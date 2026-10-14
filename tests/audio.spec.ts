@@ -104,14 +104,15 @@ test.describe("autoplay", () => {
     });
 
     test.describe("touch", () => {
-        test.use({ hasTouch: true, viewport: { width: 390, height: 664 } });
+        // Landscape: in portrait, phones get the "rotate your phone" overlay and the game pauses.
+        test.use({ hasTouch: true, viewport: { width: 664, height: 390 } });
 
         test("a tap starts the theme", async ({ page }) => {
             const { errors } = collectPageErrors(page);
             await trackSources(page);
 
             await bootGame(page);
-            await page.touchscreen.tap(195, 300);
+            await page.touchscreen.tap(332, 150);
             await expectThemeAudible(page);
 
             expect(errors).toEqual([]);

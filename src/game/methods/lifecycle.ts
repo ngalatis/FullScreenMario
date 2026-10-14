@@ -95,7 +95,7 @@ export const lifecycleMethods = {
      */
     addPreThing(this: MarioGame, prething: IPreThing): void {
         var thing: IThing = prething.thing,
-            position: string = prething.position || thing.position;
+            position: string | undefined = prething.position || thing.position;
 
         thing.FSM.addThing(
             thing,
@@ -371,8 +371,8 @@ export const lifecycleMethods = {
             leftX: number = Infinity,
             overlaps: ISolid[] = thing.overlaps,
             other: ISolid,
-            leftThing: IThing,
-            rightThing: IThing,
+            leftThing: IThing = overlaps[0],
+            rightThing: IThing = overlaps[0],
             midpoint: number,
             i: number;
 

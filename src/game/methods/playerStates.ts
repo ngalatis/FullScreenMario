@@ -216,7 +216,9 @@ export const playerStateMethods = {
             return;
         }
 
-        if (!thing.FSM.AudioPlayer.getTheme().paused) {
+        var theme = thing.FSM.AudioPlayer.getTheme();
+
+        if (theme && !theme.paused) {
             thing.FSM.AudioPlayer.playTheme();
         }
 
@@ -290,7 +292,7 @@ export const playerStateMethods = {
         thing.FSM.animateCharacterPauseVelocity(thing);
 
         // The last stage in the events clears it, resets movement, and stops
-        stages.push(function (thing: IPlayer): boolean {
+        stages.push(function (): boolean {
             thing.shrooming = false;
             stages.length = 0;
 

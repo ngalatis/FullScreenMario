@@ -81,7 +81,7 @@ export const movementMethods = {
 
         // If .resting, jump!
         if (thing.resting) {
-            thing.yvel = -Math.abs(thing.jumpheight);
+            thing.yvel = -Math.abs(thing.jumpheight!);
             thing.resting = undefined;
         }
     },
@@ -358,7 +358,8 @@ export const movementMethods = {
             return;
         }
 
-        thing.tension += thing.yvel;
+        // Scale Platforms are given their starting tension by the Scale macro
+        thing.tension = (thing.tension || 0) + thing.yvel;
         thing.FSM.shiftVert(thing, thing.yvel);
 
         // The rest of the logic is for the platform's partner(s)
@@ -366,10 +367,12 @@ export const movementMethods = {
             return;
         }
 
-        thing.partners.partnerPlatform.tension -= thing.yvel;
+        var partnerPlatform: IPlatform = thing.partners.partnerPlatform;
+
+        partnerPlatform.tension = (partnerPlatform.tension || 0) - thing.yvel;
 
         // If the partner has fallen off, everybody falls!
-        if (thing.partners.partnerPlatform.tension <= 0) {
+        if (partnerPlatform.tension <= 0) {
             thing.FSM.scoreOn(1000, thing);
             thing.partners.partnerPlatform.yvel = thing.FSM.unitsize / 2;
             thing.collide = thing.partners.partnerPlatform.collide = (
@@ -782,7 +785,7 @@ export const movementMethods = {
     moveCoinEmerge(this: MarioGame, thing: ICoin, parent?: ISolid): void {
         thing.FSM.shiftVert(thing, thing.yvel);
 
-        if (parent && thing.bottom >= thing.blockparent.bottom) {
+        if (parent && thing.blockparent && thing.bottom >= thing.blockparent.bottom) {
             thing.FSM.killNormal(thing);
         }
     },
@@ -930,7 +933,7 @@ export const movementMethods = {
      * @param thing   A Player that should move.
      */
     movePlayerVine(this: MarioGame, thing: IPlayer): void {
-        var attachedSolid: ISolid = thing.attachedSolid,
+        var attachedSolid: ISolid | undefined = thing.attachedSolid,
             animatedClimbing: boolean;
 
         if (!attachedSolid) {
@@ -938,8 +941,8 @@ export const movementMethods = {
             return;
         }
 
-        if (thing.bottom < thing.attachedSolid.top) {
-            thing.FSM.unattachPlayer(thing, thing.attachedSolid);
+        if (thing.bottom < attachedSolid.top) {
+            thing.FSM.unattachPlayer(thing, attachedSolid);
             return;
         }
 
@@ -966,7 +969,7 @@ export const movementMethods = {
             animatedClimbing = true;
             thing.FSM.shiftVert(thing, thing.FSM.unitsize / 2);
             if (thing.top > attachedSolid.bottom) {
-                thing.FSM.unattachPlayer(thing, thing.attachedSolid);
+                thing.FSM.unattachPlayer(thing, attachedSolid);
             }
             return;
         } else {
@@ -982,7 +985,7 @@ export const movementMethods = {
         thing.animatedClimbing = animatedClimbing;
 
         if (thing.bottom < thing.FSM.MapScreener.top - thing.FSM.unitsize * 4) {
-            thing.FSM.setLocation(thing.attachedSolid.transport);
+            thing.FSM.setLocation(attachedSolid.transport);
         }
     },
 
@@ -995,7 +998,12 @@ export const movementMethods = {
      * @param thing   A Player that should move.
      */
     movePlayerSpringboardDown(this: MarioGame, thing: IPlayer): void {
-        var other: ISpringboard = thing.spring;
+        var other: ISpringboard | undefined = thing.spring;
+
+        if (!other) {
+            thing.movement = thing.FSM.movePlayer;
+            return;
+        }
 
         // If a Player has moved off the spring, get outta here
         if (!thing.FSM.isThingTouchingThing(thing, other)) {

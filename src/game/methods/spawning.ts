@@ -395,7 +395,10 @@ export const spawnMethods = {
      */
     spawnCollectionComponent(this: MarioGame, collection: any, thing: IThing): void {
         thing.collection = collection;
-        collection[thing.collectionName] = thing;
+
+        if (thing.collectionName !== undefined) {
+            collection[thing.collectionName] = thing;
+        }
     },
 
     /**
@@ -478,7 +481,7 @@ export const spawnMethods = {
      * @param thing   A Detector activated to make the Lakitu flee.
      */
     activateLakituStop(this: MarioGame, thing: IDetector): void {
-        var lakitu: ILakitu = thing.FSM.MapScreener.lakitu;
+        var lakitu: ILakitu | undefined = thing.FSM.MapScreener.lakitu;
 
         if (!lakitu) {
             return;
@@ -624,7 +627,7 @@ export const spawnMethods = {
             area: IArea = <IArea>AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
-            section: any = area.sections[thing.section || 0],
+            section: any = area.sections![thing.section || 0],
             left: number = (thing.left + MapScreener.left) / FSM.unitsize,
             before: any[] = section.before ? section.before.creation : undefined,
             command: any,
@@ -689,7 +692,7 @@ export const spawnMethods = {
             area: IArea = <IArea>AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
-            section: any = area.sections[thing.section || 0],
+            section: any = area.sections![thing.section || 0],
             stretch: any[] = section.stretch ? section.stretch.creation : undefined,
             left: number = (thing.left + MapScreener.left) / FSM.unitsize,
             width: number = MapScreener.width / FSM.unitsize,
@@ -743,7 +746,7 @@ export const spawnMethods = {
             area: IArea = <IArea>AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
-            section: any = area.sections[thing.section || 0],
+            section: any = area.sections![thing.section || 0],
             left: number = (thing.left + MapScreener.left) / FSM.unitsize,
             after: any[] = section.after ? section.after.creation : undefined,
             command: any,

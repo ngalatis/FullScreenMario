@@ -139,7 +139,7 @@ MarioGame.settings.ui = {
                         window.ondevicemotion = <any>FSM.InputWriter.makePipe("ondevicemotion", "type");
                     },
                     "disable": (FSM: IMarioGame): void => {
-                        window.ondevicemotion = undefined;
+                        window.ondevicemotion = null;
                     }
                 }
             ],
@@ -160,12 +160,12 @@ MarioGame.settings.ui = {
                         "title": title[0].toUpperCase() + title.substr(1),
                         "type": "Keys",
                         "storeLocally": true,
-                        "source": (FSM: IMarioGame): string[] => {
+                        "source": (FSM: UserWrappr.IGameStartr): string[] => {
                             return FSM.InputWriter
                                 .getAliasAsKeyStrings(title)
                                 .map((string: string) => string.toLowerCase());
                         },
-                        "callback": (FSM: IMarioGame, valueOld: any, valueNew: any): void => {
+                        "callback": (FSM: UserWrappr.IGameStartr, valueOld: any, valueNew: any): void => {
                             FSM.InputWriter.switchAliasValues(
                                 title,
                                 [FSM.InputWriter.convertKeyStringToAlias(valueOld)],
@@ -195,7 +195,7 @@ MarioGame.settings.ui = {
 
                     output.push({
                         "title": mod.name,
-                        "source": (): boolean => mod.enabled,
+                        "source": (): boolean | undefined => mod.enabled,
                         "storeLocally": true,
                         "type": "text"
                     });
@@ -205,12 +205,15 @@ MarioGame.settings.ui = {
             },
             "callback": (FSM: IMarioGame, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
                 var name: string = button.textContent,
-                    key: string = button.getAttribute("localStorageKey"),
+                    key: string | null = button.getAttribute("localStorageKey"),
                     mod: ModAttachr.IModAttachrMod = FSM.ModAttacher.getMod(name);
 
                 FSM.ModAttacher.toggleMod(name);
-                FSM.ItemsHolder.setItem(key, mod.enabled);
-                FSM.ItemsHolder.saveItem(key);
+
+                if (key !== null) {
+                    FSM.ItemsHolder.setItem(key, mod.enabled);
+                    FSM.ItemsHolder.saveItem(key);
+                }
             }
         }, {
             "title": "Editor",
@@ -247,12 +250,18 @@ MarioGame.settings.ui = {
                     return {
                         "title": "Map Generator!",
                         "callback": (
-                            FSM: IMarioGame,
+                            GameStarter: UserWrappr.IGameStartr,
                             schema: UserWrappr.UISchemas.ISchema,
                             button: HTMLElement,
                             event: Event): void => {
-                            var parent: HTMLElement = (<HTMLElement>event.target).parentElement,
-                                randomizer: HTMLInputElement = <HTMLInputElement>parent.querySelector(".randomInput");
+                            var FSM: IMarioGame = <IMarioGame>GameStarter,
+                                parent: HTMLElement | null = (<HTMLElement>event.target).parentElement;
+
+                            if (parent === null) {
+                                return;
+                            }
+
+                            var randomizer: HTMLInputElement = <HTMLInputElement>parent.querySelector(".randomInput");
 
                             randomizer.value = randomizer.value.replace(/[^\d]/g, "");
                             if (!randomizer.value) {

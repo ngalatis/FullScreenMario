@@ -71,7 +71,7 @@ export const animationMethods = {
         thing.FSM.setMidXObj(output, thing);
         thing.FSM.setTop(output, thing.top);
         output.blockparent = thing;
-        output.animate(output, thing);
+        output.animate?.(output, thing);
 
         return output;
     },
@@ -252,8 +252,8 @@ export const animationMethods = {
      * @param interval   How many steps between hidden toggles (by default, 2).
      */
     animateFlicker(this: MarioGame, thing: IThing, cleartime?: number, interval?: number): void {
-        cleartime = Math.round(cleartime) || 49;
-        interval = Math.round(interval) || 2;
+        cleartime = Math.round(cleartime ?? 0) || 49;
+        interval = Math.round(interval ?? 0) || 2;
 
         thing.flickering = true;
 
@@ -644,6 +644,8 @@ export const animationMethods = {
                 thing.FSM.switchClass(thing, "hiding", "out");
             },
             21);
+
+        return false;
     },
 
     /**
@@ -783,7 +785,7 @@ export const animationMethods = {
             });
 
         thing.FSM.addThing(ball, xloc, thing.top + thing.FSM.unitsize * 8);
-        ball.animate(ball);
+        ball.animate?.(ball);
         ball.onDelete = function (): void {
             thing.numballs -= 1;
         };
@@ -808,6 +810,11 @@ export const animationMethods = {
      * @param balls   CastleFireballs rotating from thing's center.
      */
     animateCastleBlock(this: MarioGame, thing: ICastleBlock, balls: ICastleFireball[]): void {
+        // angle and dt are set when the CastleBlock spawns its CastleFireballs
+        if (thing.angle === undefined || thing.dt === undefined) {
+            return;
+        }
+
         var midx: number = thing.EightBitter.getMidX(thing),
             midy: number = thing.EightBitter.getMidY(thing),
             ax: number = Math.cos(thing.angle * Math.PI) * thing.FSM.unitsize * 4,

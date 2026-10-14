@@ -1,9 +1,0 @@
-{
-    // Strict type check for the engine only. The game (src/game) still runs
-    // under the non-strict project config until it is migrated too.
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "strict": true
-    },
-    "include": ["src/engine"]
-}

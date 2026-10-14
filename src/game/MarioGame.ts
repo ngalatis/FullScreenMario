@@ -30,32 +30,10 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
 
     /**
      * Static settings passed to individual reset Functions. Each of these
-     * should be filled out separately, after the MarioGame class
-     * has been declared but before an instance has been instantiated.
+     * should be filled out separately (by ./settings/*), after the MarioGame
+     * class has been declared but before an instance has been instantiated.
      */
-    public static settings: IMarioGameStoredSettings = {
-        "audio": undefined,
-        "collisions": undefined,
-        "devices": undefined,
-        "editor": undefined,
-        "generator": undefined,
-        "groups": undefined,
-        "events": undefined,
-        "help": undefined,
-        "input": undefined,
-        "math": undefined,
-        "maps": undefined,
-        "mods": undefined,
-        "objects": undefined,
-        "quadrants": undefined,
-        "renderer": undefined,
-        "runner": undefined,
-        "scenes": undefined,
-        "sprites": undefined,
-        "items": undefined,
-        "touch": undefined,
-        "ui": undefined
-    };
+    public static settings: IMarioGameStoredSettings = <IMarioGameStoredSettings>{};
 
     /**
      * How much to expand each pixel from raw sizing measurements to in-game.
@@ -92,7 +70,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     /**
      * Overriden MapScreenr refers to the IMapScreenr defined in MarioGame.d.ts.
      */
-    public MapScreener: IMapScreenr;
+    public MapScreener!: IMapScreenr;
 
     /**
      * Stored settings to be stored separately and kept within a GameStartr.
@@ -102,12 +80,12 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     /**
      * How much to expand each pixel from raw sizing measurements to in-game.
      */
-    public unitsize: number;
+    public unitsize!: number;
 
     /**
      * Levels of points to award for hopping on / shelling enemies.
      */
-    public pointLevels: number[];
+    public pointLevels!: number[];
 
     /**
      * Internal reference to the static customTextMappings.
@@ -116,12 +94,13 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     /**
      * Useful for custom text Things, where "text!" cannot be a Function name.
      */
-    public customTextMappings: ITextMappings;
+    public customTextMappings!: ITextMappings;
 
     /**
      * The game's player, which (when defined) will always be a Player Thing.
+     * It is assigned by addPlayer, once a map has started.
      */
-    public player: IPlayer;
+    public player!: IPlayer;
 
     /**
      * Container for device motion information, used by this.deviceMotion.
@@ -232,7 +211,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     resetItemsHolder(FSM: MarioGame, settings: GameStartr.IGameStartrSettings): void {
         super.resetItemsHolder(FSM, settings);
 
-        if (settings.width < 560) {
+        if (settings.width !== undefined && settings.width < 560) {
             (<HTMLElement>(<HTMLTableRowElement>FSM.ItemsHolder.getContainer().children[0]).cells[4]).style.display = "none";
         }
     }
@@ -423,7 +402,7 @@ export interface MarioGame extends Omit<GroupMethods, OverridingMethodName> {
  * Installs method groups onto a prototype with the same property attributes
  * that class methods have (writable, configurable, non-enumerable).
  */
-function installMethods(target: object, ...groups: object[]): void {
+function installMethods(target: object, ...groups: Record<string, unknown>[]): void {
     for (const group of groups) {
         for (const key of Object.keys(group)) {
             Object.defineProperty(target, key, {

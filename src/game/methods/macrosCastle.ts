@@ -228,7 +228,7 @@ export const castleMacroMethods = {
         }
 
         // CastleWalls right
-        j = reference.hasOwnProperty("walls") ? reference.walls : 2;
+        j = reference.walls ?? 2;
         for (i = 0; i < j; i += 1) { // x
             output.push({
                 "thing": "CastleWall",
@@ -400,8 +400,8 @@ export const castleMacroMethods = {
             y: number = reference.y || 0,
             npc: string = reference.npc || "Toad",
             output: any[],
-            texts: any[],
-            keys: string[];
+            texts: any[] | undefined,
+            keys: string[] | undefined;
 
         if (npc === "Toad") {
             keys = ["1", "2"];
@@ -534,7 +534,10 @@ export const castleMacroMethods = {
             });
         }
 
-        output.push.apply(output, texts);
+        if (texts) {
+            output.push.apply(output, texts);
+        }
+
         return output;
     },
 

@@ -331,9 +331,14 @@ export const inputMethods = {
     deviceMotion(this: MarioGame, FSM: MarioGame, event: DeviceMotionEvent): void {
         var player: IPlayer = FSM.player,
             deviceMotionStatus: IDeviceMotionStatus = FSM.deviceMotionStatus,
-            acceleration: DeviceMotionEventAcceleration = event.accelerationIncludingGravity;
+            acceleration: DeviceMotionEventAcceleration | null = event.accelerationIncludingGravity;
 
         FSM.ModAttacher.fireEvent("onDeviceMotion", event);
+
+        // Devices without an accelerometer report null readings
+        if (acceleration === null || acceleration.x === null || acceleration.y === null) {
+            return;
+        }
 
         if (deviceMotionStatus.y !== undefined) {
             deviceMotionStatus.dy = acceleration.y - deviceMotionStatus.y;

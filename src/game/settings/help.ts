@@ -94,7 +94,7 @@ MarioGame.settings.help = {
                         "code": "{GAME}.killNormal({GAME}.GroupHolder.getCharacter(0));",
                         "comment": "Kills the first playing Character."
                     }, {
-                        "code": "{GAME}.GroupHolder.getSceneryGroup().forEach({GAME}.killNormal.bind(FSM));",
+                        "code": "{GAME}.GroupHolder.getSceneryGroup().forEach({GAME}.killNormal.bind({GAME}));",
                         "comment": "Kills all playing Scenery."
                     }]
             }, {
@@ -151,23 +151,23 @@ MarioGame.settings.help = {
             {
                 "title": `{GAME}.ModAttacher.getMods`,
                 "description": "Gets all the available mods.",
-                "usage": `{GAME}.ItemsHolder.getMods();`
+                "usage": `{GAME}.ModAttacher.getMods();`
             }, {
                 "title": `{GAME}.ModAttacher.enableMod`,
                 "description": "Enables a mod.",
-                "usage": `{GAME}.enableMod("<key>");`,
+                "usage": `{GAME}.ModAttacher.enableMod("<name>");`,
                 "examples": [
                     {
-                        "code": `{GAME}.enableMod("Gradient Skies");`,
+                        "code": `{GAME}.ModAttacher.enableMod("Gradient Skies");`,
                         "comment": `Enables the "Gradient Skies" mod.`
                     }]
             }, {
                 "title": `{GAME}.ModAttacher.disableMod`,
                 "description": "Disables a mod.",
-                "usage": `{GAME}.disableMod("<key>");`,
+                "usage": `{GAME}.ModAttacher.disableMod("<name>");`,
                 "examples": [
                     {
-                        "code": `{GAME}.disableMod("Gradient Skies");`,
+                        "code": `{GAME}.ModAttacher.disableMod("Gradient Skies");`,
                         "comment": `Disables the "Gradient Skies" mod.`
                     }]
             }]

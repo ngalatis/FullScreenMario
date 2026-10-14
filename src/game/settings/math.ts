@@ -1,5 +1,5 @@
 import { MarioGame } from "../MarioGame";
-import type { ICastleAxe, IMapScreenr, IPlayer, ISpringboard, IThing } from "../types";
+import type { ICastleAxe, IPlayer, ISpringboard, IThing } from "../types";
 import * as MathDecidr from "../../engine/MathDecidr";
 
 MarioGame.settings.math = {
@@ -13,7 +13,7 @@ MarioGame.settings.math = {
          * @returns Whether the player is both alive and close enough to the axe.
          */
         "canPlayerTouchCastleAxe": function (
-            constants: IMapScreenr,
+            constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
             thing: IThing,
             other: ICastleAxe): boolean {
@@ -35,7 +35,7 @@ MarioGame.settings.math = {
          * Decreases a player's jumping yvel based on whether it's running.
          */
         "decreasePlayerJumpingYvel": function (
-            constants: IMapScreenr,
+            constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
             player: IPlayer): void {
             var jumpmod: number = player.FSM.MapScreener.jumpmod - player.xvel * .0014,
@@ -50,17 +50,18 @@ MarioGame.settings.math = {
          *                    or false if the skidding status was unchanged.
          */
         "decreasePlayerRunningXvel": function (
-            constants: IMapScreenr,
+            constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
             player: IPlayer): boolean {
+            var skiddingChanged: boolean = false;
+
             // If a button is pressed, hold/increase speed
             if (player.keys.run !== 0 && !player.crouching) {
                 var dir: number = player.keys.run,
                     // No sprinting underwater
                     sprinting: number = Number(player.keys.sprint && !player.FSM.MapScreener.underwater) || 0,
                     adder: number = dir * (.098 * (Number(sprinting) + 1)),
-                    decel: number = 0,
-                    skiddingChanged: boolean = false;
+                    decel: number = 0;
 
                 // Reduce the speed, both by subtracting and dividing a little
                 player.xvel += adder || 0;
@@ -105,17 +106,18 @@ MarioGame.settings.math = {
          * @returns A player's yvel for when riding up a springboard.
          */
         "springboardYvelUp": function (
-            constants: IMapScreenr,
+            constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
             thing: ISpringboard): number {
-            return Math.max(thing.FSM.unitsize * -2, thing.tensionSave * -.98);
+            // tensionSave is recorded by collideSpringboard before a rise starts
+            return Math.max(thing.FSM.unitsize * -2, thing.tensionSave! * -.98);
         },
         /**
          * @returns How many fireworks to show at the end of a level,
          *          based on the given time's rightmost digit.
          */
         "numberOfFireworks": function (
-            constants: IMapScreenr,
+            constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
             time: number): number {
             var numFireworks: number = time % 10;

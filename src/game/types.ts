@@ -199,17 +199,17 @@ export interface IDeviceMotionStatus {
     /**
      * The device's current horizontal acceleration.
      */
-    x: number;
+    x: number | undefined;
 
     /**
      * The device's current vertical acceleration.
      */
-    y: number;
+    y: number | undefined;
 
     /**
      * How much the vertical acceleration has changed since the last upkeep.
      */
-    dy: number;
+    dy: number | undefined;
 }
 
 /**
@@ -1038,6 +1038,11 @@ export interface ICharacter extends IThing {
  */
 export interface ICharacterOverlapping extends ICharacter {
     /**
+     * The Solids this is overlapping.
+     */
+    overlaps: ISolid[];
+
+    /**
      * The horizontal location to check overlaps at.
      */
     overlapCheck: number;
@@ -1180,17 +1185,17 @@ export interface IBowser extends IHammerBro {
     /**
      * How many hammers to throw.
      */
-    throwAmount?: number;
+    throwAmount: number;
 
     /**
      * How long to delay between throwing Hammers.
      */
-    throwBetween?: number;
+    throwBetween: number;
 
     /**
      * How long to delay before throwing Hammers.
      */
-    throwDelay?: number;
+    throwDelay: number;
 
     /**
      * How many hammers to throw each cycle.
@@ -1263,6 +1268,11 @@ export interface IPiranha extends IEnemy {
  */
 export interface IPodoboo extends IEnemy {
     /**
+     * How much to increase this Podoboo's y-velocity each upkeep while falling.
+     */
+    gravity: number;
+
+    /**
      * How often this should jump.
      */
     frequency: number;
@@ -1309,15 +1319,7 @@ export interface IItem extends ICharacter {
 /**
  * A Coin Item that gives a Player a point when touched.
  */
-export interface ICoin extends IItem {
-    /**
-     * Animation callback for when this is bumped by a Solid.
-     *
-     * @param thing   The Soin being bumped by other.
-     * @param other   The Solid bumping thing.
-     */
-    animate(thing: ICoin, other: ISolid): void;
-}
+export interface ICoin extends IItem { }
 
 /**
  * A Shell that may be kicked by a Player into Characters.
@@ -1455,7 +1457,7 @@ export interface IPlayer extends ICharacter {
     /**
      * How many simultaneous enemies this is currently jumping on.
      */
-    jumpers?: number;
+    jumpers: number;
 
     /**
      * Whether this is currently jumping through the air.
@@ -1475,7 +1477,7 @@ export interface IPlayer extends ICharacter {
     /**
      * Scratch variable to store maxspeed.
      */
-    maxspeedsave?: number;
+    maxspeedsave: number;
 
     /**
      * How many Fireballs this Player has dropped.
@@ -4106,7 +4108,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param big   Whether this should skip creating the spawn (by default,
      *              false).
      */
-    killSpawn(thing: ICharacter, big?: boolean): IThing;
+    killSpawn(thing: ICharacter, big?: boolean): IThing | undefined;
 
     /**
      * A kill Function similar to killSpawn but more configurable. A spawned

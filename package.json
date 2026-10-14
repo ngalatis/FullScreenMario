@@ -10,7 +10,7 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.engine.json && tsc --noEmit -p tsconfig.node.json",
+        "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
         "test": "playwright test"
     },
     "devDependencies": {

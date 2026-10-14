@@ -28,7 +28,7 @@ export const mapMethods = {
      */
     setMap(this: MarioGame, name?: string | IMarioGame, location?: string | number): void {
         var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
-            time: number,
+            time: number | undefined,
             map: IMap;
 
         if (typeof name === "undefined" || name.constructor === MarioGame) {
@@ -90,7 +90,7 @@ export const mapMethods = {
 
         FSM.QuadsKeeper.resetQuadrants();
 
-        location.entry(FSM, location);
+        location.entry?.(FSM, location);
 
         FSM.ModAttacher.fireEvent("onSetLocation", location);
 
@@ -243,9 +243,16 @@ export const mapMethods = {
             FSM.scrollWindow(location.xloc * FSM.unitsize);
         }
 
+        // Entering from a pipe requires a Location with an entrance Thing
+        if (!location || !location.entrance) {
+            return;
+        }
+
+        var entrance: IThing = location.entrance;
+
         FSM.addPlayer(
-            location.entrance.left + FSM.player.width * FSM.unitsize / 2,
-            location.entrance.top + FSM.player.height * FSM.unitsize);
+            entrance.left + FSM.player.width * FSM.unitsize / 2,
+            entrance.top + FSM.player.height * FSM.unitsize);
 
         FSM.animatePlayerPipingStart(FSM.player);
         FSM.AudioPlayer.play("Pipe");
@@ -260,7 +267,7 @@ export const mapMethods = {
             function (): boolean {
                 FSM.shiftVert(FSM.player, FSM.unitsize / -4);
 
-                if (FSM.player.bottom <= location.entrance.top) {
+                if (FSM.player.bottom <= entrance.top) {
                     FSM.animatePlayerPipingEnd(FSM.player);
                     return true;
                 }
@@ -414,7 +421,7 @@ export const mapMethods = {
         // Copy all attributes, if they exist
         if (scope.attributes) {
             for (i in scope.attributes) {
-                if (scope.hasOwnProperty(i) && scope[i]) {
+                if (scope.hasOwnProperty(i) && (<any>scope)[i]) {
                     MarioGame.prototype.proliferate(scope, scope.attributes[i]);
                 }
             }
@@ -480,17 +487,17 @@ export const mapMethods = {
     mapAddStretched(this: MarioGame, prethingRaw: string | MapsCreatr.IPreThingSettings): IThing {
         var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             boundaries: any = FSM.AreaSpawner.getArea().boundaries,
-            prething: MapsCreatr.IPreThingSettings = prethingRaw instanceof String
-                ? { "thing": prething }
-                : <MapsCreatr.IPreThingSettings>prethingRaw,
+            prething: MapsCreatr.IPreThingSettings = typeof prethingRaw === "string"
+                ? { "thing": prethingRaw }
+                : prethingRaw,
             y: number = (
-                ((<IMapScreenr>FSM.MapScreener).floor - prething.y)
+                ((<IMapScreenr>FSM.MapScreener).floor - (prething.y || 0))
                 * FSM.unitsize
             ),
             // It is assumed the PreThing does have a .thing if it's a stretch
             thing: IThing = FSM.ObjectMaker.make((<any>prething).thing, {
                 "width": boundaries.right - boundaries.left,
-                "height": prething.height || FSM.getAbsoluteHeight(prething.y)
+                "height": prething.height || FSM.getAbsoluteHeight(prething.y || 0)
             });
 
         return <IThing>FSM.addThing(thing, boundaries.left, y);
@@ -507,11 +514,11 @@ export const mapMethods = {
             MapsCreator: MapsCreatr.IMapsCreatr = FSM.MapsCreator,
             AreaSpawner: AreaSpawnr.IAreaSpawnr = FSM.AreaSpawner,
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
-            prething: MapsCreatr.IPreThingSettings = prethingRaw instanceof String
+            prething: MapsCreatr.IPreThingSettings = typeof prethingRaw === "string"
                 ? {
-                    "thing": prething
+                    "thing": prethingRaw
                 }
-                : <MapsCreatr.IPreThingSettings>prethingRaw,
+                : prethingRaw,
             area: IArea = <IArea>AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             boundaries: any = FSM.AreaSpawner.getArea().boundaries;

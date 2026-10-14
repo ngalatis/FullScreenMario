@@ -201,7 +201,7 @@ export const collisionHandlerMethods = {
                 }
                 // Some items require fancy versions (e.g. Shell)
                 if ((<IItem>thing).item) {
-                    thing.collide(other, thing);
+                    thing.collide?.(other, thing);
                 }
             } else if (other.actionLeft) {
                 // Players trigger other actions (e.g. Pipe's mapExitPipeHorizontal)
@@ -248,7 +248,7 @@ export const collisionHandlerMethods = {
      */
     collideUpCoin(this: MarioGame, thing: ICoin, other: ISolid): void {
         thing.blockparent = other;
-        thing.animate(thing, other);
+        thing.animate?.(thing, other);
     },
 
     /**
@@ -559,7 +559,7 @@ export const collisionHandlerMethods = {
         // Items
         if ((<IItem>thing).item) {
             if (thing.collidePrimary) {
-                return thing.collide(other, thing);
+                return thing.collide?.(other, thing);
             }
             return;
         }

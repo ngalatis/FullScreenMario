@@ -73,7 +73,7 @@ export const deathMethods = {
      * @param big   Whether this should skip creating the spawn (by default,
      *              false).
      */
-    killSpawn(this: MarioGame, thing: ICharacter, big?: boolean): IThing {
+    killSpawn(this: MarioGame, thing: ICharacter, big?: boolean): IThing | undefined {
         if (big) {
             thing.FSM.killNormal(thing);
             return;
@@ -113,7 +113,7 @@ export const deathMethods = {
 
         if (typeof attributesCopied !== "undefined") {
             for (i = 0; i < attributesCopied.length; i += 1) {
-                attributes[attributesCopied[i]] = thing[attributesCopied[i]];
+                attributes[attributesCopied[i]] = (<any>thing)[attributesCopied[i]];
             }
         }
 
@@ -242,8 +242,8 @@ export const deathMethods = {
      */
     killToShell(this: MarioGame, thing: ICharacter, big?: number): IShell {
         var spawn: IShell,
-            nocollidecharold: boolean,
-            nocollideplayerold: boolean;
+            nocollidecharold: boolean | undefined,
+            nocollideplayerold: boolean | undefined;
 
         thing.spawnSettings = {
             "smart": thing.smart

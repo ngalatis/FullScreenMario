@@ -233,6 +233,6 @@ export class MathDecidr implements IMathDecidr {
      * @returns The result of the equation.
      */
     compute(name: string, ...args: any[]): any {
-        return this.equations[name].apply(this, Array.prototype.slice.call(arguments, 1));
+        return (<(...equationArgs: any[]) => any>this.equations[name]).apply(this, args);
     }
 }

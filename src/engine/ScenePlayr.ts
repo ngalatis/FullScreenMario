@@ -65,6 +65,11 @@ export interface ICutsceneSettings {
      * Arguments passed to the currents playing routines.
      */
     routineArguments: any[];
+
+    /**
+     * Any other settings the cutscene was started with.
+     */
+    [i: string]: any;
 }
 
 /**
@@ -94,7 +99,7 @@ export interface IScenePlayr {
     /**
      * @returns The currently playing cutscene.
      */
-    getCutscene(): ICutscene;
+    getCutscene(): ICutscene | undefined;
 
     /**
      * @returns The cutscene referred to by the given name.
@@ -104,7 +109,7 @@ export interface IScenePlayr {
     /**
      * @returns The currently playing routine.
      */
-    getRoutine(): IRoutine;
+    getRoutine(): IRoutine | undefined;
 
     /**
      * @param name   The name of a routine to return.
@@ -116,7 +121,7 @@ export interface IScenePlayr {
     /**
      * @returns The name of the currently playing cutscene.
      */
-    getCutsceneName(): string;
+    getCutsceneName(): string | undefined;
 
     /**
      * @returns The settings used by the current cutscene.
@@ -188,22 +193,22 @@ export class ScenePlayr implements IScenePlayr {
     /**
      * The currently playing cutscene.
      */
-    private cutscene: ICutscene;
+    private cutscene: ICutscene | undefined;
 
     /**
      * The currently playing routine within the current cutscene.
      */
-    private routine: IRoutine;
+    private routine: IRoutine | undefined;
 
     /**
      * The name of the current cutscene.
      */
-    private cutsceneName: string;
+    private cutsceneName: string | undefined;
 
     /**
      * Persistent settings for the current cutscene, passed to each routine.
      */
-    private cutsceneSettings: ICutsceneSettings;
+    private cutsceneSettings: ICutsceneSettings | undefined;
 
     /**
      * Any additional arguments to pass to routines.
@@ -234,7 +239,7 @@ export class ScenePlayr implements IScenePlayr {
     /**
      * @returns The currently playing cutscene.
      */
-    getCutscene(): ICutscene {
+    getCutscene(): ICutscene | undefined {
         return this.cutscene;
     }
 
@@ -248,7 +253,7 @@ export class ScenePlayr implements IScenePlayr {
     /**
      * @returns The currently playing routine.
      */
-    getRoutine(): IRoutine {
+    getRoutine(): IRoutine | undefined {
         return this.routine;
     }
 
@@ -258,20 +263,24 @@ export class ScenePlayr implements IScenePlayr {
      *          by the given name.
      */
     getOtherRoutine(name: string): IRoutine {
+        if (!this.cutscene) {
+            throw new Error("No cutscene is currently playing.");
+        }
+
         return this.cutscene.routines[name];
     }
 
     /**
      * @returns The name of the currently playing cutscene.
      */
-    getCutsceneName(): string {
+    getCutsceneName(): string | undefined {
         return this.cutsceneName;
     }
 
     /**
      * @returns The settings used by the current cutscene.
      */
-    getCutsceneSettings(): ICutsceneSettings {
+    getCutsceneSettings(): ICutsceneSettings | undefined {
         return this.cutsceneSettings;
     }
 
@@ -282,6 +291,10 @@ export class ScenePlayr implements IScenePlayr {
      * @param value   The value for the new setting.
      */
     addCutsceneSetting(key: string, value: any): void {
+        if (!this.cutsceneSettings) {
+            throw new Error("No cutscene is currently playing.");
+        }
+
         this.cutsceneSettings[key] = value;
     }
 
@@ -309,12 +322,14 @@ export class ScenePlayr implements IScenePlayr {
 
         this.cutscene = this.cutscenes[name];
         this.cutsceneName = name;
-        this.cutsceneSettings = settings || {};
 
-        this.cutsceneSettings.cutscene = this.cutscene;
-        this.cutsceneSettings.cutsceneName = name;
+        const cutsceneSettings: ICutsceneSettings = settings || {};
+        this.cutsceneSettings = cutsceneSettings;
 
-        this.cutsceneArguments.push(this.cutsceneSettings);
+        cutsceneSettings.cutscene = this.cutscene;
+        cutsceneSettings.cutsceneName = name;
+
+        this.cutsceneArguments.push(cutsceneSettings);
 
         if (this.cutscene.firstRoutine) {
             this.playRoutine(this.cutscene.firstRoutine, ...args);
@@ -367,11 +382,12 @@ export class ScenePlayr implements IScenePlayr {
 
         this.routine = this.cutscene.routines[name];
 
-        this.cutsceneSettings.routine = this.routine;
-        this.cutsceneSettings.routineName = name;
-        this.cutsceneSettings.routineArguments = args;
+        const cutsceneSettings: ICutsceneSettings = <ICutsceneSettings>this.cutsceneSettings;
+        cutsceneSettings.routine = this.routine;
+        cutsceneSettings.routineName = name;
+        cutsceneSettings.routineArguments = args;
 
-        this.routine.apply(this, routineArgs);
+        (<(...routineArguments: any[]) => void>this.routine).apply(this, routineArgs);
     }
 
     /**

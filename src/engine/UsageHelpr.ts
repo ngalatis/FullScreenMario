@@ -204,7 +204,7 @@ export class UsageHelpr {
      * for each help settings opening.
      */
     displayHelpMenu(): void {
-        this.openings.forEach((opening: string[]): void => this.logHelpText(opening));
+        this.openings.forEach((opening: IHelpLine): void => this.logHelpText(opening));
     }
 
     /**
@@ -311,7 +311,7 @@ export class UsageHelpr {
             styles: string[] = (<string[]>line)
                 .slice(1)
                 .filter((style: string): boolean => UsageHelpr.styles.hasOwnProperty(style))
-                .map((style: string): string => UsageHelpr.styles[style]);
+                .map((style: string): string => UsageHelpr.styles[<keyof ITextStyles>style]);
 
         // A last blank "" style allows the last "%c" in the message to reset text styles
         this.logger(this.filterHelpText(message), ...styles, "");

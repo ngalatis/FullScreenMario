@@ -119,12 +119,12 @@ export interface IItemValue {
      * A mapping of values to callbacks that should be triggered when value
      * is equal to them.
      */
-    triggers: ITriggers;
+    triggers?: ITriggers;
     
     /**
      * An HTML element whose second child's textContent is always set to that of the element.
      */
-    element: HTMLElement;
+    element?: HTMLElement;
     
     /**
      * Whether an Element should be created and synced to the value.
@@ -134,37 +134,37 @@ export interface IItemValue {
     /**
      * An Element tag to use in creating the element, if hasElement is true.
      */
-    elementTag: string;
+    elementTag?: string;
     
     /**
      * A maximum value for the value to equal, if value is a number.
      */
-    maximum: number;
+    maximum?: number;
     
     /**
      * A callback to call when the value reaches the maximum value.
      */
-    onMaximum: Function;
+    onMaximum?: Function;
     
     /**
      * A minimum value for the value to equal, if value is a number.
      */
-    minimum: number;
+    minimum?: number;
     
     /**
      * A callback to call when the value reaches the minimum value.
      */
-    onMinimum: Function;
+    onMinimum?: Function;
     
     /**
      * A maximum number to modulo the value against, if value is a number.
      */
-    modularity: number;
+    modularity?: number;
     
     /**
      * A callback to call when the value reaches modularity.
      */
-    onModular: Function;
+    onModular?: Function;
     
     /**
      * A Function to transform the value when it's being set.
@@ -283,7 +283,7 @@ export interface IItemsHoldr {
     /**
      * @returns Whether this should save changes to localStorage automatically.
      */
-    getAutoSave(): boolean;
+    getAutoSave(): boolean | undefined;
     
     /**
      * @returns The prefix to store thigns under in localStorage.
@@ -510,68 +510,68 @@ export class ItemValue implements IItemValue {
     /**
      * Whether the value should be stored in the ItemHoldr's localStorage.
      */
-    storeLocally: boolean;
+    storeLocally!: boolean;
 
     /**
      * A mapping of values to callbacks that should be triggered when value
      * is equal to them.
      */
-    triggers: ITriggers;
+    triggers?: ITriggers;
 
     /**
      * An HTML element whose second child's textContent is always set to that of the element.
      */
-    element: HTMLElement;
+    element?: HTMLElement;
 
     /**
      * Whether an Element should be created and synced to the value.
      */
-    hasElement: boolean;
+    hasElement!: boolean;
 
     /**
      * An Element tag to use in creating the element, if hasElement is true.
      */
-    elementTag: string;
+    elementTag?: string;
 
     /**
      * A minimum value for the value to equal, if value is a number.
      */
-    minimum: number;
+    minimum?: number;
 
     /**
      * A callback to call when the value reaches the minimum value.
      */
-    onMinimum: Function;
+    onMinimum?: Function;
 
     /**
      * A maximum value for the value to equal, if value is a number.
      */
-    maximum: number;
+    maximum?: number;
 
     /**
      * A callback to call when the value reaches the maximum value.
      */
-    onMaximum: Function;
+    onMaximum?: Function;
 
     /**
      * A maximum number to modulo the value against, if value is a number.
      */
-    modularity: number;
+    modularity?: number;
 
     /**
      * A callback to call when the value reaches modularity.
      */
-    onModular: Function;
+    onModular?: Function;
 
     /**
      * A Function to transform the value when it's being set.
      */
-    transformGet: Function;
+    transformGet?: Function;
 
     /**
      * A Function to transform the value when it's being retrieved.
      */
-    transformSet: Function;
+    transformSet?: Function;
 
     /**
      * The value being stored.
@@ -703,8 +703,10 @@ export class ItemValue implements IItemValue {
      * Checks if the current value should trigger a callback, and if so calls it.
      */
     private checkTriggers(): void {
-        if (this.triggers.hasOwnProperty(this.value)) {
-            this.triggers[this.value].apply(this, this.ItemsHolder.getCallbackArgs());
+        const triggers: ITriggers | undefined = this.triggers;
+
+        if (triggers && triggers.hasOwnProperty(this.value)) {
+            triggers[this.value].apply(this, this.ItemsHolder.getCallbackArgs());
         }
     }
 
@@ -730,10 +732,12 @@ export class ItemValue implements IItemValue {
      * Updates the ItemValue's element's second child to be the ItemValue's value.
      */
     private updateElement(): void {
+        const element: HTMLElement = <HTMLElement>this.element;
+
         if (this.ItemsHolder.hasDisplayChange(this.value)) {
-            this.element.children[1].textContent = this.ItemsHolder.getDisplayChange(this.value);
+            element.children[1].textContent = this.ItemsHolder.getDisplayChange(this.value);
         } else {
-            this.element.children[1].textContent = this.value;
+            element.children[1].textContent = this.value;
         }
     }
 
@@ -796,17 +800,17 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Whether this should save changes to localStorage automatically.
      */
-    private autoSave: boolean;
+    private autoSave: boolean | undefined;
 
     /**
      * A container element containing children for each value's element.
      */
-    private container: HTMLElement;
+    private container!: HTMLElement;
 
     /**
      * An Array of elements as createElement arguments, outside-to-inside.
      */
-    private containersArguments: [string, any][];
+    private containersArguments!: [string, any][];
 
     /**
      * Any hardcoded changes to element content, such as "INF" for Infinity.
@@ -863,7 +867,7 @@ export class ItemsHoldr implements IItemsHoldr {
                     "className": this.prefix + "_container"
                 }]
             ];
-            this.container = this.makeContainer(settings.containersArguments);
+            this.container = this.makeContainer(this.containersArguments);
         }
     }
 
@@ -902,7 +906,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * @returns Whether this should save changes to localStorage automatically.
      */
-    getAutoSave(): boolean {
+    getAutoSave(): boolean | undefined {
         return this.autoSave;
     }
 
@@ -1023,7 +1027,7 @@ export class ItemsHoldr implements IItemsHoldr {
         }
 
         if (this.container && this.items[key].hasElement) {
-            this.container.removeChild(this.items[key].element);
+            this.container.removeChild(<HTMLElement>this.items[key].element);
         }
 
         this.itemKeys.splice(this.itemKeys.indexOf(key), 1);
@@ -1041,7 +1045,7 @@ export class ItemsHoldr implements IItemsHoldr {
         if (this.container) {
             for (i in this.items) {
                 if (this.items[i].hasElement) {
-                    this.container.removeChild(this.items[i].element);
+                    this.container.removeChild(<HTMLElement>this.items[i].element);
                 }
             }
         }
@@ -1186,7 +1190,7 @@ export class ItemsHoldr implements IItemsHoldr {
     makeContainer(containers: [string, any][]): HTMLElement {
         var output: HTMLElement = this.createElement.apply(this, containers[0]),
             current: HTMLElement = output,
-            child: HTMLElement,
+            child: HTMLElement = output,
             key: string,
             i: number;
 
@@ -1198,7 +1202,7 @@ export class ItemsHoldr implements IItemsHoldr {
 
         for (key in this.items) {
             if (this.items[key].hasElement) {
-                child.appendChild(this.items[key].element);
+                child.appendChild(<HTMLElement>this.items[key].element);
             }
         }
 

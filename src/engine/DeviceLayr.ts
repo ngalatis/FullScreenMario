@@ -54,6 +54,12 @@ export interface IJoystickTriggerAxis {
      * The current status of the axis.
      */
     status?: AxisStatus;
+
+    /**
+     * Event keys to trigger for each status, by status name ("negative",
+     * "neutral", "positive").
+     */
+    [i: string]: any;
 }
 
 /**
@@ -212,7 +218,7 @@ export interface IDeviceLayr {
      * @param {Boolean} status   Whether the button is activated (pressed).
      * @returns {Boolean} Whether the trigger was activated.
      */
-    activateButtonTrigger(gamepad: IGamepad, name: string, status: boolean);
+    activateButtonTrigger(gamepad: IGamepad, name: string, status: boolean): boolean;
 
     /**
      * Clears the statuses of all axes and buttons on all known gamepads.
@@ -477,7 +483,7 @@ export class DeviceLayr implements IDeviceLayr {
             status: AxisStatus;
 
         if (!listing) {
-            return;
+            return false;
         }
 
         // If the axis' current status matches the new one, don't do anything

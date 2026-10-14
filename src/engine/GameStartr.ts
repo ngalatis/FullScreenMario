@@ -24,7 +24,6 @@ import * as TouchPassr from "./TouchPassr";
 import * as UsageHelpr from "./UsageHelpr";
 import * as UserWrappr from "./UserWrappr";
 import * as WorldSeedr from "./WorldSeedr";
-import { js_beautify } from "./js_beautify";
 
 /**
  * Extra CSS styles that may be added to a page.
@@ -1723,18 +1722,18 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * MapsCreatr and added or removed from user input. Area properties are given to
      * a MapScreenr when a new Area is loaded.
      */
-    public AreaSpawner: AreaSpawnr.IAreaSpawnr;
+    public AreaSpawner!: AreaSpawnr.IAreaSpawnr;
 
     /**
      * An audio library to automate preloading and controlled playback of multiple
      * audio tracks, with support for different browsers' preferred file types.
      */
-    public AudioPlayer: AudioPlayr.IAudioPlayr;
+    public AudioPlayer!: AudioPlayr.IAudioPlayr;
 
     /**
      * A layer on InputWritr to map GamePad API device actions to InputWritr pipes.
      */
-    public DeviceLayer: DeviceLayr.IDeviceLayr;
+    public DeviceLayer!: DeviceLayr.IDeviceLayr;
 
     /**
      * A general utility for obtaining and analyzing framerate measurements. The 
@@ -1742,21 +1741,21 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * number or a set amount). Options for analyzing the data such as getting the
      * mean, median, extremes, etc. are available.
      */
-    public FPSAnalyzer: FPSAnalyzr.IFPSAnalyzr;
+    public FPSAnalyzer!: FPSAnalyzr.IFPSAnalyzr;
 
     /**
      * A class to continuously series of "game" Functions. Each game is run in a 
      * set order and the group is run as a whole at a particular interval, with a
      * configurable speed.
      */
-    public GamesRunner: GamesRunnr.IGamesRunnr;
+    public GamesRunner!: GamesRunnr.IGamesRunnr;
 
     /**
      * A general storage container for values in keyed Arrays and/or Objects.
      * Manipulation utlities are provided for adding, removing, switching, and
      * applying methods to values.
      */
-    public GroupHolder: GroupHoldr.IGroupHoldr;
+    public GroupHolder!: GroupHoldr.IGroupHoldr;
 
     /**
      * A general utility for automating interactions with user-called events linked
@@ -1764,51 +1763,51 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * on the event code, and call the appropriate callback. Further utilities allow 
      * for saving and playback of input histories in JSON format.
      */
-    public InputWriter: InputWritr.IInputWritr;
+    public InputWriter!: InputWritr.IInputWritr;
 
     /**
      * A versatile container to store and manipulate values in localStorage, and 
      * optionally keep an updated HTML container showing these values.
      */
-    public ItemsHolder: ItemsHoldr.IItemsHoldr;
+    public ItemsHolder!: ItemsHoldr.IItemsHoldr;
 
     /**
      * The level editor manager.
      */
-    public LevelEditor: LevelEditr.ILevelEditr;
+    public LevelEditor!: LevelEditr.ILevelEditr;
 
     /**
      * A typed MersenneTwister, which is a state-based random number generator.
      * Options exist for changing or randomizing state and producing random
      * booleans, integers, and real numbers.
      */
-    public NumberMaker: NumberMakr.INumberMakr;
+    public NumberMaker!: NumberMakr.INumberMakr;
 
     /**
      * Storage container and lazy loader for GameStartr maps that is the back-end
      * counterpart to MapsHandlr. Maps are created with their custom Location and
      * Area members, which are initialized the first time the map is retrieved. 
      */
-    public MapsCreator: MapsCreatr.IMapsCreatr;
+    public MapsCreator!: MapsCreatr.IMapsCreatr;
 
     /**
      * A simple container for Map attributes given by switching to an Area within 
      * that map. A bounding box of the current viewport is kept, along with a bag
      * of assorted variable values.
      */
-    public MapScreener: MapScreenr.IMapScreenr;
+    public MapScreener!: MapScreenr.IMapScreenr;
 
     /**
      * A computation utility to automate running common equations with access
      * to a set of constant values.
      */
-    public MathDecider: MathDecidr.IMathDecidr;
+    public MathDecider!: MathDecidr.IMathDecidr;
 
     /**
      * An addon for for extensible modding functionality. "Mods" register triggers
      * such as "onModEnable" or "onReset" that can be triggered during gameplay.
      */
-    public ModAttacher: ModAttachr.IModAttachr;
+    public ModAttacher!: ModAttachr.IModAttachr;
 
     /**
      * An factory for JavaScript classes that automates the process of 
@@ -1816,12 +1815,12 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * and a listing of properties for each class is taken in, and dynamically
      * accessible constructors keyed by String names are made available.
      */
-    public ObjectMaker: ObjectMakr.IObjectMakr;
+    public ObjectMaker!: ObjectMakr.IObjectMakr;
 
     /**
      * A front-end to PixelRendr to automate drawing mass amounts of sprites.
      */
-    public PixelDrawer: PixelDrawr.IPixelDrawr;
+    public PixelDrawer!: PixelDrawr.IPixelDrawr;
 
     /**
      * A moderately unusual graphics module designed to compress images as
@@ -1829,19 +1828,19 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * are performed and cached quickly enough for use in real-time environments, 
      * such as real-time video games.
      */
-    public PixelRender: PixelRendr.IPixelRendr;
+    public PixelRender!: PixelRendr.IPixelRendr;
 
     /**
      * Quadrant-based collision detection. A grid structure of Quadrants is kept,
      * with Things placed within quadrants they intersect. Operations are available
      * to shift quadrants horizontally or vertically and add/remove rows and columns.
      */
-    public QuadsKeeper: QuadsKeepr.IQuadsKeepr;
+    public QuadsKeeper!: QuadsKeepr.IQuadsKeepr;
 
     /**
      * A cutscene runner for jumping between scenes and their routines.
      */
-    public ScenePlayer: ScenePlayr.IScenePlayr;
+    public ScenePlayer!: ScenePlayr.IScenePlayr;
 
     /**
      * A Thing collision detection automator that unifies GroupHoldr and QuadsKeepr.
@@ -1849,42 +1848,42 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * with another Thing, and reacting to a collision are generated and cached for
      * each Thing type, based on the overarching Thing groups.
      */
-    public ThingHitter: ThingHittr.IThingHittr;
+    public ThingHitter!: ThingHittr.IThingHittr;
 
     /**
      * A timed events library providing a flexible alternative to setTimeout 
      * and setInterval that respects pauses and resumes. Events are assigned 
      * integer timestamps, and can be set to repeat multiple times.
      */
-    public TimeHandler: TimeHandlr.ITimeHandlr;
+    public TimeHandler!: TimeHandlr.ITimeHandlr;
 
     /**
      * A GUI touch layer layer on top of InputWritr that provides an extensible
      * API for adding touch-based control elements into an HTML element.
      */
-    public TouchPasser: TouchPassr.ITouchPassr;
+    public TouchPasser!: TouchPassr.ITouchPassr;
 
     /**
      * A simple interactive text-based assistant to demonstrate common API uses.
      */
-    public UsageHelper: UsageHelpr.IUsageHelpr;
+    public UsageHelper!: UsageHelpr.IUsageHelpr;
 
     /**
      * A user interface manager made to work on top of GameStartr implementations
      * and provide a configurable HTML display of options.
      */
-    public UserWrapper: UserWrappr.IUserWrappr;
+    public UserWrapper!: UserWrappr.IUserWrappr;
 
     /**
      * A randomization utility to automate random, recursive generation of
      * possibilities based on position and probability schemas. 
      */
-    public WorldSeeder: WorldSeedr.IWorldSeedr;
+    public WorldSeeder!: WorldSeedr.IWorldSeedr;
 
     /**
      * Settings for individual modules are stored as sub-Objects here.
      */
-    public settings: IGameStartrStoredSettings;
+    public settings!: IGameStartrStoredSettings;
 
     /**
      * Default list of reset Functions to call during this.reset or this.resetTimed,
@@ -1921,17 +1920,17 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * HTML container containing all game elements.
      */
-    public container: HTMLDivElement;
+    public container!: HTMLDivElement;
 
     /**
      * Canvas upon which the game's screen is constantly drawn.
      */
-    public canvas: HTMLCanvasElement;
+    public canvas!: HTMLCanvasElement;
 
     /**
      * How much to scale each pixel from PixelDrawr to the real canvas.
      */
-    public scale: number;
+    public scale!: number;
 
     /**
      * Initializes a new instance of the GameStartr class.
@@ -2025,8 +2024,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * @param customs   Any optional custom settings.
      */
     resetQuadsKeeper(GameStarter: GameStartr, settings: IGameStartrSettings): void {
-        var quadrantWidth: number = settings.width / (GameStarter.settings.quadrants.numCols - 3),
-            quadrantHeight: number = settings.height / (GameStarter.settings.quadrants.numRows - 2);
+        var quadrantWidth: number = <number>settings.width / (GameStarter.settings.quadrants.numCols - 3),
+            quadrantHeight: number = <number>settings.height / (GameStarter.settings.quadrants.numRows - 2);
 
         GameStarter.QuadsKeeper = new QuadsKeepr.QuadsKeepr(
             GameStarter.proliferate(
@@ -2180,8 +2179,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         GameStarter.MapScreener = new MapScreenr.MapScreenr({
             "EightBitter": GameStarter,
             "unitsize": GameStarter.unitsize,
-            "width": settings.width,
-            "height": settings.height,
+            "width": <number>settings.width,
+            "height": <number>settings.height,
             "variableArgs": [GameStarter],
             "variables": GameStarter.settings.maps.screenVariables
         });
@@ -2289,8 +2288,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         GameStarter.LevelEditor = new LevelEditr.LevelEditr(
             GameStarter.proliferate(
                 {
-                    "GameStarter": GameStarter,
-                    "beautifier": js_beautify
+                    "GameStarter": GameStarter
                 },
                 GameStarter.settings.editor));
     }
@@ -2360,7 +2358,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * @param customs   Any optional custom settings.
      */
     startModAttacher(GameStarter: GameStartr, settings: IGameStartrSettings): void {
-        var mods: { [i: string]: boolean } = settings.mods,
+        var mods: { [i: string]: boolean } | undefined = settings.mods,
             i: string;
 
         if (mods) {
@@ -2393,7 +2391,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 settings.style)
         });
 
-        GameStarter.canvas = GameStarter.createCanvas(settings.width, settings.height);
+        GameStarter.canvas = GameStarter.createCanvas(<number>settings.width, <number>settings.height);
         GameStarter.PixelDrawer.setCanvas(GameStarter.canvas);
         GameStarter.container.appendChild(GameStarter.canvas);
 
@@ -2416,7 +2414,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         var GameStarter: GameStartr = GameStartr.prototype.ensureCorrectCaller(this);
 
         dx = dx | 0;
-        dy = dy | 0;
+        dy = <number>dy | 0;
 
         if (!dx && !dy) {
             return;
@@ -2503,7 +2501,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         if (typeof thingRaw === "string" || thingRaw instanceof String) {
             thing = this.ObjectMaker.make(<string>thingRaw);
         } else if (thingRaw.constructor === Array) {
-            thing = this.ObjectMaker.make.apply(this.ObjectMaker, <any[]>thingRaw);
+            thing = this.ObjectMaker.make.apply(this.ObjectMaker, <[string, any?]>thingRaw);
         } else {
             thing = <IThing>thingRaw;
         }
@@ -2649,7 +2647,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         // For each listing in the attributes...
         for (attribute in attributes) {
             // If the thing has that attribute as true:
-            if (thing[attribute]) {
+            if ((<any>thing)[attribute]) {
                 // Add the extra options
                 thing.GameStarter.proliferate(thing, attributes[attribute]);
 
@@ -3390,6 +3388,6 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
             sheet.appendChild(document.createTextNode(compiled));
         }
 
-        document.querySelector("head").appendChild(sheet);
+        (<HTMLElement>document.querySelector("head")).appendChild(sheet);
     }
 }

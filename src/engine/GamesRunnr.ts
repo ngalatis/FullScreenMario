@@ -333,12 +333,12 @@ export class GamesRunnr implements IGamesRunnr {
     /**
      * Optional trigger Function for this.pause.
      */
-    private onPause: ITriggerCallback;
+    private onPause: ITriggerCallback | undefined;
 
     /**
      * Optional trigger Function for this.play.
      */
-    private onPlay: ITriggerCallback;
+    private onPlay: ITriggerCallback | undefined;
 
     /**
      * Arguments to be passed to the optional trigger Functions.
@@ -348,7 +348,7 @@ export class GamesRunnr implements IGamesRunnr {
     /**
      * Reference to the next frame, such as requestAnimationFrame's returned int.
      */
-    private upkeepNext: number;
+    private upkeepNext!: number;
 
     /**
      * Function used to schedule the next frame, such as requestAnimationFrame.
@@ -393,7 +393,7 @@ export class GamesRunnr implements IGamesRunnr {
     /**
      * The actual step, as (1 / speed) * interval.
      */
-    private intervalReal: number;
+    private intervalReal!: number;
 
     /**
      * The most upkeeps one frame may run, at speed 1.
@@ -404,7 +404,7 @@ export class GamesRunnr implements IGamesRunnr {
      * Time, in milliseconds, of the previous frame (undefined before the
      * first frame of a run, which then only marks a starting point).
      */
-    private frameTime: number;
+    private frameTime: number | undefined;
 
     /**
      * Display time received but not yet spent on upkeeps, in milliseconds.
@@ -416,7 +416,7 @@ export class GamesRunnr implements IGamesRunnr {
      * the FPS measurements, so they read the rate of logic updates without
      * being thrown off by several of them happening in the same frame.
      */
-    private updateClock: number;
+    private updateClock!: number;
 
     /**
      * How much real time has been absorbed by snapping frame deltas.
@@ -449,7 +449,7 @@ export class GamesRunnr implements IGamesRunnr {
      * Whether scheduling timeouts should adjust to elapsed upkeep time. No
      * longer used (the accumulator does this), kept for compatibility.
      */
-    private adjustFramerate: boolean;
+    private adjustFramerate: boolean | undefined;
 
     /**
      * Initializes a new instance of the GamesRunnr class.

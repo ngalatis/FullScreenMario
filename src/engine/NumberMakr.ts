@@ -297,7 +297,7 @@ export class NumberMakr implements INumberMakr {
     /**
      * The starting seed used to initialize.
      */
-    private seed: number | number[];
+    private seed!: number | number[];
 
     /**
      * Initializes a new instance of the NumberMakr class.

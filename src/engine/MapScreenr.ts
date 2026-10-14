@@ -168,42 +168,42 @@ export class MapScreenr implements IMapScreenr {
     /**
      * Top border measurement of the bounding box.
      */
-    public top: number;
+    public top!: number;
 
     /**
      * Right border measurement of the bounding box.
      */
-    public right: number;
+    public right!: number;
 
     /**
      * Bottom border measurement of the bounding box.
      */
-    public bottom: number;
+    public bottom!: number;
 
     /**
      * Left border measurement of the bounding box.
      */
-    public left: number;
+    public left!: number;
 
     /**
      * Constant horizontal midpoint of the bounding box, equal to (left + right) / 2.
      */
-    public middleX: number;
+    public middleX!: number;
 
     /**
      * Constant vertical midpoint of the bounding box, equal to (top + bottom) / 2.
      */
-    public middleY: number;
+    public middleY!: number;
 
     /**
      * Constant width of the bounding box.
      */
-    public width: number;
+    public width!: number;
 
     /**
      * Constant height of the bounding box.
      */
-    public height: number;
+    public height!: number;
 
     /**
      * Resets the MapScreenr. All members of the settings argument are copied

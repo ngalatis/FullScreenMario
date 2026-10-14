@@ -457,12 +457,12 @@ export class EightBittr implements IEightBittr {
     /**
      * How much to expand each pixel from raw sizing measurements to in-game.
      */
-    public unitsize: number;
+    public unitsize!: number;
 
     /**
      * Timed result summaries of resetTimed, if it was called.
      */
-    public resetTimes: IResetTimes;
+    public resetTimes!: IResetTimes;
 
     /**
      * Any custom settings passed in during construction to be passed to
@@ -474,7 +474,7 @@ export class EightBittr implements IEightBittr {
      * A listing of the names of all member variables of this EightBittr
      * that should be pulled in from the setting's constantsSource.
      */
-    protected constants: string[];
+    protected constants: string[] | undefined;
 
     /**
      * Initializes a new instance of the EightBittr class. Constants are copied
@@ -493,7 +493,7 @@ export class EightBittr implements IEightBittr {
 
         if (constants) {
             for (i = 0; i < constants.length; i += 1) {
-                EightBitter[constants[i]] = constantsSource[constants[i]];
+                (<any>EightBitter)[constants[i]] = constantsSource[constants[i]];
             }
         }
     }
@@ -519,11 +519,11 @@ export class EightBittr implements IEightBittr {
         for (i = 0; i < resets.length; i += 1) {
             reset = resets[i];
 
-            if (!EightBitter[reset]) {
+            if (!(<any>EightBitter)[reset]) {
                 throw new Error(reset + " is missing on a resetting EightBittr.");
             }
 
-            EightBitter[reset](EightBitter, customs);
+            (<any>EightBitter)[reset](EightBitter, customs);
         }
     }
 
@@ -550,7 +550,7 @@ export class EightBittr implements IEightBittr {
 
         for (i = 0; i < resets.length; i += 1) {
             timeStart = performance.now();
-            EightBitter[resets[i]](EightBitter, customs);
+            (<any>EightBitter)[resets[i]](EightBitter, customs);
             timeEnd = performance.now();
 
             this.resetTimes.times.push({
@@ -1033,23 +1033,23 @@ export class EightBittr implements IEightBittr {
 
                     // Style: proliferate (instead of making a new Object)
                     case "style":
-                        this.proliferate(recipient[i], setting);
+                        this.proliferate((<any>recipient)[i], setting);
                         break;
 
                     // By default, use the normal proliferate logic
                     default:
                         // If it's null, don't do anything (like .textContent)
                         if (setting === null) {
-                            recipient[i] = null;
+                            (<any>recipient)[i] = null;
                         } else if (typeof setting === "object") {
                             // If it's an object, recurse on a new version of it
                             if (!recipient.hasOwnProperty(i)) {
-                                recipient[i] = new setting.constructor();
+                                (<any>recipient)[i] = new setting.constructor();
                             }
-                            this.proliferate(recipient[i], setting, noOverride);
+                            this.proliferate((<any>recipient)[i], setting, noOverride);
                         } else {
                             // Regular primitives are easy to copy otherwise
-                            recipient[i] = setting;
+                            (<any>recipient)[i] = setting;
                         }
                         break;
                 }

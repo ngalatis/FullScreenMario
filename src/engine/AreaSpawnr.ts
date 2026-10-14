@@ -9,7 +9,7 @@ import * as MapsCreatr from "./MapsCreatr";
  * @param index   Which command this is, as passed through Array.forEach.
  */
 export interface ICommandAdder {
-    (thing: string | MapsCreatr.IPreThingSettings, index: number): void;
+    (thing: string | MapsCreatr.IPreThingSettings, index: number, commands: (string | MapsCreatr.IPreThingSettings)[]): void;
 }
 
 /**
@@ -244,57 +244,57 @@ export class AreaSpawnr implements IAreaSpawnr {
     /**
      * The currently referenced Map, set by setMap.
      */
-    private mapCurrent: MapsCreatr.IMapsCreatrMap;
+    private mapCurrent!: MapsCreatr.IMapsCreatrMap;
 
     /**
      * The currently referenced Area, set by setLocation.
      */
-    private areaCurrent: MapsCreatr.IMapsCreatrArea;
+    private areaCurrent!: MapsCreatr.IMapsCreatrArea;
 
     /**
      * The currently referenced Location, set by setLocation.
      */
-    private locationEntered: MapsCreatr.IMapsCreatrLocation;
+    private locationEntered!: MapsCreatr.IMapsCreatrLocation;
 
     /**
      * The name of the currently referenced Area, set by setMap.
      */
-    private mapName: string;
+    private mapName!: string;
 
     /**
      * The current Area's listing of PreThings.
      */
-    private prethings: MapsCreatr.IPreThingsContainers;
+    private prethings!: MapsCreatr.IPreThingsContainers;
 
     /**
      * Function for when a PreThing is to be spawned.
      */
-    private onSpawn: (prething: MapsCreatr.IPreThing) => void;
+    private onSpawn: ((prething: MapsCreatr.IPreThing) => void) | undefined;
 
     /**
      * Function for when a PreThing is to be un-spawned.
      */
-    private onUnspawn: (prething: MapsCreatr.IPreThing) => void;
+    private onUnspawn: ((prething: MapsCreatr.IPreThing) => void) | undefined;
 
     /**
      * Optionally, PreThing settings to stretch across an Area.
      */
-    private stretches: (string | MapsCreatr.IPreThingSettings)[];
+    private stretches!: (string | MapsCreatr.IPreThingSettings)[];
 
     /**
      * If stretches exists, a Function to add stretches to an Area.
      */
-    private stretchAdd: ICommandAdder;
+    private stretchAdd: ICommandAdder | undefined;
 
     /**
      * Optionally, PreThing settings to place at the end of an Area.
      */
-    private afters: (string | MapsCreatr.IPreThingSettings)[];
+    private afters!: (string | MapsCreatr.IPreThingSettings)[];
 
     /**
      * If afters exists, a Function to add afters to an Area.
      */
-    private afterAdd: ICommandAdder;
+    private afterAdd: ICommandAdder | undefined;
 
     /** 
      * An optional scope to call stretchAdd and afterAdd on, if not this.
@@ -450,7 +450,7 @@ export class AreaSpawnr implements IAreaSpawnr {
 
         // Most of the work is done by setLocation (by default, the map's first)
         if (arguments.length > 1) {
-            this.setLocation(location);
+            this.setLocation(<string>location);
         }
 
         return this.mapCurrent;
@@ -487,7 +487,7 @@ export class AreaSpawnr implements IAreaSpawnr {
         // Copy all the settings from that area into the MapScreenr container
         for (i = 0; i < this.screenAttributes.length; i += 1) {
             attribute = this.screenAttributes[i];
-            this.MapScreener[attribute] = this.areaCurrent[attribute];
+            (<any>this.MapScreener)[attribute] = (<any>this.areaCurrent)[attribute];
         }
 
         // Reset the prethings object, enabling it to be used as a fresh start
@@ -517,7 +517,7 @@ export class AreaSpawnr implements IAreaSpawnr {
         this.stretches = stretchesRaw;
 
         for (i = 0; i < stretchesRaw.length; i += 1) {
-            this.stretchAdd.call(this.commandScope || this, stretchesRaw[i], i, stretchesRaw);
+            (<ICommandAdder>this.stretchAdd).call(this.commandScope || this, stretchesRaw[i], i, stretchesRaw);
         }
     }
 
@@ -533,7 +533,7 @@ export class AreaSpawnr implements IAreaSpawnr {
         this.afters = aftersRaw;
 
         for (i = 0; i < aftersRaw.length; i += 1) {
-            this.afterAdd.call(this.commandScope || this, aftersRaw[i], i, aftersRaw);
+            (<ICommandAdder>this.afterAdd).call(this.commandScope || this, aftersRaw[i], i, aftersRaw);
         }
     }
 
@@ -615,7 +615,7 @@ export class AreaSpawnr implements IAreaSpawnr {
             }
 
             // Don't bother trying to spawn the group if it has no members
-            group = this.prethings[name][direction];
+            group = (<any>this.prethings[name])[direction];
             if (group.length === 0) {
                 continue;
             }
@@ -668,7 +668,7 @@ export class AreaSpawnr implements IAreaSpawnr {
             i: number;
 
         for (i = 0; i < group.length; i += 1) {
-            if (group[i][directionKey] >= directionEnd) {
+            if ((<any>group[i])[directionKey] >= directionEnd) {
                 return i;
             }
         }
@@ -705,7 +705,7 @@ export class AreaSpawnr implements IAreaSpawnr {
             i: number;
 
         for (i = group.length - 1; i >= 0; i -= 1) {
-            if (group[i][directionKey] <= directionEnd) {
+            if ((<any>group[i])[directionKey] <= directionEnd) {
                 return i;
             }
         }

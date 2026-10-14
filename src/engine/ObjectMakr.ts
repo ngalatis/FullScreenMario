@@ -24,7 +24,7 @@ export interface IClassFunctions {
  * Root abstract definition for class Functions.
  */
 export interface IClassFunction {
-    new ();
+    new (): any;
 }
 
 /**
@@ -118,7 +118,7 @@ export interface IObjectMakr {
     /**
      * @returns The optional mapping of indices.
      */
-    getIndexMap(): any[];
+    getIndexMap(): any[] | undefined;
 
     /**
      * Creates a new instance of the specified type and returns it.
@@ -158,24 +158,24 @@ export class ObjectMakr implements IObjectMakr {
     /**
      * Whether a full property mapping should be made for each type.
      */
-    private doPropertiesFull: boolean;
+    private doPropertiesFull: boolean | undefined;
 
     /**
      * If doPropertiesFull is true, a version of properties that contains the
      * sum properties for each type (rather than missing inherited ones).
      */
-    private propertiesFull: IClassProperties;
+    private propertiesFull!: IClassProperties;
 
     /**
      * How properties can be mapped from an Array to indices.
      */
-    private indexMap: any[];
+    private indexMap: any[] | undefined;
 
     /**
      * Optionally, a String index for each generated Object's Function to
      * be run when made.
      */
-    private onMake: string;
+    private onMake: string | undefined;
 
     /**
      * Initializes a new instance of the ObjectMakr class.
@@ -275,7 +275,7 @@ export class ObjectMakr implements IObjectMakr {
     /**
      * @returns The optional mapping of indices.
      */
-    getIndexMap(): any[] {
+    getIndexMap(): any[] | undefined {
         return this.indexMap;
     }
 
@@ -356,7 +356,7 @@ export class ObjectMakr implements IObjectMakr {
 
         // For each [i] in properties, set that property as under indexMap[i]
         for (i = properties.length - 1; i >= 0; --i) {
-            output[this.indexMap[i]] = properties[i];
+            output[(<any[]>this.indexMap)[i]] = properties[i];
         }
 
         return output;

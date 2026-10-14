@@ -62,7 +62,7 @@ export interface IGameStartrConstructor {
  * @returns An HTML element as described by the schema.
  */
 export interface IOptionsGenerator {
-    generate: (schema: UISchemas.ISchema) => HTMLDivElement;
+    generate(schema: UISchemas.ISchema): HTMLDivElement;
 }
 
 /**
@@ -434,7 +434,7 @@ export namespace UISchemas {
                 return element;
             }
 
-            return this.getParentControlElement(element.parentElement);
+            return this.getParentControlElement(<HTMLElement>element.parentElement);
         }
     }
 
@@ -519,7 +519,7 @@ export namespace UISchemas {
                 element.className = classNameStart;
                 element.textContent = option.title;
 
-                element.onclick = function (schema: IOptionsButtonSchema, element: HTMLDivElement): void {
+                element.onclick = function (schema: IOptionsButtonsSchema, element: HTMLDivElement): void {
                     if (scope.getParentControlElement(element).getAttribute("active") !== "on") {
                         return;
                     }
@@ -536,7 +536,7 @@ export namespace UISchemas {
 
                 this.ensureLocalStorageButtonValue(element, option, schema);
 
-                if (option[schema.keyActive || "active"]) {
+                if ((<any>option)[schema.keyActive || "active"]) {
                     element.className += " option-enabled";
                     element.setAttribute("option-enabled", "true");
                 } else if (schema.assumeInactive) {
@@ -574,7 +574,7 @@ export namespace UISchemas {
 
             value = this.GameStarter.ItemsHolder.getItem(key);
             if (value.toString().toLowerCase() === "true") {
-                details[schema.keyActive || "active"] = true;
+                (<any>details)[schema.keyActive || "active"] = true;
                 schema.callback.call(this, this.GameStarter, schema, child);
             }
         }
@@ -650,12 +650,12 @@ export namespace UISchemas {
 
             input.type = "file";
             input.className = "select-upload-input";
-            input.onchange = this.handleFileDrop.bind(this, input, uploader);
+            input.onchange = <(event: Event) => any>this.handleFileDrop.bind(this, input, uploader);
 
-            uploader.ondragenter = this.handleFileDragEnter.bind(this, uploader);
+            uploader.ondragenter = <(event: DragEvent) => any>this.handleFileDragEnter.bind(this, uploader);
             uploader.ondragover = this.handleFileDragOver.bind(this, uploader);
-            uploader.ondragleave = input.ondragend = this.handleFileDragLeave.bind(this, uploader);
-            uploader.ondrop = this.handleFileDrop.bind(this, input, uploader);
+            uploader.ondragleave = input.ondragend = <(event: DragEvent) => any>this.handleFileDragLeave.bind(this, uploader);
+            uploader.ondrop = <(event: DragEvent) => any>this.handleFileDrop.bind(this, input, uploader);
             uploader.onclick = input.click.bind(input);
 
             uploader.appendChild(input);
@@ -720,7 +720,7 @@ export namespace UISchemas {
                     });
             };
 
-            toggler.onclick(null);
+            toggler.onclick(<any>null);
 
             mapsOut.appendChild(mapsIn);
             container.appendChild(toggler);
@@ -785,8 +785,8 @@ export namespace UISchemas {
             event.preventDefault();
             event.stopPropagation();
 
-            reader.onprogress = this.handleFileUploadProgress.bind(this, file, uploader);
-            reader.onloadend = this.handleFileUploadCompletion.bind(this, file, uploader);
+            reader.onprogress = <(event: ProgressEvent<FileReader>) => any>this.handleFileUploadProgress.bind(this, file, uploader);
+            reader.onloadend = <(event: ProgressEvent<FileReader>) => any>this.handleFileUploadCompletion.bind(this, file, uploader);
 
             reader.readAsText(file);
         }
@@ -822,7 +822,7 @@ export namespace UISchemas {
          */
         protected handleFileUploadCompletion(file: File, uploader: HTMLDivElement, event: LevelEditr.IDataProgressEvent): void {
             this.GameStarter.LevelEditor.handleUploadCompletion(event);
-            uploader.innerText = uploader.getAttribute("textOld");
+            uploader.innerText = <string>uploader.getAttribute("textOld");
         }
     }
 
@@ -922,8 +922,8 @@ export namespace UISchemas {
         generateRangedTable(schema: IOptionsMapGridSchema): HTMLTableElement {
             var scope: MapsGridGenerator = this,
                 table: HTMLTableElement = document.createElement("table"),
-                rangeX: number[] = schema.rangeX,
-                rangeY: number[] = schema.rangeY,
+                rangeX: number[] = <number[]>schema.rangeX,
+                rangeY: number[] = <number[]>schema.rangeY,
                 row: HTMLTableRowElement,
                 cell: HTMLTableCellElement,
                 i: number,
@@ -941,7 +941,7 @@ export namespace UISchemas {
                         if (scope.getParentControlElement(cell).getAttribute("active") === "on") {
                             callback();
                         }
-                    }).bind(scope, schema.callback.bind(scope, scope.GameStarter, schema, cell));
+                    }).bind(scope, <() => any>schema.callback.bind(scope, scope.GameStarter, schema, cell));
                     row.appendChild(cell);
                 }
 
@@ -963,8 +963,8 @@ export namespace UISchemas {
                 i: number,
                 j: number;
 
-            for (i = 0; i < schema.extras.length; i += 1) {
-                extra = schema.extras[i];
+            for (i = 0; i < (<IOptionsMapGridExtra[]>schema.extras).length; i += 1) {
+                extra = (<IOptionsMapGridExtra[]>schema.extras)[i];
                 element = document.createElement("div");
 
                 element.className = "select-option maps-grid-option maps-grid-option-extra";
@@ -1069,7 +1069,7 @@ export namespace UISchemas {
          * 
          * @param GameStarter   The GameStarter this option is controlling.
          */
-        callback: (GameStarter: IGameStartr) => void;
+        callback: (GameStarter: IGameStartr, valueOld?: string, valueNew?: string) => void;
 
         /**
          * A source for the allowed keys in the option.
@@ -1098,7 +1098,7 @@ export namespace UISchemas {
          * 
          * @param GameStarter   The GameStarter this option is controlling.
          */
-        update: (GameStarter: IGameStartr) => void;
+        update: (GameStarter: IGameStartr, value?: string) => void;
     }
 
     /**
@@ -1163,7 +1163,7 @@ export namespace UISchemas {
      * Container of table option descriptions, keyed by name.
      */
     export interface IOptionsTableTypes {
-        [i: string]: (input: IInputElement | ISelectElement, details: IOptionsTableOption, schema: ISchema) => any;
+        [i: string]: (input: any, details: any, schema: ISchema) => any;
     }
 
     /**
@@ -1301,7 +1301,7 @@ export namespace UISchemas {
          * @returns An HTML element containing the input.
          */
         protected setKeyInput(input: IInputElement, details: IOptionsTableKeysOption, schema: ISchema): ISelectElement[] {
-            var values: string = details.source.call(this, this.GameStarter),
+            var values: string[] = details.source.call(this, this.GameStarter),
                 possibleKeys: string[] = this.UserWrapper.getAllPossibleKeys(),
                 children: ISelectElement[] = [],
                 child: ISelectElement,
@@ -1355,7 +1355,7 @@ export namespace UISchemas {
             child.type = "number";
             child.value = Number(details.source.call(scope, scope.GameStarter)).toString();
             child.min = (details.minimum || 0).toString();
-            child.max = (details.maximum || Math.max(details.minimum + 10, 10)).toString();
+            child.max = (details.maximum || Math.max((details.minimum || 0) + 10, 10)).toString();
 
             child.onchange = child.oninput = function (): void {
                 if (child.checkValidity()) {
@@ -1422,12 +1422,12 @@ export namespace UISchemas {
             };
 
             details.source = function (): string {
-                return scope.UserWrapper.getCurrentSize().name;
+                return <string>scope.UserWrapper.getCurrentSize().name;
             };
 
-            details.update = function (GameStarter: IGameStartr, value: ISizeSummary | string): ISelectElement {
+            details.update = function (GameStarter: IGameStartr, value: ISizeSummary | string): void {
                 if (value === scope.UserWrapper.getCurrentSize()) {
-                    return undefined;
+                    return;
                 }
 
                 scope.UserWrapper.setCurrentSize(value);
@@ -1471,9 +1471,9 @@ export namespace UISchemas {
                 if (child.setValue) {
                     child.setValue(value);
                 } else if (child.onchange) {
-                    child.onchange(undefined);
+                    child.onchange(<any>undefined);
                 } else if (child.onclick) {
-                    child.onclick(undefined);
+                    child.onclick(<any>undefined);
                 }
             }
         }
@@ -1510,9 +1510,9 @@ export namespace UISchemas {
                     child.value = value;
 
                     if (child.onchange) {
-                        child.onchange(undefined);
+                        child.onchange(<any>undefined);
                     } else if (child.onclick) {
-                        child.onclick(undefined);
+                        child.onclick(<any>undefined);
                     }
                 }
             }
@@ -1526,7 +1526,7 @@ export namespace UISchemas {
          * @param {Mixed} value   What value is to be stored under the key.
          */
         protected storeLocalStorageValue(child: IInputElement | ISelectElement, value: any): void {
-            var key: string = child.getAttribute("localStorageKey");
+            var key: string | null = child.getAttribute("localStorageKey");
 
             if (key) {
                 this.GameStarter.ItemsHolder.setItem(key, value);
@@ -1562,12 +1562,12 @@ export class UserWrappr {
      * The GameStartr instance created by GameStartrConstructor and stored
      * under window.
      */
-    private GameStarter: IGameStartr;
+    private GameStarter!: IGameStartr;
 
     /**
      * A ItemsHoldr used to store UI settings.
      */
-    private ItemsHolder: ItemsHoldr.IItemsHoldr;
+    private ItemsHolder!: ItemsHoldr.IItemsHoldr;
 
     /**
      * The settings used to construct the UserWrappr.
@@ -1598,7 +1598,7 @@ export class UserWrappr {
     /**
      * The currently selected size for the game.
      */
-    private currentSize: ISizeSummary;
+    private currentSize!: ISizeSummary;
 
     /**
      * The CSS selector for the HTML element containing GameStarter's container.
@@ -1618,7 +1618,7 @@ export class UserWrappr {
     /**
      * Whether the page is currently known to be hidden.
      */
-    private isPageHidden: boolean;
+    private isPageHidden!: boolean;
 
     /**
      * Layout reasons (such as "rotate" or "menu") the game is currently held
@@ -1640,7 +1640,7 @@ export class UserWrappr {
     /**
      * Handle of the animation frame a size change is waiting on, if any.
      */
-    private fitFrame: number;
+    private fitFrame: number | undefined;
 
     /**
      * A utility Function to log messages, commonly console.log.
@@ -1650,12 +1650,12 @@ export class UserWrappr {
     /**
      * Generators used to generate HTML controls for the user.
      */
-    private generators: { [i: string]: IOptionsGenerator };
+    private generators!: { [i: string]: IOptionsGenerator };
 
     /**
      * Identifier for the interval Function checking for device input.
      */
-    private deviceChecker: number;
+    private deviceChecker!: number;
 
     /**
      * The document element that will contain the game.
@@ -1746,7 +1746,7 @@ export class UserWrappr {
     resetGameStarter(settings: IUserWrapprSettings, customs: IGameStartrCustoms = {}): void {
         this.loadGameStarter(this.fixCustoms(customs));
 
-        window[settings.globalName] = this.GameStarter;
+        (<any>window)[settings.globalName] = this.GameStarter;
         this.GameStarter.UserWrapper = this;
 
         this.loadGenerators();
@@ -1913,7 +1913,7 @@ export class UserWrappr {
         this.currentSize = <ISizeSummary>size;
 
         if (this.GameStarter) {
-            this.GameStarter.container.parentNode.removeChild(this.GameStarter.container);
+            (<Node>this.GameStarter.container.parentNode).removeChild(this.GameStarter.container);
             this.resetGameStarter(this.settings, this.customs);
         }
     }

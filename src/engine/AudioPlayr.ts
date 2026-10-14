@@ -192,12 +192,12 @@ export interface IAudioPlayr {
     /**
      * @returns The current playing theme's sound.
      */
-    getTheme(): ISound;
+    getTheme(): ISound | undefined;
 
     /**
      * @returns The name of the currently playing theme.
      */
-    getThemeName(): string;
+    getThemeName(): string | undefined;
 
     /**
      * @returns The directory under which all filetype directories are to be located.
@@ -664,7 +664,7 @@ class Sound implements ISound {
      * Starts the clock (and the audio, if the context is running).
      */
     private begin(): void {
-        const duration: number = this.buffer.duration;
+        const duration: number = (<AudioBuffer>this.buffer).duration;
 
         this.running = true;
         this.startedAt = performance.now();
@@ -782,7 +782,7 @@ class Sound implements ISound {
             source.loop = this._loop;
             gain.gain.value = this._volume;
             source.connect(gain);
-            gain.connect(this.host.getOutput());
+            gain.connect(<AudioNode>this.host.getOutput());
             source.onended = (): void => {
                 source.disconnect();
                 gain.disconnect();
@@ -817,7 +817,9 @@ class Sound implements ISound {
         }
         try {
             source.disconnect();
-            gain.disconnect();
+            if (gain) {
+                gain.disconnect();
+            }
         } catch (error) {
             // Already disconnected.
         }
@@ -848,22 +850,22 @@ export class AudioPlayr implements IAudioPlayr {
     /**
      * Sounds keyed by their name.
      */
-    private library: ISoundsLibrary;
+    private library!: ISoundsLibrary;
 
     /**
      * Directories mapping folder names to sound libraries.
      */
-    private directories: IDirectoriesLibrary;
+    private directories!: IDirectoriesLibrary;
 
     /**
      * Every sound in the library.
      */
-    private allSounds: Sound[];
+    private allSounds!: Sound[];
 
     /**
      * The folder each sound lives in, keyed by sound name.
      */
-    private soundFolders: { [i: string]: string };
+    private soundFolders!: { [i: string]: string };
 
     /**
      * What file types to try for each sound, in order.
@@ -883,12 +885,12 @@ export class AudioPlayr implements IAudioPlayr {
     /**
      * The currently playing theme.
      */
-    private theme: ISound;
+    private theme: ISound | undefined;
 
     /**
      * The name of the currently playing theme.
      */
-    private themeName: string;
+    private themeName: string | undefined;
 
     /**
      * Directory from which audio files are fetched.
@@ -1038,14 +1040,14 @@ export class AudioPlayr implements IAudioPlayr {
     /**
      * @returns The current playing theme's sound.
      */
-    getTheme(): ISound {
+    getTheme(): ISound | undefined {
         return this.theme;
     }
 
     /**
      * @returns The name of the currently playing theme.
      */
-    getThemeName(): string {
+    getThemeName(): string | undefined {
         return this.themeName;
     }
 
@@ -1304,10 +1306,10 @@ export class AudioPlayr implements IAudioPlayr {
         if (typeof name === "undefined") {
             switch (this.getThemeDefault.constructor) {
                 case Function:
-                    name = this.getThemeDefault();
+                    name = <string>this.getThemeDefault();
                     break;
                 default:
-                    name = this.getThemeDefault;
+                    name = <string>this.getThemeDefault;
                     break;
             }
         }
@@ -1567,7 +1569,7 @@ export class AudioPlayr implements IAudioPlayr {
      * the player still works silently, and every sound ends right away.
      */
     private createContext(): void {
-        var Context: typeof AudioContext = typeof window === "undefined"
+        var Context: typeof AudioContext | undefined = typeof window === "undefined"
                 ? undefined
                 : (window.AudioContext || (window as any).webkitAudioContext);
 
@@ -1592,7 +1594,7 @@ export class AudioPlayr implements IAudioPlayr {
      * has made a gesture, except while the page is hidden.
      */
     private syncContext(): void {
-        var context: AudioContext = this.context,
+        var context: AudioContext | undefined = this.context,
             state: string = context ? context.state : "closed";
 
         if (!context || state === "closed") {
@@ -1616,7 +1618,7 @@ export class AudioPlayr implements IAudioPlayr {
      * Rejoins every playing sound to the context after it started or stopped.
      */
     private onContextStateChange(): void {
-        if (this.context.state === "running") {
+        if (this.context && this.context.state === "running") {
             this.unlocked = true;
         }
 
@@ -1777,7 +1779,7 @@ export class AudioPlayr implements IAudioPlayr {
         queue = themes.concat(others, hurryThemes);
         next = (): void => {
             if (queue.length) {
-                this.loadBuffer(queue.shift()).then(next);
+                this.loadBuffer(<string>queue.shift()).then(next);
             }
         };
 
@@ -1837,7 +1839,7 @@ export class AudioPlayr implements IAudioPlayr {
         return new Promise((resolve, reject): void => {
             try {
                 // Older Safari only knows the callback form.
-                var result: any = this.context.decodeAudioData(data, resolve, reject);
+                var result: any = (<AudioContext>this.context).decodeAudioData(data, resolve, reject);
 
                 if (result && typeof result.catch === "function") {
                     result.catch(reject);

@@ -43,7 +43,7 @@ export interface IRender {
     /**
      * An optional filter to change colors by, if source is a "filter" command.
      */
-    filter: IFilterAttributes;
+    filter?: IFilterAttributes;
 
     /**
      * Any containers storing this IRender.
@@ -86,7 +86,7 @@ export interface IRenderLibrary {
  */
 export interface ISpriteAttributes {
     filter?: IFilter;
-    [i: string]: number | IFilter;
+    [i: string]: number | IFilter | undefined;
 }
 
 /**
@@ -196,22 +196,22 @@ export interface ISpriteMultiple {
     /**
      * How many pixels tall the top section is, if it exists.
      */
-    topheight: number;
+    topheight?: number;
 
     /**
      * How many pixels wide the right section is, if it exists.
      */
-    rightwidth: number;
+    rightwidth?: number;
 
     /**
      * How many pixels tall the bottom section is, if it exists.
      */
-    bottomheight: number;
+    bottomheight?: number;
 
     /**
      * How many pixels wide the left section is, if it exists.
      */
-    leftwidth: number;
+    leftwidth?: number;
 
     /**
      * Whether the middle section should be stretched to fill the remaining
@@ -422,22 +422,22 @@ export class SpriteMultiple implements ISpriteMultiple {
     /**
      * How many pixels tall the top section is, if it exists.
      */
-    topheight: number;
+    topheight?: number;
 
     /**
      * How many pixels wide the right section is, if it exists.
      */
-    rightwidth: number;
+    rightwidth?: number;
 
     /**
      * How many pixels tall the bottom section is, if it exists.
      */
-    bottomheight: number;
+    bottomheight?: number;
 
     /**
      * How many pixels wide the left section is, if it exists.
      */
-    leftwidth: number;
+    leftwidth?: number;
 
     /**
      * Whether the middle section should be stretched to fill the remaining
@@ -458,13 +458,13 @@ export class SpriteMultiple implements ISpriteMultiple {
         this.direction = render.source[1];
 
         if (this.direction === "vertical" || this.direction === "corners") {
-            this.topheight = sources.topheight | 0;
-            this.bottomheight = sources.bottomheight | 0;
+            this.topheight = <number>sources.topheight | 0;
+            this.bottomheight = <number>sources.bottomheight | 0;
         }
 
         if (this.direction === "horizontal" || this.direction === "corners") {
-            this.rightwidth = sources.rightwidth | 0;
-            this.leftwidth = sources.leftwidth | 0;
+            this.rightwidth = <number>sources.rightwidth | 0;
+            this.leftwidth = <number>sources.leftwidth | 0;
         }
 
         this.middleStretch = sources.middleStretch || false;
@@ -492,7 +492,7 @@ export class Render implements IRender {
     /**
      * An optional filter to change colors by, if source is a "filter" command.
      */
-    filter: IFilterAttributes;
+    filter?: IFilterAttributes;
 
     /**
      * Any containers storing this Render.
@@ -885,6 +885,8 @@ export class PixelRendr implements IPixelRendr {
                     return b[i] - a[i];
                 }
             }
+
+            return 0;
         });
 
         if (forceZeroColor) {
@@ -900,7 +902,7 @@ export class PixelRendr implements IPixelRendr {
         }
 
         for (i = 0; i < output.length; i += 1) {
-            output[i] = Array.prototype.slice.call(output[i]);
+            output[i] = <any>Array.prototype.slice.call(output[i]);
         }
 
         return output;
@@ -1304,7 +1306,7 @@ export class PixelRendr implements IPixelRendr {
             case "palette":
                 // Split the colors on on each digit
                 // ("...1234..." => [..., "12", "34", ...]
-                var split: string[] = colors.match(this.digitsplit),
+                var split: string[] = <string[]>colors.match(this.digitsplit),
                     i: string;
 
                 // For each color filter to be applied, replace it
@@ -1334,7 +1336,7 @@ export class PixelRendr implements IPixelRendr {
     private spriteGetArray(colors: string): Uint8ClampedArray {
         var clength: number = colors.length,
             numcolors: number = clength / this.digitsizeDefault,
-            split: string[] = colors.match(this.digitsplit),
+            split: string[] = <string[]>colors.match(this.digitsplit),
             olength: number = numcolors * 4,
             output: Uint8ClampedArray = new this.Uint8ClampedArray(olength),
             reference: number[],
@@ -1721,7 +1723,7 @@ export class PixelRendr implements IPixelRendr {
     private getClosestInPalette(palette: IPalette, rgba: number[] | Uint8ClampedArray): number {
         var bestDifference: number = Infinity,
             difference: number,
-            bestIndex: number,
+            bestIndex!: number,
             i: number;
 
         for (i = palette.length - 1; i >= 0; i -= 1) {
@@ -1770,7 +1772,7 @@ export class PixelRendr implements IPixelRendr {
      * @param size   How many digits the output must contain.
      * @returns A stringified digit of the given length.
      */
-    private makeSizedDigit(size: number, number: number): string {
+    private makeSizedDigit(size: number, number: number | string): string {
         return this.makeDigit(number, size, "0");
     }
 

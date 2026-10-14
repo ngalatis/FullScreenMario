@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const port = 4173;
+// Override with PW_PORT to run several test suites side by side.
+const port = Number(process.env.PW_PORT ?? 4173);
 
 export default defineConfig({
     testDir: "./tests",

@@ -4,8 +4,8 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
     "name": "8-4",
     "locations": [
         { "entry": "Castle" },
-        { "entry": "PipeVertical" },  // 1: Pipe 1
-        { "area": 1, "entry": "PipeVertical" }, // 2: Past B 
+        { "entry": "PipeVertical" }, // 1: Pipe 1
+        { "area": 1, "entry": "PipeVertical" }, // 2: Past B
         { "area": 2, "entry": "PipeVertical" }, // 3: Past C
         { "area": 3, "entry": "PipeVertical", "xloc": 0 }, // 4: Underwater
         { "area": 4, "entry": "PipeVertical" } // 5: Past E
@@ -26,10 +26,7 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                 {
                     "stretch": {
                         "width": 8,
-                        "creation": [
-                            { "macro": "Floor" },
-                            { "thing": "Stone", "y": 88 },
-                        ]
+                        "creation": [{ "macro": "Floor" }, { "thing": "Stone", "y": 88 }]
                     },
                     "after": {
                         "width": 424,
@@ -40,19 +37,35 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                             { "macro": "Fill", "thing": "Goomba", "x": 36, "y": 8, "xnum": 3, "xwidth": 12 },
                             { "macro": "Floor", "x": 88, "y": 24, "width": 32 },
                             { "macro": "Water", "x": 120, "width": 136 },
-                            { "thing": "Platform", "x": 152, "width": 16, "sliding": true, "begin": 140, "end": 232, "speed": 2 },
+                            {
+                                "thing": "Platform",
+                                "x": 152,
+                                "width": 16,
+                                "sliding": true,
+                                "begin": 140,
+                                "end": 232,
+                                "speed": 2
+                            },
                             { "macro": "Floor", "x": 256, "y": 24, "width": 48 },
                             { "thing": "Stone", "x": 264, "y": 56, "width": 32 },
-                            { "macro": "Pipe", "x": 304, "y": 40, "height": "Infinity", "piranha": true, "transport": 2 },
+                            {
+                                "macro": "Pipe",
+                                "x": 304,
+                                "y": 40,
+                                "height": "Infinity",
+                                "piranha": true,
+                                "transport": 2
+                            },
                             { "macro": "Floor", "x": 320, "y": 24, "width": 56 },
                             { "macro": "Pipe", "x": 376, "y": 48, "height": "Infinity", "piranha": true },
                             { "macro": "Floor", "x": 392, "y": 24, "width": 32 },
                             { "macro": "Section", "x": 424 }
                         ]
                     }
-                },
+                }
             ]
-        }, {
+        },
+        {
             "setting": "Castle",
             "creation": [
                 { "macro": "Pipe", "y": 16, "height": "Infinity", "piranha": true, "entrance": 2 },
@@ -69,7 +82,14 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                             { "macro": "Pipe", "x": 40, "y": 24, "height": "Infinity", "piranha": true },
                             { "macro": "Floor", "x": 56, "width": 64 },
                             { "macro": "Fill", "thing": "Beetle", "x": 88, "y": 8.5, "xnum": 2, "xwidth": 16 },
-                            { "macro": "Pipe", "x": 120, "y": 16, "height": "Infinity", "piranha": true, "transport": 1 },
+                            {
+                                "macro": "Pipe",
+                                "x": 120,
+                                "y": 16,
+                                "height": "Infinity",
+                                "piranha": true,
+                                "transport": 1
+                            },
                             { "macro": "Floor", "x": 136, "width": 64 },
                             { "thing": "Koopa", "x": 176, "y": 32, "jumping": true },
                             { "thing": "Koopa", "x": 192, "y": 24, "jumping": true },
@@ -80,15 +100,12 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                             { "thing": "Stone", "x": 280, "y": 32, "width": 16 },
                             { "macro": "Pipe", "x": 280, "y": 32, "height": 24, "transport": 3 },
                             { "thing": "Koopa", "x": 304, "y": 28, "jumping": true },
-                            { "thing": "Koopa", "x": 320, "y": 36, "jumping": true },
+                            { "thing": "Koopa", "x": 320, "y": 36, "jumping": true }
                         ]
                     },
                     "stretch": {
                         "width": 8,
-                        "creation": [
-                            { "macro": "Floor" },
-                            { "thing": "Stone", "y": 88 },
-                        ]
+                        "creation": [{ "macro": "Floor" }, { "thing": "Stone", "y": 88 }]
                     },
                     "after": {
                         "width": 16,
@@ -100,7 +117,8 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                     }
                 }
             ]
-        }, {
+        },
+        {
             "setting": "Castle",
             "creation": [
                 { "macro": "Pipe", "y": 16, "height": "Infinity", "piranha": true, "entrance": 3 },
@@ -118,12 +136,26 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                             { "macro": "Pipe", "x": 56, "y": 40, "height": "Infinity", "piranha": true },
                             { "macro": "CheepsStart", "x": 72 },
                             { "macro": "Floor", "x": 72, "y": 24, "width": 48 },
-                            { "macro": "Pipe", "x": 120, "y": 48, "height": "Infinity", "piranha": true, "transport": 1 },
+                            {
+                                "macro": "Pipe",
+                                "x": 120,
+                                "y": 48,
+                                "height": "Infinity",
+                                "piranha": true,
+                                "transport": 1
+                            },
                             { "macro": "Floor", "x": 136, "y": 24, "width": 48 },
                             { "macro": "Water", "x": 184, "width": 32 },
                             { "macro": "Floor", "x": 216, "y": 24, "width": 32 },
-                            { "macro": "Pipe", "x": 248, "y": 40, "height": "Infinity", "piranha": true, "transport": 4 },
-                            { "macro": "CheepsStop", "x": 264 },
+                            {
+                                "macro": "Pipe",
+                                "x": 248,
+                                "y": 40,
+                                "height": "Infinity",
+                                "piranha": true,
+                                "transport": 4
+                            },
+                            { "macro": "CheepsStop", "x": 264 }
                         ]
                     },
                     "stretch": {
@@ -144,7 +176,8 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                     }
                 }
             ]
-        }, {
+        },
+        {
             "setting": "Underwater Castle",
             "blockBoundaries": true,
             "underwater": true,
@@ -173,7 +206,8 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                 { "thing": "PipeHorizontal", "x": 544, "y": 48, "transport": 5 },
                 { "thing": "Stone", "x": 552, "y": 56, "width": 24, "height": 24 }
             ]
-        }, {
+        },
+        {
             "setting": "Castle",
             "blockBoundaries": true,
             "creation": [
@@ -187,7 +221,14 @@ MarioGame.MarioGame.settings.maps.library["8-4"] = {
                 { "thing": "Podoboo", "x": 160, "y": -32 },
                 { "macro": "Floor", "x": 184, "y": 24, "width": 48 },
                 { "thing": "Stone", "x": 184, "y": 80, "width": 48, "height": 16 },
-                { "macro": "EndInsideCastle", "x": 232, "spawnType": "Bowser", "throwing": true, "npc": "Peach", "transport": { "map": "1-1" } }
+                {
+                    "macro": "EndInsideCastle",
+                    "x": 232,
+                    "spawnType": "Bowser",
+                    "throwing": true,
+                    "npc": "Peach",
+                    "transport": { "map": "1-1" }
+                }
             ]
         }
     ]

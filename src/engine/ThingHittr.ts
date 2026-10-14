@@ -9,7 +9,7 @@ export interface IGroupHitList {
 
 /**
  * Determines whether a Thing may all have hits checked.
- * 
+ *
  * @returns Whether the Thing may all have hits checked.
  */
 export interface IGlobalCheck {
@@ -17,16 +17,16 @@ export interface IGlobalCheck {
 }
 
 /**
- * Checks all possible hits for a single Thing, calling the respective hit 
+ * Checks all possible hits for a single Thing, calling the respective hit
  * Function when any are found.
- * 
+ *
  * @param thing   A Thing whose hits are to be checked.
  */
 export interface IHitsCheck {
     (thing: QuadsKeepr.IThing): void;
 }
 
-/** 
+/**
  * Determines whether a Thing collides with another Thing.
  *
  * @param thing   A Thing to check collision with.
@@ -39,10 +39,10 @@ export interface IHitCheck {
 
 /**
  * Callback for when a Thing collides with another Thing.
- * 
+ *
  * @param thing   A Thing that has collided with another Thing.
  * @param other   A Thing that has collided with another Thing.
- * 
+ *
  */
 export interface IHitCallback {
     (thing: QuadsKeepr.IThing, other: QuadsKeepr.IThing): void;
@@ -122,7 +122,7 @@ export interface IThingHittrSettings {
 export interface IThingHittr {
     /**
      * Caches global and hits checks for the given type if they do not yet exist.
-     * 
+     *
      * @param typeName   The type to cache hits for.
      * @param groupName   The general group the type fall sunder.
      */
@@ -130,14 +130,14 @@ export interface IThingHittr {
 
     /**
      * Checks all hits for a Thing using its generated hits check.
-     * 
+     *
      * @param thing   The Thing to have hits checked.
      */
     checkHitsForThing(thing: QuadsKeepr.IThing): void;
 
     /**
      * Checks whether two Things are hitting.
-     * 
+     *
      * @param thing   The primary Thing that may be hitting other.
      * @param other   The secondary Thing that may be being hit by thing.
      * @returns Whether the two Things are hitting.
@@ -146,14 +146,12 @@ export interface IThingHittr {
 
     /**
      * Reacts to two Things hitting.
-     * 
+     *
      * @param thing   The primary Thing that is hitting other.
      * @param other   The secondary Thing that is being hit by thing.
      */
     runHitCallbackForThings(thing: QuadsKeepr.IThing, other: QuadsKeepr.IThing): void;
 }
-
-
 
 /**
  * A Thing collision detection automator that unifies GroupHoldr and QuadsKeepr.
@@ -225,7 +223,7 @@ export class ThingHittr implements IThingHittr {
 
     /**
      * Initializes a new instance of the ThingHittr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IThingHittrSettings) {
@@ -262,12 +260,15 @@ export class ThingHittr implements IThingHittr {
     /**
      * Caches global and hits checks for the given type if they do not yet exist
      * and have their generators defined
-     * 
+     *
      * @param typeName   The type to cache hits for.
      * @param groupName   The general group the type fall sunder.
      */
     cacheChecksForType(typeName: string, groupName: string): void {
-        if (!this.generatedGlobalChecks.hasOwnProperty(typeName) && this.globalCheckGenerators.hasOwnProperty(groupName)) {
+        if (
+            !this.generatedGlobalChecks.hasOwnProperty(typeName) &&
+            this.globalCheckGenerators.hasOwnProperty(groupName)
+        ) {
             this.generatedGlobalChecks[typeName] = this.globalCheckGenerators[groupName]();
             this.generatedHitsChecks[typeName] = this.generateHitsCheck(typeName);
         }
@@ -275,7 +276,7 @@ export class ThingHittr implements IThingHittr {
 
     /**
      * Checks all hits for a Thing using its generated hits check.
-     * 
+     *
      * @param thing   The Thing to have hits checked.
      */
     checkHitsForThing(thing: QuadsKeepr.IThing): void {
@@ -284,7 +285,7 @@ export class ThingHittr implements IThingHittr {
 
     /**
      * Checks whether two Things are hitting.
-     * 
+     *
      * @param thing   The primary Thing that may be hitting other.
      * @param other   The secondary Thing that may be being hit by thing.
      * @returns Whether the two Things are hitting.
@@ -295,7 +296,7 @@ export class ThingHittr implements IThingHittr {
 
     /**
      * Reacts to two Things hitting.
-     * 
+     *
      * @param thing   The primary Thing that is hitting other.
      * @param other   The secondary Thing that is being hit by thing.
      */
@@ -305,18 +306,18 @@ export class ThingHittr implements IThingHittr {
 
     /**
      * Function generator for a hits check for a specific Thing type.
-     * 
+     *
      * @param typeName   The type of the Things to generate for.
      * @returns A Function that can check all hits for a Thing of the given type.
      */
     private generateHitsCheck(typeName: string): IHitsCheck {
         /**
          * Collision detection Function for a Thing. For each Quadrant the Thing
-         * is in, for all groups within that Function that the Thing's group is 
+         * is in, for all groups within that Function that the Thing's group is
          * allowed to collide with, it is checked for collision with the Things
          * in that group. For each Thing it does collide with, the appropriate
          * hit Function is called.
-         * 
+         *
          * @param thing   A Thing to check collision detection for.
          */
         return (thing: QuadsKeepr.IThing): void => {
@@ -366,7 +367,7 @@ export class ThingHittr implements IThingHittr {
     /**
      * Runs the Function in the group that maps to the two Things' types. If it doesn't
      * yet exist, it is created.
-     * 
+     *
      * @param group   The group of Functions to use.
      * @param thing   The primary Thing reacting to other.
      * @param other   The secondary Thing that thing is reacting to.
@@ -376,7 +377,8 @@ export class ThingHittr implements IThingHittr {
         group: IThingFunctionContainerGroup<IThingFunction>,
         thing: QuadsKeepr.IThing,
         other: QuadsKeepr.IThing,
-        generators: IThingFunctionGeneratorContainerGroup<IThingFunction>): any {
+        generators: IThingFunctionGeneratorContainerGroup<IThingFunction>
+    ): any {
         var typeThing: string = (<any>thing)[this.keyTypeName],
             typeOther: string = (<any>other)[this.keyTypeName],
             container: IThingFunctionContainer<IThingFunction> = group[typeThing],
@@ -388,7 +390,8 @@ export class ThingHittr implements IThingHittr {
 
         check = container[typeOther];
         if (!check) {
-            check = container[typeOther] = generators[(<any>thing)[this.keyGroupName]][(<any>other)[this.keyGroupName]]();
+            check = container[typeOther] =
+                generators[(<any>thing)[this.keyGroupName]][(<any>other)[this.keyGroupName]]();
         }
 
         return (<Function>check)(thing, other);
@@ -396,7 +399,7 @@ export class ThingHittr implements IThingHittr {
 
     /**
      * Generates the list of group names each group is allowd to hit.
-     * 
+     *
      * @param group   A summary of group containers.
      */
     private generateGroupHitLists(group: IThingFunctionGeneratorContainerGroup<IThingFunction>): IGroupHitList {

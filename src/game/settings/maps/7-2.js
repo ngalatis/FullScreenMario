@@ -2,11 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["7-2"] = {
     "name": "7-2",
-    "locations": [
-        { "entry": "Walking" },
-        { "area": 1 },
-        { "area": 2, "entry": "PipeVertical" }
-    ],
+    "locations": [{ "entry": "Walking" }, { "area": 1 }, { "area": 2, "entry": "PipeVertical" }],
     "areas": [
         {
             "setting": "Overworld",
@@ -19,7 +15,8 @@ MarioGame.MarioGame.settings.maps.library["7-2"] = {
                 { "thing": "PipeHorizontal", "x": 80, "y": 16, "transport": 1 },
                 { "macro": "Pipe", "x": 96, "height": 32 }
             ]
-        }, {
+        },
+        {
             "setting": "Underwater",
             "blockBoundaries": true,
             "underwater": true,
@@ -87,7 +84,16 @@ MarioGame.MarioGame.settings.maps.library["7-2"] = {
                 { "thing": "Blooper", "x": 1208, "y": 38 },
                 { "thing": "Stone", "x": 1256, "y": 64, "height": 64 },
                 { "thing": "Stone", "x": 1264, "y": 64, "width": 16 },
-                { "macro": "Fill", "thing": "Coin", "x": 1281, "y": 32, "xnum": 3, "ynum": 2, "xwidth": 8, "yheight": -24 },
+                {
+                    "macro": "Fill",
+                    "thing": "Coin",
+                    "x": 1281,
+                    "y": 32,
+                    "xnum": 3,
+                    "ynum": 2,
+                    "xwidth": 8,
+                    "yheight": -24
+                },
                 { "thing": "Stone", "x": 1304, "y": 64, "width": 16 },
                 { "macro": "Floor", "x": 1320, "width": 320 },
                 { "thing": "Stone", "x": 1320, "y": 64, "height": 64 },
@@ -109,7 +115,8 @@ MarioGame.MarioGame.settings.maps.library["7-2"] = {
                 { "thing": "PipeHorizontal", "x": 1520, "y": 48, "width": 16 },
                 { "thing": "Stone", "x": 1528, "y": 88, "width": 112, "height": 88 }
             ]
-        }, {
+        },
+        {
             "setting": "Overworld",
             "blockBoundaries": true,
             "creation": [

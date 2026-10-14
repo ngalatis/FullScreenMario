@@ -7,7 +7,7 @@ MarioGame.settings.math = {
         /**
          * Determines whether a player is within touching distance of a castle axe
          * (assuming it is alive), so that it can start the BowserVictory cutscene.
-         * 
+         *
          * @param thing   A player close to a castle axe.
          * @param other   A castle axe that can defeat Bowser.
          * @returns Whether the player is both alive and close enough to the axe.
@@ -16,7 +16,8 @@ MarioGame.settings.math = {
             constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
             thing: IThing,
-            other: ICastleAxe): boolean {
+            other: ICastleAxe
+        ): boolean {
             if (!thing.FSM.isThingAlive(thing)) {
                 return false;
             }
@@ -37,8 +38,9 @@ MarioGame.settings.math = {
         "decreasePlayerJumpingYvel": function (
             constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
-            player: IPlayer): void {
-            var jumpmod: number = player.FSM.MapScreener.jumpmod - player.xvel * .0014,
+            player: IPlayer
+        ): void {
+            var jumpmod: number = player.FSM.MapScreener.jumpmod - player.xvel * 0.0014,
                 power: number = Math.pow(player.keys.jumplev, jumpmod),
                 dy: number = player.FSM.unitsize / power;
 
@@ -52,7 +54,8 @@ MarioGame.settings.math = {
         "decreasePlayerRunningXvel": function (
             constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
-            player: IPlayer): boolean {
+            player: IPlayer
+        ): boolean {
             var skiddingChanged: boolean = false;
 
             // If a button is pressed, hold/increase speed
@@ -60,16 +63,16 @@ MarioGame.settings.math = {
                 var dir: number = player.keys.run,
                     // No sprinting underwater
                     sprinting: number = Number(player.keys.sprint && !player.FSM.MapScreener.underwater) || 0,
-                    adder: number = dir * (.098 * (Number(sprinting) + 1)),
+                    adder: number = dir * (0.098 * (Number(sprinting) + 1)),
                     decel: number = 0;
 
                 // Reduce the speed, both by subtracting and dividing a little
                 player.xvel += adder || 0;
-                player.xvel *= .98;
-                decel = .0007;
+                player.xvel *= 0.98;
+                decel = 0.0007;
 
                 // If you're accelerating in the opposite direction from your current velocity, that's a skid
-                if ((player.keys.run > 0) === player.moveleft) {
+                if (player.keys.run > 0 === player.moveleft) {
                     if (!player.skidding) {
                         player.skidding = true;
                         skiddingChanged = true;
@@ -81,8 +84,8 @@ MarioGame.settings.math = {
                 }
             } else {
                 // Otherwise slow down a bit
-                player.xvel *= .98;
-                decel = .035;
+                player.xvel *= 0.98;
+                decel = 0.035;
             }
 
             if (player.xvel > decel) {
@@ -108,9 +111,10 @@ MarioGame.settings.math = {
         "springboardYvelUp": function (
             constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
-            thing: ISpringboard): number {
+            thing: ISpringboard
+        ): number {
             // tensionSave is recorded by collideSpringboard before a rise starts
-            return Math.max(thing.FSM.unitsize * -2, thing.tensionSave! * -.98);
+            return Math.max(thing.FSM.unitsize * -2, thing.tensionSave! * -0.98);
         },
         /**
          * @returns How many fireworks to show at the end of a level,
@@ -119,7 +123,8 @@ MarioGame.settings.math = {
         "numberOfFireworks": function (
             constants: MathDecidr.IConstants,
             equations: MathDecidr.IEquationContainer,
-            time: number): number {
+            time: number
+        ): number {
             var numFireworks: number = time % 10;
 
             if (!(numFireworks === 1 || numFireworks === 3 || numFireworks === 6)) {

@@ -2,11 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["2-2"] = {
     "name": "2-2",
-    "locations": [
-        { "entry": "Walking" },
-        { "area": 1 },
-        { "area": 2, "entry": "PipeVertical" }
-    ],
+    "locations": [{ "entry": "Walking" }, { "area": 1 }, { "area": 2, "entry": "PipeVertical" }],
     "areas": [
         {
             "setting": "Overworld",
@@ -18,7 +14,8 @@ MarioGame.MarioGame.settings.maps.library["2-2"] = {
                 { "thing": "PipeHorizontal", "x": 80, "y": 16, "transport": 1 },
                 { "macro": "Pipe", "x": 96, "height": 32 }
             ]
-        }, {
+        },
+        {
             "setting": "Underwater",
             "blockBoundaries": true,
             "underwater": true,
@@ -81,7 +78,16 @@ MarioGame.MarioGame.settings.maps.library["2-2"] = {
                 { "thing": "CheepCheep", "x": 1206, "y": 56, "smart": true },
                 { "thing": "Stone", "x": 1256, "y": 64, "height": 64 },
                 { "thing": "Stone", "x": 1264, "y": 64, "width": 16 },
-                { "macro": "Fill", "thing": "Coin", "x": 1281, "y": 7, "xnum": 3, "ynum": 2, "xwidth": 8, "yheight": 24 },
+                {
+                    "macro": "Fill",
+                    "thing": "Coin",
+                    "x": 1281,
+                    "y": 7,
+                    "xnum": 3,
+                    "ynum": 2,
+                    "xwidth": 8,
+                    "yheight": 24
+                },
                 { "thing": "Stone", "x": 1304, "y": 64, "width": 16 },
                 { "thing": "Stone", "x": 1320, "y": 64, "height": 64 },
                 { "macro": "Floor", "x": 1320, "width": 320 },
@@ -102,13 +108,14 @@ MarioGame.MarioGame.settings.maps.library["2-2"] = {
                 { "thing": "Stone", "x": 1528, "y": 88, "width": 128, "height": 88 },
                 { "macro": "Floor", "x": 1640, "width": 16 }
             ]
-        }, {
+        },
+        {
             "setting": "Overworld",
             "blockBoundaries": true,
             "creation": [
                 { "macro": "Floor", "width": 464 },
                 { "macro": "Pipe", "height": 16, "piranha": true, "entrance": 2 },
-                { "macro": "Pattern", "pattern": "BackRegular", "x": 104, },
+                { "macro": "Pattern", "pattern": "BackRegular", "x": 104 },
                 { "thing": "Stone", "x": 16, "y": 8 },
                 { "thing": "Stone", "x": 24, "y": 16, "height": 16 },
                 { "thing": "Stone", "x": 32, "y": 24, "height": 24 },

@@ -66,8 +66,8 @@ export interface IObjectMakrSettings {
 }
 
 /**
- * An factory for JavaScript classes that automates the process of 
- * setting constructors' prototypal inheritance. A sketch of class inheritance 
+ * An factory for JavaScript classes that automates the process of
+ * setting constructors' prototypal inheritance. A sketch of class inheritance
  * and a listing of properties for each class is taken in, and dynamically
  * accessible constructors keyed by String names are made available.
  */
@@ -123,7 +123,7 @@ export interface IObjectMakr {
     /**
      * Creates a new instance of the specified type and returns it.
      * If desired, any settings are applied to it (deep copy using proliferate).
-     * 
+     *
      * @param name   The name of the type to initialize a new instance of.
      * @param [settings]   Additional attributes to add to the new instance.
      * @returns A newly created instance of the specified type.
@@ -131,11 +131,9 @@ export interface IObjectMakr {
     make(name: string, settings?: any): any;
 }
 
-
-
 /**
- * An factory for JavaScript classes that automates the process of 
- * setting constructors' prototypal inheritance. A sketch of class inheritance 
+ * An factory for JavaScript classes that automates the process of
+ * setting constructors' prototypal inheritance. A sketch of class inheritance
  * and a listing of properties for each class is taken in, and dynamically
  * accessible constructors keyed by String names are made available.
  */
@@ -179,7 +177,7 @@ export class ObjectMakr implements IObjectMakr {
 
     /**
      * Initializes a new instance of the ObjectMakr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IObjectMakrSettings) {
@@ -209,9 +207,8 @@ export class ObjectMakr implements IObjectMakr {
         this.processFunctions(this.inheritance, Object, "Object");
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns The complete inheritance mapping.
@@ -279,14 +276,13 @@ export class ObjectMakr implements IObjectMakr {
         return this.indexMap;
     }
 
-
     /* Core usage
-    */
+     */
 
     /**
      * Creates a new instance of the specified type and returns it.
      * If desired, any settings are applied to it (deep copy using proliferate).
-     * 
+     *
      * @param name   The name of the type to initialize a new instance of.
      * @param [settings]   Additional attributes to add to the new instance.
      * @returns A newly created instance of the specified type.
@@ -311,19 +307,19 @@ export class ObjectMakr implements IObjectMakr {
                 output,
                 name,
                 settings,
-                (this.doPropertiesFull ? this.propertiesFull : this.properties)[name]);
+                (this.doPropertiesFull ? this.propertiesFull : this.properties)[name]
+            );
         }
 
         return output;
     }
 
-
     /* Core parsing
-    */
+     */
 
     /**
      * Parser that calls processPropertyArray on all properties given as arrays
-     * 
+     *
      * @param properties   Type properties for classes to create.
      * @remarks Only call this if indexMap is given as an array
      */
@@ -343,7 +339,7 @@ export class ObjectMakr implements IObjectMakr {
 
     /**
      * Creates an output properties object with the mapping shown in indexMap
-     * 
+     *
      * @param properties   An Array with indiced versions of properties
      * @example
      *     this.indexMap = ["width", "height"];
@@ -364,7 +360,7 @@ export class ObjectMakr implements IObjectMakr {
 
     /**
      * Recursive parser to generate each Function, starting from the base.
-     * 
+     *
      * @param base   An object whose keys are the names of Functions to
      *               made, and whose values are objects whose keys are
      *               for children that inherit from these Functions
@@ -373,8 +369,7 @@ export class ObjectMakr implements IObjectMakr {
      *                       if it is a generated one (and not Object itself).
      */
     private processFunctions(base: any, parent: IClassFunction, parentName?: string): void {
-        var name: string,
-            ref: string;
+        var name: string, ref: string;
 
         // For each name in the current object:
         for (name in base) {
@@ -417,21 +412,19 @@ export class ObjectMakr implements IObjectMakr {
         }
     }
 
-
     /* Utilities
-    */
+     */
 
     /**
      * Proliferates all members of the donor to the recipient recursively, as
      * a deep copy.
-     * 
+     *
      * @param recipient   An object receiving the donor's members.
      * @param donor   An object whose members are copied to recipient.
      * @param [noOverride]   If recipient properties may be overriden (by default, false).
      */
     private proliferate(recipient: any, donor: any, noOverride?: boolean): void {
-        var setting: any,
-            i: string;
+        var setting: any, i: string;
 
         // For each attribute of the donor:
         for (i in donor) {

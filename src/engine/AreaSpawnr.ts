@@ -3,13 +3,17 @@ import * as MapsCreatr from "./MapsCreatr";
 
 /**
  * A Function to add a map command, such as an after or stretch.
- * 
+ *
  * @param thing   The raw command to create a Thing, as either a title
  *                or a JSON object.
  * @param index   Which command this is, as passed through Array.forEach.
  */
 export interface ICommandAdder {
-    (thing: string | MapsCreatr.IPreThingSettings, index: number, commands: (string | MapsCreatr.IPreThingSettings)[]): void;
+    (
+        thing: string | MapsCreatr.IPreThingSettings,
+        index: number,
+        commands: (string | MapsCreatr.IPreThingSettings)[]
+    ): void;
 }
 
 /**
@@ -89,7 +93,7 @@ export interface IAreaSpawnr {
     /**
      * Gets the map listed under the given name. If no name is provided, the
      * mapCurrent is returned instead.
-     * 
+     *
      * @param name   An optional key to find the map under.
      * @returns A Map under the given name, or the current map if none given.
      */
@@ -97,7 +101,7 @@ export interface IAreaSpawnr {
 
     /**
      * Simple getter pipe to the internal MapsCreator.getMaps() function.
-     * 
+     *
      * @returns A listing of maps, keyed by their names.
      */
     getMaps(): { [i: string]: MapsCreatr.IMapsCreatrMap };
@@ -126,28 +130,28 @@ export interface IAreaSpawnr {
     /**
      * Simple getter function for the internal prethings object. This will be
      * undefined before the first call to setMap.
-     * 
+     *
      * @returns A listing of the current area's Prethings.
      */
     getPreThings(): MapsCreatr.IPreThingsContainers;
 
     /**
      * Sets the currently manipulated Map in the handler to be the one under a
-     * given name. Note that this will do very little unless a location is 
+     * given name. Note that this will do very little unless a location is
      * provided.
-     * 
+     *
      * @param name   A key to find the map under.
-     * @param location   An optional key for a location to immediately start the 
-     *                   map in (if not provided, ignored). 
-     * @returns The now-current map.               
+     * @param location   An optional key for a location to immediately start the
+     *                   map in (if not provided, ignored).
+     * @returns The now-current map.  
      */
     setMap(name: string, location?: string): MapsCreatr.IMapsCreatrMap;
 
     /**
-     * Goes to a particular location in the given map. Area attributes are 
+     * Goes to a particular location in the given map. Area attributes are
      * copied to the MapScreener, PreThings are loaded, and stretches and afters
      * are checked.
-     * 
+     *
      * @param name   The key of the Location to start in.
      */
     setLocation(name: string): void;
@@ -155,7 +159,7 @@ export interface IAreaSpawnr {
     /**
      * Applies the stretchAdd Function to each given "stretch" command and
      * stores the commands in stretches.
-     * 
+     *
      * @param stretchesRaw   Raw descriptions of the stretches.
      */
     setStretches(stretchesRaw: (string | MapsCreatr.IPreThingSettings)[]): void;
@@ -163,16 +167,16 @@ export interface IAreaSpawnr {
     /**
      * Applies the afterAdd Function to each given "after" command and stores
      * the commands in afters.
-     * 
+     *
      * @param aftersRaw   Raw descriptions of the afters.
      */
     setAfters(aftersRaw: (string | MapsCreatr.IPreThingSettings)[]): void;
 
     /**
-     * Calls onSpawn on every PreThing touched by the given bounding box, 
-     * determined in order of the given direction. This is a simple wrapper 
+     * Calls onSpawn on every PreThing touched by the given bounding box,
+     * determined in order of the given direction. This is a simple wrapper
      * around applySpawnAction that also gives it true as the status.
-     * 
+     *
      * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param top   The upper-most bound to spawn within.
@@ -186,7 +190,7 @@ export interface IAreaSpawnr {
      * Calls onUnspawn on every PreThing touched by the given bounding box,
      * determined in order of the given direction. This is a simple wrapper
      * around applySpawnAction that also gives it false as the status.
-     * 
+     *
      * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param top   The upper-most bound to spawn within.
@@ -196,8 +200,6 @@ export interface IAreaSpawnr {
      */
     unspawnArea(direction: string, top: number, right: number, bottom: number, left: number): void;
 }
-
-
 
 /**
  * Area manipulator and spawner for GameStartr Maps that is the front-end
@@ -296,7 +298,7 @@ export class AreaSpawnr implements IAreaSpawnr {
      */
     private afterAdd: ICommandAdder | undefined;
 
-    /** 
+    /**
      * An optional scope to call stretchAdd and afterAdd on, if not this.
      */
     private commandScope: any;
@@ -330,9 +332,8 @@ export class AreaSpawnr implements IAreaSpawnr {
         this.commandScope = settings.commandScope;
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns The internal MapsCreator.
@@ -365,7 +366,7 @@ export class AreaSpawnr implements IAreaSpawnr {
     /**
      * Gets the map listed under the given name. If no name is provided, the
      * mapCurrent is returned instead.
-     * 
+     *
      * @param name   An optional key to find the map under.
      * @returns A Map under the given name, or the current map if none given.
      */
@@ -379,7 +380,7 @@ export class AreaSpawnr implements IAreaSpawnr {
 
     /**
      * Simple getter pipe to the internal MapsCreator.getMaps() function.
-     * 
+     *
      * @returns A listing of maps, keyed by their names.
      */
     getMaps(): { [i: string]: MapsCreatr.IMapsCreatrMap } {
@@ -418,26 +419,25 @@ export class AreaSpawnr implements IAreaSpawnr {
     /**
      * Simple getter function for the internal prethings object. This will be
      * undefined before the first call to setMap.
-     * 
+     *
      * @returns A listing of the current area's Prethings.
      */
     getPreThings(): MapsCreatr.IPreThingsContainers {
         return this.prethings;
     }
 
-
     /* Map & area setting
-    */
+     */
 
     /**
      * Sets the currently manipulated Map in the handler to be the one under a
-     * given name. Note that this will do very little unless a location is 
+     * given name. Note that this will do very little unless a location is
      * provided.
-     * 
+     *
      * @param name   A key to find the map under.
-     * @param location   An optional key for a location to immediately start the 
-     *                   map in (if not provided, ignored). 
-     * @returns The now-current map.               
+     * @param location   An optional key for a location to immediately start the
+     *                   map in (if not provided, ignored).
+     * @returns The now-current map.  
      */
     setMap(name: string, location?: string): MapsCreatr.IMapsCreatrMap {
         // Get the newly current map from this.getMap normally
@@ -457,16 +457,14 @@ export class AreaSpawnr implements IAreaSpawnr {
     }
 
     /**
-     * Goes to a particular location in the given map. Area attributes are 
+     * Goes to a particular location in the given map. Area attributes are
      * copied to the MapScreener, PreThings are loaded, and stretches and afters
      * are checked.
-     * 
+     *
      * @param name   The key of the Location to start in.
      */
     setLocation(name: string): void {
-        var location: MapsCreatr.IMapsCreatrLocation,
-            attribute: string,
-            i: number;
+        var location: MapsCreatr.IMapsCreatrLocation, attribute: string, i: number;
 
         // Query the location from the current map and ensure it exists
         location = this.mapCurrent.locations[name];
@@ -508,7 +506,7 @@ export class AreaSpawnr implements IAreaSpawnr {
     /**
      * Applies the stretchAdd Function to each given "stretch" command and
      * stores the commands in stretches.
-     * 
+     *
      * @param stretchesRaw   Raw descriptions of the stretches.
      */
     setStretches(stretchesRaw: (string | MapsCreatr.IPreThingSettings)[]): void {
@@ -524,7 +522,7 @@ export class AreaSpawnr implements IAreaSpawnr {
     /**
      * Applies the afterAdd Function to each given "after" command and stores
      * the commands in afters.
-     * 
+     *
      * @param aftersRaw   Raw descriptions of the afters.
      */
     setAfters(aftersRaw: (string | MapsCreatr.IPreThingSettings)[]): void {
@@ -538,10 +536,10 @@ export class AreaSpawnr implements IAreaSpawnr {
     }
 
     /**
-     * Calls onSpawn on every PreThing touched by the given bounding box, 
-     * determined in order of the given direction. This is a simple wrapper 
+     * Calls onSpawn on every PreThing touched by the given bounding box,
+     * determined in order of the given direction. This is a simple wrapper
      * around applySpawnAction that also gives it true as the status.
-     * 
+     *
      * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param top   The upper-most bound to spawn within.
@@ -559,7 +557,7 @@ export class AreaSpawnr implements IAreaSpawnr {
      * Calls onUnspawn on every PreThing touched by the given bounding box,
      * determined in order of the given direction. This is a simple wrapper
      * around applySpawnAction that also gives it false as the status.
-     * 
+     *
      * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param top   The upper-most bound to spawn within.
@@ -580,12 +578,12 @@ export class AreaSpawnr implements IAreaSpawnr {
      * status is used as a filter: all PreThings that already have the status
      * (generally true or false as spawned or unspawned, respectively) will have
      * the callback called on them.
-     * 
-     * @param callback   The callback to be run whenever a matching matching 
+     *
+     * @param callback   The callback to be run whenever a matching matching
      *                   PreThing is found.
-     * @param status   The spawn status to match PreThings against. Only PreThings 
+     * @param status   The spawn status to match PreThings against. Only PreThings
      *                 with .spawned === status will have the callback applied.
-     * @param direction   The direction by which to order PreThings, as "xInc", 
+     * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param top   The upper-most bound to apply within.
      * @param right   The right-most bound to apply within.
@@ -599,7 +597,8 @@ export class AreaSpawnr implements IAreaSpawnr {
         top: number,
         right: number,
         bottom: number,
-        left: number): void {
+        left: number
+    ): void {
         var name: string,
             group: MapsCreatr.IPreThing[],
             prething: MapsCreatr.IPreThing,
@@ -626,7 +625,7 @@ export class AreaSpawnr implements IAreaSpawnr {
             start = this.findPreThingsSpawnStart(direction, group, mid, top, right, bottom, left);
             end = this.findPreThingsSpawnEnd(direction, group, mid, top, right, bottom, left);
 
-            // Loop through all the directionally valid PreThings, spawning if 
+            // Loop through all the directionally valid PreThings, spawning if
             // they're within the bounding box
             for (i = start; i <= end; i += 1) {
                 prething = group[i];
@@ -641,11 +640,11 @@ export class AreaSpawnr implements IAreaSpawnr {
     }
 
     /**
-     * Finds the index from which PreThings should stop having an action 
-     * applied to them in applySpawnAction. This is less efficient than the 
+     * Finds the index from which PreThings should stop having an action
+     * applied to them in applySpawnAction. This is less efficient than the
      * unused version below, but is more reliable for slightly unsorted groups.
-     * 
-     * @param direction   The direction by which to order PreThings, as "xInc", 
+     *
+     * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param group   The group to find a PreThing index within.
      * @param mid   The middle of the group. This is currently unused.
@@ -662,7 +661,8 @@ export class AreaSpawnr implements IAreaSpawnr {
         top: number,
         right: number,
         bottom: number,
-        left: number): number {
+        left: number
+    ): number {
         var directionKey: string = AreaSpawnr.directionKeys[direction],
             directionEnd: number = this.getDirectionEnd(directionKey, top, right, bottom, left),
             i: number;
@@ -677,10 +677,10 @@ export class AreaSpawnr implements IAreaSpawnr {
     }
 
     /**
-     * Finds the index from which PreThings should stop having an action 
-     * applied to them in applySpawnAction. This is less efficient than the 
+     * Finds the index from which PreThings should stop having an action
+     * applied to them in applySpawnAction. This is less efficient than the
      * unused version below, but is more reliable for slightly unsorted groups.
-     * 
+     *
      * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param group   The group to find a PreThing index within.
@@ -698,7 +698,8 @@ export class AreaSpawnr implements IAreaSpawnr {
         top: number,
         right: number,
         bottom: number,
-        left: number): number {
+        left: number
+    ): number {
         var directionKey: string = AreaSpawnr.directionKeys[direction],
             directionKeyOpposite: string = AreaSpawnr.directionKeys[AreaSpawnr.directionOpposites[direction]],
             directionEnd: number = this.getDirectionEnd(directionKeyOpposite, top, right, bottom, left),
@@ -715,9 +716,9 @@ export class AreaSpawnr implements IAreaSpawnr {
 
     /**
      * Conditionally returns a measurement based on what direction String is
-     * given. This is useful for generically finding boundaries when the 
+     * given. This is useful for generically finding boundaries when the
      * direction isn't known, such as in findPreThingsSpawnStart and -End.
-     * 
+     *
      * @param direction   The direction by which to order PreThings, as "xInc",
      *                    "xDec", "yInc", or "yDec".
      * @param top   The upper-most bound to apply within.

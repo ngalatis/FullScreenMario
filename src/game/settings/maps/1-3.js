@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["1-3"] = {
     "name": "1-3",
     "time": 300,
-    "locations": [
-        { "entry": "Plain" }
-    ],
+    "locations": [{ "entry": "Plain" }],
     "areas": [
         {
             "setting": "Overworld",
@@ -34,7 +32,16 @@ MarioGame.MarioGame.settings.maps.library["1-3"] = {
                 { "macro": "Fill", "thing": "Coin", "x": 482, "y": 71, "xnum": 4, "xwidth": 8 },
                 { "macro": "Tree", "x": 520, "width": 40 },
                 { "macro": "Tree", "x": 560, "y": 32, "width": 24 },
-                { "thing": "Koopa", "x": 592, "y": 76, "smart": true, "jumping": true, "floating": true, "begin": 16, "end": 88 },
+                {
+                    "thing": "Koopa",
+                    "x": 592,
+                    "y": 76,
+                    "smart": true,
+                    "jumping": true,
+                    "floating": true,
+                    "begin": 16,
+                    "end": 88
+                },
                 { "macro": "Tree", "x": 608, "y": 56, "width": 48 },
                 { "thing": "Goomba", "x": 640, "y": 64 },
                 { "macro": "Fill", "thing": "Coin", "x": 681, "y": 63, "xnum": 2, "xwidth": 8 },
@@ -47,7 +54,16 @@ MarioGame.MarioGame.settings.maps.library["1-3"] = {
                 { "thing": "Koopa", "x": 880, "y": 60, "smart": true },
                 { "macro": "Tree", "x": 904, "width": 24 },
                 { "macro": "Fill", "thing": "Coin", "x": 906, "y": 7, "xnum": 3, "xwidth": 8 },
-                { "thing": "Koopa", "x": 912, "y": 68, "smart": true, "jumping": true, "floating": true, "begin": 4, "end": 76 },
+                {
+                    "thing": "Koopa",
+                    "x": 912,
+                    "y": 68,
+                    "smart": true,
+                    "jumping": true,
+                    "floating": true,
+                    "begin": 4,
+                    "end": 76
+                },
                 { "macro": "Tree", "x": 928, "y": 32, "width": 32 },
                 { "macro": "Fill", "thing": "Coin", "x": 963, "y": 63, "xnum": 2, "xwidth": 8 },
                 { "macro": "Tree", "x": 976, "y": 32, "width": 32, "solidTrunk": true },

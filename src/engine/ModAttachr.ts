@@ -1,7 +1,7 @@
 import * as ItemsHoldr from "./ItemsHoldr";
 
 /**
- * General schema for a mod, including its name, events with callbacks, 
+ * General schema for a mod, including its name, events with callbacks,
  * scope, and whether it's enabled.
  */
 export interface IModAttachrMod {
@@ -28,7 +28,7 @@ export interface IModAttachrMod {
 
 /**
  * Abstrack callback Function for any mod event.
- * 
+ *
  * @param args   The arguments for the mod event.
  * @returns The result of the mod (normally ignored).
  */
@@ -118,14 +118,13 @@ export interface IModAttachr {
      */
     getScopeDefault(): any;
 
-
-    /* Alterations 
-    */
+    /* Alterations
+     */
 
     /**
      * Adds a mod to the pool of mods, listing it under all the relevant events.
      * If the event is enabled, the "onModEnable" event for it is triggered.
-     * 
+     *
      * @param mod   A summary Object for a mod, containing at the very
      *              least a name and listing of events.
      */
@@ -133,7 +132,7 @@ export interface IModAttachr {
 
     /**
      * Adds multiple mods via this.addMod.
-     * 
+     *
      * @param mods   The mods to add.
      * @returns The return values of the mods' onModEnable events, in order.
      */
@@ -142,7 +141,7 @@ export interface IModAttachr {
     /**
      * Enables a mod of the given name, if it exists. The onModEnable event is
      * called for the mod.
-     * 
+     *
      * @param name   The name of the mod to enable.
      * @param args   Any additional arguments to pass. This will have `mod`
      *               and `name` unshifted in front, in that order.
@@ -151,7 +150,7 @@ export interface IModAttachr {
 
     /**
      * Enables any number of mods.
-     * 
+     *
      * @param names   Names of the mods to enable.
      * @returns The return values of the mods' onModEnable events, in order.
      */
@@ -160,7 +159,7 @@ export interface IModAttachr {
     /**
      * Disables a mod of the given name, if it exists. The onModDisable event is
      * called for the mod.
-     * 
+     *
      * @param name   The name of the mod to disable.
      * @returns The return value of the mod's onModDisable event.
      */
@@ -168,14 +167,14 @@ export interface IModAttachr {
 
     /**
      * Disables any number of mods.
-     * 
+     *
      * @param names   Names of the mods to disable.
      */
     disableMods(...names: string[]): any[];
 
     /**
      * Toggles a mod via enableMod/disableMod of the given name, if it exists.
-     * 
+     *
      * @param name   The name of the mod to toggle.
      * @returns The result of the mod's onModEnable or onModDisable event.
      */
@@ -183,7 +182,7 @@ export interface IModAttachr {
 
     /**
      * Toggles any number of mods.
-     * 
+     *
      * @param names   Names of the mods to toggle.
      * @returns The result of the mods' onModEnable or onModDisable events, in order.
      */
@@ -191,7 +190,7 @@ export interface IModAttachr {
 
     /**
      * Fires an event, which calls all mods listed for that event.
-     * 
+     *
      * @param event   The name of the event to fire.
      * @param args   Any additional arguments to pass. This will have `mod`
      *               and `event` unshifted in front, in that order.
@@ -201,7 +200,7 @@ export interface IModAttachr {
     /**
      * Fires an event specifically for one mod, rather than all mods containing
      * that event.
-     * 
+     *
      * @param event   The name of the event to fire.
      * @param modName   The name of the mod to fire the event.
      * @param args   Any additional arguments to pass. This will have `mod`
@@ -210,8 +209,6 @@ export interface IModAttachr {
      */
     fireModEvent(event: string, modName: string, ...args: any[]): any;
 }
-
-
 
 /**
  * An addon for for extensible modding functionality. "Mods" register triggers
@@ -240,7 +237,7 @@ export class ModAttachr implements IModAttachr {
 
     /**
      * Initializes a new instance of the ModAttachr class.
-     * 
+     *
      * @param [settings]   Settings to be used for initialization.
      */
     constructor(settings?: IModAttachrSettings) {
@@ -266,9 +263,8 @@ export class ModAttachr implements IModAttachr {
         }
     }
 
-
-    /* Simple gets 
-    */
+    /* Simple gets
+     */
 
     /**
      * @returns An Object keying each mod by their name.
@@ -313,14 +309,13 @@ export class ModAttachr implements IModAttachr {
         return this.scopeDefault;
     }
 
-
-    /* Alterations 
-    */
+    /* Alterations
+     */
 
     /**
      * Adds a mod to the pool of mods, listing it under all the relevant events.
      * If the event is enabled, the "onModEnable" event for it is triggered.
-     * 
+     *
      * @param mod   A summary Object for a mod, containing at the very
      *              least a name and listing of events.
      */
@@ -367,7 +362,7 @@ export class ModAttachr implements IModAttachr {
 
     /**
      * Adds multiple mods via this.addMod.
-     * 
+     *
      * @param mods   The mods to add.
      * @returns The return values of the mods' onModEnable events, in order.
      */
@@ -385,7 +380,7 @@ export class ModAttachr implements IModAttachr {
     /**
      * Enables a mod of the given name, if it exists. The onModEnable event is
      * called for the mod.
-     * 
+     *
      * @param name   The name of the mod to enable.
      * @param args   Any additional arguments to pass. This will have `mod`
      *               and `name` unshifted in front, in that order.
@@ -414,7 +409,7 @@ export class ModAttachr implements IModAttachr {
 
     /**
      * Enables any number of mods.
-     * 
+     *
      * @param names   Names of the mods to enable.
      * @returns The return values of the mods' onModEnable events, in order.
      */
@@ -432,7 +427,7 @@ export class ModAttachr implements IModAttachr {
     /**
      * Disables a mod of the given name, if it exists. The onModDisable event is
      * called for the mod.
-     * 
+     *
      * @param name   The name of the mod to disable.
      * @returns The return value of the mod's onModDisable event.
      */
@@ -459,7 +454,7 @@ export class ModAttachr implements IModAttachr {
 
     /**
      * Disables any number of mods.
-     * 
+     *
      * @param names   Names of the mods to disable.
      * @returns The return values of the mods' onModEnable events, in order.
      */
@@ -476,7 +471,7 @@ export class ModAttachr implements IModAttachr {
 
     /**
      * Toggles a mod via enableMod/disableMod of the given name, if it exists.
-     * 
+     *
      * @param name   The name of the mod to toggle.
      * @returns The result of the mod's onModEnable or onModDisable event.
      */
@@ -496,7 +491,7 @@ export class ModAttachr implements IModAttachr {
 
     /**
      * Toggles any number of mods.
-     * 
+     *
      * @param names   Names of the mods to toggle.
      * @returns The result of the mods' onModEnable or onModDisable events, in order.
      */
@@ -511,13 +506,12 @@ export class ModAttachr implements IModAttachr {
         return result;
     }
 
-
     /* Actions
-    */
+     */
 
     /**
      * Fires an event, which calls all mods listed for that event.
-     * 
+     *
      * @param event   The name of the event to fire.
      * @param args   Any additional arguments to pass. This will have `mod`
      *               and `event` unshifted in front, in that order.
@@ -549,7 +543,7 @@ export class ModAttachr implements IModAttachr {
     /**
      * Fires an event specifically for one mod, rather than all mods containing
      * that event.
-     * 
+     *
      * @param event   The name of the event to fire.
      * @param modName   The name of the mod to fire the event.
      * @param args   Any additional arguments to pass. This will have `mod`

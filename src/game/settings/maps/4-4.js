@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["4-4"] = {
     "name": "4-4",
     "time": 300,
-    "locations": [
-        { "entry": "Castle" }
-    ],
+    "locations": [{ "entry": "Castle" }],
     "areas": [
         {
             "setting": "Castle",
@@ -28,7 +26,15 @@ MarioGame.MarioGame.settings.maps.library["4-4"] = {
                             { "macro": "Floor", "width": 400 },
                             { "thing": "Stone", "y": 88, "width": 400 },
                             { "thing": "Stone", "x": 16, "y": 56, "width": 48, "height": 32 },
-                            { "macro": "Fill", "thing": "Stone", "x": 72, "y": 56, "xnum": 5, "xwidth": 16, "height": 32 },
+                            {
+                                "macro": "Fill",
+                                "thing": "Stone",
+                                "x": 72,
+                                "y": 56,
+                                "xnum": 5,
+                                "xwidth": 16,
+                                "height": 32
+                            },
                             { "thing": "Stone", "x": 152, "y": 56, "width": 24, "height": 32 },
                             { "thing": "Stone", "x": 176, "y": 56, "width": 48 },
                             { "macro": "Pipe", "x": 192, "height": 24, "piranha": true },
@@ -36,7 +42,7 @@ MarioGame.MarioGame.settings.maps.library["4-4"] = {
                             { "thing": "CastleBlock", "x": 296, "y": 56, "fireballs": 6, "hidden": true },
                             { "thing": "CastleBlock", "x": 352, "y": 32, "fireballs": 6, "hidden": true },
                             { "macro": "SectionFail", "x": 384, "y": 24, "width": 40, "height": 24 },
-                            { "macro": "SectionPass", "x": 394, "y": 80, "width": 40, "height": 24 },
+                            { "macro": "SectionPass", "x": 394, "y": 80, "width": 40, "height": 24 }
                         ]
                     },
                     "stretch": {

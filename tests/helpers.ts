@@ -30,5 +30,5 @@ export async function bootGame(page: Page): Promise<void> {
 /** Every map name in the game: worlds 1-8 with four levels each, plus the random map. */
 export const mapNames: string[] = [
     ...Array.from({ length: 8 }, (_, w) => Array.from({ length: 4 }, (_, l) => `${w + 1}-${l + 1}`)).flat(),
-    "Random",
+    "Random"
 ];

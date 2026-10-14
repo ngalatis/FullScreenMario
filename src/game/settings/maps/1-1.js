@@ -6,11 +6,7 @@ const onTouchDevice = typeof window.matchMedia === "function" && window.matchMed
 
 MarioGame.MarioGame.settings.maps.library["1-1"] = {
     "name": "1-1",
-    "locations": [
-          { "entry": "Plain" },
-          { "entry": "PipeVertical" },
-          { "area": 1 },
-    ],
+    "locations": [{ "entry": "Plain" }, { "entry": "PipeVertical" }, { "area": 1 }],
     "areas": [
         {
             "setting": "Overworld",
@@ -22,32 +18,43 @@ MarioGame.MarioGame.settings.maps.library["1-1"] = {
                 { "thing": "DecorativeDot", "x": 21.5, "y": 46.5 },
                 { "thing": "DecorativeDot", "x": 21.5, "y": 86.5 },
                 {
-                    "thing": "CustomText", "x": 20, "y": 36, "texts": onTouchDevice ? [
-                      { "text": "MOVE: ARROWS", "offset": 22 },
-                      { "text": "LEAP: A  FIRE/SPRINT: B" },
-                      { "text": "PAUSE: START", "offset": 22 }
-                    ] : [
-                      { "text": "MOVE: ARROWS/WASD", "offset": 12 },
-                      { "text": "FIRE/SPRINT: SHIFT/CTRL" },
-                      { "text": "PAUSE: P/RIGHTCLICK", "offset": 8 }
-                    ]
+                    "thing": "CustomText",
+                    "x": 20,
+                    "y": 36,
+                    "texts": onTouchDevice
+                        ? [
+                              { "text": "MOVE: ARROWS", "offset": 22 },
+                              { "text": "LEAP: A  FIRE/SPRINT: B" },
+                              { "text": "PAUSE: START", "offset": 22 }
+                          ]
+                        : [
+                              { "text": "MOVE: ARROWS/WASD", "offset": 12 },
+                              { "text": "FIRE/SPRINT: SHIFT/CTRL" },
+                              { "text": "PAUSE: P/RIGHTCLICK", "offset": 8 }
+                          ]
                 },
                 {
-                    "thing": "CustomText", "x": 24.5, "y": 84, "size": "Large", "texts": [
-                      { "text": "SUPER" }
-                    ]
+                    "thing": "CustomText",
+                    "x": 24.5,
+                    "y": 84,
+                    "size": "Large",
+                    "texts": [{ "text": "SUPER" }]
                 },
                 {
-                    "thing": "CustomText", "x": 24.5, "y": 68, "size": "Huge", "texts": [
-                      { "text": "MARIO BROS." }
-                    ]
+                    "thing": "CustomText",
+                    "x": 24.5,
+                    "y": 68,
+                    "size": "Huge",
+                    "texts": [{ "text": "MARIO BROS." }]
                 },
                 { "thing": "DecorativeDot", "x": 105.5, "y": 46.5 },
                 { "thing": "DecorativeDot", "x": 105.5, "y": 86.5 },
                 {
-                    "thing": "CustomText", "x": 52, "y": 44, "size": "Colored", "texts": [
-                      { "text": "©1985 NINTENDO" }
-                    ]
+                    "thing": "CustomText",
+                    "x": 52,
+                    "y": 44,
+                    "size": "Colored",
+                    "texts": [{ "text": "©1985 NINTENDO" }]
                 },
                 { "thing": "Block", "x": 128, "y": 32 },
                 { "thing": "Brick", "x": 160, "y": 32 },
@@ -135,7 +142,8 @@ MarioGame.MarioGame.settings.maps.library["1-1"] = {
                 { "thing": "Stone", "x": 1504, "y": 64, "height": 64, "width": 16 },
                 { "macro": "EndOutsideCastle", "x": 1584, "y": 0, "transport": { "map": "1-2" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -143,7 +151,16 @@ MarioGame.MarioGame.settings.maps.library["1-1"] = {
                 { "macro": "Floor", "x": 0, "y": 0, "width": 136 },
                 { "macro": "Fill", "thing": "Brick", "x": 0, "y": 8, "ynum": 11, "yheight": 8 },
                 { "macro": "Fill", "thing": "Brick", "x": 32, "y": 8, "xnum": 7, "ynum": 3, "xwidth": 8, "yheight": 8 },
-                { "macro": "Fill", "thing": "Coin", "x": 33, "y": 31, "xnum": 7, "ynum": 2, "xwidth": 8, "yheight": 16 },
+                {
+                    "macro": "Fill",
+                    "thing": "Coin",
+                    "x": 33,
+                    "y": 31,
+                    "xnum": 7,
+                    "ynum": 2,
+                    "xwidth": 8,
+                    "yheight": 16
+                },
                 { "macro": "Fill", "thing": "Coin", "x": 41, "y": 63, "xnum": 5, "ynum": 1, "xwidth": 8 },
                 { "thing": "PipeHorizontal", "x": 104, "y": 16, "transport": 1, "width": 16 },
                 { "thing": "PipeVertical", "x": 120, "y": 88, "height": 88 }

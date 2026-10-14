@@ -10,19 +10,16 @@ MarioGame.MarioGame.settings.mods = {
             "events": {
                 "onPlayerLanding": function (mod) {
                     var player = this.player;
-                    
+
                     // Don't trigger during cutscenes or small landings
-                    if (
-                        player.FSM.MapScreener.nokeys
-                        || Math.abs(player.yvel) < player.FSM.unitsize / 4
-                    ) {
+                    if (player.FSM.MapScreener.nokeys || Math.abs(player.yvel) < player.FSM.unitsize / 4) {
                         return;
                     }
-                    
+
                     if (player.resting.actionTop) {
                         player.resting.actionTop(player, player.resting);
                     }
-                    
+
                     player.jumpcount = 0;
                     player.resting = undefined;
                     player.yvel = -3 * player.FSM.unitsize;
@@ -30,123 +27,123 @@ MarioGame.MarioGame.settings.mods = {
                 "onPlayerActionLeft": function (mod, player, other) {
                     other.actionLeft(player, other, true);
                 }
-            },
-        }, {
+            }
+        },
+        {
             "name": "Dark is the Night",
             "description": "The night is darkest before the dawn, but I promise you: the dawn is coming.",
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
                     var area = this.AreaSpawner.getArea();
-                    
+
                     if (!area) {
                         return;
                     }
-                    
+
                     mod.events.onPreSetLocation.call(this, mod);
                 },
                 "onPreSetLocation": function (mod) {
                     var area = this.AreaSpawner.getArea();
-                    
+
                     area.setting += " Castle Alt2";
                     area.setBackground(area);
-                    
+
                     this.PixelDrawer.setBackground(area.background);
                     this.GroupHolder.callOnAll(this, this.PixelDrawer.setThingSprite.bind(this.PixelDrawer));
-                    
-                    this.ModAttacher.fireEvent(
-                        "onSetLocation",
-                        this.AreaSpawner.getLocation()
-                    );
+
+                    this.ModAttacher.fireEvent("onSetLocation", this.AreaSpawner.getLocation());
                 },
                 "onModDisable": function (mod) {
                     var area = this.AreaSpawner.getArea();
-                    
+
                     area.setting = area.setting.replace(" Castle Alt2", "");
                     area.setBackground(area);
-                    
+
                     this.PixelDrawer.setBackground(area.background);
                     this.GroupHolder.callOnAll(this, this.PixelDrawer.setThingSprite.bind(this.PixelDrawer));
-                    
-                    this.ModAttacher.fireEvent(
-                        "onSetLocation",
-                        this.AreaSpawner.getLocation()
-                    );
+
+                    this.ModAttacher.fireEvent("onSetLocation", this.AreaSpawner.getLocation());
                 }
             }
-        }, {
+        },
+        {
             "name": "Earthquake!",
             "description": "Mario landing causes everything else to jump.",
             "enabled": false,
             "events": {
                 "onPlayerLanding": (function () {
-                    var shiftLevels = [2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2],
+                    var shiftLevels = [2, 1.5, 1, 0.5, 0, -0.5, -1, -1.5, -2],
                         shiftCount = 0,
                         shiftAll = function (FSM, texts, solids, scenery, characters) {
                             var dy = shiftLevels[shiftCount];
-                            
+
                             if (dy < 0) {
                                 FSM.shiftVert(FSM.player, dy);
                             }
-                            
+
                             FSM.shiftThings(texts, 0, dy);
                             FSM.shiftThings(solids, 0, dy);
                             FSM.shiftThings(scenery, 0, dy);
                             FSM.shiftThings(characters, 0, dy);
-                            
+
                             shiftCount += 1;
                             if (shiftCount >= shiftLevels.length) {
                                 shiftCount = 0;
                                 return true;
                             }
                         };
-                    
+
                     return function (mod) {
                         var player = this.player,
-                            characters, solids, scenery, texts, character, i;
-                    
+                            characters,
+                            solids,
+                            scenery,
+                            texts,
+                            character,
+                            i;
+
                         // Don't trigger during cutscenes or small landings
-                        if (
-                            player.FSM.MapScreener.nokeys
-                            || Math.abs(player.yvel) < player.FSM.unitsize / 4
-                        ) {
+                        if (player.FSM.MapScreener.nokeys || Math.abs(player.yvel) < player.FSM.unitsize / 4) {
                             return;
                         }
-                        
+
                         this.AudioPlayer.play("Bump");
-                        
+
                         texts = this.GroupHolder.getTextGroup().slice();
                         scenery = this.GroupHolder.getSceneryGroup().slice();
                         solids = this.GroupHolder.getSolidGroup().slice();
                         characters = this.GroupHolder.getCharacterGroup().slice();
-                        
+
                         for (i = 0; i < characters.length; i += 1) {
                             character = characters[i];
-                            if (
-                                character.player 
-                                || character.nofall 
-                                || !character.resting 
-                                || character.grounded
-                            ) {
+                            if (character.player || character.nofall || !character.resting || character.grounded) {
                                 continue;
                             }
-                            
+
                             character.resting = undefined;
                             character.yvel = player.FSM.unitsize * -1.4;
                         }
-                        
-                        // A copy of each group is made because new Things 
+
+                        // A copy of each group is made because new Things
                         // added in shouldn't start being moved in the middle
                         if (shiftCount === 0) {
                             this.TimeHandler.addEventInterval(
-                                shiftAll, 1, Infinity, this,
-                                texts, solids, scenery, characters
+                                shiftAll,
+                                1,
+                                Infinity,
+                                this,
+                                texts,
+                                solids,
+                                scenery,
+                                characters
                             );
                         }
-                    }
+                    };
                 })()
             }
-        }, {
+        },
+        {
             "name": "Gradient Skies",
             "description": "Skies fade out to black in the heavens above.",
             "enabled": false,
@@ -158,7 +155,7 @@ MarioGame.MarioGame.settings.mods = {
                 },
                 "onModDisable": function (mod) {
                     var area = this.AreaSpawner.getArea();
-                    
+
                     area.setBackground(area);
                     this.PixelDrawer.setBackground(area.background);
                 },
@@ -168,26 +165,29 @@ MarioGame.MarioGame.settings.mods = {
                             setting = area.setting,
                             context = this.canvas.getContext("2d"),
                             background = context.createLinearGradient(
-                                0, 0,
+                                0,
+                                0,
                                 this.MapScreener.width,
                                 this.MapScreener.height
-                            ), gradient, i;
-                        
+                            ),
+                            gradient,
+                            i;
+
                         for (i in gradients) {
                             if (setting.indexOf(i) !== -1) {
-                                gradient = gradients[i]
+                                gradient = gradients[i];
                                 break;
                             }
                         }
-                        
+
                         if (!gradient) {
                             gradient = gradients["default"];
                         }
-                        
+
                         for (i in gradient) {
                             background.addColorStop(i, gradient[i]);
                         }
-                        
+
                         area.background = background;
                         this.PixelDrawer.setBackground(area.background);
                     };
@@ -228,7 +228,8 @@ MarioGame.MarioGame.settings.mods = {
                 })
             },
             "settings": {}
-        }, {
+        },
+        {
             // http://www.themushroomkingdom.net/smb_breakdown.shtml#hard
             "name": "Hard Mode",
             "description": "Like in Super Mario Bros Deluxe!",
@@ -237,19 +238,20 @@ MarioGame.MarioGame.settings.mods = {
                 "onAddThing": function (mod, thing) {
                     var spawn;
                     if (thing.title === "Goomba") {
-                        spawn = thing.FSM.killReplace(
-                            thing,
-                            "Beetle", 
-                            undefined,
-                            [ "direction", "moveleft", "lookleft", "xvel", "yvel", "speed" ]
-                        );
+                        spawn = thing.FSM.killReplace(thing, "Beetle", undefined, [
+                            "direction",
+                            "moveleft",
+                            "lookleft",
+                            "xvel",
+                            "yvel",
+                            "speed"
+                        ]);
                         spawn.mod = "Hard Mode";
-                    }
-                    else if (thing.title === "Platform") {
+                    } else if (thing.title === "Platform") {
                         thing.FSM.reduceWidth(thing, thing.FSM.unitsize * 8, true);
                         thing.FSM.shiftHoriz(thing, thing.FSM.unitsize * 4);
                     }
-                    
+
                     if (thing.groupType === "Character") {
                         thing.speed *= 1.4;
                     }
@@ -259,17 +261,14 @@ MarioGame.MarioGame.settings.mods = {
                         characters = FSM.GroupHolder.getCharacterGroup(),
                         solids = FSM.GroupHolder.getSolidGroup(),
                         attributes = ["direction", "moveleft", "lookleft", "xvel", "yvel", "speed"],
-                        spawn, thing, i;
-                    
+                        spawn,
+                        thing,
+                        i;
+
                     for (i = 0; i < characters.length; i += 1) {
                         thing = characters[i];
                         if (thing.title === "Goomba") {
-                            spawn = thing.FSM.killReplace(
-                                thing, 
-                                "Beetle", 
-                                undefined,
-                                attributes
-                            );
+                            spawn = thing.FSM.killReplace(thing, "Beetle", undefined, attributes);
                             spawn.mod = "Hard Mode";
                             if (thing.xvel > 0) {
                                 spawn.FSM.flipHoriz(spawn);
@@ -279,10 +278,10 @@ MarioGame.MarioGame.settings.mods = {
                         }
                         thing.speed *= 1.4;
                     }
-                    
-                    for(i = 0; i < solids.length; i += 1) {
+
+                    for (i = 0; i < solids.length; i += 1) {
                         thing = solids[i];
-                        if(thing.title === "Platform") {
+                        if (thing.title === "Platform") {
                             thing.FSM.reduceWidth(thing, thing.FSM.unitsize * 8, true);
                             thing.FSM.shiftHoriz(thing, thing.FSM.unitsize * 4);
                         }
@@ -293,22 +292,18 @@ MarioGame.MarioGame.settings.mods = {
                         characters = FSM.GroupHolder.getCharacterGroup(),
                         solids = FSM.GroupHolder.getSolidGroup(),
                         attributes = ["direction", "moveleft", "lookleft", "xvel", "yvel", "speed"],
-                        thing, i;
-                    
+                        thing,
+                        i;
+
                     for (i = 0; i < characters.length; i += 1) {
                         thing = characters[i];
                         if (thing.title === "Beetle" && thing.mod === "Hard Mode") {
-                            thing.FSM.killReplace(
-                                thing, 
-                                "Goomba", 
-                                undefined,
-                                attributes
-                            );
+                            thing.FSM.killReplace(thing, "Goomba", undefined, attributes);
                         } else {
                             thing.speed /= 1.4;
                         }
                     }
-                    
+
                     for (i = 0; i < solids.length; i += 1) {
                         thing = solids[i];
                         if (thing.title === "Platform") {
@@ -318,7 +313,8 @@ MarioGame.MarioGame.settings.mods = {
                     }
                 }
             }
-        }, {
+        },
+        {
             "name": "High Speed",
             "description": "Mario's maximum speed is quadrupled.",
             "enabled": false,
@@ -328,7 +324,7 @@ MarioGame.MarioGame.settings.mods = {
                         keyNames = mod.settings.keyNames,
                         multiplier = mod.settings.multiplier,
                         i;
-                    
+
                     for (i = 0; i < keyNames.length; i += 1) {
                         mod.settings[keyNames[i]] = stats[keyNames[i]];
                         stats[keyNames[i]] *= multiplier;
@@ -338,7 +334,7 @@ MarioGame.MarioGame.settings.mods = {
                     var stats = this.ObjectMaker.getFunction("Player").prototype,
                         keyNames = mod.settings.keyNames,
                         i;
-                    
+
                     for (i = 0; i < keyNames.length; i += 1) {
                         stats[keyNames[i]] = mod.settings[keyNames[i]];
                     }
@@ -348,7 +344,8 @@ MarioGame.MarioGame.settings.mods = {
                 "keyNames": ["maxspeedsave", "maxspeed", "scrollspeed"],
                 "multiplier": 14
             }
-        }, {
+        },
+        {
             "name": "Infinite Lives",
             "description": "Mario never really dies.",
             "enabled": false,
@@ -357,10 +354,10 @@ MarioGame.MarioGame.settings.mods = {
                     var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         proto = FSM.ObjectMaker.getFunction("Area").prototype,
                         stats = FSM.settings.items.values.lives;
-                    
+
                     mod.settings.onPlayerDeathOld = proto.onPlayerDeath;
                     proto.onPlayerDeath = FSM.mapEntranceRespawn;
-                    
+
                     mod.settings.livesOld = FSM.ItemsHolder.getItem("lives");
                     mod.settings.statsOld = stats;
                     stats.valueDefault = Infinity;
@@ -370,9 +367,9 @@ MarioGame.MarioGame.settings.mods = {
                     var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         proto = FSM.ObjectMaker.getFunction("Area").prototype,
                         stats = FSM.settings.items.values.lives;
-                    
+
                     proto.onPlayerDeath = mod.settings.onPlayerDeathOld;
-                    
+
                     stats.valueDefault = mod.settings.statsOld.valueDefault;
                     FSM.ItemsHolder.setItem("lives", mod.settings.livesOld);
                 }
@@ -382,7 +379,8 @@ MarioGame.MarioGame.settings.mods = {
                 "statsOld": undefined,
                 "livesOld": undefined
             }
-        }, {
+        },
+        {
             "name": "Invincibility",
             "description": "Mario is constantly given star power.",
             "enabled": false,
@@ -408,33 +406,36 @@ MarioGame.MarioGame.settings.mods = {
                     }
                 }
             }
-        }, {
+        },
+        {
             "name": "Parallax Clouds",
             "description": "Clouds in the sky scroll at about 63% the normal rate.",
             "enabled": false,
             "events": {
                 "onModEnable": function () {
-                    this.ObjectMaker.getFunction("Cloud").prototype.parallaxHoriz = .7;
+                    this.ObjectMaker.getFunction("Cloud").prototype.parallaxHoriz = 0.7;
                 },
                 "onModDisable": function () {
                     this.ObjectMaker.getFunction("Cloud").prototype.parallaxHoriz = undefined;
                 }
             }
-        }, {
+        },
+        {
             "name": "Low Gravity",
             "description": "I believe I can fly!",
             "enabled": false,
             "events": {
                 "onModEnable": function () {
-                    this.ObjectMaker.getFunction("Player").prototype.gravity 
-                            = this.ObjectMaker.getFunction("Area").prototype.gravity / 1.4
+                    this.ObjectMaker.getFunction("Player").prototype.gravity =
+                        this.ObjectMaker.getFunction("Area").prototype.gravity / 1.4;
                 },
                 "onModDisable": function () {
-                    this.ObjectMaker.getFunction("Player").prototype.gravity 
-                            = this.ObjectMaker.getFunction("Area").prototype.gravity;
+                    this.ObjectMaker.getFunction("Player").prototype.gravity =
+                        this.ObjectMaker.getFunction("Area").prototype.gravity;
                 }
             }
-        }, {
+        },
+        {
             "name": "Luigi",
             "description": "The little brother who could!",
             "enabled": false,
@@ -442,25 +443,26 @@ MarioGame.MarioGame.settings.mods = {
                 "onModEnable": function () {
                     this.ItemsHolder.setItem("luigi", true);
                     this.ObjectMaker.getFunction("Player").prototype.title = "Luigi";
-                    
+
                     if (this.player) {
                         this.player.title = "Luigi";
                         this.PixelDrawer.setThingSprite(this.player);
-                        
+
                         this.ThingHitter.cacheChecksForType(this.player.title, this.player.groupType);
                     }
                 },
                 "onModDisable": function () {
                     this.ItemsHolder.setItem("luigi", false);
                     this.ObjectMaker.getFunction("Player").prototype.title = "Player";
-                    
+
                     if (this.player) {
                         this.player.title = "Player";
                         this.PixelDrawer.setThingSprite(this.player);
                     }
                 }
             }
-        }, { 
+        },
+        {
             "name": "Tilt Gravity",
             "description": "Tilting your device pushes characters around",
             "enabled": false,
@@ -470,15 +472,16 @@ MarioGame.MarioGame.settings.mods = {
                         acceleration = event.accelerationIncludingGravity,
                         diff = -acceleration.x * this.unitsize,
                         y = acceleration.y,
-                        character, i;
-                    
+                        character,
+                        i;
+
                     for (i = 0; i < characters.length; i += 1) {
                         character = characters[i];
                         if (!character.player && !character.grounded) {
                             this.shiftHoriz(character, diff);
                         }
                     }
-                    
+
                     if (typeof mod.settings.y !== "undefined") {
                         diff = (y - mod.settings.y) * this.unitsize * 2;
                         if (diff > 0) {
@@ -492,28 +495,29 @@ MarioGame.MarioGame.settings.mods = {
                             }
                         }
                     }
-                    
+
                     mod.settings.y = y;
                 }
             },
             "settings": {
                 "y": undefined
             }
-        }, {
+        },
+        {
             "name": "Palette Swap",
             "description": "Swaps the color palette around randomly for each area.",
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
                     mod.settings.paletteDefaultOld = this.settings.sprites.paletteDefault;
-                    
+
                     if (this.AreaSpawner.getMapName()) {
                         mod.events.onPreSetLocation.call(this, mod);
                     }
                 },
                 "onModDisable": function (mod) {
                     this.settings.sprites.paletteDefault = mod.settings.paletteDefaultOld;
-                    
+
                     mod.resetVisuals(this);
                     mod.resetThingSprites(this);
                 },
@@ -521,7 +525,7 @@ MarioGame.MarioGame.settings.mods = {
                     this.settings.sprites.paletteDefault = mod.shufflePalette(
                         Array.prototype.slice.call(mod.settings.paletteDefaultOld)
                     );
-                    
+
                     mod.resetVisuals(this);
                     mod.resetThingSprites(this);
                 }
@@ -539,9 +543,7 @@ MarioGame.MarioGame.settings.mods = {
                     FSM.GroupHolder.getCharacterGroup(),
                     FSM.GroupHolder.getTextGroup()
                 ]);
-                FSM.PixelDrawer.setBackground(
-                    FSM.AreaSpawner.getArea().background
-                );
+                FSM.PixelDrawer.setBackground(FSM.AreaSpawner.getArea().background);
             },
             "resetThingSprites": function (FSM) {
                 FSM.GroupHolder.callOnAll(undefined, function (thing) {
@@ -551,17 +553,18 @@ MarioGame.MarioGame.settings.mods = {
             },
             "shufflePalette": function shufflePalette(array) {
                 var i, j, temp;
-                
+
                 for (i = 0; i < array.length - 1; i += 1) {
                     j = Math.floor(Math.random() * i);
                     temp = array[i + 1];
                     array[i + 1] = array[j + 1];
                     array[j + 1] = temp;
                 }
-                
+
                 return array;
             }
-        }, {
+        },
+        {
             "name": "QCount",
             "description": "QQQQQQQ",
             "enabled": false,
@@ -571,31 +574,37 @@ MarioGame.MarioGame.settings.mods = {
                         characters = mod.settings.characters,
                         charactersFSM = FSM.GroupHolder.getCharacterGroup(),
                         level;
-                    
+
                     FSM.InputWriter.addEvent("onkeydown", "q", function () {
                         mod.settings.qcount += 1;
-                        
+
                         if (mod.settings.levels[mod.settings.qcount]) {
                             var level = mod.settings.levels[mod.settings.qcount];
-                            mod.settings.events.push(FSM.TimeHandler.addEventInterval(function () {
-                                if (charactersFSM.length < 210) {
-                                    var num = Math.floor(Math.random() * level.length),
-                                        lul = FSM.ObjectMaker.make.apply(FSM.ObjectMaker, level[num]);
-                                    
-                                    lul.yvel = Math.random() * FSM.unitsize / 4;
-                                    lul.xvel = lul.speed = Math.random() * FSM.unitsize * 2;
-                                    if (Math.floor(Math.random() * 2)) {
-                                        lul.xvel *= -1;
-                                    }
-                                    
-                                    characters.push(lul);
-                                    FSM.addThing(
-                                        lul, 
-                                        (32 * Math.random() + 128) * FSM.unitsize,
-                                        88 * Math.random() * FSM.unitsize
-                                    );
-                                }
-                            }, 7, Infinity));
+                            mod.settings.events.push(
+                                FSM.TimeHandler.addEventInterval(
+                                    function () {
+                                        if (charactersFSM.length < 210) {
+                                            var num = Math.floor(Math.random() * level.length),
+                                                lul = FSM.ObjectMaker.make.apply(FSM.ObjectMaker, level[num]);
+
+                                            lul.yvel = (Math.random() * FSM.unitsize) / 4;
+                                            lul.xvel = lul.speed = Math.random() * FSM.unitsize * 2;
+                                            if (Math.floor(Math.random() * 2)) {
+                                                lul.xvel *= -1;
+                                            }
+
+                                            characters.push(lul);
+                                            FSM.addThing(
+                                                lul,
+                                                (32 * Math.random() + 128) * FSM.unitsize,
+                                                88 * Math.random() * FSM.unitsize
+                                            );
+                                        }
+                                    },
+                                    7,
+                                    Infinity
+                                )
+                            );
                         }
                     });
                     FSM.InputWriter.addAliasValues("q", [81]);
@@ -616,8 +625,8 @@ MarioGame.MarioGame.settings.mods = {
                 "characters": [],
                 "events": [],
                 "levels": {
-                    "7": [ ["Goomba"] ],
-                    "14": [ 
+                    "7": [["Goomba"]],
+                    "14": [
                         ["Koopa"],
                         ["Koopa", { "smart": true }],
                         ["Koopa", { "jumping": true }],
@@ -627,10 +636,11 @@ MarioGame.MarioGame.settings.mods = {
                         ["Lakitu"],
                         ["Blooper"]
                     ],
-                    "21": [ ["Bowser"] ]
+                    "21": [["Bowser"]]
                 }
             }
-        }, {
+        },
+        {
             "name": "Super Fireballs",
             "description": "Fireballs blow up solids, and Mario has unlimited.",
             "enabled": false,
@@ -644,21 +654,28 @@ MarioGame.MarioGame.settings.mods = {
                     this.ObjectMaker.getFunction("solid").prototype.firedeath = 0;
                 }
             }
-        }, {
+        },
+        {
             "name": "Trip of Acid",
             "description": "Sprites aren't cleared from the screen each game tick.",
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
-                    this.TimeHandler.addEvent(function () {
-                        this.PixelDrawer.setNoRefill(true);
-                    }.bind(this), 3);
+                    this.TimeHandler.addEvent(
+                        function () {
+                            this.PixelDrawer.setNoRefill(true);
+                        }.bind(this),
+                        3
+                    );
                 },
                 "onSetLocation": function (mod) {
                     this.PixelDrawer.setNoRefill(false);
-                    this.TimeHandler.addEvent(function () {
-                        this.PixelDrawer.setNoRefill(true);
-                    }.bind(this), 3);
+                    this.TimeHandler.addEvent(
+                        function () {
+                            this.PixelDrawer.setNoRefill(true);
+                        }.bind(this),
+                        3
+                    );
                 },
                 "onModDisable": function (mod) {
                     this.PixelDrawer.setNoRefill(false);

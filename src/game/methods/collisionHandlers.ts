@@ -7,27 +7,45 @@
  * declared on the MarioGame class through interface merging, so callers such as
  * thing.FSM.generateHitCharacterSolid(...) keep working unchanged.
  */
-import type { IBlock, IBrick, ICastleAxe, ICastleFireball, ICharacter, ICharacterOverlapping, ICoin, IDetectCollision, IEnemy, IFireball, IItem, IPlayer, IShell, ISolid, ISpringboard, IStar, IVine } from "../types";
+import type {
+    IBlock,
+    IBrick,
+    ICastleAxe,
+    ICastleFireball,
+    ICharacter,
+    ICharacterOverlapping,
+    ICoin,
+    IDetectCollision,
+    IEnemy,
+    IFireball,
+    IItem,
+    IPlayer,
+    IShell,
+    ISolid,
+    ISpringboard,
+    IStar,
+    IVine
+} from "../types";
 import type { MarioGame } from "../MarioGame";
 
 export const collisionHandlerMethods = {
     /* Collision functions
-    */
+     */
 
     /**
-     * Function generator for the generic hitCharacterSolid callback. This is 
+     * Function generator for the generic hitCharacterSolid callback. This is
      * used repeatedly by ThingHittr to generate separately optimized Functions
      * for different Thing types.
-     * 
+     *
      * @returns A Function that generates hitCharacterSolid.
      */
     generateHitCharacterSolid(this: MarioGame): (thing: ICharacter, other: ISolid) => void {
         /**
-         * Generic callback for when a character touches a solid. Solids that 
+         * Generic callback for when a character touches a solid. Solids that
          * "up" kill anything that didn't cause the up, but otherwise this will
          * normally involve the solid's collide callback being called and
          * under/undermid checks activating.
-         * 
+         *
          * @param thing
          * @param other
          * @returns Whether thing is hitting other.
@@ -50,9 +68,7 @@ export const collisionHandlerMethods = {
             }
 
             // If the character is overlapping the solid, call that too
-            if (
-                thing.checkOverlaps
-                && thing.FSM.isCharacterOverlappingSolid(thing, other)) {
+            if (thing.checkOverlaps && thing.FSM.isCharacterOverlappingSolid(thing, other)) {
                 thing.FSM.markOverlap(<ICharacterOverlapping>thing, other);
             }
         };
@@ -60,17 +76,17 @@ export const collisionHandlerMethods = {
 
     /**
      * Function generator for the generic hitCharacterCharacter callback. This
-     * is used repeatedly by ThingHittr to generate separately optimized 
+     * is used repeatedly by ThingHittr to generate separately optimized
      * Functions for different Thing types.
-     * 
+     *
      * @returns A Function that generates hitCharacterCharacter.
      */
     generateHitCharacterCharacter(this: MarioGame): (thing: ICharacter, other: ICharacter) => void {
         /**
          * Generic callback for when a character touches another character. The
-         * first Thing's collide callback is called unless it's a player, in 
+         * first Thing's collide callback is called unless it's a player, in
          * which the other Thing's is.
-         *  
+         *
          * @param thing
          * @param other
          * @returns Whether thing is hitting other.
@@ -91,7 +107,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback used by most Items. The item's action callback will
      * be called only if the first Thing is a player.
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   An Item being touched by thing.
      */
@@ -108,11 +124,11 @@ export const collisionHandlerMethods = {
     },
 
     /**
-     * General callback for when a character touches a solid. This mostly 
+     * General callback for when a character touches a solid. This mostly
      * determines if the character is on top (it should rest on the solid), to
      * the side (it should shouldn't overlap), or undernearth (it also shouldn't
      * overlap).
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   A Solid being touched by thing.
      */
@@ -166,31 +182,25 @@ export const collisionHandlerMethods = {
 
         // Character bumping into the side of the solid
         if (
-            thing.resting !== other
-            && !thing.FSM.isCharacterBumpingSolid(thing, other)
-            && !thing.FSM.isThingOnThing(thing, other)
-            && !thing.FSM.isThingOnThing(other, thing)
-            && !thing.under
+            thing.resting !== other &&
+            !thing.FSM.isCharacterBumpingSolid(thing, other) &&
+            !thing.FSM.isThingOnThing(thing, other) &&
+            !thing.FSM.isThingOnThing(other, thing) &&
+            !thing.under
         ) {
             // Character to the left of the solid
             if (thing.right <= other.right) {
                 thing.xvel = Math.min(thing.xvel, 0);
                 thing.FSM.shiftHoriz(
                     thing,
-                    Math.max(
-                        other.left + thing.FSM.unitsize - thing.right,
-                        thing.FSM.unitsize / -2
-                    )
+                    Math.max(other.left + thing.FSM.unitsize - thing.right, thing.FSM.unitsize / -2)
                 );
             } else {
                 // Character to the right of the solid
                 thing.xvel = Math.max(thing.xvel, 0);
                 thing.FSM.shiftHoriz(
                     thing,
-                    Math.min(
-                        other.right - thing.FSM.unitsize - thing.left,
-                        thing.FSM.unitsize / 2
-                    )
+                    Math.min(other.right - thing.FSM.unitsize - thing.left, thing.FSM.unitsize / 2)
                 );
             }
 
@@ -214,7 +224,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for a character hitting an "up" solid. If it has an
      * onCollideUp callback, that is called; otherwise, it is killed.
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   A Solid being touched by thing.
      */
@@ -230,7 +240,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for an item hitting an "up" solid. Items just hop
      * and switch direction.
-     * 
+     *
      * @param thing   An Item touching other.
      * @param other   A Solid being touched by thing.
      */
@@ -242,7 +252,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for a floating coin being hit by an "up" solid. It is
      * animated, as if it were hit as the contents of a solid.
-     * 
+     *
      * @param thing   A Coin being touched by other.
      * @param other   A Solid touching thing.
      */
@@ -255,7 +265,7 @@ export const collisionHandlerMethods = {
      * Collision callback for a player hitting a regular Coin. The Coin
      * disappears but points and Coin totals are both increased, along with
      * the "Coin" sound being played.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A Coin being touched by thing.
      */
@@ -273,7 +283,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for a player hitting a Star. The Star is killed, and
      * a PlayerStarUp trigger is called on the Thing.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A Star being touched by thing.
      */
@@ -288,9 +298,9 @@ export const collisionHandlerMethods = {
 
     /**
      * Collision callback for a character being hit by a fireball. It will
-     * most likely be killed with an explosion unless it has the nofiredeath 
+     * most likely be killed with an explosion unless it has the nofiredeath
      * flag, in which case only the fireball dies.
-     * 
+     *
      * @param thing   A Character being touched by other.
      * @param other   A Fireball touching thing.
      */
@@ -307,12 +317,10 @@ export const collisionHandlerMethods = {
         }
 
         if (thing.nofiredeath) {
-            thing.FSM.AudioPlayer.playLocal(
-                "Bump", thing.FSM.getMidX(other));
+            thing.FSM.AudioPlayer.playLocal("Bump", thing.FSM.getMidX(other));
             thing.death(thing);
         } else {
-            thing.FSM.AudioPlayer.playLocal(
-                "Kick", thing.FSM.getMidX(other));
+            thing.FSM.AudioPlayer.playLocal("Kick", thing.FSM.getMidX(other));
             thing.death(thing, 2);
             thing.FSM.scoreOn(thing.scoreFire, thing);
         }
@@ -323,7 +331,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for hitting a CastleFireball. The character is killed
      * unless it has the star flag, in which case the CastleFireball is.
-     * 
+     *
      * @param thing   A Character being touched by other.
      * @param other   A CastleFireball touching thing.
      */
@@ -339,7 +347,7 @@ export const collisionHandlerMethods = {
      * Collision callback for when a character hits a Shell. This covers various
      * cases, such as deaths, side-to-side Shell collisions, player stomps, and
      * so on.
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   A Shell being touched by thing.
      */
@@ -352,7 +360,7 @@ export const collisionHandlerMethods = {
             return thing.FSM.collideShell(thing, other);
         }
 
-        // Hitting a solid (e.g. wall) 
+        // Hitting a solid (e.g. wall)
         if (thing.groupType === "Solid") {
             return thing.FSM.collideShellSolid(<any>thing, other);
         }
@@ -378,9 +386,9 @@ export const collisionHandlerMethods = {
     },
 
     /**
-     * Collision callback for a solid being hit by a Shell. The Shell will 
+     * Collision callback for a solid being hit by a Shell. The Shell will
      * bounce the opposition direction.
-     * 
+     *
      * @param thing   A Solid being touched by other.
      * @param other   A Shell touching thing.
      */
@@ -401,14 +409,13 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for when a Player hits a Shell. This covers all the
      * possible scenarios, and is much larger than common sense dictates.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A Shell being touched by thing.
      */
     collideShellPlayer(this: MarioGame, thing: IPlayer, other: IShell): void {
         var shelltoleft: boolean = thing.FSM.objectToLeft(other, thing),
-            playerjump: boolean = thing.yvel > 0 && (
-                thing.bottom <= other.top + thing.FSM.unitsize * 2);
+            playerjump: boolean = thing.yvel > 0 && thing.bottom <= other.top + thing.FSM.unitsize * 2;
 
         // Star players kill the shell no matter what
         if (thing.star) {
@@ -422,7 +429,7 @@ export const collisionHandlerMethods = {
         if (other.landing) {
             // Equal shelltoleft measurements: it's still being pushed
             if (other.shelltoleft === shelltoleft) {
-                // Tepmorarily increase the landing count of the shell; if it is 
+                // Tepmorarily increase the landing count of the shell; if it is
                 // just being started, that counts as the score hit
                 other.landing += 1;
                 if (other.landing === 1) {
@@ -433,7 +440,8 @@ export const collisionHandlerMethods = {
                         other.landing -= 1;
                     },
                     2,
-                    other);
+                    other
+                );
             } else {
                 // Different shelltoleft measurements: it's deadly
                 thing.death(thing);
@@ -464,7 +472,8 @@ export const collisionHandlerMethods = {
                         other.hitcount -= 1;
                     },
                     2,
-                    other);
+                    other
+                );
             } else {
                 // Otherwise it was moving, but should now be still
                 other.xvel = 0;
@@ -498,15 +507,13 @@ export const collisionHandlerMethods = {
                         other.landing -= 1;
                     },
                     2,
-                    other);
+                    other
+                );
             }
         } else {
             // Since a Player is touching the shell normally, that's a death if
             // the shell isn't moving away
-            if (!other.hitcount && (
-                (shelltoleft && other.xvel > 0)
-                || (!shelltoleft && other.xvel < 0)
-            )) {
+            if (!other.hitcount && ((shelltoleft && other.xvel > 0) || (!shelltoleft && other.xvel < 0))) {
                 thing.death(thing);
             }
         }
@@ -515,7 +522,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for two Shells. If one is moving, it kills the other;
      * otherwise, they bounce off.
-     * 
+     *
      * @param thing   A Shell touching other.
      * @param other   A Shell being touched by thing.
      */
@@ -541,7 +548,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for a general character hitting an enemy. This covers
      * many general cases, most of which involve a player and an enemy.
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   An Enemy being touched by thing.
      */
@@ -573,11 +580,8 @@ export const collisionHandlerMethods = {
 
         // Player landing on top of an enemy
         if (
-            ((<IStar>thing).star && !other.nostar)
-            || (
-                !thing.FSM.MapScreener.underwater
-                && (!other.deadly && thing.FSM.isThingOnThing(thing, other))
-            )
+            ((<IStar>thing).star && !other.nostar) ||
+            (!thing.FSM.MapScreener.underwater && !other.deadly && thing.FSM.isThingOnThing(thing, other))
         ) {
             // For the sake of typing. Should be optimized during runtime.
             var player: IPlayer = <IPlayer>thing;
@@ -595,18 +599,13 @@ export const collisionHandlerMethods = {
                 player.FSM.AudioPlayer.play("Kick");
             } else {
                 // A non-star player kills the enemy with spawn, and hops
-                player.FSM.setBottom(
-                    player,
-                    Math.min(player.bottom, other.top + player.FSM.unitsize)
-                );
+                player.FSM.setBottom(player, Math.min(player.bottom, other.top + player.FSM.unitsize));
                 player.FSM.TimeHandler.addEvent(player.FSM.jumpEnemy, 0, player, other);
 
                 other.death(other, player.star ? 2 : 0);
 
                 player.FSM.addClass(player, "hopping");
-                player.FSM.removeClasses(
-                    player, "running skidding jumping one two three"
-                );
+                player.FSM.removeClasses(player, "running skidding jumping one two three");
                 player.hopping = true;
 
                 if (player.power === 1) {
@@ -622,9 +621,9 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for a character bumping into the bottom of a solid.
      * Only players cause the solid to jump and be considered "up", though large
-     * players will kill solids that have the breakable flag on. If the solid 
+     * players will kill solids that have the breakable flag on. If the solid
      * does jump and has contents, they emerge.
-     * 
+     *
      * @param thing   A Brick being touched by other.
      * @param other   A Character touching thing.
      */
@@ -645,33 +644,28 @@ export const collisionHandlerMethods = {
 
         thing.up = other;
         if ((<IPlayer>other).power > 1 && thing.breakable && !thing.contents) {
-            thing.FSM.TimeHandler.addEvent(
-                thing.FSM.killBrick, 2, thing, other);
+            thing.FSM.TimeHandler.addEvent(thing.FSM.killBrick, 2, thing, other);
             return;
         }
 
         thing.FSM.animateSolidBump(thing);
 
         if (thing.contents) {
-            thing.FSM.TimeHandler.addEvent(
-                function (): void {
-                    thing.FSM.animateSolidContents(thing, <any>other);
+            thing.FSM.TimeHandler.addEvent(function (): void {
+                thing.FSM.animateSolidContents(thing, <any>other);
 
-                    if (thing.contents !== "Coin") {
+                if (thing.contents !== "Coin") {
+                    thing.FSM.animateBlockBecomesUsed(<any>thing);
+                } else {
+                    if (thing.lastcoin) {
                         thing.FSM.animateBlockBecomesUsed(<any>thing);
                     } else {
-                        if (thing.lastcoin) {
-                            thing.FSM.animateBlockBecomesUsed(<any>thing);
-                        } else {
-                            thing.FSM.TimeHandler.addEvent(
-                                function (): void {
-                                    thing.lastcoin = true;
-                                },
-                                245);
-                        }
+                        thing.FSM.TimeHandler.addEvent(function (): void {
+                            thing.lastcoin = true;
+                        }, 245);
                     }
-                },
-                7);
+                }
+            }, 7);
         }
     },
 
@@ -679,7 +673,7 @@ export const collisionHandlerMethods = {
      * Collision callback for a Player hitting the bottom of a Block. Unused
      * Blocks have their contents emerge (by default a Coin), while used Blocks
      * just have a small bump noise played.
-     * 
+     *
      * @param thing   A Block being touched by other.
      * @param other   A Player touching thing.
      */
@@ -704,14 +698,13 @@ export const collisionHandlerMethods = {
         thing.FSM.animateSolidBump(thing);
         thing.FSM.removeClass(thing, "hidden");
         thing.FSM.switchClass(thing, "unused", "used");
-        thing.FSM.TimeHandler.addEvent(
-            thing.FSM.animateSolidContents, 7, thing, other);
+        thing.FSM.TimeHandler.addEvent(thing.FSM.animateSolidContents, 7, thing, other);
     },
 
     /**
      * Collision callback for Vines. A player becomes "attached" to the Vine
      * and starts climbing it, with movement set to movePlayerVine.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A Solid being touched by thing.
      */
@@ -747,13 +740,10 @@ export const collisionHandlerMethods = {
 
         thing.FSM.animateCharacterPauseVelocity(thing);
         thing.FSM.addClass(thing, "climbing");
-        thing.FSM.removeClasses(
-            thing, "running", "jumping", "skidding");
+        thing.FSM.removeClasses(thing, "running", "jumping", "skidding");
 
         thing.FSM.TimeHandler.cancelClassCycle(thing, "running");
-        thing.FSM.TimeHandler.addClassCycle(
-            thing, ["one", "two"], "climbing", 0
-        );
+        thing.FSM.TimeHandler.addClassCycle(thing, ["one", "two"], "climbing", 0);
 
         thing.attachedLeft = !thing.FSM.objectToLeft(thing, other);
         thing.attachedOff = thing.attachedLeft ? 1 : -1;
@@ -765,19 +755,13 @@ export const collisionHandlerMethods = {
      * Collision callback for a character hitting a Springboard. This acts as a
      * normal solid to non-players, and only acts as a spring if a Player is
      * above it and moving down.
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   A Springboard being touched by thing.
      */
     collideSpringboard(this: MarioGame, thing: ICharacter, other: ISpringboard): void {
-        if (
-            thing.player && thing.yvel >= 0 && !other.tension
-            && thing.FSM.isCharacterOnSolid(thing, other)
-        ) {
-            other.tension = other.tensionSave = Math.max(
-                thing.yvel * 0.77,
-                thing.FSM.unitsize
-            );
+        if (thing.player && thing.yvel >= 0 && !other.tension && thing.FSM.isCharacterOnSolid(thing, other)) {
+            other.tension = other.tensionSave = Math.max(thing.yvel * 0.77, thing.FSM.unitsize);
             thing.movement = thing.FSM.movePlayerSpringboardDown;
             (<IPlayer>thing).spring = other;
             thing.xvel /= 2.8;
@@ -789,7 +773,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for a character hitting a WaterBlocker on the top of
      * an underwater area. It simply stops them from moving up.
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   A WaterBlocker being touched by thing.
      */
@@ -800,7 +784,7 @@ export const collisionHandlerMethods = {
     /**
      * Collision callback for the DetectCollision on a flagpole at the end of an
      * EndOutsideCastle. The Flagpole cutscene is started.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A DetectCollision being touched by thing.
      */
@@ -819,7 +803,7 @@ export const collisionHandlerMethods = {
      * Collision callback for a Player hitting a CastleAxe. A player and
      * screen are paused for 140 steps (other callbacks should be animating
      * the custcene).
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A CastleAxe being touched by thing.
      */
@@ -835,11 +819,11 @@ export const collisionHandlerMethods = {
     },
 
     /**
-     * Collision callback for a player hitting the DetectCollision placed next 
+     * Collision callback for a player hitting the DetectCollision placed next
      * a CastleDoor in EndOutsideCastle. Things and the current time are added
      * to cutscene settings. Infinite time goes directly to the Fireworks
      * routine, while having non-infinite time goes to the Countdown routine.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A DetectCollision being touched by thing.
      */
@@ -862,11 +846,11 @@ export const collisionHandlerMethods = {
         }
     },
 
-    /** 
+    /**
      * Collision callback for a player reaching a castle NPC. Things and
      * the NPC's keys are added to cutscene settings, and the Dialog routine
      * is played.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A DetectCollision being touched by thing.
      */
@@ -885,7 +869,7 @@ export const collisionHandlerMethods = {
      * cloud worlds. A player collides with it as normal for solids, but if
      * a Player is then resting on it, it becomes a normal moving platform
      * with only horizontal momentum.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A Solid being touched by thing.
      */
@@ -909,7 +893,7 @@ export const collisionHandlerMethods = {
      * callback is only hit if the Thing is a player; otherwise, an optional
      * activateFail may be activated. The DetectCollision is then killed if it
      * doesn't have the noActivateDeath flag.
-     * 
+     *
      * @param thing   A Character touching other.
      * @param other   A DetectCollision being touched by thing.
      */
@@ -929,10 +913,10 @@ export const collisionHandlerMethods = {
     },
 
     /**
-     * Collision callback for level transports (any Thing with a .transport 
-     * attribute). Depending on the transport, either the map or location are 
+     * Collision callback for level transports (any Thing with a .transport
+     * attribute). Depending on the transport, either the map or location are
      * shifted to it.
-     * 
+     *
      * @param thing   A Player touching other.
      * @param other   A Solid being touched by thing.
      */
@@ -960,7 +944,7 @@ export const collisionHandlerMethods = {
         } else {
             throw new Error("Unknown transport type:" + transport);
         }
-    },
+    }
 };
 
 export type CollisionHandlerMethods = typeof collisionHandlerMethods;

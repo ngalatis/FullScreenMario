@@ -393,7 +393,6 @@ export interface IAudioPlayr {
     addEventImmediate(name: string, event: string, callback: any): void;
 }
 
-
 /**
  * What a Sound needs from the player that owns it.
  */
@@ -482,7 +481,10 @@ class Sound implements ISound {
     private timer: any;
     private listeners: { [type: string]: { callback: ISoundListener; once: boolean }[] } = {};
 
-    constructor(public readonly name: string, private host: ISoundHost) { }
+    constructor(
+        public readonly name: string,
+        private host: ISoundHost
+    ) {}
 
     get paused(): boolean {
         return this._paused;
@@ -842,7 +844,6 @@ class Sound implements ISound {
     }
 }
 
-
 /**
  * An audio library to automate lazy loading, background preloading and
  * controlled playback of multiple audio tracks, built on the Web Audio API:
@@ -1006,8 +1007,7 @@ export class AudioPlayr implements IAudioPlayr {
         this.directory = settings.directory;
         this.fileTypes = settings.fileTypes;
         this.getThemeDefault = settings.getThemeDefault || "Theme";
-        this.getVolumeLocal = typeof settings.getVolumeLocal === "undefined"
-            ? 1 : settings.getVolumeLocal;
+        this.getVolumeLocal = typeof settings.getVolumeLocal === "undefined" ? 1 : settings.getVolumeLocal;
 
         // Sounds should always start blank
         this.sounds = {};
@@ -1042,9 +1042,8 @@ export class AudioPlayr implements IAudioPlayr {
         this.preload(settings.library);
     }
 
-
     /* Simple getters
-    */
+     */
 
     /**
      * @returns The listing of sounds, keyed by name.
@@ -1103,9 +1102,8 @@ export class AudioPlayr implements IAudioPlayr {
         return this.output ? this.output.gain.value : 0;
     }
 
-
     /* Playback modifiers
-    */
+     */
 
     /**
      * @returns The current volume as a Number in [0,1], retrieved by the ItemsHoldr.
@@ -1165,9 +1163,8 @@ export class AudioPlayr implements IAudioPlayr {
         this.applyOutputGain();
     }
 
-
     /* Other modifiers
-    */
+     */
 
     /**
      * @returns The Function or Number used as the volume setter for local sounds.
@@ -1199,9 +1196,8 @@ export class AudioPlayr implements IAudioPlayr {
         this.getThemeDefault = getThemeDefaultNew;
     }
 
-
     /* Playback
-    */
+     */
 
     /**
      * Plays the sound of the given name.
@@ -1445,9 +1441,8 @@ export class AudioPlayr implements IAudioPlayr {
         return sound;
     }
 
-
     /* Public utilities
-    */
+     */
 
     /**
      * Adds an event listener to a sound. The player keeps track of the
@@ -1525,9 +1520,8 @@ export class AudioPlayr implements IAudioPlayr {
         this.sounds[name].addEventListener(event, callback, { once: true });
     }
 
-
     /* Private utilities
-    */
+     */
 
     /**
      * Restarts a sound from the beginning, at full relative volume.
@@ -1634,18 +1628,16 @@ export class AudioPlayr implements IAudioPlayr {
         }
     }
 
-
     /* Web Audio
-    */
+     */
 
     /**
      * Creates the shared context and master gain. If there's no Web Audio,
      * the player still works silently, and every sound ends right away.
      */
     private createContext(): void {
-        var Context: typeof AudioContext | undefined = typeof window === "undefined"
-                ? undefined
-                : (window.AudioContext || (window as any).webkitAudioContext);
+        var Context: typeof AudioContext | undefined =
+            typeof window === "undefined" ? undefined : window.AudioContext || (window as any).webkitAudioContext;
 
         if (!Context) {
             return;
@@ -1653,8 +1645,9 @@ export class AudioPlayr implements IAudioPlayr {
 
         try {
             this.context = new Context();
-            this.unlocked = this.context.state === "running"
-                || !!(navigator.userActivation && navigator.userActivation.hasBeenActive);
+            this.unlocked =
+                this.context.state === "running" ||
+                !!(navigator.userActivation && navigator.userActivation.hasBeenActive);
             this.output = this.context.createGain();
             this.output.connect(this.context.destination);
             this.context.addEventListener("statechange", this.stateHandler);
@@ -1758,11 +1751,10 @@ export class AudioPlayr implements IAudioPlayr {
         this.allSounds.forEach((sound: Sound): void => sound.syncHold());
     }
 
-    private ignoreError(): void { }
-
+    private ignoreError(): void {}
 
     /* Loading
-    */
+     */
 
     /**
      * Creates a sound for every name in the library settings. Nothing is
@@ -1883,12 +1875,7 @@ export class AudioPlayr implements IAudioPlayr {
     }
 
     private async fetchBuffer(name: string): Promise<AudioBuffer | undefined> {
-        var type: string,
-            url: string,
-            controller: AbortController,
-            timeout: any,
-            response: Response,
-            i: number;
+        var type: string, url: string, controller: AbortController, timeout: any, response: Response, i: number;
 
         if (this.disposed || !this.context || typeof fetch === "undefined") {
             return undefined;

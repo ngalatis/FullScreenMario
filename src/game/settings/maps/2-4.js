@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["2-4"] = {
     "name": "2-4",
     "time": 300,
-    "locations": [
-        { "entry": "Castle" }
-    ],
+    "locations": [{ "entry": "Castle" }],
     "areas": [
         {
             "setting": "Castle",
@@ -50,7 +48,16 @@ MarioGame.MarioGame.settings.maps.library["2-4"] = {
                 { "macro": "Floor", "x": 744, "y": 24, "width": 48 },
                 { "thing": "Stone", "x": 744, "y": 88, "width": 48, "height": 24 },
                 { "macro": "Floor", "x": 792, "width": 80 },
-                { "macro": "Fill", "thing": "Coin", "x": 817, "y": 7, "xnum": 3, "ynum": 2, "xwidth": 8, "yheight": 32 },
+                {
+                    "macro": "Fill",
+                    "thing": "Coin",
+                    "x": 817,
+                    "y": 7,
+                    "xnum": 3,
+                    "ynum": 2,
+                    "xwidth": 8,
+                    "yheight": 32
+                },
                 { "thing": "CastleBlock", "x": 824, "y": 16 },
                 { "thing": "Stone", "x": 864, "y": 24, "height": 24 },
                 { "macro": "Water", "x": 872, "width": 16 },
@@ -60,10 +67,28 @@ MarioGame.MarioGame.settings.maps.library["2-4"] = {
                 { "macro": "Floor", "x": 920, "width": 104 },
                 { "thing": "Stone", "x": 920, "y": 24, "width": 40, "height": 24 },
                 { "thing": "Stone", "x": 920, "y": 88, "width": 104, "height": 24 },
-                { "macro": "Fill", "thing": "Stone", "x": 976, "y": 24, "xnum": 2, "xwidth": 32, "width": 16, "height": 24 },
+                {
+                    "macro": "Fill",
+                    "thing": "Stone",
+                    "x": 976,
+                    "y": 24,
+                    "xnum": 2,
+                    "xwidth": 32,
+                    "width": 16,
+                    "height": 24
+                },
                 { "macro": "Fill", "thing": "Brick", "x": 1024, "y": 64, "xnum": 6 },
                 { "macro": "EndInsideCastle", "x": 1024, "spawnType": "Shell", "transport": { "map": "3-1" } },
-                { "thing": "Platform", "x": 1108, "y": 56, "width": 16, "sliding": true, "begin": 1080, "end": 1112, "nocollidechar": true }
+                {
+                    "thing": "Platform",
+                    "x": 1108,
+                    "y": 56,
+                    "width": 16,
+                    "sliding": true,
+                    "begin": 1080,
+                    "end": 1112,
+                    "nocollidechar": true
+                }
             ]
         }
     ]

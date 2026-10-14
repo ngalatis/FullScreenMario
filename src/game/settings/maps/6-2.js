@@ -96,7 +96,8 @@ MarioGame.MarioGame.settings.maps.library["6-2"] = {
                 { "thing": "Koopa", "x": 1648, "y": 84, "jumping": true },
                 { "macro": "EndOutsideCastle", "x": 1728, "transport": { "map": "6-3" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -111,7 +112,8 @@ MarioGame.MarioGame.settings.maps.library["6-2"] = {
                 { "thing": "PipeHorizontal", "x": 104, "y": 16, "transport": 1 },
                 { "thing": "PipeVertical", "x": 120, "y": 88, "height": 88 }
             ]
-        }, {
+        },
+        {
             "setting": "Underwater",
             "blockBoundaries": true,
             "underwater": true,
@@ -155,7 +157,8 @@ MarioGame.MarioGame.settings.maps.library["6-2"] = {
                 { "thing": "Stone", "x": 504, "y": 88, "width": 16, "height": 88, "width": 16 },
                 { "thing": "ScrollBlocker", "x": 520 }
             ]
-        }, {
+        },
+        {
             "setting": "Sky Night",
             "exit": 3,
             "creation": [
@@ -173,7 +176,8 @@ MarioGame.MarioGame.settings.maps.library["6-2"] = {
                 { "macro": "Fill", "thing": "Coin", "x": 569, "y": 63, "xnum": 10, "xwidth": 8 },
                 { "macro": "Fill", "thing": "Coin", "x": 681, "y": 15, "xnum": 3, "xwidth": 8 }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [

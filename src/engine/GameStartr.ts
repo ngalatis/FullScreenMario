@@ -247,14 +247,14 @@ export interface IAudioPlayrCustoms extends IGameStartrSettingsObject {
     library: {
         [i: string]: {
             [i: string]: string[];
-        }
+        };
     };
 }
 
 /**
  * Settings regarding device input detection, particularly for an IDeviceLayr.
  */
-export interface IDeviceLayrCustoms extends IGameStartrSettingsObject { }
+export interface IDeviceLayrCustoms extends IGameStartrSettingsObject {}
 
 /**
  * Settings regarding upkeep Functions, particularly for an IGroupHoldr.
@@ -274,7 +274,7 @@ export interface IGamesRunnrCustoms extends IGameStartrSettingsObject {
 /**
  * Settings regarding groups holding in-game Things, particularly for an IGroupHoldr.
  */
-export interface IGroupHoldrCustoms extends IGameStartrSettingsObject, GroupHoldr.IGroupHoldrSettings { }
+export interface IGroupHoldrCustoms extends IGameStartrSettingsObject, GroupHoldr.IGroupHoldrSettings {}
 
 /**
  * Settings regarding keyboard and mouse inputs, particularly for an IInputWritr.
@@ -355,7 +355,7 @@ export interface ILevelEditrCustoms extends IGameStartrSettingsObject {
     prethings: {
         [i: string]: {
             [i: string]: any;
-        }
+        };
     };
 
     /**
@@ -367,7 +367,7 @@ export interface ILevelEditrCustoms extends IGameStartrSettingsObject {
         [i: string]: {
             description: string;
             options: any;
-        }
+        };
     };
 }
 
@@ -393,14 +393,14 @@ export interface IMapCustoms extends IGameStartrSettingsObject {
 
     /**
      * Function for when a PreThing is to be spawned.
-     * 
+     *
      * @param prething   A PreThing entering the map.
      */
     onSpawn?: (prething: MapsCreatr.IPreThing) => void;
 
     /**
      * Function for when a PreThing is to be un-spawned.
-     * 
+     *
      * @param prething   A PreThing leaving the map.
      */
     onUnspawn?: (prething: MapsCreatr.IPreThing) => void;
@@ -484,7 +484,7 @@ export interface IMapsCreatrAreaRaw extends MapsCreatr.IMapsCreatrAreaRaw {
 /**
  * Settings regarding computations, particularly for an IMathDecidr.
  */
-export interface IMathDecidrCustoms extends IGameStartrSettingsObject, MathDecidr.IMathDecidrSettings { }
+export interface IMathDecidrCustoms extends IGameStartrSettingsObject, MathDecidr.IMathDecidrSettings {}
 
 /**
  * Settings regarding mods, particularly for an IModAttachr.
@@ -533,13 +533,13 @@ export interface IPixelRendrCustoms extends IGameStartrSettingsObject {
     flipHoriz?: string;
 
     /**
-     * What key in attributions should contain sprite widths (by default, 
+     * What key in attributions should contain sprite widths (by default,
      * "spriteWidth").
      */
     spriteWidth?: string;
 
     /**
-     * What key in attributions should contain sprite heights (by default, 
+     * What key in attributions should contain sprite heights (by default,
      * "spriteHeight").
      */
     spriteHeight?: string;
@@ -564,7 +564,7 @@ export interface IPixelRendrCustoms extends IGameStartrSettingsObject {
 /**
  * Settings regarding in-game object generation, particularly for an IObjectMakr.
  */
-export interface IObjectMakrCustoms extends IGameStartrSettingsObject, ObjectMakr.IObjectMakrSettings { }
+export interface IObjectMakrCustoms extends IGameStartrSettingsObject, ObjectMakr.IObjectMakrSettings {}
 
 /**
  * Settings regarding screen quadrants, particularly for an IQuadsKeepr.
@@ -589,12 +589,12 @@ export interface IQuadsKeeprCustoms extends IGameStartrSettingsObject {
 /**
  * Settings regarded preset in-game scenes, particularly for an IScenePlayr.
  */
-export interface IScenePlayrCustoms extends IGameStartrSettingsObject { }
+export interface IScenePlayrCustoms extends IGameStartrSettingsObject {}
 
 /**
  * Settings regarding collision detection, particularily for an IThingHittr.
  */
-export interface IThingHittrCustoms extends IGameStartrSettingsObject, ThingHittr.IThingHittrSettings { }
+export interface IThingHittrCustoms extends IGameStartrSettingsObject, ThingHittr.IThingHittrSettings {}
 
 /**
  * Settings regarding timed events, particularly for an ITimeHandlr.
@@ -606,7 +606,7 @@ export interface ITimeHandlrCustoms extends IGameStartrSettingsObject {
     timingDefault?: number;
 
     /**
-     * Attribute name to store listings of cycles in objects (by default, 
+     * Attribute name to store listings of cycles in objects (by default,
      * "cycles").
      */
     keyCycles?: string;
@@ -629,7 +629,7 @@ export interface ITimeHandlrCustoms extends IGameStartrSettingsObject {
     keyDoClassCycleStart?: string;
 
     /**
-     * Optional attribute to check for whether a cycle may be given to an 
+     * Optional attribute to check for whether a cycle may be given to an
      * object (if not given, ignored).
      */
     keyCycleCheckValidity?: string;
@@ -643,17 +643,17 @@ export interface ITimeHandlrCustoms extends IGameStartrSettingsObject {
 /**
  * Settings regarding touchscreen inputs, particularly for an ITouchPassr.
  */
-export interface ITouchPassrCustoms extends IGameStartrSettingsObject, TouchPassr.ITouchPassrSettings { }
+export interface ITouchPassrCustoms extends IGameStartrSettingsObject, TouchPassr.ITouchPassrSettings {}
 
 /**
  * Settings regarding help text, particularly for an IUsageHelpr.
  */
-export interface IUsageHelprCustoms extends IGameStartrSettingsObject, UsageHelpr.IUsageHelprSettings { }
+export interface IUsageHelprCustoms extends IGameStartrSettingsObject, UsageHelpr.IUsageHelprSettings {}
 
 /**
  * Settings regarding the visible interface, particularly for an IUserWrappr.
  */
-export interface IUserWrapprCustoms extends IGameStartrSettingsObject { }
+export interface IUserWrapprCustoms extends IGameStartrSettingsObject {}
 
 /**
  * Settings regarding map generation, particularly for an IWorldSeedr.
@@ -848,7 +848,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     DeviceLayer: DeviceLayr.IDeviceLayr;
 
     /**
-     * A general utility for obtaining and analyzing framerate measurements. The 
+     * A general utility for obtaining and analyzing framerate measurements. The
      * most recent measurements are kept up to a certain point (either an infinite
      * number or a set amount). Options for analyzing the data such as getting the
      * mean, median, extremes, etc. are available.
@@ -856,7 +856,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     FPSAnalyzer: FPSAnalyzr.IFPSAnalyzr;
 
     /**
-     * A class to continuously series of "game" Functions. Each game is run in a 
+     * A class to continuously series of "game" Functions. Each game is run in a
      * set order and the group is run as a whole at a particular interval, with a
      * configurable speed.
      */
@@ -871,14 +871,14 @@ export interface IGameStartr extends EightBittr.IEightBittr {
 
     /**
      * A general utility for automating interactions with user-called events linked
-     * with callbacks. Pipe functions are available that take in user input, switch 
-     * on the event code, and call the appropriate callback. Further utilities allow 
+     * with callbacks. Pipe functions are available that take in user input, switch
+     * on the event code, and call the appropriate callback. Further utilities allow
      * for saving and playback of input histories in JSON format.
      */
     InputWriter: InputWritr.IInputWritr;
 
     /**
-     * A versatile container to store and manipulate values in localStorage, and 
+     * A versatile container to store and manipulate values in localStorage, and
      * optionally keep an updated HTML container showing these values.
      */
     ItemsHolder: ItemsHoldr.IItemsHoldr;
@@ -898,12 +898,12 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     /**
      * Storage container and lazy loader for GameStartr maps that is the back-end
      * counterpart to MapsHandlr. Maps are created with their custom Location and
-     * Area members, which are initialized the first time the map is retrieved. 
+     * Area members, which are initialized the first time the map is retrieved.
      */
     MapsCreator: MapsCreatr.IMapsCreatr;
 
     /**
-     * A simple container for Map attributes given by switching to an Area within 
+     * A simple container for Map attributes given by switching to an Area within
      * that map. A bounding box of the current viewport is kept, along with a bag
      * of assorted variable values.
      */
@@ -922,8 +922,8 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     ModAttacher: ModAttachr.IModAttachr;
 
     /**
-     * An factory for JavaScript classes that automates the process of 
-     * setting constructors' prototypal inheritance. A sketch of class inheritance 
+     * An factory for JavaScript classes that automates the process of
+     * setting constructors' prototypal inheritance. A sketch of class inheritance
      * and a listing of properties for each class is taken in, and dynamically
      * accessible constructors keyed by String names are made available.
      */
@@ -936,8 +936,8 @@ export interface IGameStartr extends EightBittr.IEightBittr {
 
     /**
      * A moderately unusual graphics module designed to compress images as
-     * compressed text blobs and store the text blobs in a StringFilr. These tasks 
-     * are performed and cached quickly enough for use in real-time environments, 
+     * compressed text blobs and store the text blobs in a StringFilr. These tasks
+     * are performed and cached quickly enough for use in real-time environments,
      * such as real-time video games.
      */
     PixelRender: PixelRendr.IPixelRendr;
@@ -963,8 +963,8 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     ThingHitter: ThingHittr.IThingHittr;
 
     /**
-     * A timed events library providing a flexible alternative to setTimeout 
-     * and setInterval that respects pauses and resumes. Events are assigned 
+     * A timed events library providing a flexible alternative to setTimeout
+     * and setInterval that respects pauses and resumes. Events are assigned
      * integer timestamps, and can be set to repeat multiple times.
      */
     TimeHandler: TimeHandlr.ITimeHandlr;
@@ -988,7 +988,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
 
     /**
      * A randomization utility to automate random, recursive generation of
-     * possibilities based on position and probability schemas. 
+     * possibilities based on position and probability schemas.
      */
     WorldSeeder: WorldSeedr.IWorldSeedr;
 
@@ -1244,7 +1244,14 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      * @param left   A left boundary to spawn within.
      * @remarks This is generally called by a QuadsKeepr during a screen update.
      */
-    onAreaSpawn(GameStarter: IGameStartr, direction: string, top: number, right: number, bottom: number, left: number): void;
+    onAreaSpawn(
+        GameStarter: IGameStartr,
+        direction: string,
+        top: number,
+        right: number,
+        bottom: number,
+        left: number
+    ): void;
 
     /**
      * "Unspawns" all Things within a given area that should be gone by marking
@@ -1258,7 +1265,14 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      * @param left   A left boundary to spawn within.
      * @remarks This is generally called by a QuadsKeepr during a screen update.
      */
-    onAreaUnspawn(GameStarter: IGameStartr, direction: string, top: number, right: number, bottom: number, left: number): void;
+    onAreaUnspawn(
+        GameStarter: IGameStartr,
+        direction: string,
+        top: number,
+        right: number,
+        bottom: number,
+        left: number
+    ): void;
 
     /**
      * Adds a new Thing to the game at a given position, relative to the top
@@ -1295,7 +1309,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      * @param thing
      * @param attributes   A lookup of attributes that may be added to the Thing's class.
      */
-    thingProcessAttributes(thing: IThing, attributes: { [i: string]: string; }): void;
+    thingProcessAttributes(thing: IThing, attributes: { [i: string]: string }): void;
 
     /**
      * Runs through commands generated by a WorldSeedr and evaluates all of
@@ -1545,10 +1559,10 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     increaseHeight(thing: IThing, dy: number, updateSize?: boolean): void;
 
     /**
-     * Generates a key for a Thing based off the Thing's basic attributes. 
+     * Generates a key for a Thing based off the Thing's basic attributes.
      * This key should be used for PixelRender.get calls, to cache the Thing's
      * sprite.
-     * 
+     *
      * @param thing
      * @returns A key that to identify the Thing's sprite.
      */
@@ -1710,8 +1724,6 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     addPageStyles(styles: IPageStyles): void;
 }
 
-
-
 /**
  * A general-use game engine for 2D 8-bit games.
  */
@@ -1736,7 +1748,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     public DeviceLayer!: DeviceLayr.IDeviceLayr;
 
     /**
-     * A general utility for obtaining and analyzing framerate measurements. The 
+     * A general utility for obtaining and analyzing framerate measurements. The
      * most recent measurements are kept up to a certain point (either an infinite
      * number or a set amount). Options for analyzing the data such as getting the
      * mean, median, extremes, etc. are available.
@@ -1744,7 +1756,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     public FPSAnalyzer!: FPSAnalyzr.IFPSAnalyzr;
 
     /**
-     * A class to continuously series of "game" Functions. Each game is run in a 
+     * A class to continuously series of "game" Functions. Each game is run in a
      * set order and the group is run as a whole at a particular interval, with a
      * configurable speed.
      */
@@ -1759,14 +1771,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * A general utility for automating interactions with user-called events linked
-     * with callbacks. Pipe functions are available that take in user input, switch 
-     * on the event code, and call the appropriate callback. Further utilities allow 
+     * with callbacks. Pipe functions are available that take in user input, switch
+     * on the event code, and call the appropriate callback. Further utilities allow
      * for saving and playback of input histories in JSON format.
      */
     public InputWriter!: InputWritr.IInputWritr;
 
     /**
-     * A versatile container to store and manipulate values in localStorage, and 
+     * A versatile container to store and manipulate values in localStorage, and
      * optionally keep an updated HTML container showing these values.
      */
     public ItemsHolder!: ItemsHoldr.IItemsHoldr;
@@ -1786,12 +1798,12 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Storage container and lazy loader for GameStartr maps that is the back-end
      * counterpart to MapsHandlr. Maps are created with their custom Location and
-     * Area members, which are initialized the first time the map is retrieved. 
+     * Area members, which are initialized the first time the map is retrieved.
      */
     public MapsCreator!: MapsCreatr.IMapsCreatr;
 
     /**
-     * A simple container for Map attributes given by switching to an Area within 
+     * A simple container for Map attributes given by switching to an Area within
      * that map. A bounding box of the current viewport is kept, along with a bag
      * of assorted variable values.
      */
@@ -1810,8 +1822,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     public ModAttacher!: ModAttachr.IModAttachr;
 
     /**
-     * An factory for JavaScript classes that automates the process of 
-     * setting constructors' prototypal inheritance. A sketch of class inheritance 
+     * An factory for JavaScript classes that automates the process of
+     * setting constructors' prototypal inheritance. A sketch of class inheritance
      * and a listing of properties for each class is taken in, and dynamically
      * accessible constructors keyed by String names are made available.
      */
@@ -1824,8 +1836,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * A moderately unusual graphics module designed to compress images as
-     * compressed text blobs and store the text blobs in a StringFilr. These tasks 
-     * are performed and cached quickly enough for use in real-time environments, 
+     * compressed text blobs and store the text blobs in a StringFilr. These tasks
+     * are performed and cached quickly enough for use in real-time environments,
      * such as real-time video games.
      */
     public PixelRender!: PixelRendr.IPixelRendr;
@@ -1851,8 +1863,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     public ThingHitter!: ThingHittr.IThingHittr;
 
     /**
-     * A timed events library providing a flexible alternative to setTimeout 
-     * and setInterval that respects pauses and resumes. Events are assigned 
+     * A timed events library providing a flexible alternative to setTimeout
+     * and setInterval that respects pauses and resumes. Events are assigned
      * integer timestamps, and can be set to repeat multiple times.
      */
     public TimeHandler!: TimeHandlr.ITimeHandlr;
@@ -1876,7 +1888,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * A randomization utility to automate random, recursive generation of
-     * possibilities based on position and probability schemas. 
+     * possibilities based on position and probability schemas.
      */
     public WorldSeeder!: WorldSeedr.IWorldSeedr;
 
@@ -1934,7 +1946,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Initializes a new instance of the GameStartr class.
-     * 
+     *
      * @param customs   Any optional custom settings.
      */
     constructor(settings: IGameStartrSettings = {}) {
@@ -1955,13 +1967,12 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         }
     }
 
-
     /* Resets
-    */
+     */
 
     /**
      * Resets the GameStartr by calling the parent EightBittr.prototype.reset.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -1970,9 +1981,9 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Resets the EightBittr and records the time by calling the parent 
+     * Resets the EightBittr and records the time by calling the parent
      * EightBittr.prototype.resetTimed.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -1982,7 +1993,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.UsageHelper.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -1992,10 +2003,10 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.ObjectMaker.
-     * 
+     *
      * Because many Thing functions require access to other GameStartr modules, each is
-     * given a reference to this container GameStartr via properties.thing.GameStarter. 
-     * 
+     * given a reference to this container GameStartr via properties.thing.GameStarter.
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2014,12 +2025,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                         }
                     }
                 },
-                GameStarter.settings.objects));
+                GameStarter.settings.objects
+            )
+        );
     }
 
     /**
      * Sets this.QuadsKeeper.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2039,12 +2052,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "onAdd": GameStarter.onAreaSpawn.bind(GameStarter, GameStarter),
                     "onRemove": GameStarter.onAreaUnspawn.bind(GameStarter, GameStarter)
                 },
-                GameStarter.settings.quadrants));
+                GameStarter.settings.quadrants
+            )
+        );
     }
 
     /**
      * Sets this.PixelRender.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2056,12 +2071,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "QuadsKeeper": GameStarter.QuadsKeeper,
                     "unitsize": GameStarter.unitsize
                 },
-                GameStarter.settings.sprites));
+                GameStarter.settings.sprites
+            )
+        );
     }
 
     /**
      * Sets this.PixelDrawer.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2075,12 +2092,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "unitsize": GameStarter.unitsize,
                     "generateObjectKey": GameStarter.generateThingKey
                 },
-                GameStarter.settings.renderer));
+                GameStarter.settings.renderer
+            )
+        );
     }
 
     /**
      * Sets this.TimeHandler.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2091,12 +2110,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "classAdd": GameStarter.addClass,
                     "classRemove": GameStarter.removeClass
                 },
-                GameStarter.settings.events));
+                GameStarter.settings.events
+            )
+        );
     }
 
     /**
      * Sets this.AudioPlayer.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2106,12 +2127,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 {
                     "ItemsHolder": GameStarter.ItemsHolder
                 },
-                GameStarter.settings.audio));
+                GameStarter.settings.audio
+            )
+        );
     }
 
     /**
      * Sets this.GamesRunner.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2125,13 +2148,15 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "onPause": GameStarter.onGamePause.bind(GameStarter, GameStarter),
                     "FPSAnalyzer": new FPSAnalyzr.FPSAnalyzr()
                 },
-                GameStarter.settings.runner));
+                GameStarter.settings.runner
+            )
+        );
         GameStarter.FPSAnalyzer = GameStarter.GamesRunner.getFPSAnalyzer();
     }
 
     /**
      * Sets this.ItemsHolder.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2141,12 +2166,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 {
                     "callbackArgs": [GameStarter]
                 },
-                GameStarter.settings.items));
+                GameStarter.settings.items
+            )
+        );
     }
 
     /**
      * Sets this.GroupHolder.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2156,7 +2183,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.ThingHitter.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2166,12 +2193,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 {
                     "scope": GameStarter
                 },
-                GameStarter.settings.collisions));
+                GameStarter.settings.collisions
+            )
+        );
     }
 
     /**
      * Sets this.MapScreener.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2188,7 +2217,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.NumberMaker.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2198,7 +2227,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.MapCreator.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2215,7 +2244,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.AreaSpawner.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2234,7 +2263,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.InputWriter.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2245,12 +2274,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "canTrigger": GameStarter.canInputsTrigger.bind(GameStarter, GameStarter),
                     "eventInformation": GameStarter
                 },
-                GameStarter.settings.input.InputWritrArgs));
+                GameStarter.settings.input.InputWritrArgs
+            )
+        );
     }
 
     /**
      * Sets this.DeviceLayer.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2260,12 +2291,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 {
                     "InputWriter": GameStarter.InputWriter
                 },
-                GameStarter.settings.devices));
+                GameStarter.settings.devices
+            )
+        );
     }
 
     /**
      * Sets this.InputWriter.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2275,12 +2308,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 {
                     "InputWriter": GameStarter.InputWriter
                 },
-                GameStarter.settings.touch));
+                GameStarter.settings.touch
+            )
+        );
     }
 
     /**
      * Sets this.LevelEditor.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2290,12 +2325,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 {
                     "GameStarter": GameStarter
                 },
-                GameStarter.settings.editor));
+                GameStarter.settings.editor
+            )
+        );
     }
 
     /**
      * Sets this.WorldSeeder.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2306,12 +2343,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "random": GameStarter.NumberMaker.random.bind(GameStarter.NumberMaker),
                     "onPlacement": GameStarter.mapPlaceRandomCommands.bind(GameStarter, GameStarter)
                 },
-                GameStarter.settings.generator));
+                GameStarter.settings.generator
+            )
+        );
     }
 
     /**
      * Sets this.ScenePlayer.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2321,12 +2360,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                 {
                     "cutsceneArguments": [GameStarter]
                 },
-                GameStarter.settings.scenes));
+                GameStarter.settings.scenes
+            )
+        );
     }
 
     /**
      * Sets this.MathDecider.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2336,7 +2377,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets this.ModAttacher.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2347,13 +2388,15 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "scopeDefault": GameStarter,
                     "ItemsHoldr": GameStarter.ItemsHolder
                 },
-                GameStarter.settings.mods));
+                GameStarter.settings.mods
+            )
+        );
     }
 
-    /** 
+    /**
      * Starts self.ModAttacher. All mods are enabled, and the "onReady" trigger
      * is fired.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2373,9 +2416,9 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Resets the parent HTML container. Width and height are set by customs, 
+     * Resets the parent HTML container. Width and height are set by customs,
      * and canvas, ItemsHolder, and TouchPassr container elements are added.
-     * 
+     *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
@@ -2388,7 +2431,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
                     "width": settings.width + "px",
                     "height": settings.height + "px"
                 },
-                settings.style)
+                settings.style
+            )
         });
 
         GameStarter.canvas = GameStarter.createCanvas(<number>settings.width, <number>settings.height);
@@ -2398,14 +2442,13 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         GameStarter.TouchPasser.setParentContainer(GameStarter.container);
     }
 
-
     /* Global manipulations
-    */
+     */
 
     /**
      * Scrolls the game window by shifting all Things and checking for quadrant
      * refreshes. Shifts are rounded to the nearest integer, to preserve pixels.
-     * 
+     *
      * @param customs   Any optional custom settings.
      * @param dx   How far to scroll horizontally.
      * @param dy   How far to scroll vertically.
@@ -2414,7 +2457,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         var GameStarter: GameStartr = GameStartr.prototype.ensureCorrectCaller(this);
 
         dx = dx | 0;
-        dy = <number>dy | 0;
+        dy = (<number>dy) | 0;
 
         if (!dx && !dy) {
             return;
@@ -2428,7 +2471,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Scrolls everything but a single Thing.
-     * 
+     *
      * @param thing   The only Thing that shouldn't move on the screen.
      * @param dx   How far to scroll horizontally.
      * @param dy   How far to scroll vertically.
@@ -2443,8 +2486,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Spawns all Things within a given area that should be there. 
-     * 
+     * Spawns all Things within a given area that should be there.
+     *
      * @param GameStarter
      * @param direction   The direction spawning comes from.
      * @param top   A top boundary to spawn within.
@@ -2453,7 +2496,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * @param left   A left boundary to spawn within.
      * @remarks This is generally called by a QuadsKeepr during a screen update.
      */
-    onAreaSpawn(GameStarter: GameStartr, direction: string, top: number, right: number, bottom: number, left: number): void {
+    onAreaSpawn(
+        GameStarter: GameStartr,
+        direction: string,
+        top: number,
+        right: number,
+        bottom: number,
+        left: number
+    ): void {
         GameStarter.AreaSpawner.spawnArea(
             direction,
             (top + GameStarter.MapScreener.top) / GameStarter.unitsize,
@@ -2466,7 +2516,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * "Unspawns" all Things within a given area that should be gone by marking
      * their PreThings as not in game.
-     * 
+     *
      * @param GameStarter
      * @param direction   The direction spawning comes from.
      * @param top   A top boundary to spawn within.
@@ -2475,7 +2525,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * @param left   A left boundary to spawn within.
      * @remarks This is generally called by a QuadsKeepr during a screen update.
      */
-    onAreaUnspawn(GameStarter: GameStartr, direction: string, top: number, right: number, bottom: number, left: number): void {
+    onAreaUnspawn(
+        GameStarter: GameStartr,
+        direction: string,
+        top: number,
+        right: number,
+        bottom: number,
+        left: number
+    ): void {
         GameStarter.AreaSpawner.unspawnArea(
             direction,
             (top + GameStarter.MapScreener.top) / GameStarter.unitsize,
@@ -2487,8 +2544,8 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Adds a new Thing to the game at a given position, relative to the top
-     * left corner of the screen. 
-     * 
+     * left corner of the screen.
+     *
      * @param thingRaw   What type of Thing to add. This may be a String of
      *                   the class title, an Array containing the String
      *                   and an Object of settings, or an actual Thing.
@@ -2538,10 +2595,10 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Processes a Thing so that it is ready to be placed in gameplay. There are
      * a lot of steps here: width and height must be set with defaults and given
-     * to spritewidth and spriteheight, a quadrants Array must be given, the 
+     * to spritewidth and spriteheight, a quadrants Array must be given, the
      * sprite must be set, attributes and onThingMake called upon, and initial
      * class cycles and flipping set.
-     * 
+     *
      * @param thing   The Thing being processed.
      * @param title   What type Thing this is (the name of the class).
      * @param settings   Additional settings to be given to the Thing.
@@ -2566,17 +2623,15 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         }
 
         // Each thing has at least 4 maximum quadrants for the QuadsKeepr
+        num = Math.floor(thing.width * (thing.GameStarter.unitsize / thing.GameStarter.QuadsKeeper.getQuadrantWidth()));
+        if (num > 0) {
+            maxQuads += ((num + 1) * maxQuads) / 2;
+        }
         num = Math.floor(
-            thing.width * (
-                thing.GameStarter.unitsize / thing.GameStarter.QuadsKeeper.getQuadrantWidth()
-            )
+            (thing.height * thing.GameStarter.unitsize) / thing.GameStarter.QuadsKeeper.getQuadrantHeight()
         );
         if (num > 0) {
-            maxQuads += ((num + 1) * maxQuads / 2);
-        }
-        num = Math.floor(thing.height * thing.GameStarter.unitsize / thing.GameStarter.QuadsKeeper.getQuadrantHeight());
-        if (num > 0) {
-            maxQuads += ((num + 1) * maxQuads / 2);
+            maxQuads += ((num + 1) * maxQuads) / 2;
         }
         thing.maxquads = maxQuads;
         thing.quadrants = new Array(maxQuads);
@@ -2590,9 +2645,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         thing.spriteheightpixels = thing.spriteheight * thing.GameStarter.unitsize;
 
         // Canvas, context
-        thing.canvas = thing.GameStarter.createCanvas(
-            thing.spritewidthpixels, thing.spriteheightpixels
-        );
+        thing.canvas = thing.GameStarter.createCanvas(thing.spritewidthpixels, thing.spriteheightpixels);
         thing.context = <CanvasRenderingContext2D>thing.canvas.getContext("2d");
 
         if (thing.opacity !== 1) {
@@ -2614,14 +2667,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         thing.GameStarter.setClassInitial(thing, thing.name || thing.title);
 
         // Sprite cycles
-        if (cycle = thing.spriteCycle) {
+        if ((cycle = thing.spriteCycle)) {
             thing.GameStarter.TimeHandler.addClassCycle(thing, cycle[0], cycle[1] || null, cycle[2] || null);
         }
-        if (cycle = thing.spriteCycleSynched) {
+        if ((cycle = thing.spriteCycleSynched)) {
             thing.GameStarter.TimeHandler.addClassCycleSynched(thing, cycle[0], cycle[1] || null, cycle[2] || null);
         }
 
-        // flipHoriz and flipVert initially 
+        // flipHoriz and flipVert initially
         if (thing.flipHoriz) {
             thing.GameStarter.flipHoriz(thing);
         }
@@ -2637,7 +2690,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * Processes additional Thing attributes. For each attribute the Thing's
      * class says it may have, if it has it, the attribute's key is appeneded to
      * the Thing's name and the attribute value proliferated onto the Thing.
-     * 
+     *
      * @param thing
      * @param attributes   A lookup of attributes that may be added to the Thing's class.
      */
@@ -2662,9 +2715,9 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Runs through commands generated by a WorldSeedr and evaluates all of 
-     * to create PreThings via MapsCreator.analyzePreSwitch. 
-     * 
+     * Runs through commands generated by a WorldSeedr and evaluates all of
+     * to create PreThings via MapsCreator.analyzePreSwitch.
+     *
      * @param GameStarter
      * @param generatedCommands   Commands generated by WorldSeedr.generateFull.
      */
@@ -2698,7 +2751,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Triggered Function for when the game is unpaused. Music resumes, and
      * the mod event is fired.
-     * 
+     *
      * @param GameStartr
      */
     onGamePlay(GameStarter: GameStartr): void {
@@ -2709,7 +2762,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Triggered Function for when the game is paused. Music stops, and the
      * mod event is fired.
-     * 
+     *
      * @param GameStartr
      */
     onGamePause(GameStarter: GameStartr): void {
@@ -2719,7 +2772,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Checks whether inputs can be fired, which by default is always true.
-     * 
+     *
      * @param GameStartr
      * @returns Whether inputs can be fired, which is always true.
      */
@@ -2734,14 +2787,13 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         this.ModAttacher.fireEvent("onGameStart");
     }
 
-
     /* Physics & similar
-    */
+     */
 
     /**
      * Generically kills a Thing by setting its alive to false, hidden to true,
      * and clearing its movement.
-     * 
+     *
      * @param thing
      */
     killNormal(thing: IThing): void {
@@ -2754,10 +2806,10 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         thing.movement = undefined;
     }
 
-    /** 
+    /**
      * Sets a Thing's "changed" flag to true, which indicates to the PixelDrawr
      * to redraw the Thing and its quadrant.
-     * 
+     *
      * @param thing
      */
     markChanged(thing: IThing): void {
@@ -2767,10 +2819,10 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Shifts a Thing vertically using the EightBittr utility, and marks the
      * Thing as having a changed appearance.
-     * 
+     *
      * @param thing
      * @param dy   How far to shift the Thing vertically.
-     * @param notChanged   Whether to skip marking the Thing as changed (by 
+     * @param notChanged   Whether to skip marking the Thing as changed (by
      *                     default, false).
      */
     shiftVert(thing: IThing, dy: number, notChanged?: boolean): void {
@@ -2784,7 +2836,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Shifts a Thing horizontally using the EightBittr utility, and marks the
      * Thing as having a changed appearance.
-     * 
+     *
      * @param thing
      * @param dx   How far to shift the Thing horizontally.
      * @param notChanged   Whether to skip marking the Thing as changed (by
@@ -2801,7 +2853,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Sets a Thing's top using the EightBittr utility, and marks the Thing as
      * having a changed appearance.
-     * 
+     *
      * @param thing
      * @param top   A new top border for the Thing.
      */
@@ -2813,7 +2865,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Sets a Thing's right using the EightBittr utility, and marks the Thing as
      * having a changed appearance.
-     * 
+     *
      * @param thing
      * @param right   A new right border for the Thing.
      */
@@ -2825,7 +2877,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Sets a Thing's bottom using the EightBittr utility, and marks the Thing
      * as having a changed appearance.
-     * 
+     *
      * @param thing
      * @param bottom   A new bottom border for the Thing.
      */
@@ -2837,7 +2889,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Sets a Thing's left using the EightBittr utility, and marks the Thing
      * as having a changed appearance.
-     * 
+     *
      * @param thing
      * @param left   A new left border for the Thing.
      */
@@ -2847,14 +2899,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Shifts a thing both horizontally and vertically. If the Thing marks 
+     * Shifts a thing both horizontally and vertically. If the Thing marks
      * itself as having a parallax effect (parallaxHoriz or parallaxVert), that
      * proportion of movement is respected (.5 = half, etc.).
-     * 
+     *
      * @param thing
      * @param dx   How far to shift the Thing horizontally.
      * @param dy   How far to shift the Thing vertically.
-     * @param notChanged   Whether to skip marking the Thing as changed (by 
+     * @param notChanged   Whether to skip marking the Thing as changed (by
      *                     default, false).
      */
     shiftBoth(thing: IThing, dx: number, dy: number, notChanged?: boolean): void {
@@ -2880,10 +2932,10 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Calls shiftBoth on all members of an Array.
-     * 
+     *
      * @param dx   How far to shift the Things horizontally.
      * @param dy   How far to shift the Things vertically.
-     * @param notChanged   Whether to skip marking the Things as changed (by 
+     * @param notChanged   Whether to skip marking the Things as changed (by
      *                     default, false).
      */
     shiftThings(things: IThing[], dx: number, dy: number, notChanged?: boolean): void {
@@ -2894,7 +2946,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Calls shiftBoth on all groups in the calling GameStartr's GroupHoldr.
-     * 
+     *
      * @param dx   How far to shift the Things horizontally.
      * @param dy   How far to shift the Things vertically.
      */
@@ -2907,12 +2959,12 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * Sets the width and unitwidth of a Thing, and optionally updates the
      * Thing's spritewidth and spritewidth pixels, and/or calls updateSize.
      * The thing is marked as having changed appearance.
-     * 
+     *
      * @param thing
      * @param width   A new width for the Thing.
-     * @param updateSprite   Whether to update the Thing's spritewidth and 
+     * @param updateSprite   Whether to update the Thing's spritewidth and
      *                       spritewidthpixels (by default, false).
-     * @param updateSize   Whether to call updateSize on the Thing (by 
+     * @param updateSize   Whether to call updateSize on the Thing (by
      *                     default, false).
      */
     setWidth(thing: IThing, width: number, updateSprite?: boolean, updateSize?: boolean): void {
@@ -2935,12 +2987,12 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * Sets the height and unitheight of a Thing, and optionally updates the
      * Thing's spriteheight and spriteheight pixels, and/or calls updateSize.
      * The thing is marked as having changed appearance.
-     * 
+     *
      * @param thing
      * @param height   A new height for the Thing.
      * @param updateSprite   Whether to update the Thing's spriteheight and
      *                       spriteheightpixels (by default, false).
-     * @param updateSize   Whether to call updateSize on the Thing (by 
+     * @param updateSize   Whether to call updateSize on the Thing (by
      *                     default, false).
      */
     setHeight(thing: IThing, height: number, updateSprite?: boolean, updateSize?: boolean): void {
@@ -2961,14 +3013,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Utility to call both setWidth and setHeight on a Thing.
-     * 
+     *
      * @param thing
      * @param width   A new width for the Thing.
      * @param height   A new height for the Thing.
      * @param updateSprite   Whether to update the Thing's spritewidth,
      *                       spriteheight, spritewidthpixels, and
      *                       spritspriteheightpixels (by default, false).
-     * @param updateSize   Whether to call updateSize on the Thing (by 
+     * @param updateSize   Whether to call updateSize on the Thing (by
      *                     default, false).
      */
     setSize(thing: IThing, width: number, height: number, updateSprite?: boolean, updateSize?: boolean): void {
@@ -2979,7 +3031,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Shifts a Thing horizontally by its xvel and vertically by its yvel, using
      * shiftHoriz and shiftVert.
-     * 
+     *
      * @param thing
      */
     updatePosition(thing: IThing): void {
@@ -2992,7 +3044,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * unitwidth, unitheight, spritewidthpixels, spriteheightpixels, and
      * spriteheightpixels attributes. The Thing's sprite is then updated by the
      * PixelDrawer, and its appearance is marked as changed.
-     * 
+     *
      * @param thing
      */
     updateSize(thing: IThing): void {
@@ -3009,9 +3061,9 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Reduces a Thing's width by pushing back its right and decreasing its 
+     * Reduces a Thing's width by pushing back its right and decreasing its
      * width. It is marked as changed in appearance.
-     * 
+     *
      * @param thing
      * @param dx   How much to reduce the Thing's width.
      * @param updateSize   Whether to also call updateSize on the Thing
@@ -3029,9 +3081,9 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Reduces a Thing's height by pushing down its top and decreasing its 
+     * Reduces a Thing's height by pushing down its top and decreasing its
      * height. It is marked as changed in appearance.
-     * 
+     *
      * @param thing
      * @param dy   How much to reduce the Thing's height.
      * @param updateSize   Whether to also call updateSize on the Thing
@@ -3049,12 +3101,12 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Increases a Thing's width by pushing forward its right and decreasing its 
+     * Increases a Thing's width by pushing forward its right and decreasing its
      * width. It is marked as changed in appearance.
-     * 
+     *
      * @param thing
      * @param dx   How much to increase the Thing's width.
-     * @param updateSize   Whether to also call updateSize on the Thing 
+     * @param updateSize   Whether to also call updateSize on the Thing
      *                     (by default, false).
      */
     increaseWidth(thing: IThing, dx: number, updateSize?: boolean): void {
@@ -3070,12 +3122,12 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Reduces a Thing's height by pushing down its top and decreasing its 
+     * Reduces a Thing's height by pushing down its top and decreasing its
      * height. It is marked as changed in appearance.
-     * 
+     *
      * @param thing
      * @param dy   How much to increase the Thing's height.
-     * @param updateSize   Whether to also call updateSize on the Thing 
+     * @param updateSize   Whether to also call updateSize on the Thing
      *                     (by default, false).
      */
     increaseHeight(thing: IThing, dy: number, updateSize?: boolean): void {
@@ -3090,15 +3142,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         }
     }
 
-
     /* Appearance utilities
-    */
+     */
 
     /**
-     * Generates a key for a Thing based off the Thing's basic attributes. 
+     * Generates a key for a Thing based off the Thing's basic attributes.
      * This key should be used for PixelRender.get calls, to cache the Thing's
      * sprite.
-     * 
+     *
      * @param thing
      * @returns A key that to identify the Thing's sprite.
      */
@@ -3107,10 +3158,10 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Sets the class of a Thing, sets the new sprite for it, and marks it as 
+     * Sets the class of a Thing, sets the new sprite for it, and marks it as
      * having changed appearance. The class is stored in the Thing's internal
      * .className attribute.
-     * 
+     *
      * @param thing
      * @param className   A new .className for the Thing.
      */
@@ -3123,7 +3174,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * A version of setClass to be used before the Thing's sprite attributes
      * have been set. This just sets the internal .className.
-     * 
+     *
      * @param thing
      * @param className   A new .className for the Thing.
      */
@@ -3132,9 +3183,9 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Adds a string to a Thing's class after a " ", updates the Thing's 
+     * Adds a string to a Thing's class after a " ", updates the Thing's
      * sprite, and marks it as having changed appearance.
-     * 
+     *
      * @param thing
      * @param className   A class to add to the Thing.
      */
@@ -3145,18 +3196,16 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Adds multiple strings to a Thing's class after a " ", updates the Thing's 
-     * sprite, and marks it as having changed appearance. Strings may be given 
-     * as Arrays or Strings; Strings will be split on " ". Any number of 
+     * Adds multiple strings to a Thing's class after a " ", updates the Thing's
+     * sprite, and marks it as having changed appearance. Strings may be given
+     * as Arrays or Strings; Strings will be split on " ". Any number of
      * additional arguments may be given.
-     * 
+     *
      * @param thing
      * @param classes   Any number of classes to add to the Thing.
      */
     addClasses(thing: IThing, ...classes: (string | string[])[]): void {
-        var adder: string | string[],
-            i: number,
-            j: number;
+        var adder: string | string[], i: number, j: number;
 
         for (i = 0; i < classes.length; i += 1) {
             adder = classes[i];
@@ -3174,7 +3223,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Removes a string from a Thing's class, updates the Thing's sprite, and
      * marks it as having changed appearance.
-     * 
+     *
      * @param thing
      * @param className   A class to remove from the Thing.
      */
@@ -3190,18 +3239,16 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Removes multiple strings from a Thing's class, updates the Thing's 
-     * sprite, and marks it as having changed appearance. Strings may be given 
-     * as Arrays or Strings; Strings will be split on " ". Any number of 
+     * Removes multiple strings from a Thing's class, updates the Thing's
+     * sprite, and marks it as having changed appearance. Strings may be given
+     * as Arrays or Strings; Strings will be split on " ". Any number of
      * additional arguments may be given.
-     * 
+     *
      * @param thing
      * @param classes   Any number of classes to remove from the Thing.
      */
     removeClasses(thing: IThing, ...classes: (string | string[])[]): void {
-        var adder: string | string[],
-            i: number,
-            j: number;
+        var adder: string | string[], i: number, j: number;
 
         for (i = 0; i < classes.length; i += 1) {
             adder = classes[i];
@@ -3228,7 +3275,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Removes the first class from a Thing and adds the second. All typical
      * sprite updates are called.
-     * 
+     *
      * @param thing
      * @param classNameOut   A class to remove from the Thing.
      * @param classNameIn   A class to add to the thing.
@@ -3241,7 +3288,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Marks a Thing as being flipped horizontally by setting its .flipHoriz
      * attribute to true and giving it a "flipped" class.
-     * 
+     *
      * @param thing
      */
     flipHoriz(thing: IThing): void {
@@ -3252,7 +3299,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Marks a Thing as being flipped vertically by setting its .flipVert
      * attribute to true and giving it a "flipped" class.
-     * 
+     *
      * @param thing
      */
     flipVert(thing: IThing): void {
@@ -3263,7 +3310,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Marks a Thing as not being flipped horizontally by setting its .flipHoriz
      * attribute to false and giving it a "flipped" class.
-     * 
+     *
      * @param thing
      */
     unflipHoriz(thing: IThing): void {
@@ -3274,7 +3321,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Marks a Thing as not being flipped vertically by setting its .flipVert
      * attribute to true and giving it a "flipped" class.
-     * 
+     *
      * @param thing
      */
     unflipVert(thing: IThing): void {
@@ -3284,7 +3331,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Sets the opacity of the Thing and marks its appearance as changed.
-     * 
+     *
      * @param thing
      * @param opacity   A number in [0,1].
      */
@@ -3293,31 +3340,33 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         thing.GameStarter.markChanged(thing);
     }
 
-
     /* Miscellaneous utilities
-    */
+     */
 
     /**
-     * Ensures the current object is a GameStartr by throwing an error if it 
+     * Ensures the current object is a GameStartr by throwing an error if it
      * is not. This should be used for Functions in any GameStartr descendants
      * that have to call 'this' to ensure their caller is what the programmer
      * expected it to be.
-     * 
+     *
      * @param current
      */
     ensureCorrectCaller(current: any): GameStartr {
         if (!(current instanceof GameStartr)) {
-            throw new Error("A function requires the scope ('this') to be the "
-                + "manipulated GameStartr object. Unfortunately, 'this' is a "
-                + typeof (this) + ".");
+            throw new Error(
+                "A function requires the scope ('this') to be the " +
+                    "manipulated GameStartr object. Unfortunately, 'this' is a " +
+                    typeof this +
+                    "."
+            );
         }
         return current;
     }
 
     /**
-     * Removes a Thing from an Array using Array.splice. If the thing has an 
+     * Removes a Thing from an Array using Array.splice. If the thing has an
      * onDelete, that is called.
-     * 
+     *
      * @param thing
      * @param array   The group containing the thing.
      * @param location   The index of the Thing in the Array, for speed's
@@ -3338,7 +3387,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     /**
      * Takes a snapshot of the current screen canvas by simulating a click event
      * on a dummy link.
-     * 
+     *
      * @param name   A name for the image to be saved as.
      * @param format   A format for the image to be saved as (by default, png).
      * @remarks For security concerns, browsers won't allow this unless it's
@@ -3356,7 +3405,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * Adds a set of CSS styles to the page.
-     * 
+     *
      * @param styles   CSS styles represented as JSON.
      */
     addPageStyles(styles: IPageStyles): void {

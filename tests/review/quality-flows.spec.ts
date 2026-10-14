@@ -56,7 +56,9 @@ test.describe("level flow", () => {
             const groups = fsm.GroupHolder.getGroups();
             const all: any[] = Object.keys(groups).flatMap((name) => groups[name]);
             const pole = all.find((thing) => thing.title === "FlagPole");
-            const door = all.find((thing) => thing.title === "DetectCollision" && thing.transport && thing.transport.map);
+            const door = all.find(
+                (thing) => thing.title === "DetectCollision" && thing.transport && thing.transport.map
+            );
 
             if (!pole || !door) {
                 return false;
@@ -73,14 +75,14 @@ test.describe("level flow", () => {
                 return fsm.ItemsHolder.getItem("world") === "1-2" || fsm.player.dead;
             },
             undefined,
-            { timeout: 45_000 },
+            { timeout: 45_000 }
         );
         const outcome = await page.evaluate(() => {
             const fsm = (window as any).FSM;
             return {
                 world: fsm.ItemsHolder.getItem("world"),
                 dead: !!fsm.player.dead,
-                x: (fsm.MapScreener.left + fsm.player.left) / fsm.unitsize,
+                x: (fsm.MapScreener.left + fsm.player.left) / fsm.unitsize
             };
         });
         expect(outcome, JSON.stringify(outcome)).toMatchObject({ world: "1-2", dead: false });
@@ -108,7 +110,8 @@ test.describe("level flow", () => {
         const placed = await page.evaluate(() => {
             const fsm = (window as any).FSM;
             const pipe = fsm.GroupHolder.getGroup("Solid").find(
-                (thing: any) => String(thing.title).startsWith("Pipe") && thing.transport !== undefined && thing.actionTop,
+                (thing: any) =>
+                    String(thing.title).startsWith("Pipe") && thing.transport !== undefined && thing.actionTop
             );
 
             if (!pipe) {
@@ -128,7 +131,7 @@ test.describe("level flow", () => {
         await page.waitForFunction(
             () => (window as any).FSM.AreaSpawner.getArea() !== (window as any).__areaBefore,
             undefined,
-            { timeout: 20_000 },
+            { timeout: 20_000 }
         );
         await page.evaluate(() => (window as any).FSM.keyUpDown((window as any).FSM));
         await page.waitForTimeout(300);
@@ -163,20 +166,26 @@ test.describe("level flow", () => {
             () => {
                 const groups = (window as any).FSM.GroupHolder.getGroups();
                 return Object.keys(groups).some((name) =>
-                    groups[name].some((thing: any) => thing.texts && thing.texts[0] && thing.texts[0].text === "GAME OVER"),
+                    groups[name].some(
+                        (thing: any) => thing.texts && thing.texts[0] && thing.texts[0].text === "GAME OVER"
+                    )
                 );
             },
             undefined,
-            { timeout: 20_000 },
+            { timeout: 20_000 }
         );
 
         await page.waitForFunction(
             () => {
                 const fsm = (window as any).FSM;
-                return fsm.ItemsHolder.getItem("world") === "1-1" && fsm.ItemsHolder.getItem("lives") === 3 && !fsm.player.dead;
+                return (
+                    fsm.ItemsHolder.getItem("world") === "1-1" &&
+                    fsm.ItemsHolder.getItem("lives") === 3 &&
+                    !fsm.player.dead
+                );
             },
             undefined,
-            { timeout: 30_000 },
+            { timeout: 30_000 }
         );
         expect(errors).toEqual([]);
     });
@@ -196,7 +205,7 @@ test.describe("keyboard", () => {
                 return player.top < before - 8 && player.yvel < 0;
             },
             topBefore,
-            { timeout: 3000 },
+            { timeout: 3000 }
         );
         await page.keyboard.up("ArrowUp");
     });

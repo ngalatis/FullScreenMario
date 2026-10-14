@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["2-3"] = {
     "name": "2-3",
     "time": 300,
-    "locations": [
-        { "entry": "Plain" }
-    ],
+    "locations": [{ "entry": "Plain" }],
     "areas": [
         {
             "setting": "Overworld",

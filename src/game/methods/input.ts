@@ -11,12 +11,12 @@ import type { MarioGame } from "../MarioGame";
 
 export const inputMethods = {
     /* Input
-    */
+     */
 
     /**
-     * Reacts to the left key being pressed. keys.run and leftDown are marked 
+     * Reacts to the left key being pressed. keys.run and leftDown are marked
      * and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -35,7 +35,7 @@ export const inputMethods = {
     /**
      * Reacts to the right key being pressed. keys.run and keys.rightDown are
      * marked and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -58,7 +58,7 @@ export const inputMethods = {
     /**
      * Reacts to the up key being pressed. If a Player can jump, it does, and
      * underwater paddling is checked. The mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -83,11 +83,9 @@ export const inputMethods = {
             }
 
             if (FSM.MapScreener.underwater) {
-                FSM.TimeHandler.addEvent(
-                    function (): void {
-                        player.jumping = player.keys.jump = false;
-                    },
-                    14);
+                FSM.TimeHandler.addEvent(function (): void {
+                    player.jumping = player.keys.jump = false;
+                }, 14);
             }
         }
 
@@ -99,9 +97,9 @@ export const inputMethods = {
     },
 
     /**
-     * Reacts to the down key being pressed. A player's keys.crouch is marked 
+     * Reacts to the down key being pressed. A player's keys.crouch is marked
      * and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -123,7 +121,7 @@ export const inputMethods = {
     /**
      * Reacts to the sprint key being pressed. Firing happens if a Player is
      * able, keys.spring is marked, and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -149,7 +147,7 @@ export const inputMethods = {
     /**
      * Reacts to the pause key being pressed. The game is either paused or unpaused,
      * and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -170,7 +168,7 @@ export const inputMethods = {
     /**
      * Reacts to the mute key being lifted. Muting is toggled and the mod event
      * is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -188,9 +186,9 @@ export const inputMethods = {
     },
 
     /**
-     * Reacts to the left key being lifted. keys.run and keys.leftDown are 
+     * Reacts to the left key being lifted. keys.run and keys.leftDown are
      * marked and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -208,9 +206,9 @@ export const inputMethods = {
     },
 
     /**
-     * Reacts to the right key being lifted. keys.run and keys.rightDown are 
+     * Reacts to the right key being lifted. keys.run and keys.rightDown are
      * marked and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -230,7 +228,7 @@ export const inputMethods = {
     /**
      * Reacts to the up key being lifted. Jumping stops and the mod event is
      * fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -252,7 +250,7 @@ export const inputMethods = {
     /**
      * Reacts to the down key being lifted. keys.crouch is marked, crouch
      * removal happens if necessary, and the mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -275,7 +273,7 @@ export const inputMethods = {
     /**
      * Reacts to the spring key being lifted. keys.sprint is marked and the mod
      * event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -292,7 +290,7 @@ export const inputMethods = {
 
     /**
      * Reacts to the pause key being lifted. The mod event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -307,7 +305,7 @@ export const inputMethods = {
     /**
      * Reacts to a right click being pressed. Pausing is toggled and the mod
      * event is fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -324,7 +322,7 @@ export const inputMethods = {
      * Reacts to a regularly caused device motion event. Acceleration is checked
      * for changed tilt horizontally (to trigger left or right key statuses) or
      * changed tilt vertically (jumping). The mod event is also fired.
-     * 
+     *
      * @param FSM
      * @param event   The original user-caused Event.
      */
@@ -377,13 +375,13 @@ export const inputMethods = {
     /**
      * Checks whether inputs can be fired, which is equivalent to the status of
      * the MapScreener's nokeys variable (an inverse value).
-     * 
+     *
      * @param FSM
      * @returns Whether inputs are allowed to trigger.
      */
     canInputsTrigger(this: MarioGame, FSM: MarioGame): boolean {
         return !FSM.MapScreener.nokeys;
-    },
+    }
 };
 
 export type InputMethods = typeof inputMethods;

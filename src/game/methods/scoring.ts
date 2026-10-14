@@ -11,12 +11,12 @@ import { MarioGame } from "../MarioGame";
 
 export const scoringMethods = {
     /* Scoring
-    */
+     */
 
     /**
      * Determines how many points should be gained from a number of consecutive
      * enemy deaths (such as via hops or shells).
-     * 
+     *
      * @param level   How many deaths have happened.
      * @returns How many points should be gained (or 0, for having gained a life).
      */
@@ -34,15 +34,15 @@ export const scoringMethods = {
     /**
      * Driver function to score some number of points for a Player and show
      * the gains via an animation.
-     * 
+     *
      * @param value   How many points a Player is receiving.
      * @param continuation   Whether the game shouldn't increase the score
      *                       amount in the ItemsHoldr (this will only be
      *                       false on the first score() call).
-     * @remarks For point gains that should not have a visual animation, 
+     * @remarks For point gains that should not have a visual animation,
      *          directly call ItemsHolder.increase("score", value).
-     * @remarks The calling chain will be: 
-     *              score -> scoreOn -> scoreAnimateOn -> scoreAnimate          
+     * @remarks The calling chain will be:
+     *              score -> scoreOn -> scoreAnimateOn -> scoreAnimate  
      */
     score(this: MarioGame, value: number, continuation?: boolean): void {
         if (!value) {
@@ -60,15 +60,15 @@ export const scoringMethods = {
     /**
      * Scores a given number of points for a Player, and shows the gains via
      * an animation centered at the top of a thing.
-     * 
+     *
      * @param value   How many points a Player is receiving.
      * @param thing   An in-game Thing to place the visual score text
      *                        on top of and centered.
      * @param continuation   Whether the game shouldn't increase the score
      *                       amount in the ItemsHoldr (this will only be
      *                       false on the first score() call).
-     * @remarks The calling chain will be: 
-     *              scoreOn -> scoreAnimateOn -> scoreAnimate     
+     * @remarks The calling chain will be:
+     *              scoreOn -> scoreAnimateOn -> scoreAnimate  
      */
     scoreOn(this: MarioGame, value: number, thing: IThing, continuation?: boolean): void {
         if (!value) {
@@ -88,12 +88,12 @@ export const scoringMethods = {
     /**
      * Centers a text associated with some points gain on the top of a Thing,
      * and animates it updward, setting an event for it to die.
-     * 
+     *
      * @param text   The text whose position is being manipulated.
      * @param thing   An in-game Thing to place the visual score text
      *                on top of and centered.
-     * @remarks The calling chain will be: 
-     *              scoreAnimateOn -> scoreAnimate     
+     * @remarks The calling chain will be:
+     *              scoreAnimateOn -> scoreAnimate  
      */
     scoreAnimateOn(this: MarioGame, text: IText, thing: IThing): void {
         thing.FSM.setMidXObj(text, thing);
@@ -103,7 +103,7 @@ export const scoringMethods = {
 
     /**
      * Animates a score on top of a Thing.
-     * 
+     *
      * @param thing   An in-game Thing to place the visual score text
      *                on top of and centered.
      * @param timeout   How many game ticks to wait before killing
@@ -112,23 +112,17 @@ export const scoringMethods = {
      *              scoreAnimate <- scoreAnimateOn <- scoreOn <- score
      */
     scoreAnimate(this: MarioGame, thing: IThing, timeout: number = 28): void {
-        thing.FSM.TimeHandler.addEventInterval(
-            thing.FSM.shiftVert,
-            1,
-            timeout,
-            thing,
-            -thing.FSM.unitsize / 6);
+        thing.FSM.TimeHandler.addEventInterval(thing.FSM.shiftVert, 1, timeout, thing, -thing.FSM.unitsize / 6);
 
-        thing.FSM.TimeHandler.addEvent(
-            thing.FSM.killNormal, timeout, thing);
+        thing.FSM.TimeHandler.addEvent(thing.FSM.killNormal, timeout, thing);
     },
 
     /**
-     * Inelegant catch-all Function for when a Player has hit a shell and 
+     * Inelegant catch-all Function for when a Player has hit a shell and
      * needs points to be scored. This takes into account player star status and
      * Shell resting and peeking. With none of those modifiers, it defaults to
      * scoreOn with 400.
-     * 
+     *
      * @param thing   A Player hitting other.
      * @param other   A Shell being hit by thing.
      * @remarks See http://themushroomkingdom.net/smb_breakdown.shtml
@@ -165,10 +159,10 @@ export const scoringMethods = {
     /**
      * Determines the amount a Player should score upon hitting a flagpole,
      * based on the Player's y-position.
-     * 
+     *
      * @param thing   A Player hitting a flagpole
      * @param difference   How far up the pole the collision happened,
-     *                     by absolute amount (not multiplied by 
+     *                     by absolute amount (not multiplied by
      *                     unitsize).
      * @returns How many points to award.
      * @remarks See http://themushroomkingdom.net/smb_breakdown.shtml
@@ -188,13 +182,13 @@ export const scoringMethods = {
     },
 
     /* Audio
-    */
+     */
 
     /**
-     * Determines how loud a sound should be at an x-location. This 
+     * Determines how loud a sound should be at an x-location. This
      * is louder closer to a Player, and nothing to the right of the
      * visible screen.
-     * 
+     *
      * @param FSM
      * @param xloc   The x-location of the sound's source.
      * @returns How loud the sound should be, in [0,1].
@@ -205,26 +199,21 @@ export const scoringMethods = {
         }
 
         return Math.max(
-            .14,
-            Math.min(
-                .84,
-                (
-                    FSM.MapScreener.width - Math.abs(xloc - FSM.player.left)
-                ) / FSM.MapScreener.width
-            )
+            0.14,
+            Math.min(0.84, (FSM.MapScreener.width - Math.abs(xloc - FSM.player.left)) / FSM.MapScreener.width)
         );
     },
 
     /**
      * Determines the name of the default theme for the current area,
      * which is the first word in the area's setting (split on spaces).
-     * 
+     *
      * @param FSM
      * @returns The default theme for the current area.
      */
     getAudioThemeDefault(this: MarioGame, FSM: MarioGame): string {
         return (<IArea>FSM.AreaSpawner.getArea()).setting.split(" ")[0];
-    },
+    }
 };
 
 export type ScoringMethods = typeof scoringMethods;

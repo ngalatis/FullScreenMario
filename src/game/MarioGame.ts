@@ -2,7 +2,15 @@ import * as AreaSpawnr from "../engine/AreaSpawnr";
 import * as GameStartr from "../engine/GameStartr";
 import * as MathDecidr from "../engine/MathDecidr";
 import * as ObjectMakr from "../engine/ObjectMakr";
-import type { IDeviceMotionStatus, IMarioGame, IMarioGameStoredSettings, IMapScreenr, IPlayer, ITextMappings, IThing } from "./types";
+import type {
+    IDeviceMotionStatus,
+    IMarioGame,
+    IMarioGameStoredSettings,
+    IMapScreenr,
+    IPlayer,
+    ITextMappings,
+    IThing
+} from "./types";
 import { lifecycleMethods, type LifecycleMethods } from "./methods/lifecycle";
 import { inputMethods, type InputMethods } from "./methods/input";
 import { collisionDetectionMethods, type CollisionDetectionMethods } from "./methods/collisionDetection";
@@ -20,12 +28,12 @@ import { castleMacroMethods, type CastleMacroMethods } from "./methods/macrosCas
 
 /**
  * A free HTML5 remake of Nintendo's original Super Mario Bros, expanded for the
- * modern web. It includes the original 32 levels, a random map generator, a 
+ * modern web. It includes the original 32 levels, a random map generator, a
  * level editor, and over a dozen custom mods.
  */
 export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
-    // For the sake of reset functions, constants are stored as members of the 
-    // MarioGame Function itself - this allows prototype setters to use 
+    // For the sake of reset functions, constants are stored as members of the
+    // MarioGame Function itself - this allows prototype setters to use
     // them regardless of whether the prototype has been instantiated yet.
 
     /**
@@ -110,7 +118,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     /**
      * Initializes a new instance of the MarioGame class using the static
      * settings stored in `MarioGame.setting`.
-     * 
+     *
      * @param settings   Extra settings such as screen size.
      */
     constructor(settings: GameStartr.IGameStartrSettings) {
@@ -123,7 +131,9 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
                     constantsSource: MarioGame,
                     constants: ["unitsize", "scale", "gravity", "pointLevels", "customTextMappings"]
                 },
-                settings));
+                settings
+            )
+        );
 
         this.settings = MarioGame.settings;
 
@@ -136,9 +146,8 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         };
     }
 
-
     /* Resets
-    */
+     */
 
     /**
      * Sets this.ObjectMaker.
@@ -166,12 +175,14 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
                         }
                     }
                 },
-                FSM.settings.objects));
+                FSM.settings.objects
+            )
+        );
     }
 
     /**
      * Sets this.AudioPlayer.
-     * 
+     *
      * @param FSM
      * @param customs   Any optional custom settings.
      */
@@ -185,7 +196,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
 
     /**
      * Sets this.AreaSpawner.
-     * 
+     *
      * @param FSM
      * @param customs   Any optional custom settings.
      */
@@ -202,9 +213,9 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
 
     /**
      * Resets this.ItemsHolder via the parent GameStartr resetItemsHolder.
-     * 
+     *
      * If the screen isn't wide enough to fit the "lives" display, it's hidden.
-     * 
+     *
      * @param FSM
      * @param customs   Any optional custom settings.
      */
@@ -212,13 +223,14 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         super.resetItemsHolder(FSM, settings);
 
         if (settings.width !== undefined && settings.width < 560) {
-            (<HTMLElement>(<HTMLTableRowElement>FSM.ItemsHolder.getContainer().children[0]).cells[4]).style.display = "none";
+            (<HTMLElement>(<HTMLTableRowElement>FSM.ItemsHolder.getContainer().children[0]).cells[4]).style.display =
+                "none";
         }
     }
 
     /**
      * Sets this.MathDecider, using its existing MapScreenr as its constants.
-     * 
+     *
      * @param FSM
      * @param customs   Any optional custom settings.
      */
@@ -228,16 +240,18 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
                 {
                     "constants": FSM.MapScreener
                 },
-                FSM.settings.math));
+                FSM.settings.math
+            )
+        );
     }
 
     /**
      * Sets this.container via the parent GameStartr resetContaienr.
-     * 
+     *
      * The container is given the "Press Start" font, the PixelRender is told
      * to draw the scenery, solid, character, and text groups, and the container
      * width is set to the custom's width.
-     * 
+     *
      * @param FSM
      * @param customs   Any optional custom settings.
      */
@@ -261,7 +275,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     /**
      * Slight addition to the GameStartr thingProcess Function. The Thing's hit
      * check type is cached immediately.
-     * 
+     *
      * @param thing   The Thing being processed.
      * @param title   What type Thing this is (the name of the class).
      * @param settings   Additional settings to be given to the Thing.
@@ -286,7 +300,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
      * Adds a new Player Thing to the game and sets it as EightBitter.play. Any
      * required additional settings (namely keys, power/size, and swimming) are
      * applied here.
-     * 
+     *
      * @param left   A left edge to place the Thing at (by default, unitsize * 16).
      * @param bottom   A bottom to place the Thing upon (by default, unitsize * 16).
      * @returns A newly created Player in the game.
@@ -303,18 +317,9 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         if ((<IMapScreenr>FSM.MapScreener).underwater) {
             player.swimming = true;
 
-            FSM.TimeHandler.addClassCycle(
-                player,
-                [
-                    "swim1", "swim2"
-                ],
-                "swimming",
-                5);
+            FSM.TimeHandler.addClassCycle(player, ["swim1", "swim2"], "swimming", 5);
 
-            FSM.TimeHandler.addEventInterval(
-                player.FSM.animatePlayerBubbling,
-                96, Infinity,
-                player);
+            FSM.TimeHandler.addEventInterval(player.FSM.animatePlayerBubbling, 96, Infinity, player);
         }
 
         FSM.setPlayerSizeSmall(player);
@@ -333,23 +338,25 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         return player;
     }
 
-
     /* Miscellaneous utilities
-    */
+     */
 
     /**
-     * Ensures the current object is a GameStartr by throwing an error if it 
+     * Ensures the current object is a GameStartr by throwing an error if it
      * is not. This should be used for functions in any GameStartr descendants
      * that have to call 'this' to ensure their caller is what the programmer
      * expected it to be.
-     * 
-     * @param {Mixed} current   
+     *
+     * @param {Mixed} current  
      */
     ensureCorrectCaller(current: any): MarioGame {
         if (!(current instanceof MarioGame)) {
-            throw new Error("A function requires the scope ('this') to be the "
-                + "manipulated MarioGame object. Unfortunately, 'this' is a "
-                + typeof (this) + ".");
+            throw new Error(
+                "A function requires the scope ('this') to be the " +
+                    "manipulated MarioGame object. Unfortunately, 'this' is a " +
+                    typeof this +
+                    "."
+            );
         }
         return current;
     }
@@ -360,8 +367,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
  * prototype below, and merged into the class type here so that every caller
  * (including the "this" of each method) sees them as ordinary MarioGame members.
  */
-type GroupMethods =
-    LifecycleMethods &
+type GroupMethods = LifecycleMethods &
     InputMethods &
     CollisionDetectionMethods &
     PlayerStateMethods &
@@ -382,12 +388,7 @@ type GroupMethods =
  * are left out of the extended type and declared directly instead.
  */
 type OverridingMethodName =
-    "gameStart" |
-    "generateThingKey" |
-    "onGamePause" |
-    "onGamePlay" |
-    "canInputsTrigger" |
-    "killNormal";
+    "gameStart" | "generateThingKey" | "onGamePause" | "onGamePlay" | "canInputsTrigger" | "killNormal";
 
 export interface MarioGame extends Omit<GroupMethods, OverridingMethodName> {
     gameStart: GroupMethods["gameStart"];

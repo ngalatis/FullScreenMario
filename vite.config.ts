@@ -16,9 +16,9 @@ function thirdPartyNotices(): Plugin {
             this.emitFile({
                 type: "asset",
                 fileName: "third-party-notices.txt",
-                source: readFileSync(fileURLToPath(new URL("./THIRD_PARTY_NOTICES.md", import.meta.url)), "utf8"),
+                source: readFileSync(fileURLToPath(new URL("./THIRD_PARTY_NOTICES.md", import.meta.url)), "utf8")
             });
-        },
+        }
     };
 }
 
@@ -51,7 +51,10 @@ function offlineSupport(): Plugin {
             const hash = createHash("sha256");
 
             for (const file of files) {
-                hash.update(file).update("\0").update(readFileSync(join(outDirectory, file))).update("\0");
+                hash.update(file)
+                    .update("\0")
+                    .update(readFileSync(join(outDirectory, file)))
+                    .update("\0");
             }
 
             // encodeURI because several sound files have spaces in their names
@@ -61,8 +64,9 @@ function offlineSupport(): Plugin {
                 join(outDirectory, "sw.js"),
                 serviceWorkerSource
                     .replace("__CACHE_VERSION__", hash.digest("hex").slice(0, 12))
-                    .replace("__PRECACHE__", JSON.stringify(precache, null, 4)));
-        },
+                    .replace("__PRECACHE__", JSON.stringify(precache, null, 4))
+            );
+        }
     };
 }
 
@@ -178,6 +182,6 @@ export default defineConfig({
     build: {
         target: "es2022",
         // The whole game is one bundle (the original loaded ~70 scripts).
-        chunkSizeWarningLimit: 1000,
-    },
+        chunkSizeWarningLimit: 1000
+    }
 });

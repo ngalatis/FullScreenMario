@@ -2,9 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["6-1"] = {
     "name": "6-1",
-    "locations": [
-        { "entry": "Plain" }
-    ],
+    "locations": [{ "entry": "Plain" }],
     "areas": [
         {
             "setting": "Overworld Night",

@@ -7,23 +7,29 @@ MarioGame.MarioGame.settings.items = {
         "Infinity": "INF"
     },
     "containersArguments": [
-        ["table", {
-            "id": "dataDisplay",
-            "style": {
-                "position": "absolute",
-                "top": 0,
-                "width": "100%",
-                "color": "white",
-                "fontSize": "21px",
-                "textTransform": "uppercase",
+        [
+            "table",
+            {
+                "id": "dataDisplay",
+                "style": {
+                    "position": "absolute",
+                    "top": 0,
+                    "width": "100%",
+                    "color": "white",
+                    "fontSize": "21px",
+                    "textTransform": "uppercase"
+                }
             }
-        }],
-        ["tr", {
-            "style": {
-                "padding": "7px 14px 0 14px",
-                "textAlign": "center"
+        ],
+        [
+            "tr",
+            {
+                "style": {
+                    "padding": "7px 14px 0 14px",
+                    "textAlign": "center"
+                }
             }
-        }]
+        ]
     ],
     "defaults": {
         "elementTag": "td"

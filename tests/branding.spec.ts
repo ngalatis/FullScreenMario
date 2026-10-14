@@ -48,7 +48,7 @@ test.describe("branding", () => {
             const found = [
                 ...findForbiddenTerms(name),
                 // latin1 keeps binary files (images, fonts, audio) scannable byte for byte.
-                ...findForbiddenTerms(readFileSync(file, "latin1")),
+                ...findForbiddenTerms(readFileSync(file, "latin1"))
             ];
 
             if (found.length > 0) {

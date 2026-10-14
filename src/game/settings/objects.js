@@ -28,7 +28,7 @@ MarioGame.MarioGame.settings.objects = {
                         "Bowser": {}
                     },
                     "Hammer": {},
-                    "BowserFire": {},
+                    "BowserFire": {}
                 },
                 "item": {
                     "Mushroom": {
@@ -48,7 +48,7 @@ MarioGame.MarioGame.settings.objects = {
                 "BrickShard": {},
                 "Bubble": {},
                 "Coin": {},
-                "Firework": {},
+                "Firework": {}
             },
             "solid": {
                 "Block": {},
@@ -75,7 +75,7 @@ MarioGame.MarioGame.settings.objects = {
                 "WaterBlocker": {},
                 "detector": {
                     "DetectCollision": {
-                        "ScrollEnabler": {},
+                        "ScrollEnabler": {}
                     },
                     "DetectWindow": {
                         "ScrollBlocker": {},
@@ -100,7 +100,7 @@ MarioGame.MarioGame.settings.objects = {
                 "Cloud": {
                     "Cloud1": {},
                     "Cloud2": {},
-                    "Cloud3": {},
+                    "Cloud3": {}
                 },
                 "Fence": {},
                 "Flag": {},
@@ -165,7 +165,7 @@ MarioGame.MarioGame.settings.objects = {
                 "TextCharacters": {
                     "TextPeriod": {},
                     "TextExclamationMark": {},
-                    "TextColon": {},
+                    "TextColon": {}
                 },
                 "TextColored": {
                     "TextColoredD": {},
@@ -210,7 +210,7 @@ MarioGame.MarioGame.settings.objects = {
                     "Text4000": {},
                     "Text5000": {},
                     "Text8000": {},
-                    "Text1Up": {},
+                    "Text1Up": {}
                 },
                 "CustomText": {}
             }
@@ -244,19 +244,25 @@ MarioGame.MarioGame.settings.objects = {
             "attributes": {
                 "underwater": {
                     "gravity": MarioGame.MarioGame.gravity / 2.8,
-                    "stretches": [{
-                        "thing": "WaterBlocker",
-                        "y": 104,
-                        "height": 16
-                    }, {
-                        "thing": "Water",
-                        "y": 88
-                    }]
+                    "stretches": [
+                        {
+                            "thing": "WaterBlocker",
+                            "y": 104,
+                            "height": 16
+                        },
+                        {
+                            "thing": "Water",
+                            "y": 88
+                        }
+                    ]
                 },
                 "blockBoundaries": {
-                    "afters": [{
-                        "thing": "ScrollBlocker", "noBoundaryStretch": true
-                    }]
+                    "afters": [
+                        {
+                            "thing": "ScrollBlocker",
+                            "noBoundaryStretch": true
+                        }
+                    ]
                 },
                 "random": {
                     "onPlayerDeath": MarioGame.MarioGame.prototype.mapEntranceRespawn,
@@ -336,7 +342,7 @@ MarioGame.MarioGame.settings.objects = {
             "maxspeed": MarioGame.MarioGame.unitsize * 1.35, // Really only used for timed animations
             "maxspeedsave": MarioGame.MarioGame.unitsize * 1.35,
             "scrollspeed": MarioGame.MarioGame.unitsize * 1.75,
-            "running": '', // Evaluates to false for cycle checker
+            "running": "", // Evaluates to false for cycle checker
             "fire": MarioGame.MarioGame.prototype.animatePlayerFire,
             "movement": MarioGame.MarioGame.prototype.movePlayer,
             "death": MarioGame.MarioGame.prototype.killPlayer,
@@ -356,7 +362,7 @@ MarioGame.MarioGame.settings.objects = {
         },
         "enemy": {
             "type": "enemy",
-            "speed": MarioGame.MarioGame.unitsize * .21,
+            "speed": MarioGame.MarioGame.unitsize * 0.21,
             "collide": MarioGame.MarioGame.prototype.collideEnemy,
             "death": MarioGame.MarioGame.prototype.killFlip
         },
@@ -366,9 +372,7 @@ MarioGame.MarioGame.settings.objects = {
             "spawnType": "DeadGoomba",
             "toly": MarioGame.MarioGame.unitsize,
             "death": MarioGame.MarioGame.prototype.killGoomba,
-            "spriteCycleSynched": [
-                [MarioGame.MarioGame.prototype.unflipHoriz, MarioGame.MarioGame.prototype.flipHoriz]
-            ]
+            "spriteCycleSynched": [[MarioGame.MarioGame.prototype.unflipHoriz, MarioGame.MarioGame.prototype.flipHoriz]]
         },
         "Koopa": {
             "height": 12,
@@ -377,9 +381,7 @@ MarioGame.MarioGame.settings.objects = {
             "shelltype": "Shell",
             "toly": MarioGame.MarioGame.unitsize * 2,
             "death": MarioGame.MarioGame.prototype.killKoopa,
-            "spriteCycle": [
-                ["one", "two"]
-            ],
+            "spriteCycle": [["one", "two"]],
             "attributes": {
                 "smart": {
                     "movement": MarioGame.MarioGame.prototype.moveSmart,
@@ -404,8 +406,8 @@ MarioGame.MarioGame.settings.objects = {
             }
         },
         "Beetle": {
-            "speed": MarioGame.MarioGame.unitsize * .21,
-            "xvel": MarioGame.MarioGame.unitsize * .21,
+            "speed": MarioGame.MarioGame.unitsize * 0.21,
+            "xvel": MarioGame.MarioGame.unitsize * 0.21,
             "height": 8,
             "nofire": 2,
             "shellspawn": true,
@@ -413,9 +415,7 @@ MarioGame.MarioGame.settings.objects = {
             "death": MarioGame.MarioGame.prototype.killToShell,
             "spawnType": "BeetleShell",
             "shelltype": "BeetleShell",
-            "spriteCycle": [
-                ["one", "two"]
-            ],
+            "spriteCycle": [["one", "two"]]
         },
         "Piranha": {
             "height": 12,
@@ -428,9 +428,7 @@ MarioGame.MarioGame.settings.objects = {
             "death": MarioGame.MarioGame.prototype.killNormal,
             "movement": MarioGame.MarioGame.prototype.movePiranha,
             "onThingAdded": MarioGame.MarioGame.prototype.spawnPiranha,
-            "spriteCycleSynched": [
-                ["one", "two"]
-            ]
+            "spriteCycleSynched": [["one", "two"]]
         },
         "Blooper": {
             "height": 12,
@@ -449,9 +447,7 @@ MarioGame.MarioGame.settings.objects = {
             "xvel": MarioGame.MarioGame.unitsize / -6,
             "yvel": MarioGame.MarioGame.unitsize / -32,
             "death": MarioGame.MarioGame.prototype.killFlip,
-            "spriteCycleSynched": [
-                ["one", "two"]
-            ],
+            "spriteCycleSynched": [["one", "two"]],
             "attributes": {
                 "red": {
                     "xvel": MarioGame.MarioGame.unitsize / -4,
@@ -486,7 +482,7 @@ MarioGame.MarioGame.settings.objects = {
             "nocollidesolid": true,
             "grounded": true,
             "movement": undefined,
-            "xvel": MarioGame.MarioGame.unitsize / 2,
+            "xvel": MarioGame.MarioGame.unitsize / 2
         },
         "Lakitu": {
             "height": 12,
@@ -504,29 +500,23 @@ MarioGame.MarioGame.settings.objects = {
             "movement": undefined,
             "onResting": MarioGame.MarioGame.prototype.animateSpinyEggHatching,
             "spawnType": "Spiny",
-            "spriteCycleSynched": [
-                ["one", "two"]
-            ]
+            "spriteCycleSynched": [["one", "two"]]
         },
         "Spiny": {
             "deadly": true,
             "moveleft": true,
-            "spriteCycle": [
-                ["one", "two"]
-            ]
+            "spriteCycle": [["one", "two"]]
         },
         "HammerBro": {
             "height": 12,
             "onThingAdded": MarioGame.MarioGame.prototype.spawnHammerBro,
             "movement": MarioGame.MarioGame.prototype.moveHammerBro,
-            "spriteCycle": [
-                ["one", "two"]
-            ]
+            "spriteCycle": [["one", "two"]]
         },
         "Bowser": {
             "width": 16,
             "height": 16,
-            "speed": MarioGame.MarioGame.unitsize * .14,
+            "speed": MarioGame.MarioGame.unitsize * 0.14,
             "gravity": MarioGame.MarioGame.gravity / 2.8,
             "jumpTimes": [117],
             "fireTimes": [280, 350, 490],
@@ -544,9 +534,7 @@ MarioGame.MarioGame.settings.objects = {
             "killonend": MarioGame.MarioGame.prototype.animateBowserFreeze,
             "death": MarioGame.MarioGame.prototype.killBowser,
             "onThingAdded": MarioGame.MarioGame.prototype.spawnBowser,
-            "spriteCycle": [
-                ["one", "two"]
-            ]
+            "spriteCycle": [["one", "two"]]
         },
         "Hammer": {
             "movement": undefined,
@@ -554,10 +542,7 @@ MarioGame.MarioGame.settings.objects = {
             "nocollidechar": true,
             "deadly": true,
             "nofire": true,
-            "spriteCycle": [
-                ["one", "two", "three", "four"],
-                3
-            ]
+            "spriteCycle": [["one", "two", "three", "four"], 3]
         },
         "BowserFire": {
             "width": 12,
@@ -568,13 +553,8 @@ MarioGame.MarioGame.settings.objects = {
             "deadly": true,
             "nofire": true,
             "movement": MarioGame.MarioGame.prototype.moveBowserFire,
-            "xvel": MarioGame.MarioGame.unitsize * -.63,
-            "spriteCycle": [
-                [
-                    MarioGame.MarioGame.prototype.flipVert,
-                    MarioGame.MarioGame.prototype.unflipVert
-                ]
-            ]
+            "xvel": MarioGame.MarioGame.unitsize * -0.63,
+            "spriteCycle": [[MarioGame.MarioGame.prototype.flipVert, MarioGame.MarioGame.prototype.unflipVert]]
         },
         "item": {
             "collide": MarioGame.MarioGame.prototype.collideFriendly,
@@ -585,7 +565,7 @@ MarioGame.MarioGame.settings.objects = {
         },
         "Mushroom": {
             "action": MarioGame.MarioGame.prototype.playerShroom,
-            "speed": MarioGame.MarioGame.unitsize * .42
+            "speed": MarioGame.MarioGame.unitsize * 0.42
         },
         "Mushroom1Up": {
             "action": MarioGame.MarioGame.prototype.playerShroom1Up
@@ -595,9 +575,7 @@ MarioGame.MarioGame.settings.objects = {
         },
         "FireFlower": {
             "action": MarioGame.MarioGame.prototype.playerShroom,
-            "spriteCycle": [
-                ["one", "two", "three", "four"]
-            ]
+            "spriteCycle": [["one", "two", "three", "four"]]
         },
         "Fireball": {
             "width": 4,
@@ -609,9 +587,7 @@ MarioGame.MarioGame.settings.objects = {
             "animate": MarioGame.MarioGame.prototype.animateFireballEmerge,
             "collide": MarioGame.MarioGame.prototype.collideFireball,
             "death": MarioGame.MarioGame.prototype.animateFireballExplode,
-            "spriteCycleSynched": [
-                ["one", "two", "three", "four"], "spinning", 4
-            ]
+            "spriteCycleSynched": [["one", "two", "three", "four"], "spinning", 4]
         },
         "CastleFireball": {
             "deadly": true,
@@ -630,14 +606,12 @@ MarioGame.MarioGame.settings.objects = {
             "name": "star item", // Item class so player's star isn't confused with this
             "width": 7,
             "grounded": true,
-            "speed": MarioGame.MarioGame.unitsize * .56,
+            "speed": MarioGame.MarioGame.unitsize * 0.56,
             "action": MarioGame.MarioGame.prototype.collideStar,
             "movement": MarioGame.MarioGame.prototype.moveJumping,
             "jumpheight": MarioGame.MarioGame.unitsize * 1.17,
             "gravity": MarioGame.MarioGame.gravity / 2.8,
-            "spriteCycle": [
-                ["one", "two", "three", "four"], 0, 7
-            ]
+            "spriteCycle": [["one", "two", "three", "four"], 0, 7]
         },
         "Shell": {
             "height": 7,
@@ -683,9 +657,7 @@ MarioGame.MarioGame.settings.objects = {
             "nocollide": true,
             "grounded": true,
             "movement": undefined,
-            "spriteCycle": [
-                [MarioGame.MarioGame.prototype.unflipHoriz, MarioGame.MarioGame.prototype.flipHoriz]
-            ]
+            "spriteCycle": [[MarioGame.MarioGame.prototype.unflipHoriz, MarioGame.MarioGame.prototype.flipHoriz]]
         },
         "Bubble": {
             "width": 2,
@@ -706,9 +678,7 @@ MarioGame.MarioGame.settings.objects = {
             "animate": MarioGame.MarioGame.prototype.animateEmergeCoin,
             "onCollideUp": MarioGame.MarioGame.prototype.collideUpCoin,
             "collide": MarioGame.MarioGame.prototype.collideCoin,
-            "spriteCycleSynched": [
-                ["one", "two", "three", "two", "one"]
-            ]
+            "spriteCycleSynched": [["one", "two", "three", "two", "one"]]
         },
         "solid": {
             "type": "solid",
@@ -720,7 +690,7 @@ MarioGame.MarioGame.settings.objects = {
             "nocollidesolid": true,
             "firedeath": 0,
             "nofire": 2,
-            "collide": MarioGame.MarioGame.prototype.collideCharacterSolid,
+            "collide": MarioGame.MarioGame.prototype.collideCharacterSolid
         },
         "Brick": {
             "breakable": true,
@@ -730,13 +700,11 @@ MarioGame.MarioGame.settings.objects = {
             "unused": true,
             "contents": "Coin",
             "bottomBump": MarioGame.MarioGame.prototype.collideBottomBlock,
-            "spriteCycleSynched": [
-                ["one", "two", "three", "two", "one"]
-            ]
+            "spriteCycleSynched": [["one", "two", "three", "two", "one"]]
         },
         "BridgeBase": {
             "height": 4,
-            "spritewidth": 4,
+            "spritewidth": 4
         },
         "DeadGoomba": {
             "height": 4,
@@ -772,17 +740,17 @@ MarioGame.MarioGame.settings.objects = {
             "acceleration": MarioGame.MarioGame.unitsize / 16,
             "repeat": true,
             "killonend": false,
-            "maxvel": MarioGame.MarioGame.unitsize / 4 * 1.5,
+            "maxvel": (MarioGame.MarioGame.unitsize / 4) * 1.5,
             "attributes": {
                 "floating": {
                     "onThingAdded": MarioGame.MarioGame.prototype.spawnMoveFloating,
                     "movement": MarioGame.MarioGame.prototype.moveFloating,
-                    "yvel": MarioGame.MarioGame.unitsize / 4 * 1.5
+                    "yvel": (MarioGame.MarioGame.unitsize / 4) * 1.5
                 },
                 "sliding": {
                     "onThingAdded": MarioGame.MarioGame.prototype.spawnMoveSliding,
                     "movement": MarioGame.MarioGame.prototype.moveSliding,
-                    "xvel": MarioGame.MarioGame.unitsize / 4 * 1.5
+                    "xvel": (MarioGame.MarioGame.unitsize / 4) * 1.5
                 },
                 "transport": {
                     "movement": undefined,
@@ -915,8 +883,8 @@ MarioGame.MarioGame.settings.objects = {
         "DecorativeBack": {
             "width": 88,
             "height": 44,
-            "spritewidth": .5,
-            "spriteheight": .5,
+            "spritewidth": 0.5,
+            "spriteheight": 0.5
         },
         "DecorativeDot": {
             "width": 1.5,
@@ -953,7 +921,7 @@ MarioGame.MarioGame.settings.objects = {
             "width": 3.5
         },
         "ScoreText": {
-            "groupType": "Text",
+            "groupType": "Text"
         },
         "TextCharacters": [2.5, 4],
         "TextCharagersHuge": [1, 1],
@@ -970,7 +938,7 @@ MarioGame.MarioGame.settings.objects = {
         "Text1Up": [8, 4],
         "CustomText": {
             "hidden": true,
-            "spacingHorizontal": .5,
+            "spacingHorizontal": 0.5,
             "spacingVertical": 8,
             "spacingVerticalBlank": 6,
             "onThingAdded": MarioGame.MarioGame.prototype.spawnCustomText

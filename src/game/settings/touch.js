@@ -13,9 +13,10 @@ import * as MarioGame from "../MarioGame";
  * Controls" option (see ui.ts), which also remembers an explicit choice.
  */
 MarioGame.MarioGame.settings.touch = {
-    "enabled": typeof window !== "undefined"
-        && typeof window.matchMedia === "function"
-        && window.matchMedia("(pointer: coarse)").matches,
+    "enabled":
+        typeof window !== "undefined" &&
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(pointer: coarse)").matches,
     "styles": {},
     "controls": [
         {

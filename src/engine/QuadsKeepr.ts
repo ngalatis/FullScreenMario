@@ -8,17 +8,17 @@ export interface IThing {
      * The top border of the bounding box.
      */
     top: number;
-    
+
     /**
      * The right border of the bounding box.
      */
     right: number;
-    
+
     /**
      * The bottom border of the bounding box.
      */
     bottom: number;
-    
+
     /**
      * The left border of the bounding box.
      */
@@ -32,9 +32,9 @@ export interface IThingsCollection {
     [i: string]: IThing[];
 }
 
-/** 
+/**
  * For each group name in a Quadrant, how many Things it has of that name.
- * 
+ *
  * @remarks .numthings[groupName] <= .things[groupName].length, as the .things
  *          Arrays are not resized when Things are remved.
  */
@@ -99,7 +99,7 @@ export interface IQuadrantCol extends IQuadrantCollection {
 
 /**
  * A callback for a newly added or removed area from the grid.
- * 
+ *
  * @param direction The direction the changed area is, relative to the existing grid.
  * @param top   The top border of the new area.
  * @param right   The right border of the new area.
@@ -289,9 +289,9 @@ export interface IQuadsKeepr {
 
     /**
      * Shifts each Quadrant horizontally and vertically, along with the row and
-     * column containers. Offsets are adjusted to check for row or column 
+     * column containers. Offsets are adjusted to check for row or column
      * deletion and insertion.
-     * 
+     *
      * @param dx   How much to shift horizontally (will be rounded).
      * @param dy   How much to shift vertically (will be rounded).
      */
@@ -299,8 +299,8 @@ export interface IQuadsKeepr {
 
     /**
      * Adds a QuadrantRow to the end of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantRow.
      */
@@ -308,8 +308,8 @@ export interface IQuadsKeepr {
 
     /**
      * Adds a QuadrantCol to the end of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new col's bounding box.
      * @returns The newly created QuadrantCol.
      */
@@ -317,8 +317,8 @@ export interface IQuadsKeepr {
 
     /**
      * Removes the last QuadrantRow from the end of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onRemove trigger 
+     *
+     * @param callUpdate   Whether this should call the onRemove trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantRow.
      */
@@ -326,16 +326,16 @@ export interface IQuadsKeepr {
 
     /**
      * Removes the last QuadrantCol from the end of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onRemove trigger 
+     *
+     * @param callUpdate   Whether this should call the onRemove trigger
      *                     with the new row's bounding box.
      */
     popQuadrantCol(callUpdate?: boolean): void;
 
     /**
      * Adds a QuadrantRow to the beginning of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantRow.
      */
@@ -343,8 +343,8 @@ export interface IQuadsKeepr {
 
     /**
      * Adds a QuadrantCol to the beginning of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantCol.
      */
@@ -352,16 +352,16 @@ export interface IQuadsKeepr {
 
     /**
      * Removes a QuadrantRow from the beginning of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      */
     shiftQuadrantRow(callUpdate?: boolean): void;
 
     /**
      * Removes a QuadrantCol from the beginning of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      */
     shiftQuadrantCol(callUpdate?: boolean): void;
@@ -370,7 +370,7 @@ export interface IQuadsKeepr {
      * Determines the Quadrants for an entire Array of Things. This is done by
      * wiping each quadrant's memory of that Array's group type and determining
      * each Thing's quadrants.
-     * 
+     *
      * @param group   The name of the group to have Quadrants determined.
      * @param things   The listing of Things in that group.
      */
@@ -379,9 +379,9 @@ export interface IQuadsKeepr {
     /**
      * Determines the Quadrants for a single Thing. The starting row and column
      * indices are calculated so every Quadrant within them should contain the
-     * Thing. In the process, its old Quadrants and new Quadrants are marked as 
+     * Thing. In the process, its old Quadrants and new Quadrants are marked as
      * changed if it was.
-     * 
+     *
      * @param thing   A Thing whose Quadrants are to be determined.
      */
     determineThingQuadrants(thing: IThing): void;
@@ -389,16 +389,14 @@ export interface IQuadsKeepr {
     /**
      * Sets a Thing to be inside a Quadrant. The two are marked so they can
      * recognize each other's existence later.
-     * 
+     *
      * @param thing   A Thing to be placed in the Quadrant.
      * @param quadrant   A Quadrant that now contains the Thing.
-     * @param group   The grouping under which the Quadrant should store the 
+     * @param group   The grouping under which the Quadrant should store the
      *                Thing.
      */
     setThingInQuadrant(thing: IThing, quadrant: IQuadrant, group: string): void;
 }
-
-
 
 /**
  * Quadrant-based collision detection. A grid structure of Quadrants is kept,
@@ -593,8 +591,8 @@ export class QuadsKeepr implements IQuadsKeepr {
         this.onAdd = settings.onAdd;
         this.onRemove = settings.onRemove;
 
-        this.startLeft = <number>settings.startLeft | 0;
-        this.startTop = <number>settings.startTop | 0;
+        this.startLeft = (<number>settings.startLeft) | 0;
+        this.startTop = (<number>settings.startTop) | 0;
 
         this.keyTop = settings.keyTop || "top";
         this.keyLeft = settings.keyLeft || "left";
@@ -610,9 +608,8 @@ export class QuadsKeepr implements IQuadsKeepr {
         this.keyOffsetY = settings.keyOffsetY;
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns The listing of Quadrants grouped by row.
@@ -656,9 +653,8 @@ export class QuadsKeepr implements IQuadsKeepr {
         return this.quadrantHeight;
     }
 
-
     /* Quadrant updates
-    */
+     */
 
     /**
      * Completely resets all Quadrants. The grid structure of rows and columns
@@ -719,15 +715,14 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Shifts each Quadrant horizontally and vertically, along with the row and
-     * column containers. Offsets are adjusted to check for row or column 
+     * column containers. Offsets are adjusted to check for row or column
      * deletion and insertion.
-     * 
+     *
      * @param dx   How much to shift horizontally (will be rounded).
      * @param dy   How much to shift vertically (will be rounded).
      */
     shiftQuadrants(dx: number = 0, dy: number = 0): void {
-        var row: number,
-            col: number;
+        var row: number, col: number;
 
         dx = dx | 0;
         dy = dy | 0;
@@ -761,8 +756,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Adds a QuadrantRow to the end of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantRow.
      */
@@ -788,8 +783,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Adds a QuadrantCol to the end of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new col's bounding box.
      * @returns The newly created QuadrantCol.
      */
@@ -807,7 +802,13 @@ export class QuadsKeepr implements IQuadsKeepr {
         this.right += this.quadrantWidth;
 
         if (callUpdate && this.onAdd) {
-            this.onAdd("xInc", this.top, this.right - this.offsetY, this.bottom, this.right - this.quadrantWidth - this.offsetY);
+            this.onAdd(
+                "xInc",
+                this.top,
+                this.right - this.offsetY,
+                this.bottom,
+                this.right - this.quadrantWidth - this.offsetY
+            );
         }
 
         return col;
@@ -815,8 +816,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Removes the last QuadrantRow from the end of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onRemove trigger 
+     *
+     * @param callUpdate   Whether this should call the onRemove trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantRow.
      */
@@ -837,8 +838,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Removes the last QuadrantCol from the end of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onRemove trigger 
+     *
+     * @param callUpdate   Whether this should call the onRemove trigger
      *                     with the new row's bounding box.
      */
     popQuadrantCol(callUpdate?: boolean): void {
@@ -850,7 +851,13 @@ export class QuadsKeepr implements IQuadsKeepr {
         this.quadrantCols.pop();
 
         if (callUpdate && this.onRemove) {
-            this.onRemove("xDec", this.top, this.right - this.offsetY, this.bottom, this.right - this.quadrantWidth - this.offsetY);
+            this.onRemove(
+                "xDec",
+                this.top,
+                this.right - this.offsetY,
+                this.bottom,
+                this.right - this.quadrantWidth - this.offsetY
+            );
         }
 
         this.right -= this.quadrantWidth;
@@ -858,8 +865,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Adds a QuadrantRow to the beginning of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantRow.
      */
@@ -885,8 +892,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Adds a QuadrantCol to the beginning of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      * @returns The newly created QuadrantCol.
      */
@@ -912,8 +919,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Removes a QuadrantRow from the beginning of the quadrantRows Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      */
     shiftQuadrantRow(callUpdate?: boolean): void {
@@ -933,8 +940,8 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Removes a QuadrantCol from the beginning of the quadrantCols Array.
-     * 
-     * @param callUpdate   Whether this should call the onAdd trigger 
+     *
+     * @param callUpdate   Whether this should call the onAdd trigger
      *                     with the new row's bounding box.
      */
     shiftQuadrantCol(callUpdate?: boolean): void {
@@ -952,21 +959,19 @@ export class QuadsKeepr implements IQuadsKeepr {
         this.left += this.quadrantWidth;
     }
 
-
     /* Thing manipulations
-    */
+     */
 
     /**
      * Determines the Quadrants for an entire Array of Things. This is done by
      * wiping each quadrant's memory of that Array's group type and determining
      * each Thing's quadrants.
-     * 
+     *
      * @param group   The name of the group to have Quadrants determined.
      * @param things   The listing of Things in that group.
      */
     determineAllQuadrants(group: string, things: IThing[]): void {
-        var row: number,
-            col: number;
+        var row: number, col: number;
 
         for (row = 0; row < this.numRows; row += 1) {
             for (col = 0; col < this.numCols; col += 1) {
@@ -980,9 +985,9 @@ export class QuadsKeepr implements IQuadsKeepr {
     /**
      * Determines the Quadrants for a single Thing. The starting row and column
      * indices are calculated so every Quadrant within them should contain the
-     * Thing. In the process, its old Quadrants and new Quadrants are marked as 
+     * Thing. In the process, its old Quadrants and new Quadrants are marked as
      * changed if it was.
-     * 
+     *
      * @param thing   A Thing whose Quadrants are to be determined.
      */
     determineThingQuadrants(thing: IThing): void {
@@ -1016,10 +1021,10 @@ export class QuadsKeepr implements IQuadsKeepr {
     /**
      * Sets a Thing to be inside a Quadrant. The two are marked so they can
      * recognize each other's existence later.
-     * 
+     *
      * @param thing   A Thing to be placed in the Quadrant.
      * @param quadrant   A Quadrant that now contains the Thing.
-     * @param group   The grouping under which the Quadrant should store the 
+     * @param group   The grouping under which the Quadrant should store the
      *                Thing.
      */
     setThingInQuadrant(thing: IThing, quadrant: IQuadrant, group: string): void {
@@ -1037,11 +1042,10 @@ export class QuadsKeepr implements IQuadsKeepr {
         }
     }
 
-
     /* Internal rearranging
-    */
+     */
 
-    /** 
+    /**
      * Adjusts the offset measurements by checking if rows or columns have gone
      * over the limit, which requires rows or columns be removed and new ones
      * added.
@@ -1078,7 +1082,7 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Shifts a Quadrant horizontally and vertically.
-     * 
+     *
      * @param dx   How much to shift horizontally.
      * @param dy   How much to shift vertically.
      */
@@ -1090,13 +1094,12 @@ export class QuadsKeepr implements IQuadsKeepr {
         (<any>quadrant)[this.keyChanged] = true;
     }
 
-
     /* Quadrant placements
-    */
+     */
 
     /**
      * Creates a new Quadrant using the internal ObjectMaker and sets its position.
-     * 
+     *
      * @param left   The horizontal displacement of the Quadrant.
      * @param top   The vertical displacement of the Quadrant.
      * @returns The newly created Quadrant.
@@ -1124,17 +1127,17 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Creates a QuadrantRow, with length determined by numCols.
-     * 
+     *
      * @param left   The initial horizontal displacement of the col.
      * @param top   The vertical displacement of the col.
      * @returns The newly created QuadrantRow.
      */
     private createQuadrantRow(left: number = 0, top: number = 0): IQuadrantRow {
         var row: IQuadrantRow = {
-            "left": left,
-            "top": top,
-            "quadrants": []
-        },
+                "left": left,
+                "top": top,
+                "quadrants": []
+            },
             i: number;
 
         for (i = 0; i < this.numCols; i += 1) {
@@ -1147,17 +1150,17 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * Creates a QuadrantCol, with length determined by numRows.
-     * 
+     *
      * @param left   The horizontal displacement of the col.
      * @param top   The initial vertical displacement of the col.
      * @returns The newly created QuadrantCol.
      */
     private createQuadrantCol(left: number, top: number): IQuadrantCol {
         var col: IQuadrantCol = {
-            "left": left,
-            "top": top,
-            "quadrants": []
-        },
+                "left": left,
+                "top": top,
+                "quadrants": []
+            },
             i: number;
 
         for (i = 0; i < this.numRows; i += 1) {
@@ -1168,13 +1171,12 @@ export class QuadsKeepr implements IQuadsKeepr {
         return col;
     }
 
-
     /* Position utilities
-    */
+     */
 
     /**
      * @param thing   A Thing to check the bounding box of.
-     * @returns The Thing's top position, accounting for vertical offset 
+     * @returns The Thing's top position, accounting for vertical offset
      *          if needed.
      */
     private getTop(thing: IThing): number {
@@ -1187,7 +1189,7 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * @param thing   A Thing to check the bounding box of.
-     * @returns The Thing's right position, accounting for horizontal offset 
+     * @returns The Thing's right position, accounting for horizontal offset
      *          if needed.
      */
     private getRight(thing: IThing): number {
@@ -1200,7 +1202,7 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * @param thing   A Thing to check the bounding box of.
-     * @returns The Thing's bottom position, accounting for vertical 
+     * @returns The Thing's bottom position, accounting for vertical
      *          offset if needed.
      */
     private getBottom(thing: IThing): number {
@@ -1213,7 +1215,7 @@ export class QuadsKeepr implements IQuadsKeepr {
 
     /**
      * @param thing   A Thing to check the bounding box of.
-     * @returns The Thing's left position, accounting for horizontal offset 
+     * @returns The Thing's left position, accounting for horizontal offset
      *          if needed.
      */
     private getLeft(thing: IThing): number {
@@ -1224,7 +1226,7 @@ export class QuadsKeepr implements IQuadsKeepr {
         }
     }
 
-    /** 
+    /**
      * Marks all Quadrants a Thing is contained within as changed.
      */
     private markThingQuadrantsChanged(thing: IThing): void {

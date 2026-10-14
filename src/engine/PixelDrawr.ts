@@ -333,16 +333,16 @@ export interface IPixelDrawr {
     setThingArrays(thingArrays: IThing[][]): void;
 
     /**
-     * Sets the currently drawn canvas and context, and recreates 
+     * Sets the currently drawn canvas and context, and recreates
      * drawThingOnContextBound.
-     * 
+     *
      * @param canvas   The new primary canvas to be used.
      */
     setCanvas(canvas: HTMLCanvasElement): void;
 
     /**
      * @param noRefill   Whether refills should now skip redrawing the
-     *                   background each time. 
+     *                   background each time.
      */
     setNoRefill(noRefill: boolean): void;
 
@@ -359,7 +359,7 @@ export interface IPixelDrawr {
 
     /**
      * Refills the background canvas with a new fillStyle.
-     * 
+     *
      * @param fillStyle   The new fillStyle for the background context.
      */
     setBackground(fillStyle: any): void;
@@ -372,7 +372,7 @@ export interface IPixelDrawr {
     /**
      * Goes through all the motions of finding and parsing a Thing's sprite.
      * This should be called whenever the sprite's appearance changes.
-     * 
+     *
      * @param thing   A Thing whose sprite must be updated.
      */
     setThingSprite(thing: IThing): void;
@@ -385,7 +385,7 @@ export interface IPixelDrawr {
 
     /**
      * Calls drawThingOnContext on each Thing in the Array.
-     * 
+     *
      * @param array   A listing of Things to be drawn onto the canvas.
      */
     refillThingArray(array: IThing[]): void;
@@ -393,14 +393,12 @@ export interface IPixelDrawr {
     /**
      * General Function to draw a Thing onto a context. This will call
      * drawThingOnContext[Single/Multiple] with more arguments
-     * 
+     *
      * @param context   The context to have the Thing drawn on it.
      * @param thing   The Thing to be drawn onto the context.
      */
     drawThingOnContext(context: CanvasRenderingContext2D, thing: IThing): void;
 }
-
-
 
 /**
  * A front-end to PixelRendr to automate drawing mass amounts of sprites.
@@ -528,7 +526,7 @@ export class PixelDrawr implements IPixelDrawr {
 
     /**
      * Initializes a new instance of the PixelDrawr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IPixelDrawrSettings) {
@@ -555,7 +553,7 @@ export class PixelDrawr implements IPixelDrawr {
         this.groupNames = settings.groupNames;
         this.framerateSkip = settings.framerateSkip || 1;
         this.framesDrawn = 0;
-        this.epsilon = settings.epsilon || .007;
+        this.epsilon = settings.epsilon || 0.007;
 
         this.keyWidth = settings.keyWidth || "width";
         this.keyHeight = settings.keyHeight || "height";
@@ -566,16 +564,17 @@ export class PixelDrawr implements IPixelDrawr {
         this.keyOffsetX = settings.keyOffsetX;
         this.keyOffsetY = settings.keyOffsetY;
 
-        this.generateObjectKey = settings.generateObjectKey || function (thing: IThing): string {
-            return thing.toString();
-        };
+        this.generateObjectKey =
+            settings.generateObjectKey ||
+            function (thing: IThing): string {
+                return thing.toString();
+            };
 
         this.resetBackground();
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns How often refill calls should be skipped.
@@ -633,9 +632,8 @@ export class PixelDrawr implements IPixelDrawr {
         return this.epsilon;
     }
 
-
     /* Simple sets
-    */
+     */
 
     /**
      * @param framerateSkip   How often refill calls should be skipped.
@@ -652,9 +650,9 @@ export class PixelDrawr implements IPixelDrawr {
     }
 
     /**
-     * Sets the currently drawn canvas and context, and recreates 
+     * Sets the currently drawn canvas and context, and recreates
      * drawThingOnContextBound.
-     * 
+     *
      * @param canvas   The new primary canvas to be used.
      */
     setCanvas(canvas: HTMLCanvasElement): void {
@@ -664,7 +662,7 @@ export class PixelDrawr implements IPixelDrawr {
 
     /**
      * @param noRefill   Whether refills should now skip redrawing the
-     *                   background each time. 
+     *                   background each time.
      */
     setNoRefill(noRefill: boolean): void {
         this.noRefill = noRefill;
@@ -677,27 +675,34 @@ export class PixelDrawr implements IPixelDrawr {
         this.epsilon = epsilon;
     }
 
-
     /* Background manipulations
-    */
+     */
 
     /**
      * Creates a new canvas the size of MapScreener and sets the background
      * canvas to it, then recreates backgroundContext.
      */
     resetBackground(): void {
-        this.backgroundCanvas = this.createCanvas((<any>this.MapScreener)[this.keyWidth], (<any>this.MapScreener)[this.keyHeight]);
+        this.backgroundCanvas = this.createCanvas(
+            (<any>this.MapScreener)[this.keyWidth],
+            (<any>this.MapScreener)[this.keyHeight]
+        );
         this.backgroundContext = <CanvasRenderingContext2D>this.backgroundCanvas.getContext("2d");
     }
 
     /**
      * Refills the background canvas with a new fillStyle.
-     * 
+     *
      * @param fillStyle   The new fillStyle for the background context.
      */
     setBackground(fillStyle: any): void {
         this.backgroundContext.fillStyle = fillStyle;
-        this.backgroundContext.fillRect(0, 0, (<any>this.MapScreener)[this.keyWidth], (<any>this.MapScreener)[this.keyHeight]);
+        this.backgroundContext.fillRect(
+            0,
+            0,
+            (<any>this.MapScreener)[this.keyWidth],
+            (<any>this.MapScreener)[this.keyHeight]
+        );
     }
 
     /**
@@ -707,14 +712,13 @@ export class PixelDrawr implements IPixelDrawr {
         this.context.drawImage(this.backgroundCanvas, 0, 0);
     }
 
-
     /* Core rendering
-    */
+     */
 
     /**
      * Goes through all the motions of finding and parsing a Thing's sprite.
      * This should be called whenever the sprite's appearance changes.
-     * 
+     *
      * @param thing   A Thing whose sprite must be updated.
      */
     setThingSprite(thing: IThing): void {
@@ -727,7 +731,7 @@ export class PixelDrawr implements IPixelDrawr {
         thing.sprite = this.PixelRender.decode(this.generateObjectKey(thing), thing);
 
         // To do: remove dependency on .numSprites
-        // For now, it's used to know whether it's had its sprite set, but 
+        // For now, it's used to know whether it's had its sprite set, but
         // wouldn't physically having a .sprite do that?
         if (thing.sprite.constructor === PixelRendr.SpriteMultiple) {
             thing.numSprites = 0;
@@ -738,9 +742,8 @@ export class PixelDrawr implements IPixelDrawr {
         }
     }
 
-
     /* Core drawing APIs
-    */
+     */
 
     /**
      * Called every upkeep to refill the entire main canvas. All Thing arrays
@@ -763,7 +766,7 @@ export class PixelDrawr implements IPixelDrawr {
 
     /**
      * Calls drawThingOnContext on each Thing in the Array.
-     * 
+     *
      * @param array   A listing of Things to be drawn onto the canvas.
      */
     refillThingArray(array: IThing[]): void {
@@ -775,20 +778,21 @@ export class PixelDrawr implements IPixelDrawr {
     /**
      * General Function to draw a Thing onto a context. This will call
      * drawThingOnContext[Single/Multiple] with more arguments
-     * 
+     *
      * @param context   The context to have the Thing drawn on it.
      * @param thing   The Thing to be drawn onto the context.
      */
     drawThingOnContext(context: CanvasRenderingContext2D, thing: IThing): void {
         if (
-            thing.hidden
-            || thing.opacity < this.epsilon
-            || (<any>thing)[this.keyHeight] < 1
-            || (<any>thing)[this.keyWidth] < 1
-            || this.getTop(thing) > (<any>this.MapScreener)[this.keyHeight]
-            || this.getRight(thing) < 0
-            || this.getBottom(thing) < 0
-            || this.getLeft(thing) > (<any>this.MapScreener)[this.keyWidth]) {
+            thing.hidden ||
+            thing.opacity < this.epsilon ||
+            (<any>thing)[this.keyHeight] < 1 ||
+            (<any>thing)[this.keyWidth] < 1 ||
+            this.getTop(thing) > (<any>this.MapScreener)[this.keyHeight] ||
+            this.getRight(thing) < 0 ||
+            this.getBottom(thing) < 0 ||
+            this.getLeft(thing) > (<any>this.MapScreener)[this.keyWidth]
+        ) {
             return;
         }
 
@@ -797,24 +801,29 @@ export class PixelDrawr implements IPixelDrawr {
             this.setThingSprite(thing);
         }
 
-        // Whether or not the thing has a regular sprite or a SpriteMultiple, 
+        // Whether or not the thing has a regular sprite or a SpriteMultiple,
         // that sprite has already been drawn to the thing's canvas, unless it's
         // above the cutoff, in which case that logic happens now.
         if ((<any>thing.canvas)[this.keyWidth] > 0) {
             this.drawThingOnContextSingle(context, thing.canvas, thing, this.getLeft(thing), this.getTop(thing));
         } else {
-            this.drawThingOnContextMultiple(context, <IThingCanvases>thing.canvases, thing, this.getLeft(thing), this.getTop(thing));
+            this.drawThingOnContextMultiple(
+                context,
+                <IThingCanvases>thing.canvases,
+                thing,
+                this.getLeft(thing),
+                this.getTop(thing)
+            );
         }
     }
 
-
     /* Core drawing internals
-    */
+     */
 
     /**
      * Simply draws a thing's sprite to its canvas by getting and setting
      * a canvas::imageData object via context.getImageData(...).
-     * 
+     *
      * @param thing   A Thing whose canvas must be updated.
      */
     private refillThingCanvasSingle(thing: IThing): void {
@@ -826,7 +835,12 @@ export class PixelDrawr implements IPixelDrawr {
         // Retrieve the imageData from the Thing's canvas & renderingContext
         var canvas: HTMLCanvasElement = thing.canvas,
             context: CanvasRenderingContext2D = thing.context,
-            imageData: ImageData = context.getImageData(0, 0, (<any>canvas)[this.keyWidth], (<any>canvas)[this.keyHeight]);
+            imageData: ImageData = context.getImageData(
+                0,
+                0,
+                (<any>canvas)[this.keyWidth],
+                (<any>canvas)[this.keyHeight]
+            );
 
         // Copy the thing's sprite to that imageData and into the contextz
         this.PixelRender.memcpyU8(<Uint8ClampedArray>thing.sprite, imageData.data);
@@ -834,10 +848,10 @@ export class PixelDrawr implements IPixelDrawr {
     }
 
     /**
-     * For SpriteMultiples, this copies the sprite information for each 
+     * For SpriteMultiples, this copies the sprite information for each
      * sub-sprite into its own canvas, sets thing.sprites, then draws the newly
      * rendered information onto the thing's canvas.
-     * 
+     *
      * @param thing   A Thing whose canvas and sprites must be updated.
      */
     private refillThingCanvasMultiple(thing: IThing): void {
@@ -846,10 +860,10 @@ export class PixelDrawr implements IPixelDrawr {
         }
 
         var spritesRaw: PixelRendr.SpriteMultiple = <PixelRendr.SpriteMultiple>thing.sprite,
-            canvases: any = thing.canvases = {
+            canvases: any = (thing.canvases = {
                 "direction": spritesRaw.direction,
                 "multiple": true
-            },
+            }),
             canvas: HTMLCanvasElement,
             context: CanvasRenderingContext2D,
             imageData: ImageData,
@@ -892,7 +906,7 @@ export class PixelDrawr implements IPixelDrawr {
     /**
      * Draws a Thing's single canvas onto a context, commonly called by
      * this.drawThingOnContext.
-     * 
+     *
      * @param context    The context being drawn on.
      * @param canvas   The Thing's canvas being drawn onto the context.
      * @param thing   The Thing whose canvas is being drawn.
@@ -904,17 +918,38 @@ export class PixelDrawr implements IPixelDrawr {
         canvas: HTMLCanvasElement,
         thing: IThing,
         left: number,
-        top: number): void {
+        top: number
+    ): void {
         // If the sprite should repeat, use the pattern equivalent
         if (thing.repeat) {
-            this.drawPatternOnContext(context, canvas, left, top, <number>thing.unitwidth, <number>thing.unitheight, thing.opacity || 1);
+            this.drawPatternOnContext(
+                context,
+                canvas,
+                left,
+                top,
+                <number>thing.unitwidth,
+                <number>thing.unitheight,
+                thing.opacity || 1
+            );
         } else if (thing.opacity !== 1) {
             // Opacities not equal to one must reset the context afterwards
             context.globalAlpha = thing.opacity;
-            context.drawImage(canvas, left, top, canvas.width * <number>thing.scale, canvas.height * <number>thing.scale);
+            context.drawImage(
+                canvas,
+                left,
+                top,
+                canvas.width * <number>thing.scale,
+                canvas.height * <number>thing.scale
+            );
             context.globalAlpha = 1;
         } else {
-            context.drawImage(canvas, left, top, canvas.width * <number>thing.scale, canvas.height * <number>thing.scale);
+            context.drawImage(
+                canvas,
+                left,
+                top,
+                canvas.width * <number>thing.scale,
+                canvas.height * <number>thing.scale
+            );
         }
     }
 
@@ -922,7 +957,7 @@ export class PixelDrawr implements IPixelDrawr {
      * Draws a Thing's multiple canvases onto a context, typicall called by
      * drawThingOnContext. A variety of cases for canvases is allowed:
      * "vertical", "horizontal", and "corners".
-     * 
+     *
      * @param context    The context being drawn on.
      * @param canvases   The canvases being drawn onto the context.
      * @param thing   The Thing whose canvas is being drawn.
@@ -934,7 +969,8 @@ export class PixelDrawr implements IPixelDrawr {
         canvases: IThingCanvases,
         thing: IThing,
         left: number,
-        top: number): void {
+        top: number
+    ): void {
         var sprite: PixelRendr.SpriteMultiple = <PixelRendr.SpriteMultiple>thing.sprite,
             topreal: number = top,
             leftreal: number = left,
@@ -964,14 +1000,23 @@ export class PixelDrawr implements IPixelDrawr {
                         bottomreal - diffvert,
                         widthreal,
                         heightdrawn,
-                        opacity);
+                        opacity
+                    );
                     bottomreal -= diffvert;
                     heightreal -= diffvert;
                 }
                 // If there's a top, draw that and push down topreal
                 if ((canvasref = <IThingSubCanvas>(<any>canvases)[this.keyTop])) {
                     diffvert = sprite.topheight ? sprite.topheight * this.unitsize : spriteheightpixels;
-                    this.drawPatternOnContext(context, canvasref.canvas, leftreal, topreal, widthreal, heightdrawn, opacity);
+                    this.drawPatternOnContext(
+                        context,
+                        canvasref.canvas,
+                        leftreal,
+                        topreal,
+                        widthreal,
+                        heightdrawn,
+                        opacity
+                    );
                     topreal += diffvert;
                     heightreal -= diffvert;
                 }
@@ -982,7 +1027,15 @@ export class PixelDrawr implements IPixelDrawr {
                 // If there's a left, draw that and push forward leftreal
                 if ((canvasref = (<any>canvases)[this.keyLeft])) {
                     diffhoriz = sprite.leftwidth ? sprite.leftwidth * this.unitsize : spritewidthpixels;
-                    this.drawPatternOnContext(context, canvasref.canvas, leftreal, topreal, widthdrawn, heightreal, opacity);
+                    this.drawPatternOnContext(
+                        context,
+                        canvasref.canvas,
+                        leftreal,
+                        topreal,
+                        widthdrawn,
+                        heightreal,
+                        opacity
+                    );
                     leftreal += diffhoriz;
                     widthreal -= diffhoriz;
                 }
@@ -996,7 +1049,8 @@ export class PixelDrawr implements IPixelDrawr {
                         topreal,
                         widthdrawn,
                         heightreal,
-                        opacity);
+                        opacity
+                    );
                     rightreal -= diffhoriz;
                     widthreal -= diffhoriz;
                 }
@@ -1015,7 +1069,8 @@ export class PixelDrawr implements IPixelDrawr {
                     topreal,
                     widthdrawn,
                     heightdrawn,
-                    opacity);
+                    opacity
+                );
                 this.drawPatternOnContext(
                     context,
                     (<any>canvases)[this.keyLeft].canvas,
@@ -1023,7 +1078,8 @@ export class PixelDrawr implements IPixelDrawr {
                     topreal + diffvert,
                     widthdrawn,
                     heightreal - diffvert * 2,
-                    opacity);
+                    opacity
+                );
                 this.drawPatternOnContext(
                     context,
                     (<IThingSubCanvas>canvases.bottomLeft).canvas,
@@ -1031,7 +1087,8 @@ export class PixelDrawr implements IPixelDrawr {
                     bottomreal - diffvert,
                     widthdrawn,
                     heightdrawn,
-                    opacity);
+                    opacity
+                );
                 leftreal += diffhoriz;
                 widthreal -= diffhoriz;
 
@@ -1044,7 +1101,8 @@ export class PixelDrawr implements IPixelDrawr {
                     topreal,
                     widthreal - diffhoriz,
                     heightdrawn,
-                    opacity);
+                    opacity
+                );
                 this.drawPatternOnContext(
                     context,
                     (<IThingSubCanvas>canvases.topRight).canvas,
@@ -1052,7 +1110,8 @@ export class PixelDrawr implements IPixelDrawr {
                     topreal,
                     widthdrawn,
                     heightdrawn,
-                    opacity);
+                    opacity
+                );
                 topreal += diffvert;
                 heightreal -= diffvert;
 
@@ -1065,7 +1124,8 @@ export class PixelDrawr implements IPixelDrawr {
                     topreal,
                     widthdrawn,
                     heightreal - diffvert,
-                    opacity);
+                    opacity
+                );
                 this.drawPatternOnContext(
                     context,
                     (<IThingSubCanvas>canvases.bottomRight).canvas,
@@ -1073,7 +1133,8 @@ export class PixelDrawr implements IPixelDrawr {
                     bottomreal - diffvert,
                     widthdrawn,
                     heightdrawn,
-                    opacity);
+                    opacity
+                );
                 this.drawPatternOnContext(
                     context,
                     (<any>canvases)[this.keyBottom].canvas,
@@ -1081,7 +1142,8 @@ export class PixelDrawr implements IPixelDrawr {
                     bottomreal - diffvert,
                     widthreal - diffhoriz,
                     heightdrawn,
-                    opacity);
+                    opacity
+                );
                 rightreal -= diffhoriz;
                 widthreal -= diffhoriz;
                 bottomreal -= diffvert;
@@ -1103,9 +1165,8 @@ export class PixelDrawr implements IPixelDrawr {
         }
     }
 
-
     /* Position utilities (which should almost always be optimized)
-    */
+     */
 
     /**
      * @param thing   Any Thing.
@@ -1156,14 +1217,13 @@ export class PixelDrawr implements IPixelDrawr {
         }
     }
 
-
     /* Utilities
-    */
+     */
 
     /**
      * Draws a source pattern onto a context. The pattern is clipped to the size
      * of MapScreener.
-     * 
+     *
      * @param context   The context the pattern will be drawn onto.
      * @param source   The image being repeated as a pattern. This can be a canvas,
      *                 an image, or similar.
@@ -1180,15 +1240,19 @@ export class PixelDrawr implements IPixelDrawr {
         top: number,
         width: number,
         height: number,
-        opacity: number): void {
+        opacity: number
+    ): void {
         context.globalAlpha = opacity;
         context.translate(left, top);
         context.fillStyle = <CanvasPattern>context.createPattern(source, "repeat");
         context.fillRect(
-            0, 0,
+            0,
+            0,
             // Math.max(width, left - MapScreener[keyRight]),
             // Math.max(height, top - MapScreener[keyBottom])
-            width, height);
+            width,
+            height
+        );
         context.translate(-left, -top);
         context.globalAlpha = 1;
     }

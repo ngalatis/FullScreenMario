@@ -12,13 +12,13 @@ import type { MarioGame } from "../MarioGame";
 
 export const collisionDetectionMethods = {
     /* Collision detectors
-    */
+     */
 
     /**
      * Function generator for the generic canThingCollide checker. This is used
      * repeatedly by ThingHittr to generate separately optimized Functions for
      * different Thing types.
-     * 
+     *
      * @returns A Function that generates a canThingCollide checker.
      */
     generateCanThingCollide(this: MarioGame): (thing: IThing) => boolean {
@@ -26,7 +26,7 @@ export const collisionDetectionMethods = {
          * Generic checker for canCollide, used for both Solids and Characters.
          * This just returns if the Thing is alive and doesn't have the
          * nocollide flag.
-         * 
+         *
          * @param thing
          * @returns Whether the thing can collide.
          */
@@ -45,9 +45,9 @@ export const collisionDetectionMethods = {
     },
 
     /**
-     * Generic base function to check if one Thing is touching another. This 
+     * Generic base function to check if one Thing is touching another. This
      * will be called by the more specific Thing touching functions.
-     * 
+     *
      * @param thing
      * @param other
      * @returns Whether the two Things are touching.
@@ -55,18 +55,20 @@ export const collisionDetectionMethods = {
      */
     isThingTouchingThing(this: MarioGame, thing: IThing, other: IThing): boolean {
         return (
-            !thing.nocollide && !other.nocollide
-            && thing.right - thing.FSM.unitsize > other.left
-            && thing.left + thing.FSM.unitsize < other.right
-            && thing.bottom >= other.top
-            && thing.top <= other.bottom);
+            !thing.nocollide &&
+            !other.nocollide &&
+            thing.right - thing.FSM.unitsize > other.left &&
+            thing.left + thing.FSM.unitsize < other.right &&
+            thing.bottom >= other.top &&
+            thing.top <= other.bottom
+        );
     },
 
     /**
      * General top collision detection Function for two Things to determine if
      * one Thing is on top of another. This takes into consideration factors
      * such as which are solid or an enemy, and y-velocity.
-     * 
+     *
      * @param thing
      * @param other
      * @returns Whether thing is on top of other.
@@ -118,7 +120,7 @@ export const collisionDetectionMethods = {
 
     /**
      * Top collision Function to determine if a Thing is on top of a Solid.
-     * 
+     *
      * @param thing
      * @param other
      * @returns Whether thing is on top of other.
@@ -157,7 +159,7 @@ export const collisionDetectionMethods = {
      * Top collision Function to determine if a character is on top of a solid.
      * This is always true for resting (since resting checks happen before when
      * this should be called).
-     * 
+     *
      * @param thing
      * @param other
      * @returns Whether thing is on top of other.
@@ -195,11 +197,11 @@ export const collisionDetectionMethods = {
     },
 
     /**
-     * Top collision Function to determine if a character should be considered 
+     * Top collision Function to determine if a character should be considered
      * resting on a solid. This mostly uses isThingOnSolid, but also checks for
      * the corner cases of the character being exactly at the edge of the solid
      * (such as when jumping while next to it).
-     * 
+     *
      * @param thing
      * @param other
      * @returns Whether thing is on top of other.
@@ -227,15 +229,15 @@ export const collisionDetectionMethods = {
      * Function generator for the generic isCharacterTouchingCharacter checker.
      * This is used repeatedly by ThingHittr to generate separately optimized
      * Functions for different Thing types.
-     * 
-     * @returns A Function that generates isCharacterTouchingCharacter. 
+     *
+     * @returns A Function that generates isCharacterTouchingCharacter.
      */
     generateIsCharacterTouchingCharacter(this: MarioGame): (thing: ICharacter, other: ICharacter) => boolean {
         /**
          * Generic checker for whether two characters are touching each other.
          * This mostly checks to see if either has the nocollidechar flag, and
          * if the other is a player. isThingTouchingThing is used after.
-         * 
+         *
          * @param thing
          * @param other
          * @returns Whether thing is touching other.
@@ -255,16 +257,16 @@ export const collisionDetectionMethods = {
 
     /**
      * Function generator for the generic isCharacterTouchingSolid checker. This
-     * is used repeatedly by ThingHittr to generate separately optimized 
+     * is used repeatedly by ThingHittr to generate separately optimized
      * Functions for different Thing types.
-     * 
+     *
      * @returns A Function that generates isCharacterTouchingSolid.
      */
     generateIsCharacterTouchingSolid(this: MarioGame): (thing: ICharacter, other: ISolid) => boolean {
         /**
          * Generic checker for whether a character is touching a solid. The
          * hidden, collideHidden, and nocollidesolid flags are most relevant.
-         * 
+         *
          * @param thing
          * @param other
          * @returns Whether thing is touching other.
@@ -289,7 +291,7 @@ export const collisionDetectionMethods = {
     /**
      * @param thing
      * @param other
-     * @returns Whether thing's bottom is above other's top, allowing for 
+     * @returns Whether thing's bottom is above other's top, allowing for
      *          other's toly.
      */
     isCharacterAboveEnemy(this: MarioGame, thing: ICharacter, other: ICharacter): boolean {
@@ -319,7 +321,7 @@ export const collisionDetectionMethods = {
      * @param thing
      * @param other
      * @returns Whether thing, typically a solid, is on top of other.
-     * @remarks This is similar to isThingOnThing, but more specifically 
+     * @remarks This is similar to isThingOnThing, but more specifically
      *          used for characterTouchedSolid.
      */
     isSolidOnCharacter(this: MarioGame, thing: ISolid, other: ICharacter): boolean {
@@ -344,7 +346,7 @@ export const collisionDetectionMethods = {
 
         // The above checks never caught falsities, so this must be true
         return true;
-    },
+    }
 };
 
 export type CollisionDetectionMethods = typeof collisionDetectionMethods;

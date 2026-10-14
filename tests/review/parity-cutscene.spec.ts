@@ -23,7 +23,7 @@ test.describe("cutscenes", () => {
             location: 0,
             steps: 300,
             segments: [hold(["right", "sprint"], 0, 300), ...jumps([20])],
-            actions: [{ at: 1, do: "teleport", args: [6150, 416] }],
+            actions: [{ at: 1, do: "teleport", args: [6150, 416] }]
         });
 
         expect(result.errors).toEqual([]);
@@ -33,7 +33,9 @@ test.describe("cutscenes", () => {
         expect(result.final!.items[0]).toBeGreaterThan(400);
     });
 
-    test("a full flagpole run slides, walks into the castle, counts the time down and moves on to 1-2", async ({ page }) => {
+    test("a full flagpole run slides, walks into the castle, counts the time down and moves on to 1-2", async ({
+        page
+    }) => {
         const { errors } = collectPageErrors(page);
 
         // Same scenario as above, long enough for the whole countdown. The original gives exactly
@@ -44,7 +46,7 @@ test.describe("cutscenes", () => {
             location: 0,
             steps: 1100,
             segments: [hold(["right", "sprint"], 0, 1100), ...jumps([20])],
-            actions: [{ at: 1, do: "teleport", args: [6150, 416] }],
+            actions: [{ at: 1, do: "teleport", args: [6150, 416] }]
         });
 
         expect(result.errors).toEqual([]);
@@ -68,10 +70,12 @@ test.describe("cutscenes", () => {
         expect(at(1099).items[0]).toBe(20350);
 
         // The level is left for 1-2 when the Stage Clear sound ends, which takes real time
-        await page.waitForFunction(() => (window as any).FSM.AreaSpawner.getMapName() === "1-2", undefined, { timeout: 30_000 });
+        await page.waitForFunction(() => (window as any).FSM.AreaSpawner.getMapName() === "1-2", undefined, {
+            timeout: 30_000
+        });
         const next = await page.evaluate(() => ({
             map: (window as any).FSM.AreaSpawner.getMapName() as string,
-            score: (window as any).FSM.ItemsHolder.getItem("score") as number,
+            score: (window as any).FSM.ItemsHolder.getItem("score") as number
         }));
         expect(next.map).toBe("1-2");
         expect(next.score).toBeGreaterThanOrEqual(20000);
@@ -86,7 +90,10 @@ test.describe("cutscenes", () => {
             location: 0,
             steps: 1200,
             segments: [hold(["right", "sprint"], 0, 1200), ...jumps([5, 60, 120, 180])],
-            actions: [{ at: 1, do: "teleport", args: [4300, 320] }, { at: 1, do: "star" }],
+            actions: [
+                { at: 1, do: "teleport", args: [4300, 320] },
+                { at: 1, do: "star" }
+            ]
         });
 
         expect(result.errors).toEqual([]);

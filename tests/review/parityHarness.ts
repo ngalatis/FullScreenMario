@@ -89,16 +89,27 @@ export async function runScenario(page: Page, scenario: Scenario): Promise<Scena
         FSM.ItemsHolder.setItem("lives", 3);
         FSM.ItemsHolder.setItem("power", 1);
         for (const src of scenario.pre || []) {
-            (new Function("FSM", src))(FSM);
+            new Function("FSM", src)(FSM);
         }
         FSM.setMap(scenario.map, scenario.location);
         if (GR.getPaused()) {
             GR.play();
         }
 
-        const keyNames: Record<string, string> = { left: "Left", right: "Right", up: "Up", down: "Down", sprint: "Sprint" };
+        const keyNames: Record<string, string> = {
+            left: "Left",
+            right: "Right",
+            up: "Up",
+            down: "Down",
+            sprint: "Sprint"
+        };
         const held: Set<string> = new Set();
-        const step = (): void => { GR.runAllGames(); if (GR.render) { GR.render(); } };
+        const step = (): void => {
+            GR.runAllGames();
+            if (GR.render) {
+                GR.render();
+            }
+        };
         const r = (n: any): any => (typeof n === "number" ? Math.round(n * 1000) / 1000 : n);
 
         const helpers: Record<string, (...args: any[]) => void> = {
@@ -111,7 +122,9 @@ export async function runScenario(page: Page, scenario: Scenario): Promise<Scena
                     FSM.scrollWindow(shift);
                 }
             },
-            add: (title: string, left: number, top: number): void => { FSM.addThing(title, left, top); },
+            add: (title: string, left: number, top: number): void => {
+                FSM.addThing(title, left, top);
+            },
             addRel: (title: string, dx: number, dy: number): void => {
                 FSM.addThing(title, FSM.player.left + dx, FSM.player.top + dy);
             },
@@ -119,7 +132,9 @@ export async function runScenario(page: Page, scenario: Scenario): Promise<Scena
             fire: (): void => FSM.playerGetsFire(FSM.player),
             star: (): void => FSM.playerStarUp(FSM.player),
             kill: (): void => FSM.killPlayer(FSM.player),
-            eval: (src: string): void => { (new Function("FSM", src))(FSM); },
+            eval: (src: string): void => {
+                new Function("FSM", src)(FSM);
+            }
         };
 
         const snapPlayer = (): PlayerSnapshot | null => {
@@ -128,34 +143,54 @@ export async function runScenario(page: Page, scenario: Scenario): Promise<Scena
                 return null;
             }
             return {
-                l: r(p.left), t: r(p.top), xv: r(p.xvel), yv: r(p.yvel), pw: p.power,
-                al: !!p.alive, dead: p.dead || 0, rest: !!p.resting, cls: p.className,
+                l: r(p.left),
+                t: r(p.top),
+                xv: r(p.xvel),
+                yv: r(p.yvel),
+                pw: p.power,
+                al: !!p.alive,
+                dead: p.dead || 0,
+                rest: !!p.resting,
+                cls: p.className,
                 map: FSM.AreaSpawner.getMapName(),
                 items: ["score", "coins", "lives", "time", "world", "power"].map((k) => FSM.ItemsHolder.getItem(k)),
-                scr: r(FSM.MapScreener.left),
+                scr: r(FSM.MapScreener.left)
             };
         };
-        const snapChars = (): any[] => FSM.GroupHolder.getCharacterGroup()
-            .filter((t: any) => !t.player)
-            .map((t: any) => [t.title, r(t.left), r(t.top), r(t.xvel), r(t.yvel), t.alive ? 1 : 0, t.className]);
+        const snapChars = (): any[] =>
+            FSM.GroupHolder.getCharacterGroup()
+                .filter((t: any) => !t.player)
+                .map((t: any) => [t.title, r(t.left), r(t.top), r(t.xvel), r(t.yvel), t.alive ? 1 : 0, t.className]);
 
         const trace: TraceEntry[] = [];
         for (let i = 0; i < scenario.steps; i += 1) {
             const want: Set<string> = new Set();
             for (const seg of scenario.segments || []) {
                 if (i >= seg.from && i < seg.to) {
-                    for (const k of seg.keys) { want.add(k); }
+                    for (const k of seg.keys) {
+                        want.add(k);
+                    }
                 }
             }
             for (const k of held) {
-                if (!want.has(k)) { held.delete(k); FSM["keyUp" + keyNames[k]](FSM); }
+                if (!want.has(k)) {
+                    held.delete(k);
+                    FSM["keyUp" + keyNames[k]](FSM);
+                }
             }
             for (const k of want) {
-                if (!held.has(k)) { held.add(k); FSM["keyDown" + keyNames[k]](FSM); }
+                if (!held.has(k)) {
+                    held.add(k);
+                    FSM["keyDown" + keyNames[k]](FSM);
+                }
             }
             for (const a of scenario.actions || []) {
                 if (a.at === i) {
-                    try { helpers[a.do](...(a.args || [])); } catch (e: any) { errors.push("action " + a.do + ": " + e.message); }
+                    try {
+                        helpers[a.do](...(a.args || []));
+                    } catch (e: any) {
+                        errors.push("action " + a.do + ": " + e.message);
+                    }
                 }
             }
             try {

@@ -1,6 +1,6 @@
 /**
  * An Object group containing objects of type T.
- * 
+ *
  * @param T   The type of values contained within the group.
  */
 export interface IGroupHoldrObjectGroup<T> {
@@ -24,11 +24,11 @@ export interface IGroupHoldrTypesListing {
 /**
  * Abstract parent interface of all group Functions.
  */
-export interface IGroupHoldrFunction extends Function { }
+export interface IGroupHoldrFunction extends Function {}
 
 /**
  * Stores the given group internally.
- * 
+ *
  * @param value   The new group to store.
  */
 export interface IGroupHoldrSetGroupFunction<T> extends IGroupHoldrFunction {
@@ -54,7 +54,7 @@ export interface IGroupHoldrSetFunction extends IGroupHoldrFunction {
 
 /**
  * Retrieves a value from a group.
- * 
+ *
  * @param key   The key the value is stored under.
  */
 export interface IGroupHoldrGetFunction extends IGroupHoldrFunction {
@@ -63,7 +63,7 @@ export interface IGroupHoldrGetFunction extends IGroupHoldrFunction {
 
 /**
  * Adds a value to a group.
- * 
+ *
  * @param value   The value to store in the group.
  * @param [key]   The key to store the value under.
  * @remarks If the group is an Array, not providing a key will use Array::push.
@@ -74,7 +74,7 @@ export interface IGroupHoldrAddFunction extends IGroupHoldrFunction {
 
 /**
  * Adds a value to an Array group.
- * 
+ *
  * @param value   The value to store in the group.
  * @param [key]   The index to store the value under.
  */
@@ -84,7 +84,7 @@ export interface IGroupHoldrArrayAddFunction extends IGroupHoldrAddFunction {
 
 /**
  * Adds a value to an Object group.
- * 
+ *
  * @param value   The value to store in the group.
  * @param key   The key to store the value under.
  */
@@ -94,7 +94,7 @@ export interface IGroupHoldrObjectAddFunction extends IGroupHoldrAddFunction {
 
 /**
  * Deletes a value from a group.
- * 
+ *
  * @param [arg1]   Either the value (Arrays) or the key (Objects).
  * @param [arg2]   Optionally, for Array groups, the value's index.
  */
@@ -104,7 +104,7 @@ export interface IGroupHoldrDeleteFunction extends IGroupHoldrFunction {
 
 /**
  * Deletes a value from an Array group.
- * 
+ *
  * @param [value]   The value to delete, if index is not provided.
  * @param [index]   The index of the value, to bypass Array::indexOf.
  */
@@ -136,27 +136,27 @@ export interface IGroupHoldrFunctionGroups {
      * Setter Functions for each group, keyed by their group name.
      */
     setGroup: IGroupHoldrFunctionGroup<IGroupHoldrSetGroupFunction<any>>;
-    
+
     /**
      * Getter Functions for each group, keyed by their group name.
      */
     getGroup: IGroupHoldrFunctionGroup<IGroupHoldrGetGroupFunction<any>>;
-    
+
     /**
      * Value setter Functions for each group, keyed by their group name.
      */
     set: IGroupHoldrFunctionGroup<IGroupHoldrSetFunction>;
-    
+
     /**
      * Value getter Functions for each group, keyed by their group name.
      */
     get: IGroupHoldrFunctionGroup<IGroupHoldrGetFunction>;
-    
+
     /**
      * Value adder Functions for each group, keyed by their group name.
      */
     add: IGroupHoldrFunctionGroup<IGroupHoldrAddFunction>;
-    
+
     /**
      * Valuer deleter Functions for each group, keyed by their group name.
      */
@@ -174,12 +174,14 @@ export interface IGroupHoldrSettings {
 
     /**
      * The mapping of group types. This can be a single String ("Array" or
-     * "Object") to set each one, or an Object mapping each groupName to 
+     * "Object") to set each one, or an Object mapping each groupName to
      * a different String (type).
      */
-    groupTypes: string | {
-        [i: string]: string;
-    };
+    groupTypes:
+        | string
+        | {
+              [i: string]: string;
+          };
 }
 
 /**
@@ -211,7 +213,7 @@ export interface IGroupHoldr {
 
     /**
      * Switches an object from one group to another.
-     * 
+     *
      * @param value   The value being moved from one group to another.
      * @param groupNameOld   The name of the group to move out of.
      * @param groupNameNew   The name of the group to move into.
@@ -220,13 +222,19 @@ export interface IGroupHoldr {
      * @param [keyNew]   Optionally, what key the value will now be under
      *                   (required if the new group is an Object).
      */
-    switchMemberGroup(value: any, groupNameOld: string, groupNameNew: string, keyOld?: string | number, keyNew?: string | number): void;
+    switchMemberGroup(
+        value: any,
+        groupNameOld: string,
+        groupNameNew: string,
+        keyOld?: string | number,
+        keyNew?: string | number
+    ): void;
 
     /**
      * Calls a Function for each group, with that group as the first argument.
      * Extra arguments may be passed in an array after scope and func, as in
      * Function.apply's standard.
-     * 
+     *
      * @param scope   An optional scope to call this from (if falsy, defaults
      *                to the calling GroupHoldr).
      * @param func   A Function to apply to each group.
@@ -235,10 +243,10 @@ export interface IGroupHoldr {
     applyAll(scope: any, func: (...args: any[]) => any, args?: any[]): void;
 
     /**
-     * Calls a function for each member of each group. Extra arguments may be 
+     * Calls a function for each member of each group. Extra arguments may be
      * passed in an array after scope and func, as in Function.apply's standard.
-     * 
-     * @param scope   An optional scope to call this from (if falsy, defaults 
+     *
+     * @param scope   An optional scope to call this from (if falsy, defaults
      *                to the calling GroupHoldr).
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
@@ -247,10 +255,10 @@ export interface IGroupHoldr {
 
     /**
      * Calls a Function for each group, with that group as the first argument.
-     * Extra arguments may be passed after scope and func natively, as in 
+     * Extra arguments may be passed after scope and func natively, as in
      * Function.call's standard.
-     * 
-     * @param scope   An optional scope to call this from (if falsy, 
+     *
+     * @param scope   An optional scope to call this from (if falsy,
      *                defaults to this).
      * @param func   A Function to apply to each group.
      */
@@ -259,8 +267,8 @@ export interface IGroupHoldr {
     /**
      * Calls a function for each member of each group. Extra arguments may be
      * passed after scope and func natively, as in Function.call's standard.
-     * 
-     * @param scope   An optional scope to call this from (if falsy, 
+     *
+     * @param scope   An optional scope to call this from (if falsy,
      *                defaults to this).
      * @param func   A Function to apply to each group member.
      */
@@ -271,8 +279,6 @@ export interface IGroupHoldr {
      */
     clearArrays(): void;
 }
-
-
 
 /**
  * A general storage container for values in keyed Arrays and/or Objects.
@@ -308,7 +314,7 @@ export class GroupHoldr {
 
     /**
      * Initializes a new instance of the GroupHoldr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IGroupHoldrSettings) {
@@ -322,7 +328,7 @@ export class GroupHoldr {
             throw new Error("No groupTypes given to GroupHoldr.");
         }
 
-        // These functions containers are filled in setGroupNames 
+        // These functions containers are filled in setGroupNames
         this.functions = {
             "setGroup": {},
             "getGroup": {},
@@ -334,9 +340,8 @@ export class GroupHoldr {
         this.setGroupNames(settings.groupNames, settings.groupTypes);
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns The mapping of operation types to each group's Functions.
@@ -367,13 +372,12 @@ export class GroupHoldr {
         return this.groupNames;
     }
 
-
     /* Group/ordering manipulators
-    */
+     */
 
     /**
      * Switches an object from one group to another.
-     * 
+     *
      * @param value   The value being moved from one group to another.
      * @param groupNameOld   The name of the group to move out of.
      * @param groupNameNew   The name of the group to move into.
@@ -387,7 +391,8 @@ export class GroupHoldr {
         groupNameOld: string,
         groupNameNew: string,
         keyOld?: string | number,
-        keyNew?: string | number): void {
+        keyNew?: string | number
+    ): void {
         var groupOld: any = this.groups[groupNameOld];
 
         if (groupOld.constructor === Array) {
@@ -403,7 +408,7 @@ export class GroupHoldr {
      * Calls a Function for each group, with that group as the first argument.
      * Extra arguments may be passed in an array after scope and func, as in
      * Function.apply's standard.
-     * 
+     *
      * @param scope   An optional scope to call this from (if falsy, defaults
      *                to the calling GroupHoldr).
      * @param func   A Function to apply to each group.
@@ -431,18 +436,16 @@ export class GroupHoldr {
     }
 
     /**
-     * Calls a function for each member of each group. Extra arguments may be 
+     * Calls a function for each member of each group. Extra arguments may be
      * passed in an array after scope and func, as in Function.apply's standard.
-     * 
-     * @param scope   An optional scope to call this from (if falsy, defaults 
+     *
+     * @param scope   An optional scope to call this from (if falsy, defaults
      *                to the calling GroupHoldr).
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
      */
     applyOnAll(scope: any, func: (...args: any[]) => any, args?: any[]): void {
-        var group: any,
-            i: number,
-            j: any;
+        var group: any, i: number, j: any;
 
         if (!args) {
             args = [undefined];
@@ -475,10 +478,10 @@ export class GroupHoldr {
 
     /**
      * Calls a Function for each group, with that group as the first argument.
-     * Extra arguments may be passed after scope and func natively, as in 
+     * Extra arguments may be passed after scope and func natively, as in
      * Function.call's standard.
-     * 
-     * @param scope   An optional scope to call this from (if falsy, 
+     *
+     * @param scope   An optional scope to call this from (if falsy,
      *                defaults to this).
      * @param func   A Function to apply to each group.
      */
@@ -499,8 +502,8 @@ export class GroupHoldr {
     /**
      * Calls a function for each member of each group. Extra arguments may be
      * passed after scope and func natively, as in Function.call's standard.
-     * 
-     * @param scope   An optional scope to call this from (if falsy, 
+     *
+     * @param scope   An optional scope to call this from (if falsy,
      *                defaults to this).
      * @param func   A Function to apply to each group member.
      */
@@ -537,8 +540,7 @@ export class GroupHoldr {
      * Clears each Array by setting its length to 0.
      */
     clearArrays(): void {
-        var group: any,
-            i: number;
+        var group: any, i: number;
 
         for (i = this.groupNames.length - 1; i >= 0; i -= 1) {
             group = this.groups[this.groupNames[i]];
@@ -549,15 +551,14 @@ export class GroupHoldr {
         }
     }
 
-
     /* Core setup logic
-    */
+     */
 
-    /** 
-     * Meaty function to reset, given an Array of names and an object of 
-     * types. Any pre-existing Functions are cleared, and new ones are added 
+    /**
+     * Meaty function to reset, given an Array of names and an object of
+     * types. Any pre-existing Functions are cleared, and new ones are added
      * as member objects and to this.functions.
-     * 
+     *
      * @param names   An array of names of groupings to be made
      * @param types   An mapping of the function types of
      *                the names given in names. This may also be taken
@@ -640,8 +641,7 @@ export class GroupHoldr {
      * Calls the Function creators for each name in groupNames.
      */
     private createFunctions(): void {
-        var groupName: string,
-            i: number;
+        var groupName: string, i: number;
 
         for (i = 0; i < this.groupNames.length; i += 1) {
             groupName = this.groupNames[i];
@@ -655,13 +655,12 @@ export class GroupHoldr {
         }
     }
 
-
     /* Function generators
-    */
+     */
 
     /**
      * Creates a setGroup Function under this and functions.setGroup.
-     * 
+     *
      * @param name   The name of the group, from groupNames.
      */
     private createFunctionSetGroup(name: string): void {
@@ -669,8 +668,8 @@ export class GroupHoldr {
 
         /**
          * Sets the value of the group referenced by the name.
-         * 
-         * @param value   The new value for the group, which should be 
+         *
+         * @param value   The new value for the group, which should be
          *                the same type as the group (Array or Object).
          */
         this.functions.setGroup[name] = (<any>this)["set" + name + "Group"] = function (value: any | any[]): void {
@@ -680,7 +679,7 @@ export class GroupHoldr {
 
     /**
      * Creates a getGroup Function under this and functions.getGroup.
-     * 
+     *
      * @param name   The name of the group, from groupNames.
      */
     private createFunctionGetGroup(name: string): void {
@@ -697,45 +696,51 @@ export class GroupHoldr {
 
     /**
      * Creates a set Function under this and functions.set.
-     * 
+     *
      * @param name   The name of the group, from groupNames.
      */
     private createFunctionSet(name: string): void {
         /**
          * Sets a value contained within the group.
-         * 
-         * @param key   The key referencing the value to obtain. This 
+         *
+         * @param key   The key referencing the value to obtain. This
          *              should be a Number if the group is an Array, or
          *              a String if the group is an Object.
          * @param value   The value to be contained within the group.
          */
-        this.functions.set[name] = (<any>this)["set" + name] = function (key: string | number, value: any = undefined): void {
+        this.functions.set[name] = (<any>this)["set" + name] = function (
+            key: string | number,
+            value: any = undefined
+        ): void {
             this.groups[name][<string>key] = value;
         };
     }
 
     /**
      * Creates a get<type> function under this and functions.get
-     * 
+     *
      * @param name   The name of the group, from groupNames.
      */
     private createFunctionGet(name: string): void {
         /**
          * Gets the value within a group referenced by the given key.
-         * 
-         * @param  key   The key referencing the value to obtain. This 
+         *
+         * @param  key   The key referencing the value to obtain. This
          *               should be a Number if the group is an Array, or
          *               a String if the group is an Object.
          * @param value   The value contained within the group.
          */
-        this.functions.get[<string>name] = (<any>this)["get" + name] = function (this: GroupHoldr, key: string | number): void {
+        this.functions.get[<string>name] = (<any>this)["get" + name] = function (
+            this: GroupHoldr,
+            key: string | number
+        ): void {
             return (<any>this.groups[name])[<string>key];
         };
     }
 
     /**
      * Creates an add function under this and functions.add.
-     * 
+     *
      * @param name   The name of the group, from groupNames.
      */
     private createFunctionAdd(name: string): void {
@@ -744,33 +749,37 @@ export class GroupHoldr {
         if (this.groupTypes[name] === Object) {
             /**
              * Adds a value to the group, referenced by the given key.
-             * 
+             *
              * @param key   The String key to reference the value to be
              *              added.
              * @param value   The value to be added to the group.
              */
-            this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrObjectAddFunction>function (value: any, key: string): void {
-                group[key] = value;
-            };
+            this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrObjectAddFunction>(
+                function (value: any, key: string): void {
+                    group[key] = value;
+                }
+            );
         } else {
             /**
              * Adds a value to the group, referenced by the given key.
-             * 
+             *
              * @param value   The value to be added to the group.
              */
-            this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrArrayAddFunction>function (value: any, key?: number): void {
-                if (key !== undefined) {
-                    group[key] = value;
-                } else {
-                    group.push(value);
+            this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrArrayAddFunction>(
+                function (value: any, key?: number): void {
+                    if (key !== undefined) {
+                        group[key] = value;
+                    } else {
+                        group.push(value);
+                    }
                 }
-            };
+            );
         }
     }
 
     /**
      * Creates a delete function under this and functions.delete.
-     * 
+     *
      * @param name   The name of the group, from groupNames.
      */
     private createFunctionDelete(name: string): void {
@@ -779,7 +788,7 @@ export class GroupHoldr {
         if (this.groupTypes[name] === Object) {
             /**
              * Deletes a value from the group, referenced by the given key.
-             * 
+             *
              * @param key   The String key to reference the value to be
              *              deleted.
              */
@@ -789,10 +798,13 @@ export class GroupHoldr {
         } else {
             /**
              * Deletes a value from the group, referenced by the given key.
-             * 
+             *
              * @param value The value to be deleted.
              */
-            this.functions.delete[name] = (<any>this)["delete" + name] = function (value: any, index: number = group.indexOf(value)): void {
+            this.functions.delete[name] = (<any>this)["delete" + name] = function (
+                value: any,
+                index: number = group.indexOf(value)
+            ): void {
                 if (index !== -1) {
                     group.splice(index, 1);
                 }
@@ -800,13 +812,12 @@ export class GroupHoldr {
         }
     }
 
-
     /* Utilities
-    */
+     */
 
     /**
      * Returns the name of a type specified by a string ("Array" or "Object").
-     * 
+     *
      * @param str   The name of the type. If falsy, defaults to Array
      * @returns The proper name of the type.
      */
@@ -819,7 +830,7 @@ export class GroupHoldr {
 
     /**
      * Returns function specified by a string (Array or Object).
-     * 
+     *
      * @param str   The name of the type. If falsy, defaults to Array
      * @returns The class Function of the type.
      */

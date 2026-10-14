@@ -87,7 +87,8 @@ MarioGame.MarioGame.settings.maps.library["2-1"] = {
                 { "macro": "Fill", "thing": "Stone", "x": 1520, "y": 80, "xnum": 2, "height": 80 },
                 { "macro": "EndOutsideCastle", "x": 1600, "transport": { "map": "2-2" } }
             ]
-        }, {
+        },
+        {
             "setting": "Sky",
             "exit": 1,
             "creation": [
@@ -100,7 +101,8 @@ MarioGame.MarioGame.settings.maps.library["2-1"] = {
                 { "macro": "Fill", "thing": "Coin", "x": 425, "y": 71, "xnum": 3, "xwidth": 8 },
                 { "macro": "Fill", "thing": "Coin", "x": 553, "y": 7, "xnum": 3, "xwidth": 8 }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -108,7 +110,16 @@ MarioGame.MarioGame.settings.maps.library["2-1"] = {
                 { "macro": "Floor", "width": 136 },
                 { "macro": "Fill", "thing": "Brick", "y": 8, "ynum": 11 },
                 { "macro": "Fill", "thing": "Brick", "x": 32, "y": 8, "xnum": 7, "ynum": 3 },
-                { "macro": "Fill", "thing": "Coin", "x": 33, "y": 31, "xnum": 7, "ynum": 2, "yheight": 16, "xwidth": 8 },
+                {
+                    "macro": "Fill",
+                    "thing": "Coin",
+                    "x": 33,
+                    "y": 31,
+                    "xnum": 7,
+                    "ynum": 2,
+                    "yheight": 16,
+                    "xwidth": 8
+                },
                 { "macro": "Fill", "thing": "Coin", "x": 41, "y": 63, "xnum": 5, "xwidth": 8 },
                 { "thing": "PipeHorizontal", "x": 104, "y": 16, "transport": 2 },
                 { "thing": "PipeVertical", "x": 120, "y": 88, "height": 88 }

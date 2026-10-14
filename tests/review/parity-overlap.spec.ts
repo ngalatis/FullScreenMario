@@ -29,8 +29,8 @@ test.describe("two-solid overlap", () => {
             actions: [
                 { at: 2, do: "addRel", args: ["Brick", -20, -32] },
                 { at: 2, do: "addRel", args: ["Brick", 12, -32] },
-                { at: 5, do: "big" },
-            ],
+                { at: 5, do: "big" }
+            ]
         });
 
         expect(result.errors).toEqual([]);

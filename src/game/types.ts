@@ -3,7 +3,7 @@ import * as MapScreenr from "../engine/MapScreenr";
 import * as MapsCreatr from "../engine/MapsCreatr";
 
 /**
- * A simple container for Map attributes given by switching to an Area within 
+ * A simple container for Map attributes given by switching to an Area within
  * that map. A bounding box of the current viewport is kept, along with a bag
  * of assorted variable values.
  */
@@ -127,14 +127,14 @@ export interface IArea extends MapsCreatr.IMapsCreatrArea {
 
     /**
      * A callback to initialize the Area background as a function of its setting.
-     * 
+     *
      * @param area   The Area having its background set.
      */
     setBackground: (area: IArea) => void;
 
     /**
      * A callback for when a Player runs out of lives.
-     * 
+     *
      * @param FSM
      */
     onGameOver: (FSM: IMarioGame) => void;
@@ -146,7 +146,7 @@ export interface IArea extends MapsCreatr.IMapsCreatrArea {
 
     /**
      * A callback for when a Player loses a life (dies).
-     * 
+     *
      * @param FSM
      */
     onPlayerDeath: (FSM: IMarioGame) => void;
@@ -286,7 +286,7 @@ export interface IThing extends GameStartr.IThing {
      * Other Things in the same collection as this one.
      */
     partners?: {
-        [i: string]: IThing
+        [i: string]: IThing;
     };
 
     /**
@@ -433,7 +433,7 @@ export interface ITextMappings {
 export interface ISolid extends IThing {
     /**
      * A callback for when a Player actively runs into this from the left.
-     * 
+     *
      * @param thing   The Character running into other from the left.
      * @param other   The Solid being run into by thing.
      * @param transport   Other's transport property, if it exists.
@@ -442,7 +442,7 @@ export interface ISolid extends IThing {
 
     /**
      * A callback for when a Player actively attemps to crouch on top of this.
-     * 
+     *
      * @param thing   The Character crouching on other.
      * @param other   The Solid being crouched on by thing.
      * @param transport   Other's transport property, if it exists.
@@ -456,7 +456,7 @@ export interface ISolid extends IThing {
 
     /**
      * A callback for when a Player jumps up and hits the bottom of this.
-     * 
+     *
      * @param thing   The Character bumping into other from the bottom.
      * @param other   The Solid being run into by thing.
      */
@@ -464,7 +464,7 @@ export interface ISolid extends IThing {
 
     /**
      * A callback for when a Character collides with this.
-     * 
+     *
      * @param thing   The Character colliding into other.
      * @param other   The Solid being collided into by thing.
      */
@@ -483,7 +483,7 @@ export interface ISolid extends IThing {
 
     /**
      * A callback for when a Character starts resting on this.
-     * 
+     *
      * @param thing   The Character now resting on other.
      * @param other   The Solid being rested on by thing.
      */
@@ -564,7 +564,7 @@ export interface ICannon extends ISolid {
 /**
  * A CastleAxe Solid.
  */
-export interface ICastleAxe extends ISolid { }
+export interface ICastleAxe extends ISolid {}
 
 /**
  * A CastleBlock Solid, which may have a line Fireballs rotating around it.
@@ -576,7 +576,7 @@ export interface ICastleBlock extends ISolid {
     angle?: number;
 
     /**
-     * The direction of Fireball spinning, as -1 for counter-clockwise or 1 
+     * The direction of Fireball spinning, as -1 for counter-clockwise or 1
      * for clockwise (by default, clockwise).
      */
     direction: number;
@@ -603,7 +603,7 @@ export interface ICastleBlock extends ISolid {
 export interface IDetector extends ISolid {
     /**
      * Callback for when a Thing activates this.
-     * 
+     *
      * @param thing   The Thing that activated this.
      */
     activate(thing: IThing): void;
@@ -616,14 +616,14 @@ export interface IDetectCollision extends IDetector {
     /**
      * A callback for when a non-Player Character collides with this,
      * called from activate instead of Player functionality.
-     * 
+     *
      * @param thing   The Character activating this detector.
      */
     activateFail?: (thing: ICharacter) => void;
 
     /**
      * A callback for when a Character collides with this.
-     * 
+     *
      * @param thing   The Character activating other.
      * @param other   The detector being activated by thing.
      */
@@ -641,7 +641,7 @@ export interface IDetectCollision extends IDetector {
 export interface IDetectWindow extends IDetector {
     /**
      * Callback for when this scrolls into view.
-     * 
+     *
      * @param thing   This window detector.
      */
     activate(thing: IThing): void;
@@ -701,7 +701,7 @@ export interface IScrollBlocker extends IDetectWindow {
 /**
  * A Pipe Solid.
  */
-export interface IPipe extends ISolid { }
+export interface IPipe extends ISolid {}
 
 /**
  * A Platform Solid that may be floating, sliding, a transport, a falling trigger,
@@ -814,7 +814,7 @@ export interface ICharacter extends IThing {
 
     /**
      * A callback to animate this, such as when emerging from a Solid.
-     * 
+     *
      * @param thing   The Charater being animated.
      * @param other   An optional Solid used as the animation source.
      */
@@ -832,7 +832,7 @@ export interface ICharacter extends IThing {
 
     /**
      * A callback for when this collides with another Thing.
-     * 
+     *
      * @param thing   The "primary" (first) Thing colliding.
      * @param other   The "secondary" (second) Thing colliding.
      */
@@ -845,7 +845,7 @@ export interface ICharacter extends IThing {
 
     /**
      * A callback for when this dies.
-     * 
+     *
      * @param thing   The dieing Thing.
      * @param severity   How severe the death is, as 1 for normal or 2 for instant.
      */
@@ -858,7 +858,7 @@ export interface ICharacter extends IThing {
 
     /**
      * A callback for when this has finished emerging from a spawning Solid.
-     * 
+     *
      * @param thing   This Character.
      * @param other   The spawning Solid.
      */
@@ -881,7 +881,7 @@ export interface ICharacter extends IThing {
 
     /**
      * A callback to kill this Character on end, instead of killNormal.
-     * 
+     *
      * @param thing   The Thing being killed on end.
      */
     killonend?: (thing: IThing) => void;
@@ -940,7 +940,7 @@ export interface ICharacter extends IThing {
 
     /**
      * A callback for when this is hit by an "up" Solid.
-     * 
+     *
      * @param thing   This Character.
      * @param other   The "up" Solid hitting this Character.
      */
@@ -948,7 +948,7 @@ export interface ICharacter extends IThing {
 
     /**
      * A callback for when this starts resting on a Solid.
-     * 
+     *
      * @param thing   This Character.
      * @param other   The Solid now being rested upon.
      */
@@ -1061,12 +1061,12 @@ export interface ICharacterOverlapping extends ICharacter {
 /**
  * A falling shard of a Brick.
  */
-export interface IBrickShard extends ICharacter { }
+export interface IBrickShard extends ICharacter {}
 
 /**
  * A Castle Fireball.
  */
-export interface ICastleFireball extends ICharacter { }
+export interface ICastleFireball extends ICharacter {}
 
 /**
  * A malicious enemy Character.
@@ -1121,7 +1121,7 @@ export interface IBowserFire extends IEnemy {
 /**
  * A BulletBill Character.
  */
-export interface IBulletBill extends IEnemy { }
+export interface IBulletBill extends IEnemy {}
 
 /**
  * A CheepCheep Character
@@ -1136,12 +1136,12 @@ export interface ICheepCheep extends IEnemy {
 /**
  * A player-emited Fireball Enemy.
  */
-export interface IFireball extends IEnemy { }
+export interface IFireball extends IEnemy {}
 
 /**
  * A Goomba Enemy.
  */
-export interface IGoomba extends IEnemy { }
+export interface IGoomba extends IEnemy {}
 
 /**
  * A HammerBro Enemy.
@@ -1291,12 +1291,12 @@ export interface IPodoboo extends IEnemy {
 /**
  * A SpinyEgg Enemy.
  */
-export interface ISpinyEgg extends IEnemy { }
+export interface ISpinyEgg extends IEnemy {}
 
 /**
  * A Spiny Enemy hatched from a SpinyEgg.
  */
-export interface ISpiny extends IEnemy { }
+export interface ISpiny extends IEnemy {}
 
 /**
  * An item Players may interact with, such as power-ups.
@@ -1304,7 +1304,7 @@ export interface ISpiny extends IEnemy { }
 export interface IItem extends ICharacter {
     /**
      * A callback for when a Player interacts with this item.
-     * 
+     *
      * @param thing   A Player that just triggered this Item.
      * @param other   This Item being triggered.
      */
@@ -1319,7 +1319,7 @@ export interface IItem extends ICharacter {
 /**
  * A Coin Item that gives a Player a point when touched.
  */
-export interface ICoin extends IItem { }
+export interface ICoin extends IItem {}
 
 /**
  * A Shell that may be kicked by a Player into Characters.
@@ -1432,14 +1432,14 @@ export interface IPlayer extends ICharacter {
 
     /**
      * A callback for when this Player shoots a Fireball.
-     * 
+     *
      * @param player   The Player shooting a Fireball.
      */
     fire: (player: IPlayer) => void;
 
     /**
      * Retrieval Function for a new user keys description.
-     * 
+     *
      * @returns A new descriptor Object for a user's keys.
      */
     getKeys: () => IPlayerKeys;
@@ -1604,7 +1604,7 @@ export interface IPlayerKeys {
 /**
  * A decorative Scenery Thing.
  */
-export interface IScenery extends IThing { }
+export interface IScenery extends IThing {}
 
 /**
  * A Firework Scenery that may animate an explosion.
@@ -1612,7 +1612,7 @@ export interface IScenery extends IThing { }
 export interface IFirework extends IScenery {
     /**
      * Animates an explosion of the Firework.
-     * 
+     *
      * @param thing   The exploding Firework.
      */
     animate(thing: IFirework): void;
@@ -1680,7 +1680,7 @@ export interface IMacroFillPrePatternSettings extends IMacroSettings {
     pattern: string;
 
     /**
-     * How many times to repeat the overall pattern (by 
+     * How many times to repeat the overall pattern (by
      * default, 1).
      */
     repeat?: number;
@@ -1872,7 +1872,7 @@ export interface IMacroScaleSettings extends IMacroSettings {
  */
 export interface IMacroPlatformGeneratorSettings extends IMacroSettings {
     /**
-     * What direction to travel, as -1 for up or 1 for down (by 
+     * What direction to travel, as -1 for up or 1 for down (by
      * default, 1).
      */
     direction?: number;
@@ -2119,7 +2119,7 @@ export interface IMarioGameStoredSettings extends GameStartr.IGameStartrStoredSe
 
 /**
  * A free HTML5 remake of Nintendo's original Super Mario Bros, expanded for the
- * modern web. It includes the original 32 levels, a random map generator, a 
+ * modern web. It includes the original 32 levels, a random map generator, a
  * level editor, and over a dozen custom mods.
  */
 export interface IMarioGame extends GameStartr.IGameStartr {
@@ -2248,7 +2248,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * Generates a key for a Thing based off the current area and the Thing's
      * basic attributes. This should be used for PixelRender.get calls, to
      * cache the Thing's sprite.
-     * 
+     *
      * @param thing
      * @returns A key that to identify the Thing's sprite.
      */
@@ -4604,7 +4604,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A single type of Thing any number of times.
      */
-    macroFillPreThings(reference: IMacroFillPreThingsSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroFillPreThings(
+        reference: IMacroFillPreThingsSettings,
+        prethings: any[],
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to continuously place a listing of Things multiple times, from left
@@ -4618,7 +4624,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns Preset Things in a pattern.
      */
-    macroFillPrePattern(reference: IMacroFillPrePatternSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroFillPrePattern(
+        reference: IMacroFillPrePatternSettings,
+        prethings: any[],
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a Floor Thing with infinite height. All settings are
@@ -4751,7 +4763,8 @@ export interface IMarioGame extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IMarioGame): any;
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a Warp World group of Pipes, Texts, Piranhas, and
@@ -4779,7 +4792,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A detector to start spawning CheepCheeps.
      */
-    macroCheepsStart(reference: IMacroCheepsStartSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroCheepsStart(
+        reference: IMacroCheepsStartSettings,
+        prethings: any[],
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a DetectCollision that will stop the map spawning random
@@ -4793,7 +4812,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A detector to stop spawning CheepCheeps.
      */
-    macroCheepsStop(reference: IMacroCheepsStopSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroCheepsStop(
+        reference: IMacroCheepsStopSettings,
+        prethings: any[],
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a DetectCollision that will start the map spawning random
@@ -4812,7 +4837,8 @@ export interface IMarioGame extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IMarioGame): any;
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a DetectCollision that will stop the map spawning random
@@ -4831,7 +4857,8 @@ export interface IMarioGame extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IMarioGame): any;
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a DetectCollision that will tell any current Lakitu to
@@ -4845,7 +4872,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A detector to cause any current Lakitu to flee.
      */
-    macroLakituStop(reference: IMacroLakituStopSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroLakituStop(
+        reference: IMacroLakituStopSettings,
+        prethings: any[],
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a small castle, which is really a collection of sceneries.
@@ -4877,7 +4910,8 @@ export interface IMarioGame extends GameStartr.IGameStartr {
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: IMarioGame): any;
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place the typical starting Things for the inside of a castle
@@ -4906,7 +4940,8 @@ export interface IMarioGame extends GameStartr.IGameStartr {
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: IMarioGame): any;
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place the typical ending Things for the inside of a castle area.
@@ -4924,7 +4959,8 @@ export interface IMarioGame extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IMarioGame): any;
+        FSM: IMarioGame
+    ): any;
 
     /**
      * Macro to place a DetectSpawn that will call activateSectionBefore to

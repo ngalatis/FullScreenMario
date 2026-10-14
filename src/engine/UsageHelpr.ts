@@ -34,7 +34,7 @@ export interface ITextStyles {
 export type IAliases = [string, string][];
 
 /**
- * A single line of text to write to a console. If an Array, the first String is the 
+ * A single line of text to write to a console. If an Array, the first String is the
  * message, and any others are aliases of UserWrappr styles to apply.
  */
 export type IHelpLine = string | string[];
@@ -129,20 +129,18 @@ export interface IUsageHelpr {
 
     /**
      * Displays the summary for a help group of the given optionName.
-     * 
+     *
      * @param optionName   The help group to display the summary of.
      */
     displayHelpGroupSummary(optionName: string): void;
 
     /**
      * Displays the full information on a help group of the given optionName.
-     * 
+     *
      * @param optionName   The help group to display the information of.
      */
     displayHelpOption(optionName: string): void;
 }
-
-
 
 /**
  * A simple interactive text-based assistant to demonstrate common API uses.
@@ -188,7 +186,7 @@ export class UsageHelpr {
 
     /**
      * Initializes a new instance of the UsageHelpr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IUsageHelprSettings = {}) {
@@ -221,7 +219,7 @@ export class UsageHelpr {
 
     /**
      * Displays the summary for a help group of the given optionName.
-     * 
+     *
      * @param optionName   The help group to display the summary of.
      */
     displayHelpGroupSummary(optionName: string): void {
@@ -241,13 +239,14 @@ export class UsageHelpr {
             this.logger(
                 `%c${this.padTextRight(this.filterHelpText(action.title), maxTitleLength)}%c  // ${action.description}`,
                 UsageHelpr.styles.code,
-                UsageHelpr.styles.comment);
+                UsageHelpr.styles.comment
+            );
         }
     }
 
     /**
      * Displays the full information on a help group of the given optionName.
-     * 
+     *
      * @param optionName   The help group to display the information of.
      */
     displayHelpOption(optionName: string): void {
@@ -264,18 +263,10 @@ export class UsageHelpr {
             action = actions[i];
             maxExampleLength = 0;
 
-            this.logHelpText([
-                `%c${action.title}%c  ---  ${action.description}`,
-                "head",
-                "italic"
-            ]);
+            this.logHelpText([`%c${action.title}%c  ---  ${action.description}`, "head", "italic"]);
 
             if (action.usage) {
-                this.logHelpText([
-                    `%cUsage: %c${action.usage}`,
-                    "comment",
-                    "code"
-                ]);
+                this.logHelpText([`%cUsage: %c${action.usage}`, "comment", "code"]);
             }
 
             if (action.examples) {
@@ -298,7 +289,7 @@ export class UsageHelpr {
     /**
      * Logs a bit of help text, filtered by this.filterHelpText, with ordered styles
      * from `UserWrappr.styles` keyed by name.
-     * 
+     *
      * @param text   The text to be filtered and logged.
      * @remarks See https://getfirebug.com/wiki/index.php/Console.log for "%c" usage.
      */
@@ -320,7 +311,7 @@ export class UsageHelpr {
     /**
      * Filters a span of help text to replace the game name with its alias. If "%c" isn't
      * in the text, it's added at the end.
-     * 
+     *
      * @param text The text to filter.
      * @returns The text, with aliases replaced.
      */
@@ -341,7 +332,7 @@ export class UsageHelpr {
 
     /**
      * Ensures a bit of text is of least a certain length.
-     * 
+     *
      * @param text   The text to pad.
      * @param length   How wide the text must be, at minimum.
      * @param spacer   What character to pad the text with, if not a space.

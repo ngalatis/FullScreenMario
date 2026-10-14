@@ -34,7 +34,7 @@ export interface IMapScreenrSettings {
 }
 
 /**
- * A simple container for Map attributes given by switching to an Area within 
+ * A simple container for Map attributes given by switching to an Area within
  * that map. A bounding box of the current viewport is kept, along with a bag
  * of assorted variable values.
  */
@@ -112,7 +112,7 @@ export interface IMapScreenr {
 
     /**
      * Recalculates a variable by passing variableArgs to its Function.
-     * 
+     *
      * @param name   The name of the variable to recalculate.
      * @param value   A new value for the variable instead of its Function's result.
      * @returns The new value of the variable.
@@ -121,7 +121,7 @@ export interface IMapScreenr {
 
     /**
      * Shifts the MapScreenr horizontally and vertically via shiftX and shiftY.
-     * 
+     *
      * @param dx   How far to scroll horizontally.
      * @param dy   How far to scroll vertically.
      */
@@ -129,14 +129,14 @@ export interface IMapScreenr {
 
     /**
      * Shifts the MapScreenr horizontally by changing left and right by the dx.
-     * 
+     *
      * @param dx   How far to scroll horizontally.
      */
     shiftX(dx: number): void;
 
     /**
      * Shifts the MapScreenr vertically by changing top and bottom by the dy.
-     * 
+     *
      * @param dy   How far to scroll vertically.
      */
     shiftY(dy: number): void;
@@ -147,10 +147,8 @@ export interface IMapScreenr {
     [i: string]: any;
 }
 
-
-
 /**
- * A simple container for Map attributes given by switching to an Area within 
+ * A simple container for Map attributes given by switching to an Area within
  * that map. A bounding box of the current viewport is kept, along with a bag
  * of assorted variable values.
  */
@@ -208,7 +206,7 @@ export class MapScreenr implements IMapScreenr {
     /**
      * Resets the MapScreenr. All members of the settings argument are copied
      * to the MapScreenr itself, though only width and height are required.
-     * 
+     *
      * @param {IMapScreenrSettings} settings
      */
     constructor(settings: IMapScreenrSettings) {
@@ -234,9 +232,8 @@ export class MapScreenr implements IMapScreenr {
         this.variableArgs = settings.variableArgs || [];
     }
 
-
     /* State changes
-    */
+     */
 
     /**
      * Completely clears the MapScreenr for use in a new Area. Positioning is
@@ -283,24 +280,21 @@ export class MapScreenr implements IMapScreenr {
 
     /**
      * Recalculates a variable by passing variableArgs to its Function.
-     * 
+     *
      * @param name   The name of the variable to recalculate.
      * @param value   A new value for the variable instead of its Function's result.
      * @returns The new value of the variable.
      */
     setVariable(name: string, value?: any): any {
-        this[name] = arguments.length === 1
-            ? this.variables[name].apply(this, this.variableArgs)
-            : value;
+        this[name] = arguments.length === 1 ? this.variables[name].apply(this, this.variableArgs) : value;
     }
 
-
     /* Element shifting
-    */
+     */
 
     /**
      * Shifts the MapScreenr horizontally and vertically via shiftX and shiftY.
-     * 
+     *
      * @param dx   How far to scroll horizontally.
      * @param dy   How far to scroll vertically.
      */
@@ -316,7 +310,7 @@ export class MapScreenr implements IMapScreenr {
 
     /**
      * Shifts the MapScreenr horizontally by changing left and right by the dx.
-     * 
+     *
      * @param dx   How far to scroll horizontally.
      */
     shiftX(dx: number): void {
@@ -326,7 +320,7 @@ export class MapScreenr implements IMapScreenr {
 
     /**
      * Shifts the MapScreenr vertically by changing top and bottom by the dy.
-     * 
+     *
      * @param dy   How far to scroll vertically.
      */
     shiftY(dy: number): void {

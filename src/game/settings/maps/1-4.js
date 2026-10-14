@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["1-4"] = {
     "name": "1-4",
     "time": 300,
-    "locations": [
-        { "entry": "Castle" }
-    ],
+    "locations": [{ "entry": "Castle" }],
     "areas": [
         {
             "setting": "Castle",
@@ -47,7 +45,16 @@ MarioGame.MarioGame.settings.maps.library["1-4"] = {
                 { "thing": "Stone", "x": 984, "y": 24, "width": 40, "height": 24 },
                 { "thing": "Stone", "x": 984, "y": 80, "width": 40, "height": 16 },
                 { "macro": "EndInsideCastle", "x": 1024, "transport": { "map": "2-1" } },
-                { "thing": "Platform", "x": 1108, "y": 56, "width": 16, "sliding": true, "begin": 1080, "end": 1112, "nocollidechar": true }
+                {
+                    "thing": "Platform",
+                    "x": 1108,
+                    "y": 56,
+                    "width": 16,
+                    "sliding": true,
+                    "begin": 1080,
+                    "end": 1112,
+                    "nocollidechar": true
+                }
             ]
         }
     ]

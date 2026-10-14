@@ -2,11 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["8-2"] = {
     "name": "8-2",
-    "locations": [
-        { "entry": "Plain" },
-        { "entry": "PipeVertical" },
-        { "area": 1 }
-    ],
+    "locations": [{ "entry": "Plain" }, { "entry": "PipeVertical" }, { "area": 1 }],
     "areas": [
         {
             "setting": "Overworld",
@@ -100,7 +96,8 @@ MarioGame.MarioGame.settings.maps.library["8-2"] = {
                 { "thing": "PlantLarge", "x": 1704, "y": 23 },
                 { "macro": "EndOutsideCastle", "x": 1728, "transport": { "map": "8-3" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [

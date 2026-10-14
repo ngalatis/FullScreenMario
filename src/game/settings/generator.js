@@ -2,29 +2,33 @@ import * as MarioGame from "../MarioGame";
 
 MarioGame.MarioGame.settings.generator = {
     "possibilities": {
-        
         /* Overworld
-        */
-        
+         */
+
         "Overworld": {
             "height": 80,
             "width": 2992,
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "ScrollEnabler"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldStart"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldBody"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldEnd"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "ScrollEnabler"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldStart"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldBody"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldEnd"
+                    }
+                ]
             }
         },
         "OverworldStart": {
@@ -34,17 +38,20 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "spacing": -8,
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 112
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 112
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldScenery"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldScenery"
-                }]
+                ]
             }
         },
         "OverworldBody": {
@@ -52,13 +59,16 @@ MarioGame.MarioGame.settings.generator = {
             "height": 80,
             "contents": {
                 "mode": "Multiple",
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldRandomization"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldClouds"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldRandomization"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldClouds"
+                    }
+                ]
             }
         },
         "OverworldRandomization": {
@@ -67,19 +77,24 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Repeat",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldClump"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwaySpotty"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegway"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwaySpotty"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldClump"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwaySpotty"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegway"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwaySpotty"
+                    }
+                ]
             }
         },
         "OverworldClump": {
@@ -88,19 +103,23 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 60,
-                    "type": "Random",
-                    "title": "OverworldClumpLand"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "OverworldClumpWater"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "OverworldClumpTrees"
-                }]
+                "children": [
+                    {
+                        "percent": 60,
+                        "type": "Random",
+                        "title": "OverworldClumpLand"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "OverworldClumpWater"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "OverworldClumpTrees"
+                    }
+                ]
             }
         },
         "OverworldClumpLand": {
@@ -108,13 +127,16 @@ MarioGame.MarioGame.settings.generator = {
             "height": 80,
             "contents": {
                 "mode": "Multiple",
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldScenery"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldLandArea"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldScenery"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldLandArea"
+                    }
+                ]
             }
         },
         "OverworldLandArea": {
@@ -123,17 +145,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 160
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 160
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroup"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "LandObstacleGroup"
-                }]
+                ]
             }
         },
         "OverworldClumpWater": {
@@ -141,17 +166,20 @@ MarioGame.MarioGame.settings.generator = {
             "height": 80,
             "contents": {
                 "mode": "Multiple",
-                "children": [{
-                    "type": "Random",
-                    "title": "Water",
-                    "sizing": {
-                        "height": 8,
-                        "width": 320
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Water",
+                        "sizing": {
+                            "height": 8,
+                            "width": 320
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldClumpWaterMain"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldClumpWaterMain",
-                }]
+                ]
             }
         },
         "OverworldClumpWaterMain": {
@@ -165,13 +193,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldClumpWaterContents"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldClumpWaterContents"
+                    }
+                ]
             }
         },
         "OverworldClumpWaterContents": {
@@ -180,16 +211,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "CheepsStart"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldClumpWaterBridge"
-                }, {
-                    "type": "Random",
-                    "title": "CheepsStop"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CheepsStart"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldClumpWaterBridge"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CheepsStop"
+                    }
+                ]
             }
         },
         "OverworldClumpWaterBridge": {
@@ -199,22 +234,25 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "spacing": 24,
-                "children": [{
-                    "type": "Known",
-                    "title": "Bridge",
-                    "sizing": {
-                        "width": 320
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Bridge",
+                        "sizing": {
+                            "width": 320
+                        },
+                        "arguments": {
+                            "macro": "Bridge",
+                            "width": 320,
+                            "begin": true,
+                            "end": true
+                        }
                     },
-                    "arguments": {
-                        "macro": "Bridge",
-                        "width": 320,
-                        "begin": true,
-                        "end": true
+                    {
+                        "type": "Random",
+                        "title": "OverworldClumpWaterBridgeBlock"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldClumpWaterBridgeBlock"
-                }]
+                ]
             }
         },
         "OverworldClumpWaterBridgeBlock": {
@@ -228,24 +266,30 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 240,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": [{
-                        "percent": 70,
-                        "values": {
-                            "contents": "Mushroom"
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "contents": "Star"
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": [
+                            {
+                                "percent": 70,
+                                "values": {
+                                    "contents": "Mushroom"
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "contents": "Star"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "OverworldClumpTrees": {
@@ -259,19 +303,23 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 24,
                     "units": 8
                 },
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "OverworldTreeLarge"
-                }, {
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "OverworldTreesSmall"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "PlatformGenerator"
-                }]
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "OverworldTreeLarge"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "OverworldTreesSmall"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "PlatformGenerator"
+                    }
+                ]
             }
         },
         "OverworldTreesSmall": {
@@ -285,13 +333,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 8,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldTreeSmallShort"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldTreeSmall"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldTreeSmallShort"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldTreeSmall"
+                    }
+                ]
             }
         },
         "OverworldTreeSmall": {
@@ -306,13 +357,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 88,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "TreeFancy"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "TreeFancy"
+                    }
+                ]
             }
         },
         "OverworldTreeSmallShort": {
@@ -327,17 +381,20 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Known",
-                    "title": "Tree",
-                    "arguments": {
-                        "macro": "Tree",
-                        "width": 24
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Tree",
+                        "arguments": {
+                            "macro": "Tree",
+                            "width": 24
+                        }
                     }
-                }]
+                ]
             }
         },
         "OverworldTreeLarge": {
@@ -351,13 +408,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldTreeLargeBase"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldTreeSmall"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldTreeLargeBase"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldTreeSmall"
+                    }
+                ]
             }
         },
         "OverworldTreeLargeBase": {
@@ -368,58 +428,68 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "top",
                 "snap": "bottom",
                 "spacing": [0, 8, 8],
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Known",
-                    "title": "Tree",
-                    "arguments": {
-                        "macro": "Tree",
-                        "width": 64
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Tree",
+                        "arguments": {
+                            "macro": "Tree",
+                            "width": 64
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "TreeLargeCoins"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "TreeLargeCoins"
-                }]
+                ]
             }
         },
-        
-        
+
         /* Areas Segway floors
-        */
-        
+         */
+
         "OverworldSegway": {
             "width": 112,
             "height": 80,
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "OverworldSegwaySpotty"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "OverworldSegwayEnemySpots"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "OverworldSegwayRamps"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "OverworldSegwayWatery"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "OverworldSegwaySpring"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "OverworldSegwayPipeTransit"
-                }]
+                "children": [
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "OverworldSegwaySpotty"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "OverworldSegwayEnemySpots"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "OverworldSegwayRamps"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "OverworldSegwayWatery"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "OverworldSegwaySpring"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "OverworldSegwayPipeTransit"
+                    }
+                ]
             }
         },
         "OverworldSegwaySpotty": {
@@ -428,15 +498,18 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 60,
-                    "type": "Random",
-                    "title": "OverworldSegwaySpot",
-                }, {
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "Nothing",
-                }]
+                "children": [
+                    {
+                        "percent": 60,
+                        "type": "Random",
+                        "title": "OverworldSegwaySpot"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "Nothing"
+                    }
+                ]
             }
         },
         "OverworldSegwaySpot": {
@@ -445,16 +518,19 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor"
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwaySpotContent"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwaySpotContent"
-                }]
+                ]
             }
         },
         "OverworldSegwaySpotContent": {
@@ -464,15 +540,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "top",
                 "spacing": 24,
-                "children": [{
-                    "percent": 90,
-                    "type": "Random",
-                    "title": "OverworldSegwaySpotScenery"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "KoopaJumping"
-                }]
+                "children": [
+                    {
+                        "percent": 90,
+                        "type": "Random",
+                        "title": "OverworldSegwaySpotScenery"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "KoopaJumping"
+                    }
+                ]
             }
         },
         "OverworldSegwayEnemySpots": {
@@ -481,20 +560,26 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Repeat",
                 "direction": "right",
-                "spacing": [{
-                    "percent": 60,
-                    "value": 0
-                }, {
-                    "percent": 25,
-                    "value": 8
-                }, {
-                    "percent": 15,
-                    "value": 16
-                }],
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldSegwayEnemySpot"
-                }]
+                "spacing": [
+                    {
+                        "percent": 60,
+                        "value": 0
+                    },
+                    {
+                        "percent": 25,
+                        "value": 8
+                    },
+                    {
+                        "percent": 15,
+                        "value": 16
+                    }
+                ],
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwayEnemySpot"
+                    }
+                ]
             }
         },
         "OverworldSegwayEnemySpot": {
@@ -503,17 +588,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 32
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 32
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwayEnemySpotContent"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwayEnemySpotContent"
-                }]
+                ]
             }
         },
         "OverworldSegwayEnemySpotContent": {
@@ -522,19 +610,23 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 45,
-                    "type": "Random",
-                    "title": "EnemyEasy"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "LandObstacleGroupVertical"
-                }]
+                "children": [
+                    {
+                        "percent": 45,
+                        "type": "Random",
+                        "title": "EnemyEasy"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "LandObstacleGroupVertical"
+                    }
+                ]
             }
         },
         "OverworldSegwayRamps": {
@@ -543,19 +635,23 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "RampUpSmallFloor"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 48
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "RampUpSmallFloor"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 48
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampDownSmallFloor"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "RampDownSmallFloor"
-                }]
+                ]
             }
         },
         "OverworldSegwayFloating": {
@@ -564,15 +660,18 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "OverworldSegwayFloat"
-                }]
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "OverworldSegwayFloat"
+                    }
+                ]
             }
         },
         "OverworldSegwayFloat": {
@@ -581,10 +680,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "Stone"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Stone"
+                    }
+                ]
             }
         },
         "OverworldSegwayWatery": {
@@ -593,16 +694,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "RampUpSmallFloor"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwayWateryBridge", 
-                }, {
-                    "type": "Random",
-                    "title": "RampDownSmallFloor"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "RampUpSmallFloor"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwayWateryBridge"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampDownSmallFloor"
+                    }
+                ]
             }
         },
         "OverworldSegwayWateryBridge": {
@@ -611,25 +716,30 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "Water",
-                    "sizing": {
-                        "height": 8
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 24
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Water",
+                        "sizing": {
+                            "height": 8
+                        }
                     },
-                }, {
-                    "type": "Random",
-                    "title": "Bridge"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwayWateryBridgeTop"
-                }]
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 24
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Bridge"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwayWateryBridgeTop"
+                    }
+                ]
             }
         },
         "OverworldSegwayWateryBridgeTop": {
@@ -638,13 +748,16 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldSegwayWateryBridgeTopEnemies"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwayWateryBridgeTopSolid"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwayWateryBridgeTopEnemies"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwayWateryBridgeTopSolid"
+                    }
+                ]
             }
         },
         "OverworldSegwayWateryBridgeTopEnemies": {
@@ -659,20 +772,25 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 20,
                     "units": 4
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": 16
-                }, {
-                    "type": "Random",
-                    "title": "EnemyEasy"
-                }, {
-                    "type": "Random",
-                    "title": "EnemyEasy"
-                }, {
-                    "type": "Random",
-                    "title": "EnemyEasy"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": 16
+                    },
+                    {
+                        "type": "Random",
+                        "title": "EnemyEasy"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "EnemyEasy"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "EnemyEasy"
+                    }
+                ]
             }
         },
         "OverworldSegwayWateryBridgeTopSolid": {
@@ -687,13 +805,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 24,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "BlockReward"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "BlockReward"
+                    }
+                ]
             }
         },
         "OverworldSegwaySpring": {
@@ -702,13 +823,16 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldSegwaySpringLand"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwaySpringGap"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwaySpringLand"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwaySpringGap"
+                    }
+                ]
             }
         },
         "OverworldSegwaySpringLand": {
@@ -717,16 +841,19 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor"
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Springboard"
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Springboard"
-                }]
+                ]
             }
         },
         "OverworldSegwaySpringGap": {
@@ -740,13 +867,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 80,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwaySpringReward"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwaySpringReward"
+                    }
+                ]
             }
         },
         "OverworldSegwaySpringReward": {
@@ -760,16 +890,20 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "Brick"
-                }, {
-                    "type": "Random",
-                    "title": "BlockTreasureFloating"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Brick"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "BlockTreasureFloating"
+                    }
+                ]
             }
         },
         "OverworldSegwayPipeTransit": {
@@ -778,17 +912,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 112
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 112
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldSegwayPipeTransitLand"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldSegwayPipeTransitLand"
-                }]
+                ]
             }
         },
         "OverworldSegwayPipeTransitLand": {
@@ -803,20 +940,22 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 80,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "PipeRandomTransit"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PipeRandomTransit"
+                    }
+                ]
             }
         },
-        
-        
+
         /* General obstacles
-        */
-        
+         */
+
         "LandObstacleGroup": {
             "width": 160,
             "height": 80,
@@ -828,31 +967,38 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 8,
                     "units": 16
                 },
-                "children": [{
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "LandObstacleGroupDoubleStory"
-                }, {
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "LandObstacleGroupSingleStory"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "LandObstacleGroupVertical"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "LandObstacleGroupPipes"
-                }, {
-                    "percent": 3,
-                    "type": "Random",
-                    "title": "LandObstacleGroupPitSmall"
-                }, {
-                    "percent": 2,
-                    "type": "Random",
-                    "title": "LandObstacleGroupPitLarge"
-                }]
+                "children": [
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "LandObstacleGroupDoubleStory"
+                    },
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "LandObstacleGroupSingleStory"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "LandObstacleGroupVertical"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "LandObstacleGroupPipes"
+                    },
+                    {
+                        "percent": 3,
+                        "type": "Random",
+                        "title": "LandObstacleGroupPitSmall"
+                    },
+                    {
+                        "percent": 2,
+                        "type": "Random",
+                        "title": "LandObstacleGroupPitLarge"
+                    }
+                ]
             }
         },
         "LandObstacleGroupEnemies": {
@@ -862,19 +1008,23 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "spacing": 4,
-                "children": [{
-                    "percent": 65,
-                    "type": "Random",
-                    "title": "EnemyEasyScattered"
-                }, {
-                    "percent": 2,
-                    "type": "Random",
-                    "title": "EnemyHard"
-                }, {
-                    "percent": 13,
-                    "type": "Random",
-                    "title": "LandObstacleGroupVertical"
-                }]
+                "children": [
+                    {
+                        "percent": 65,
+                        "type": "Random",
+                        "title": "EnemyEasyScattered"
+                    },
+                    {
+                        "percent": 2,
+                        "type": "Random",
+                        "title": "EnemyHard"
+                    },
+                    {
+                        "percent": 13,
+                        "type": "Random",
+                        "title": "LandObstacleGroupVertical"
+                    }
+                ]
             }
         },
         "LandObstacleGroupEnemiesPure": {
@@ -888,15 +1038,18 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 8,
                     "units": 4
                 },
-                "children": [{
-                    "percent": 90,
-                    "type": "Random",
-                    "title": "EnemyEasyScattered"
-                }, {
-                    "percent": 5,
-                    "type": "Random",
-                    "title": "EnemyHard"
-                }]
+                "children": [
+                    {
+                        "percent": 90,
+                        "type": "Random",
+                        "title": "EnemyEasyScattered"
+                    },
+                    {
+                        "percent": 5,
+                        "type": "Random",
+                        "title": "EnemyHard"
+                    }
+                ]
             }
         },
         "LandObstacleGroupSingleStory": {
@@ -905,13 +1058,16 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Multiple",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "LandObstacleGroupSolidsSpotty"
-                }, {
-                    "type": "Random",
-                    "title": "EnemyEasy"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroupSolidsSpotty"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "EnemyEasy"
+                    }
+                ]
             }
         },
         "LandObstacleGroupSingleStorySolids": {
@@ -920,16 +1076,19 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 32
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 32
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroupSolidsSpotty"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "LandObstacleGroupSolidsSpotty"
-                }]
+                ]
             }
         },
         "LandObstacleGroupDoubleStory": {
@@ -938,13 +1097,16 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Multiple",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "LandObstacleGroupDoubleStorySolids"
-                }, {
-                    "type": "Random",
-                    "title": "LandObstacleGroupEnemiesPure"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroupDoubleStorySolids"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroupEnemiesPure"
+                    }
+                ]
             }
         },
         "LandObstacleGroupDoubleStorySolids": {
@@ -954,13 +1116,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "snap": "bottom",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "LandObstacleGroupSolidsPopulated"
-                }, {
-                    "type": "Random",
-                    "title": "LandObstacleGroupSolidsSpotty"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroupSolidsPopulated"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroupSolidsSpotty"
+                    }
+                ]
             }
         },
         "LandObstacleGroupSolidsPopulated": {
@@ -969,19 +1134,23 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 24
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 24
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "LandObstacleGroupSolid"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "EnemyEasyElevated"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "LandObstacleGroupSolid"
-                }, {
-                    "type": "Random",
-                    "title": "EnemyEasyElevated"
-                }]
+                ]
             }
         },
         "LandObstacleGroupSolids": {
@@ -991,15 +1160,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "snap": "bottom",
                 "direction": "right",
-                "children": [{
-                    "percent": 75,
-                    "type": "Random",
-                    "title": "Brick"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "Block"
-                }]
+                "children": [
+                    {
+                        "percent": 75,
+                        "type": "Random",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "Block"
+                    }
+                ]
             }
         },
         "LandObstacleGroupSolidsSpotty": {
@@ -1009,19 +1181,23 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "snap": "bottom",
                 "direction": "right",
-                "children": [{
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "Brick"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "Block"
-                }, {
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "Nothing"
-                }]
+                "children": [
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "Block"
+                    },
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "Nothing"
+                    }
+                ]
             }
         },
         "LandObstacleGroupPipes": {
@@ -1031,19 +1207,23 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "snap": "bottom",
                 "direction": "right",
-                "children": [{
-                    "percent": 80,
-                    "type": "Random",
-                    "title": "PipeRandom"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "PipeRandomTransit"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "PipeFloating"
-                }]
+                "children": [
+                    {
+                        "percent": 80,
+                        "type": "Random",
+                        "title": "PipeRandom"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "PipeRandomTransit"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "PipeFloating"
+                    }
+                ]
             }
         },
         "LandObstacleGroupVertical": {
@@ -1058,19 +1238,23 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 8
                 },
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "PipeRandom"
-                }, {
-                    "percent": 35,
-                    "type": "Random",
-                    "title": "StoneTower"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "CannonTower"
-                }]
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "PipeRandom"
+                    },
+                    {
+                        "percent": 35,
+                        "type": "Random",
+                        "title": "StoneTower"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "CannonTower"
+                    }
+                ]
             }
         },
         "LandObstacleGroupPitSmall": {
@@ -1080,22 +1264,28 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "snap": "bottom",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "StoneTower"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "PitTreasure"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "StoneTower"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "StoneTower"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PitTreasure"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "StoneTower"
+                    }
+                ]
             }
         },
         "LandObstacleGroupPitLarge": {
@@ -1105,28 +1295,35 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "snap": "bottom",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "StoneTower"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 16
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "StoneTower"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 16
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PitTreasure"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "EnemyEasy"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "StoneTower"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "PitTreasure"
-                }, {
-                    "type": "Random",
-                    "title": "EnemyEasy"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "StoneTower"
-                }]
+                ]
             }
         },
         "PitTreasure": {
@@ -1140,23 +1337,25 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 32
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 32
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "BlockTreasure"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "BlockTreasure",
-                }]
+                ]
             }
         },
-        
-        
+
         /* Underworld
-        */
-        
+         */
+
         "Underworld": {
             "width": 1520,
             "height": 88,
@@ -1164,22 +1363,28 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "left",
-                "children": [{
-                    "type": "Random",
-                    "title": "UnderworldStart"
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldRandomization"
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldPreEnd"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldEnd"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "UnderworldStart"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldRandomization"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldPreEnd"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldEnd"
+                    }
+                ]
             }
         },
         "UnderworldStart": {
@@ -1189,42 +1394,50 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": [{
-                        "percent": 25,
-                        "values": {
-                            "macro": "Floor", 
-                            "width": 80
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": [
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "Floor",
+                                    "width": 80
+                                }
+                            },
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "Floor",
+                                    "width": 96
+                                }
+                            },
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "Floor",
+                                    "width": 104
+                                }
+                            },
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "Floor",
+                                    "width": 128
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "macro": "Fill",
+                            "ynum": 11
                         }
-                    }, {
-                        "percent": 25,
-                        "values": {
-                            "macro": "Floor",
-                            "width": 96
-                        }
-                    }, {
-                        "percent": 25,
-                        "values": {
-                            "macro": "Floor",
-                            "width": 104
-                        }
-                    }, {
-                        "percent": 25,
-                        "values": {
-                            "macro": "Floor",
-                            "width": 128
-                        }
-                    }]
-                }, {
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "macro": "Fill",
-                        "ynum": 11
                     }
-                }]
+                ]
             }
         },
         "UnderworldRandomization": {
@@ -1233,19 +1446,23 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "UnderworldLandArea"
-                }, {
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "UnderworldSegway"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "Nothing"
-                }]
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "UnderworldLandArea"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "UnderworldSegway"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "Nothing"
+                    }
+                ]
             }
         },
         "UnderworldLandArea": {
@@ -1254,23 +1471,27 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 160
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 160
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldObstacleGroup"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Brick",
+                        "sizing": {
+                            "width": 160
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldObstacleGroup"
-                }, {
-                    "type": "Random",
-                    "title": "Brick", 
-                    "sizing": {
-                        "width": 160
-                    }
-                }]
+                ]
             }
         },
         "UnderworldObstacleGroup": {
@@ -1279,33 +1500,42 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "spacing": [{
-                    "percent": 50,
-                    "value": 0
-                }, {
-                    "percent": 30,
-                    "value": 8
-                }, {
-                    "percent": 20,
-                    "value": 16
-                }],
-                "children": [{
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "EnemyEasyScattered"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "UnderworldBricksOverhangs"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "LandObstacleGroupSingleStory"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "LandObstacleGroupVertical"
-                }]
+                "spacing": [
+                    {
+                        "percent": 50,
+                        "value": 0
+                    },
+                    {
+                        "percent": 30,
+                        "value": 8
+                    },
+                    {
+                        "percent": 20,
+                        "value": 16
+                    }
+                ],
+                "children": [
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "EnemyEasyScattered"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "UnderworldBricksOverhangs"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "LandObstacleGroupSingleStory"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "LandObstacleGroupVertical"
+                    }
+                ]
             }
         },
         "UnderworldBricksOverhangs": {
@@ -1320,11 +1550,13 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 24,
                     "units": 8
                 },
-                "children": [{
-                    "percent": 100,
-                    "type": "Random",
-                    "title": "UnderworldBricksOverhang"
-                }]
+                "children": [
+                    {
+                        "percent": 100,
+                        "type": "Random",
+                        "title": "UnderworldBricksOverhang"
+                    }
+                ]
             }
         },
         "UnderworldBricksOverhang": {
@@ -1334,38 +1566,46 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "top",
                 "snap": "left",
-                "spacing": [{
-                    "percent": 40,
-                    "value": 0
-                }, {
-                    "percent": 40,
-                    "value": 16
-                }, {
-                    "percent": 20,
-                    "value": 8
-                }],
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "UnderworldBrickCluster"
-                }, {
-                    "percent": 30,
-                    "type": "Known",
-                    "title": "Coin",
-                    "arguments": {
-                        "macro": "Fill",
-                        "xnum": 4,
-                        "xwidth": 8
+                "spacing": [
+                    {
+                        "percent": 40,
+                        "value": 0
                     },
-                    "sizing": {
-                        "width": 32,
-                        "height": 16
+                    {
+                        "percent": 40,
+                        "value": 16
+                    },
+                    {
+                        "percent": 20,
+                        "value": 8
                     }
-                }, {
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "EnemyEasyScattered",
-                }]
+                ],
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "UnderworldBrickCluster"
+                    },
+                    {
+                        "percent": 30,
+                        "type": "Known",
+                        "title": "Coin",
+                        "arguments": {
+                            "macro": "Fill",
+                            "xnum": 4,
+                            "xwidth": 8
+                        },
+                        "sizing": {
+                            "width": 32,
+                            "height": 16
+                        }
+                    },
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "EnemyEasyScattered"
+                    }
+                ]
             }
         },
         "UnderworldBrickCluster": {
@@ -1374,10 +1614,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Repeat",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "UnderworldBrickRow"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "UnderworldBrickRow"
+                    }
+                ]
             }
         },
         "UnderworldBrickRow": {
@@ -1386,18 +1628,21 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 97,
-                    "type": "Known",
-                    "title": "Brick"
-                }, {
-                    "percent": 3,
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "contents": "Coin"
+                "children": [
+                    {
+                        "percent": 97,
+                        "type": "Known",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 3,
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "contents": "Coin"
+                        }
                     }
-                }]
+                ]
             }
         },
         "UnderworldSegway": {
@@ -1406,23 +1651,28 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "UnderworldSegwaySpotty"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "OverworldSegwayWatery"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "UnderworldSegwayPlatforms"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "OverworldSegwayRamps"
-                }]
+                "children": [
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "UnderworldSegwaySpotty"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "OverworldSegwayWatery"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "UnderworldSegwayPlatforms"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "OverworldSegwayRamps"
+                    }
+                ]
             }
         },
         "UnderworldSegwaySpotty": {
@@ -1432,16 +1682,19 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Multiple",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "UnderworldSegwaySpots"
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldBrickCeiling",
-                    "sizing": {
-                        "width": 112
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "UnderworldSegwaySpots"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldBrickCeiling",
+                        "sizing": {
+                            "width": 112
+                        }
                     }
-                }]
+                ]
             }
         },
         "UnderworldSegwaySpots": {
@@ -1451,15 +1704,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "UnderworldSegwaySpot",
-                }, {
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "Nothing",
-                }]
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "UnderworldSegwaySpot"
+                    },
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "Nothing"
+                    }
+                ]
             }
         },
         "UnderworldSegwaySpot": {
@@ -1468,28 +1724,34 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": [{
-                        "percent": 40,
-                        "values": {
-                            "macro": "Floor"
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "macro": "Floor",
-                            "y": 8
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "macro": "Floor",
-                            "y": 16
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": [
+                            {
+                                "percent": 40,
+                                "values": {
+                                    "macro": "Floor"
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "macro": "Floor",
+                                    "y": 8
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "macro": "Floor",
+                                    "y": 16
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "UnderworldSegwayPlatforms": {
@@ -1503,25 +1765,31 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 8,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 16
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 16
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PlatformGenerator"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PlatformGenerator"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "PlatformGenerator"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "PlatformGenerator"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }]
+                ]
             }
         },
         "UnderworldBrickCeiling": {
@@ -1531,16 +1799,19 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 88
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 88
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Brick"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "Brick"
-                }]
+                ]
             }
         },
         "UnderworldPreEnd": {
@@ -1551,18 +1822,21 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "right",
                 "snap": "left",
                 "spacing": 32,
-                "children": [{
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "OverworldSegwaySpring"
-                }, {
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "PlatformGenerator"
-                }]
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "OverworldSegwaySpring"
+                    },
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "PlatformGenerator"
+                    }
+                ]
             }
         },
-        
+
         // OverworldSegwaySpring is 112
         // platgen is 24
         "UnderworldEnd": {
@@ -1572,13 +1846,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Random",
-                    "title": "UnderworldEndFloor"
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldEndLand"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "UnderworldEndFloor"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldEndLand"
+                    }
+                ]
             }
         },
         "UnderworldEndFloor": {
@@ -1586,10 +1863,12 @@ MarioGame.MarioGame.settings.generator = {
             "height": 8,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Random",
-                    "title": "Floor"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Floor"
+                    }
+                ]
             }
         },
         "UnderworldEndLand": {
@@ -1599,41 +1878,49 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "LakituStop",
-                    "sizing": {
-                        "width": 0
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "LakituStop",
+                        "sizing": {
+                            "width": 0
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldEndPipeArea"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 64
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampUpLarge"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 64
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldEndOutsideCastle"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "ScrollBlocker",
+                        "sizing": {
+                            "width": 0,
+                            "height": 0
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldEndPipeArea"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 64
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "RampUpLarge"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 64
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldEndOutsideCastle"
-                }, {
-                    "type": "Known",
-                    "title": "ScrollBlocker",
-                    "sizing": {
-                        "width": 0,
-                        "height": 0
-                    }
-                }]
+                ]
             }
         },
         "UnderworldEndPipeArea": {
@@ -1643,22 +1930,26 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "UnderworldEndPipeFront"
-                }, {
-                    "type": "Random",
-                    "title": "UnderworldEndPipeTransport"
-                }, {
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "macro": "Fill",
-                        "xnum": 7,
-                        "ynum": 11,
-                        "yheight": -8
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "UnderworldEndPipeFront"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "UnderworldEndPipeTransport"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "macro": "Fill",
+                            "xnum": 7,
+                            "ynum": 11,
+                            "yheight": -8
+                        }
                     }
-                }]
+                ]
             }
         },
         "UnderworldEndPipeFront": {
@@ -1668,41 +1959,47 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "macro": "Fill",
-                        "xnum": 10,
-                        "ynum": 3
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "macro": "Fill",
+                            "xnum": 10,
+                            "ynum": 3
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 40
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": {
+                            "hidden": true
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 24
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "macro": "Fill",
+                            "xnum": 10,
+                            "ynum": 1
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 40
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": {
-                        "hidden": true
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 24
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "macro": "Fill",
-                        "xnum": 10,
-                        "ynum": 1
-                    }
-                }]
+                ]
             }
         },
         "UnderworldEndPipeTransport": {
@@ -1712,49 +2009,53 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "macro": "Fill",
-                        "xnum": 4,
-                        "ynum": 3,
-                        "yheight": -8
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "macro": "Fill",
+                            "xnum": 4,
+                            "ynum": 3,
+                            "yheight": -8
+                        },
+                        "sizing": {
+                            "height": 24
+                        }
                     },
-                    "sizing": {
-                        "height": 24
+                    {
+                        "type": "Known",
+                        "title": "PipeCorner",
+                        "arguments": {
+                            "macro": "PipeCorner",
+                            "height": 64,
+                            "transport": "Overworld",
+                            "scrollEnabler": true,
+                            "scrollBlocker": true
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 40
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "macro": "Fill",
+                            "xnum": 2
+                        }
                     }
-                }, {
-                    "type": "Known",
-                    "title": "PipeCorner",
-                    "arguments": {
-                        "macro": "PipeCorner",
-                        "height": 64,
-                        "transport": "Overworld",
-                        "scrollEnabler": true,
-                        "scrollBlocker": true
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 40
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "macro": "Fill",
-                        "xnum": 2
-                    }
-                }]
+                ]
             }
         },
-        
-        
+
         /* Sky
-        */
-        
+         */
+
         "Sky": {
             "width": 1400, // ???
             "height": 80,
@@ -1762,22 +2063,28 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "left",
-                "children": [{
-                    "type": "Random",
-                    "title": "SkyStart"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "SkyBeforeMain"
-                }, {
-                    "type": "Random",
-                    "title": "SkyMain"
-                }, {
-                    "type": "Random",
-                    "title": "SkyEnd"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "SkyStart"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyBeforeMain"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyMain"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyEnd"
+                    }
+                ]
             }
         },
         "SkyStart": {
@@ -1787,16 +2094,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "width": 32
-                    },
-                    "sizing": {
-                        "width": 32
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "width": 32
+                        },
+                        "sizing": {
+                            "width": 32
+                        }
                     }
-                }]
+                ]
             }
         },
         "SkyBeforeMain": {
@@ -1806,16 +2115,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "width": 80
-                    },
-                    "sizing": {
-                        "width": 80
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "width": 80
+                        },
+                        "sizing": {
+                            "width": 80
+                        }
                     }
-                }]
+                ]
             }
         },
         "SkyMain": {
@@ -1823,16 +2134,20 @@ MarioGame.MarioGame.settings.generator = {
             "height": 80,
             "contents": {
                 "mode": "Multiple",
-                "children": [{
-                    "type": "Random",
-                    "title": "SkyMainLand"
-                }, {
-                    "type": "Random",
-                    "title": "SkyMainTransport"
-                }, {
-                    "type": "Random",
-                    "title": "SkyMainAir"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "SkyMainLand"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyMainTransport"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyMainAir"
+                    }
+                ]
             }
         },
         "SkyMainLand": {
@@ -1842,13 +2157,15 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "width": 560
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "width": 560
+                        }
                     }
-                }]
+                ]
             }
         },
         "SkyMainTransport": {
@@ -1858,20 +2175,23 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 32 
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 32
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Platform",
+                        "arguments": {
+                            "width": 24,
+                            "transport": "true"
+                        }
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Platform",
-                    "arguments": {
-                        "width": 24,
-                        "transport": "true"
-                    }
-                }]
+                ]
             }
         },
         "SkyMainAir": {
@@ -1882,23 +2202,28 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "right",
                 "snap": "bottom",
                 "spacing": 8,
-                "children": [{
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "SkyCoinsShort"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "SkyCoinsMedium"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "SkyCoinsLong"
-                }, {
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "SkyCoinsStone"
-                }]
+                "children": [
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "SkyCoinsShort"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "SkyCoinsMedium"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "SkyCoinsLong"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "SkyCoinsStone"
+                    }
+                ]
             }
         },
         "SkyCoinsShort": {
@@ -1913,19 +2238,22 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 56
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 56
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyCoinsRow",
+                        "stretch": {
+                            "width": true
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "SkyCoinsRow",
-                    "stretch": {
-                        "width": true
-                    }
-                }]
+                ]
             }
         },
         "SkyCoinsMedium": {
@@ -1940,19 +2268,22 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 56
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 56
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyCoinsRow",
+                        "stretch": {
+                            "width": true
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "SkyCoinsRow",
-                    "stretch": {
-                        "width": true
-                    }
-                }]
+                ]
             }
         },
         "SkyCoinsLong": {
@@ -1967,19 +2298,22 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 56
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 56
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyCoinsRow",
+                        "stretch": {
+                            "width": true
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "SkyCoinsRow",
-                    "stretch": {
-                        "width": true
-                    }
-                }]
+                ]
             }
         },
         "SkyCoinsRow": {
@@ -1990,10 +2324,12 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "right",
                 "snap": "top",
                 "spacing": 3,
-                "children": [{
-                    "type": "Random",
-                    "title": "Coin"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Coin"
+                    }
+                ]
             }
         },
         "SkyCoinsStone": {
@@ -2003,13 +2339,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                }, {
-                    "type": "Random",
-                    "title": "SkyCoinsStoneVertical",
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyCoinsStoneVertical"
+                    }
+                ]
             }
         },
         "SkyCoinsStoneVertical": {
@@ -2023,30 +2362,37 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 8,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 64
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 64
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": [
+                            {
+                                "percent": 33,
+                                "values": {}
+                            },
+                            {
+                                "percent": 34,
+                                "values": {
+                                    "width": 16
+                                }
+                            },
+                            {
+                                "percent": 33,
+                                "values": {
+                                    "height": 16
+                                }
+                            }
+                        ]
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": [{
-                        "percent": 33,
-                        "values": {}
-                    }, {
-                        "percent": 34,
-                        "values": {
-                            "width": 16
-                        }
-                    }, {
-                        "percent": 33,
-                        "values": {
-                            "height": 16
-                        }
-                    }]
-                }]
+                ]
             }
         },
         "SkyEnd": {
@@ -2056,13 +2402,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "SkyEndCoins"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "SkyEndCoins"
+                    }
+                ]
             }
         },
         "SkyEndCoins": {
@@ -2073,45 +2422,53 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "right",
                 "snap": "bottom",
                 "spacing": 3,
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 64
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 64
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Coin"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Coin"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Coin"
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Coin"
-                }, {
-                    "type": "Known",
-                    "title": "Coin"
-                }, {
-                    "type": "Known",
-                    "title": "Coin"
-                }]
+                ]
             }
         },
-        
-        
+
         /* Castle
-        */
-        
+         */
+
         "Castle": {
             "height": 80,
             "width": 2000,
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "CastleStart"
-                }, {
-                    "type": "Random",
-                    "title": "CastleBody"
-                }, {
-                    "type": "Random",
-                    "title": "CastleEnd"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CastleStart"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleBody"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleEnd"
+                    }
+                ]
             }
         },
         "CastleStart": {
@@ -2120,23 +2477,27 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "StartInsideCastle"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 80
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "StartInsideCastle"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 80
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "height": 24,
+                            "width": 112
+                        }
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "height": 24,
-                        "width": 112
-                    }
-                }]
+                ]
             }
         },
         "CastleBody": {
@@ -2145,19 +2506,24 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Repeat",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "CastleSegway"
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandArea"
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegway"
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandAreaLarge"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CastleSegway"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandArea"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegway"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaLarge"
+                    }
+                ]
             }
         },
         "CastleSegway": {
@@ -2167,15 +2533,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "CastleSegwayFloatingGap"
-                }, {
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "CastleSegwayPlatformGap"
-                }]
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "CastleSegwayFloatingGap"
+                    },
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "CastleSegwayPlatformGap"
+                    }
+                ]
             }
         },
         "CastleSegwayFloatingGap": {
@@ -2185,13 +2554,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Repeat",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "CastleSegwayGapSpace"
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayGapChunk"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayGapSpace"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayGapChunk"
+                    }
+                ]
             }
         },
         "CastleSegwayGapSpace": {
@@ -2199,13 +2571,16 @@ MarioGame.MarioGame.settings.generator = {
             "height": 80,
             "contents": {
                 "mode": "Multiple",
-                "children": [{
-                    "type": "Random",
-                    "title": "CastleSegwayGapSpaceWater"
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayGapSpaceEnemyArea"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayGapSpaceWater"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayGapSpaceEnemyArea"
+                    }
+                ]
             }
         },
         "CastleSegwayGapSpaceWater": {
@@ -2215,13 +2590,15 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Water",
-                    "sizing": {
-                        "width": 24
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Water",
+                        "sizing": {
+                            "width": 24
+                        }
                     }
-                }]
+                ]
             }
         },
         "CastleSegwayGapSpaceEnemyArea": {
@@ -2231,29 +2608,37 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Repeat",
                 "direction": "right",
                 "snap": "bottom",
-                "spacing": [{
-                    "percent": 60,
-                    "value": 24
-                }, {
-                    "percent": 15,
-                    "value": 0
-                }, {
-                    "percent": 15,
-                    "value": 8
-                }, {
-                    "percent": 15,
-                    "value": 16
-                }],
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 0
+                "spacing": [
+                    {
+                        "percent": 60,
+                        "value": 24
+                    },
+                    {
+                        "percent": 15,
+                        "value": 0
+                    },
+                    {
+                        "percent": 15,
+                        "value": 8
+                    },
+                    {
+                        "percent": 15,
+                        "value": 16
                     }
-                }, {
-                    "type": "Random",
-                    "title": "Podoboo"
-                }]
+                ],
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 0
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Podoboo"
+                    }
+                ]
             }
         },
         "CastleSegwayGapChunk": {
@@ -2267,19 +2652,23 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Water",
-                    "sizing": {
-                        "width": 24
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Water",
+                        "sizing": {
+                            "width": 24
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayGapChunkSolids"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayGapChunkReward"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayGapChunkSolids"
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayGapChunkReward"
-                }]
+                ]
             }
         },
         "CastleSegwayGapChunkSolids": {
@@ -2288,15 +2677,18 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Repeat",
                 "direction": "right",
-                "children": [{
-                    "percent": 80,
-                    "type": "Random",
-                    "title": "Stone"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "CastleBlockActive"
-                }]
+                "children": [
+                    {
+                        "percent": 80,
+                        "type": "Random",
+                        "title": "Stone"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "CastleBlockActive"
+                    }
+                ]
             }
         },
         "CastleSegwayGapChunkReward": {
@@ -2305,13 +2697,16 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayGapChunkBlock"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayGapChunkBlock"
+                    }
+                ]
             }
         },
         "CastleSegwayGapChunkBlock": {
@@ -2320,18 +2715,21 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "percent": 50,
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": {
-                        "contents": "Mushroom"
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "percent": 50,
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": {
+                            "contents": "Mushroom"
+                        }
                     }
-                }]
+                ]
             }
         },
         "CastleSegwayPlatformGap": {
@@ -2340,16 +2738,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "CastleSegwayPlatformGapBorder"
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayPlatformGapPlatforms"
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayPlatformGapBorder"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayPlatformGapBorder"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayPlatformGapPlatforms"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayPlatformGapBorder"
+                    }
+                ]
             }
         },
         "CastleSegwayPlatformGapBorder": {
@@ -2363,22 +2765,25 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 24,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor"
+                        },
+                        "sizing": {
+                            "height": 32
+                        },
+                        "stretch": {
+                            "width": true
+                        }
                     },
-                    "sizing": {
-                        "height": 32
-                    },
-                    "stretch": {
-                        "width": true
+                    {
+                        "type": "Random",
+                        "title": "CastleSegwayPlatformGapBorderCastleBlock"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "CastleSegwayPlatformGapBorderCastleBlock"
-                }]
+                ]
             }
         },
         "CastleSegwayPlatformGapBorderCastleBlock": {
@@ -2392,16 +2797,19 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 0
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 0
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleBlockActive"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "CastleBlockActive"
-                }]
+                ]
             }
         },
         "CastleSegwayPlatformGapPlatforms": {
@@ -2415,13 +2823,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 16,
                     "units": 16
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "PlatformGenerator"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PlatformGenerator"
+                    }
+                ]
             }
         },
         "CastleLandArea": {
@@ -2430,11 +2841,13 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 100,
-                    "type": "Random",
-                    "title": "CastleLandTunnel"
-                }]
+                "children": [
+                    {
+                        "percent": 100,
+                        "type": "Random",
+                        "title": "CastleLandTunnel"
+                    }
+                ]
             }
         },
         "CastleLandTunnel": {
@@ -2443,23 +2856,27 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 160,
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 160
+                        },
+                        "sizing": {
+                            "height": 32
+                        }
                     },
-                    "sizing": {
-                        "height": 32
+                    {
+                        "type": "Random",
+                        "title": "CastleLandTunnelEnemies"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandTunnelTop"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandTunnelEnemies"
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandTunnelTop"
-                }]
+                ]
             }
         },
         "CastleLandTunnelEnemies": {
@@ -2469,33 +2886,41 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "snap": "bottom",
-                "spacing": [{
-                    "percent": 10,
-                    "value": 4
-                }, {
-                    "percent": 15,
-                    "value": 8
-                }, {
-                    "percent": 85,
-                    "value": {
-                        "min": 32,
-                        "max": 64,
-                        "units": 8
+                "spacing": [
+                    {
+                        "percent": 10,
+                        "value": 4
+                    },
+                    {
+                        "percent": 15,
+                        "value": 8
+                    },
+                    {
+                        "percent": 85,
+                        "value": {
+                            "min": 32,
+                            "max": 64,
+                            "units": 8
+                        }
                     }
-                }],
-                "children": [{
-                    "percent": 70,
-                    "type": "Random",
-                    "title": "Goomba"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "Beetle"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "Koopa"
-                }]
+                ],
+                "children": [
+                    {
+                        "percent": 70,
+                        "type": "Random",
+                        "title": "Goomba"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "Beetle"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "Koopa"
+                    }
+                ]
             }
         },
         "CastleLandTunnelTop": {
@@ -2504,29 +2929,35 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "stretch": {
-                        "width": true
-                    },
-                    "arguments": [{
-                        "percent": 33,
-                        "values": {
-                            "height": 24
-                        }
-                    }, {
-                        "percent": 34,
-                        "values": {
-                            "height": 32
-                        }
-                    }, {
-                        "percent": 33,
-                        "values": {
-                            "height": 40
-                        }
-                    }, ]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "stretch": {
+                            "width": true
+                        },
+                        "arguments": [
+                            {
+                                "percent": 33,
+                                "values": {
+                                    "height": 24
+                                }
+                            },
+                            {
+                                "percent": 34,
+                                "values": {
+                                    "height": 32
+                                }
+                            },
+                            {
+                                "percent": 33,
+                                "values": {
+                                    "height": 40
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "CastleLandAreaLarge": {
@@ -2535,13 +2966,16 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Repeat",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "CastleLandAreaChunk"
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandAreaBetween"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaChunk"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaBetween"
+                    }
+                ]
             }
         },
         "CastleLandAreaChunk": {
@@ -2550,11 +2984,13 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Repeat",
                 "direction": "right",
-                "children": [{
-                    "percent": 100,
-                    "type": "Random",
-                    "title": "CastleLandAreaCavern"
-                }]
+                "children": [
+                    {
+                        "percent": 100,
+                        "type": "Random",
+                        "title": "CastleLandAreaCavern"
+                    }
+                ]
             }
         },
         "CastleLandAreaCavern": {
@@ -2563,23 +2999,27 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 152,
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 152
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaCavernInside"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "width": 152
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandAreaCavernInside"
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "width": 152
-                    }
-                }]
+                ]
             }
         },
         "CastleLandAreaCavernInside": {
@@ -2594,22 +3034,26 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "CastleLandAreaCavernInsideTites"
-                }, {
-                    "percent": 35,
-                    "type": "Random",
-                    "title": "CastleLandAreaCavernInsideBonus"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 24
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "CastleLandAreaCavernInsideTites"
+                    },
+                    {
+                        "percent": 35,
+                        "type": "Random",
+                        "title": "CastleLandAreaCavernInsideBonus"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 24
+                        }
                     }
-                }]
+                ]
             }
         },
         "CastleLandAreaCavernInsideTites": {
@@ -2619,36 +3063,42 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "width": 24
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandAreaCavernInsideTitesCastleBlock"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 40
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandAreaCavernInsideTitesCastleBlock"
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "width": 24,
-                        "height": 16
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "width": 24
+                        }
                     },
-                    "arguments": {
-                        "width": 24,
-                        "height": 16
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaCavernInsideTitesCastleBlock"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 40
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaCavernInsideTitesCastleBlock"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "width": 24,
+                            "height": 16
+                        },
+                        "arguments": {
+                            "width": 24,
+                            "height": 16
+                        }
                     }
-                }]
+                ]
             }
         },
         "CastleLandAreaCavernInsideTitesCastleBlock": {
@@ -2657,13 +3107,16 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "CastleBlockActive"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleBlockActive"
+                    }
+                ]
             }
         },
         "CastleLandAreaCavernInsideBonus": {
@@ -2677,16 +3130,20 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 24,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandAreaCavernInsideBonusBlocks"
-                }, {
-                    "type": "Random",
-                    "title": "CastleLandAreaCavernInsideBonusBlocks"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaCavernInsideBonusBlocks"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastleLandAreaCavernInsideBonusBlocks"
+                    }
+                ]
             }
         },
         "CastleLandAreaCavernInsideBonusBlocks": {
@@ -2695,33 +3152,41 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": [{
-                        "percent": 45,
-                        "values": {
-                            "hidden": true
-                        }
-                    }, {
-                        "percent": 35,
-                        "values": {}
-                    }, {
-                        "percent": 15,
-                        "values": {
-                            "contents": "Mushroom",
-                            "hidden": true
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "contents": "Mushroom",
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": [
+                            {
+                                "percent": 45,
+                                "values": {
+                                    "hidden": true
+                                }
+                            },
+                            {
+                                "percent": 35,
+                                "values": {}
+                            },
+                            {
+                                "percent": 15,
+                                "values": {
+                                    "contents": "Mushroom",
+                                    "hidden": true
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "contents": "Mushroom"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "CastleLandAreaBetween": {
@@ -2730,26 +3195,30 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Water",
-                    "arguments": {
-                        "macro": "Water",
-                        "width": 16
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Water",
+                        "arguments": {
+                            "macro": "Water",
+                            "width": 16
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 83
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "width": 16
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 83
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "width": 16
-                    }
-                }]
+                ]
             }
         },
         "CastleEnd": {
@@ -2758,16 +3227,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "CastlePreEnd"
-                }, {
-                    "type": "Random",
-                    "title": "EndInsideCastle"
-                }, {
-                    "type": "Random",
-                    "title": "Overworld"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "CastlePreEnd"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "EndInsideCastle"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Overworld"
+                    }
+                ]
             }
         },
         "CastlePreEnd": {
@@ -2776,39 +3249,47 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor", 
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 80
-                    }
-                }, {
-                    "type": "Random",
-                    "title": "CastlePreEndBlocks"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 56
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": [{
-                        "percent": 50,
-                        "values": {
-                            "width": 80,
-                            "height": 24
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 80
                         }
-                    }, {
-                        "percent": 50,
-                        "values": {
-                            "width": 80,
-                            "height": 32
+                    },
+                    {
+                        "type": "Random",
+                        "title": "CastlePreEndBlocks"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 56
                         }
-                    }]
-                }]
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": [
+                            {
+                                "percent": 50,
+                                "values": {
+                                    "width": 80,
+                                    "height": 24
+                                }
+                            },
+                            {
+                                "percent": 50,
+                                "values": {
+                                    "width": 80,
+                                    "height": 32
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "CastlePreEndBlocks": {
@@ -2819,51 +3300,59 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "right",
                 "snap": "top",
                 "spacing": 16,
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "width": 16,
-                        "height": 24
-                    },
-                    "arguments": {
-                        "width": 16,
-                        "height": 24
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "width": 16,
+                            "height": 24
+                        },
+                        "arguments": {
+                            "width": 16,
+                            "height": 24
+                        }
                     }
-                }]
+                ]
             }
         },
-        
-        
+
         /* Enemy groups
-        */
-        
+         */
+
         "EnemyEasy": {
             "width": 8,
             "height": 12,
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "spacing": [{
-                    "percent": 75,
-                    "value": 4
-                }, {
-                    "percent": 25,
-                    "value": 8
-                }],
-                "children": [{
-                    "percent": 45,
-                    "type": "Random",
-                    "title": "Goomba"
-                }, {
-                    "percent": 35,
-                    "type": "Random",
-                    "title": "Koopa"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "Beetle"
-                }]
+                "spacing": [
+                    {
+                        "percent": 75,
+                        "value": 4
+                    },
+                    {
+                        "percent": 25,
+                        "value": 8
+                    }
+                ],
+                "children": [
+                    {
+                        "percent": 45,
+                        "type": "Random",
+                        "title": "Goomba"
+                    },
+                    {
+                        "percent": 35,
+                        "type": "Random",
+                        "title": "Koopa"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "Beetle"
+                    }
+                ]
             }
         },
         "EnemyEasyScattered": {
@@ -2872,36 +3361,46 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "spacing": [{
-                    "percent": 45,
-                    "value": 8
-                }, {
-                    "percent": 25,
-                    "value": 4
-                }, {
-                    "percent": 15,
-                    "value": 12
-                }, {
-                    "percent": 15,
-                    "value": 16
-                }],
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "Goomba"
-                }, {
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "Koopa"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "Beetle"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "Nothing"
-                }]
+                "spacing": [
+                    {
+                        "percent": 45,
+                        "value": 8
+                    },
+                    {
+                        "percent": 25,
+                        "value": 4
+                    },
+                    {
+                        "percent": 15,
+                        "value": 12
+                    },
+                    {
+                        "percent": 15,
+                        "value": 16
+                    }
+                ],
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "Goomba"
+                    },
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "Koopa"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "Beetle"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "Nothing"
+                    }
+                ]
             }
         },
         "EnemyEasyElevated": {
@@ -2912,23 +3411,28 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "right",
                 "snap": "bottom",
                 "spacing": 4,
-                "children": [{
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "Goomba"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "Koopa"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "Beetle"
-                }, {
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "Nothing"
-                }]
+                "children": [
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "Goomba"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "Koopa"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "Beetle"
+                    },
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "Nothing"
+                    }
+                ]
             }
         },
         "EnemyHard": {
@@ -2937,41 +3441,47 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "HammerBro"
-                }, {
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "Blooper"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "Lakitu"
-                }]
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "HammerBro"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "Blooper"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "Lakitu"
+                    }
+                ]
             }
         },
-        
-        
+
         /* Solid groups
-        */
-        
+         */
+
         "SolidSmall": {
             "width": 8,
             "height": 12,
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 80,
-                    "type": "Random",
-                    "title": "Brick"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "Block"
-                }]
+                "children": [
+                    {
+                        "percent": 80,
+                        "type": "Random",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "Block"
+                    }
+                ]
             }
         },
         "SolidSmallSpotty": {
@@ -2980,19 +3490,23 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "Brick"
-                }, {
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "percent": 20,
-                    "type": "Random",
-                    "title": "Block"
-                }]
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "percent": 20,
+                        "type": "Random",
+                        "title": "Block"
+                    }
+                ]
             }
         },
         "LandObstacleGroupSolid": {
@@ -3001,15 +3515,18 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 70,
-                    "type": "Random",
-                    "title": "Brick"
-                }, {
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "Block"
-                }]
+                "children": [
+                    {
+                        "percent": 70,
+                        "type": "Random",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "Block"
+                    }
+                ]
             }
         },
         "Cannon": {
@@ -3019,26 +3536,33 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "top",
                 "snap": "bottom",
-                "spacing": [{
-                    "percent": 50,
-                    "value": 0
-                }, {
-                    "percent": 50,
-                    "value": 24
-                }],
-                "children": [{
-                    "percent": 50,
-                    "type": "Random",
-                    "title": "CannonMedium"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "CannonSmall"
-                }, {
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "CannonLarge"
-                }]    
+                "spacing": [
+                    {
+                        "percent": 50,
+                        "value": 0
+                    },
+                    {
+                        "percent": 50,
+                        "value": 24
+                    }
+                ],
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Random",
+                        "title": "CannonMedium"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "CannonSmall"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "CannonLarge"
+                    }
+                ]
             }
         },
         "CannonStack": {
@@ -3048,13 +3572,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Cannon"
-                }, {
-                    "type": "Random",
-                    "title": "Cannon"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Cannon"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Cannon"
+                    }
+                ]
             }
         },
         "RampUpSmall": {
@@ -3064,37 +3591,42 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Stone"
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 16
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Stone"
                     },
-                    "arguments": {
-                        "height": 16
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 24
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 16
+                        },
+                        "arguments": {
+                            "height": 16
+                        }
                     },
-                    "arguments": {
-                        "height": 24
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 32
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 24
+                        },
+                        "arguments": {
+                            "height": 24
+                        }
                     },
-                    "arguments": {
-                        "height": 32
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 32
+                        },
+                        "arguments": {
+                            "height": 32
+                        }
                     }
-                }]
+                ]
             }
         },
         "RampUpSmallFloor": {
@@ -3103,17 +3635,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 32
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 32
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampUpSmall"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "RampUpSmall"
-                }]
+                ]
             }
         },
         "RampUpLarge": {
@@ -3123,73 +3658,82 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Stone"
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 16
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Stone"
                     },
-                    "arguments": {
-                        "height": 16
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 24
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 16
+                        },
+                        "arguments": {
+                            "height": 16
+                        }
                     },
-                    "arguments": {
-                        "height": 24
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 32
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 24
+                        },
+                        "arguments": {
+                            "height": 24
+                        }
                     },
-                    "arguments": {
-                        "height": 32
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 40
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 32
+                        },
+                        "arguments": {
+                            "height": 32
+                        }
                     },
-                    "arguments": {
-                        "height": 40
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 48
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 40
+                        },
+                        "arguments": {
+                            "height": 40
+                        }
                     },
-                    "arguments": {
-                        "height": 48
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 56
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 48
+                        },
+                        "arguments": {
+                            "height": 48
+                        }
                     },
-                    "arguments": {
-                        "height": 56
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 64
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 56
+                        },
+                        "arguments": {
+                            "height": 56
+                        }
                     },
-                    "arguments": {
-                        "height": 64
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 64
+                        },
+                        "arguments": {
+                            "height": 64
+                        }
                     }
-                }]
+                ]
             }
         },
         "RampUpLargeFloor": {
@@ -3198,17 +3742,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 64
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 64
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampUpLarge"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "RampUpLarge"
-                }]
+                ]
             }
         },
         "RampDownSmall": {
@@ -3218,37 +3765,42 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 32
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 32
+                        },
+                        "arguments": {
+                            "height": 32
+                        }
                     },
-                    "arguments": {
-                        "height": 32
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 24
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 24
+                        },
+                        "arguments": {
+                            "height": 24
+                        }
                     },
-                    "arguments": {
-                        "height": 24
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 16
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 16
+                        },
+                        "arguments": {
+                            "height": 16
+                        }
                     },
-                    "arguments": {
-                        "height": 16
+                    {
+                        "type": "Known",
+                        "title": "Stone"
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Stone"
-                }]
+                ]
             }
         },
         "RampDownSmallFloor": {
@@ -3257,17 +3809,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 32
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 32
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampDownSmall"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "RampDownSmall"
-                }]
+                ]
             }
         },
         "RampDownLarge": {
@@ -3277,73 +3832,82 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 64
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 64
+                        },
+                        "arguments": {
+                            "height": 64
+                        }
                     },
-                    "arguments": {
-                        "height": 64
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 56
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 56
+                        },
+                        "arguments": {
+                            "height": 56
+                        }
                     },
-                    "arguments": {
-                        "height": 56
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 48
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 48
+                        },
+                        "arguments": {
+                            "height": 48
+                        }
                     },
-                    "arguments": {
-                        "height": 48
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 40
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 40
+                        },
+                        "arguments": {
+                            "height": 40
+                        }
                     },
-                    "arguments": {
-                        "height": 40
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 32
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 32
+                        },
+                        "arguments": {
+                            "height": 32
+                        }
                     },
-                    "arguments": {
-                        "height": 32
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 24
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 24
+                        },
+                        "arguments": {
+                            "height": 24
+                        }
                     },
-                    "arguments": {
-                        "height": 24
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Stone",
-                    "sizing": {
-                        "height": 16
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "sizing": {
+                            "height": 16
+                        },
+                        "arguments": {
+                            "height": 16
+                        }
                     },
-                    "arguments": {
-                        "height": 16
+                    {
+                        "type": "Known",
+                        "title": "Stone"
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Stone"
-                }]
+                ]
             }
         },
         "RampDownLargeFloor": {
@@ -3352,17 +3916,20 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "arguments": {
-                        "macro": "Floor",
-                        "width": 64
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "arguments": {
+                            "macro": "Floor",
+                            "width": 64
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampDownLarge"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "RampDownLarge"
-                }]
+                ]
             }
         },
         "StoneTower": {
@@ -3372,25 +3939,28 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "percent": 50,
-                    "type": "Known",
-                    "title": "Stone",
-                    "snap": "bottom",
-                    "sizing": {
-                        "height": 24
+                "children": [
+                    {
+                        "percent": 50,
+                        "type": "Known",
+                        "title": "Stone",
+                        "snap": "bottom",
+                        "sizing": {
+                            "height": 24
+                        },
+                        "arguments": {
+                            "height": 24
+                        }
                     },
-                    "arguments": {
-                        "height": 24
+                    {
+                        "percent": 50,
+                        "type": "Known",
+                        "title": "Stone",
+                        "stretch": {
+                            "height": true
+                        }
                     }
-                }, {
-                    "percent": 50,
-                    "type": "Known",
-                    "title": "Stone",
-                    "stretch": {
-                        "height": true
-                    },
-                }]
+                ]
             }
         },
         "StoneTowerLarge": {
@@ -3400,16 +3970,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "height": 64
-                    },
-                    "sizing": {
-                        "height": 64
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "height": 64
+                        },
+                        "sizing": {
+                            "height": 64
+                        }
                     }
-                }]
+                ]
             }
         },
         "CannonTower": {
@@ -3419,22 +3991,26 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "Cannon"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Cannon"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    }
+                ]
             }
         },
-        
+
         /* Scenery groups
-        */
-        
+         */
+
         "OverworldScenery": {
             "width": 160,
             "height": 80,
@@ -3442,22 +4018,26 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 8
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 8
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldLandScenery"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 32
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldLandScenery"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 32
-                    }
-                }]
+                ]
             }
         },
         "OverworldLandScenery": {
@@ -3472,39 +4052,48 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 4
                 },
-                "children": [{
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "HillSmall"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "HillLarge"
-                }, {
-                    "percent": 12,
-                    "type": "Random",
-                    "title": "Bush1"
-                }, {
-                    "percent": 11,
-                    "type": "Random",
-                    "title": "Bush2"
-                }, {
-                    "percent": 12,
-                    "type": "Random",
-                    "title": "Bush3"
-                }, {
-                    "percent": 10,
-                    "type": "Random",
-                    "title": "Fence"
-                }, {
-                    "percent": 5,
-                    "type": "Random",
-                    "title": "PlantSmall"
-                }, {
-                    "percent": 5,
-                    "type": "Random",
-                    "title": "PlantLarge"
-                }]
+                "children": [
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "HillSmall"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "HillLarge"
+                    },
+                    {
+                        "percent": 12,
+                        "type": "Random",
+                        "title": "Bush1"
+                    },
+                    {
+                        "percent": 11,
+                        "type": "Random",
+                        "title": "Bush2"
+                    },
+                    {
+                        "percent": 12,
+                        "type": "Random",
+                        "title": "Bush3"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Random",
+                        "title": "Fence"
+                    },
+                    {
+                        "percent": 5,
+                        "type": "Random",
+                        "title": "PlantSmall"
+                    },
+                    {
+                        "percent": 5,
+                        "type": "Random",
+                        "title": "PlantLarge"
+                    }
+                ]
             }
         },
         "OverworldClouds": {
@@ -3519,19 +4108,23 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 80,
                     "units": 8
                 },
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "CloudClump1"
-                }, {
-                    "percent": 35,
-                    "type": "Random",
-                    "title": "CloudClump2"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "CloudClump3"
-                }]
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "CloudClump1"
+                    },
+                    {
+                        "percent": 35,
+                        "type": "Random",
+                        "title": "CloudClump2"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "CloudClump3"
+                    }
+                ]
             }
         },
         "CloudClump1": {
@@ -3545,13 +4138,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                }, {
-                    "type": "Random",
-                    "title": "Cloud1"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Cloud1"
+                    }
+                ]
             }
         },
         "CloudClump2": {
@@ -3565,13 +4161,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                }, {
-                    "type": "Random",
-                    "title": "Cloud2"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Cloud2"
+                    }
+                ]
             }
         },
         "CloudClump3": {
@@ -3585,13 +4184,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 40,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                }, {
-                    "type": "Random",
-                    "title": "Cloud3"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Cloud3"
+                    }
+                ]
             }
         },
         "Cloud": {
@@ -3601,19 +4203,23 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "limit": 1,
-                "children": [{
-                    "percent": 40,
-                    "type": "Random",
-                    "title": "Cloud1"
-                }, {
-                    "percent": 35,
-                    "type": "Random",
-                    "title": "Cloud2"
-                }, {
-                    "percent": 25,
-                    "type": "Random",
-                    "title": "Cloud3"
-                }]
+                "children": [
+                    {
+                        "percent": 40,
+                        "type": "Random",
+                        "title": "Cloud1"
+                    },
+                    {
+                        "percent": 35,
+                        "type": "Random",
+                        "title": "Cloud2"
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Random",
+                        "title": "Cloud3"
+                    }
+                ]
             }
         },
         "OverworldSegwaySpotScenery": {
@@ -3623,29 +4229,32 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "percent": 70,
-                    "type": "Random",
-                    "title": "Nothing",
-                    "stretch": {
-                        "height": true
+                "children": [
+                    {
+                        "percent": 70,
+                        "type": "Random",
+                        "title": "Nothing",
+                        "stretch": {
+                            "height": true
+                        }
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "PlantSmall"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "PlantLarge"
                     }
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "PlantSmall"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "PlantLarge"
-                }]
+                ]
             }
         },
-        
-        
+
         /* Characters
-        */
-        
+         */
+
         "Goomba": {
             "width": 8,
             "height": 8,
@@ -3653,10 +4262,12 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Goomba"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Goomba"
+                    }
+                ]
             }
         },
         "Koopa": {
@@ -3666,33 +4277,38 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "percent": 20,
-                    "type": "Known",
-                    "title": "Koopa",
-                }, {
-                    "percent": 40,
-                    "type": "Known",
-                    "title": "Koopa",
-                    "arguments": {
-                        "smart": true
+                "children": [
+                    {
+                        "percent": 20,
+                        "type": "Known",
+                        "title": "Koopa"
+                    },
+                    {
+                        "percent": 40,
+                        "type": "Known",
+                        "title": "Koopa",
+                        "arguments": {
+                            "smart": true
+                        }
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Known",
+                        "title": "Koopa",
+                        "arguments": {
+                            "jumping": true
+                        }
+                    },
+                    {
+                        "percent": 25,
+                        "type": "Known",
+                        "title": "Koopa",
+                        "arguments": {
+                            "smart": true,
+                            "jumping": true
+                        }
                     }
-                }, {
-                    "percent": 15,
-                    "type": "Known",
-                    "title": "Koopa",
-                    "arguments": {
-                        "jumping": true
-                    }
-                }, {
-                    "percent": 25,
-                    "type": "Known",
-                    "title": "Koopa",
-                    "arguments": {
-                        "smart": true,
-                        "jumping": true
-                    }
-                }]
+                ]
             }
         },
         "KoopaJumping": {
@@ -3702,22 +4318,25 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "percent": 35,
-                    "type": "Known",
-                    "title": "Koopa",
-                    "arguments": {
-                        "jumping": true
+                "children": [
+                    {
+                        "percent": 35,
+                        "type": "Known",
+                        "title": "Koopa",
+                        "arguments": {
+                            "jumping": true
+                        }
+                    },
+                    {
+                        "percent": 65,
+                        "type": "Known",
+                        "title": "Koopa",
+                        "arguments": {
+                            "smart": true,
+                            "jumping": true
+                        }
                     }
-                }, {
-                    "percent": 65,
-                    "type": "Known",
-                    "title": "Koopa",
-                    "arguments": {
-                        "smart": true,
-                        "jumping": true
-                    }
-                }]
+                ]
             }
         },
         "Beetle": {
@@ -3727,10 +4346,12 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Beetle"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Beetle"
+                    }
+                ]
             }
         },
         "HammerBro": {
@@ -3740,10 +4361,12 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "HammerBro"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "HammerBro"
+                    }
+                ]
             }
         },
         "Blooper": {
@@ -3753,10 +4376,12 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Blooper"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Blooper"
+                    }
+                ]
             }
         },
         "Lakitu": {
@@ -3767,16 +4392,19 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "top",
                 "snap": "right",
                 "spacing": 4,
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 0
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 0
+                        }
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Lakitu"
                     }
-                }, {
-                    "type": "Known",
-                    "title": "Lakitu"
-                }]
+                ]
             }
         },
         "Podoboo": {
@@ -3787,20 +4415,22 @@ MarioGame.MarioGame.settings.generator = {
                 "direction": "top",
                 "spacing": -40,
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Known",
-                    "title": "Podoboo"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Known",
+                        "title": "Podoboo"
+                    }
+                ]
             }
         },
-        
-        
+
         /* Solids
-        */
-        
+         */
+
         "Brick": {
             "width": 8,
             "height": 8,
@@ -3808,25 +4438,29 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Random",
                 "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "percent": 85,
-                    "type": "Known",
-                    "title": "Brick"
-                }, {
-                    "percent": 10,
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "contents": "Coin"
+                "children": [
+                    {
+                        "percent": 85,
+                        "type": "Known",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 10,
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "contents": "Coin"
+                        }
+                    },
+                    {
+                        "percent": 5,
+                        "type": "Known",
+                        "title": "Brick",
+                        "arguments": {
+                            "contents": "Star"
+                        }
                     }
-                }, {
-                    "percent": 5,
-                    "type": "Known",
-                    "title": "Brick",
-                    "arguments": {
-                        "contents": "Star"
-                    }
-                }]
+                ]
             }
         },
         "Block": {
@@ -3836,25 +4470,31 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": [{
-                        "percent": 90,
-                        "values": {}
-                    }, {
-                        "percent": 9,
-                        "values": {
-                            "contents": "Mushroom"
-                        }
-                    }, {
-                        "percent": 1,
-                        "values": {
-                            "contents": "Mushroom1Up",
-                            "hidden": true
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": [
+                            {
+                                "percent": 90,
+                                "values": {}
+                            },
+                            {
+                                "percent": 9,
+                                "values": {
+                                    "contents": "Mushroom"
+                                }
+                            },
+                            {
+                                "percent": 1,
+                                "values": {
+                                    "contents": "Mushroom1Up",
+                                    "hidden": true
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "BlockTreasure": {
@@ -3864,26 +4504,32 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": [{
-                        "percent": 35,
-                        "values": {
-                            "contents": "Mushroom"
-                        }
-                    }, {
-                        "percent": 35,
-                        "values": {
-                            "contents": "Star"
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "contents": "Mushroom1Up"
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": [
+                            {
+                                "percent": 35,
+                                "values": {
+                                    "contents": "Mushroom"
+                                }
+                            },
+                            {
+                                "percent": 35,
+                                "values": {
+                                    "contents": "Star"
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "contents": "Mushroom1Up"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "BlockTreasureFloating": {
@@ -3893,44 +4539,53 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": [{
-                        "percent": 20,
-                        "values": {
-                            "contents": "Mushroom"
-                        }
-                    }, {
-                        "percent": 20,
-                        "values": {
-                            "hidden": true,
-                            "contents": "Mushroom"
-                        }
-                    }, {
-                        "percent": 15,
-                        "values": {
-                            "contents": "Star"
-                        }
-                    }, {
-                        "percent": 15,
-                        "values": {
-                            "hidden": true,
-                            "contents": "Star"
-                        }
-                    }, {
-                        "percent": 20,
-                        "values": {
-                            "contents": "Mushroom1Up"
-                        }
-                    }, {
-                        "percent": 20,
-                        "values": {
-                            "hidden": true,
-                            "contents": "Mushroom1Up"
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": [
+                            {
+                                "percent": 20,
+                                "values": {
+                                    "contents": "Mushroom"
+                                }
+                            },
+                            {
+                                "percent": 20,
+                                "values": {
+                                    "hidden": true,
+                                    "contents": "Mushroom"
+                                }
+                            },
+                            {
+                                "percent": 15,
+                                "values": {
+                                    "contents": "Star"
+                                }
+                            },
+                            {
+                                "percent": 15,
+                                "values": {
+                                    "hidden": true,
+                                    "contents": "Star"
+                                }
+                            },
+                            {
+                                "percent": 20,
+                                "values": {
+                                    "contents": "Mushroom1Up"
+                                }
+                            },
+                            {
+                                "percent": 20,
+                                "values": {
+                                    "hidden": true,
+                                    "contents": "Mushroom1Up"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "BlockReward": {
@@ -3938,36 +4593,43 @@ MarioGame.MarioGame.settings.generator = {
             "height": 8,
             "contents": {
                 "mode": "Certain",
-                "direction": "right", 
+                "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Block",
-                    "arguments": [{
-                        "percent": 30,
-                        "values": {
-                            "hidden": true
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "hidden": true,
-                            "contents": "Mushroom"
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "hidden": true,
-                            "contents": "Star"
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "hidden": true,
-                            "contents": "Mushroom1Up"
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Block",
+                        "arguments": [
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "hidden": true
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "hidden": true,
+                                    "contents": "Mushroom"
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "hidden": true,
+                                    "contents": "Star"
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "hidden": true,
+                                    "contents": "Mushroom1Up"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "Bridge": {
@@ -3977,16 +4639,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "snap": "bottom",
                 "direction": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "Bridge",
-                    "stretch": {
-                        "width": true
-                    },
-                    "arguments": {
-                        "macro": "Bridge",
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Bridge",
+                        "stretch": {
+                            "width": true
+                        },
+                        "arguments": {
+                            "macro": "Bridge"
+                        }
                     }
-                }]
+                ]
             }
         },
         "Tree": {
@@ -3995,16 +4659,18 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Tree",
-                    "stretch": {
-                        "width": true
-                    },
-                    "arguments": {
-                        "macro": "Tree"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Tree",
+                        "stretch": {
+                            "width": true
+                        },
+                        "arguments": {
+                            "macro": "Tree"
+                        }
                     }
-                }]
+                ]
             }
         },
         "TreeCoin": {
@@ -4014,19 +4680,22 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 4
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 4
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Coin",
+                        "sizing": {
+                            "height": 4
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "Coin",
-                    "sizing": {
-                        "height": 4
-                    }
-                }]
+                ]
             }
         },
         "TreeCoins": {
@@ -4039,19 +4708,23 @@ MarioGame.MarioGame.settings.generator = {
                     "width": true
                 },
                 "spacing": 4,
-                "children": [{
-                    "percent": 55,
-                    "type": "Random",
-                    "title": "TreeCoin"
-                }, {
-                    "percent": 30,
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "percent": 15,
-                    "type": "Random",
-                    "title": "EnemyEasy"
-                }]
+                "children": [
+                    {
+                        "percent": 55,
+                        "type": "Random",
+                        "title": "TreeCoin"
+                    },
+                    {
+                        "percent": 30,
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "percent": 15,
+                        "type": "Random",
+                        "title": "EnemyEasy"
+                    }
+                ]
             }
         },
         "TreeLargeCoins": {
@@ -4060,16 +4733,19 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "TreeCoins",
-                    "sizing": {
-                        "width": 56
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "TreeCoins",
+                        "sizing": {
+                            "width": 56
+                        }
                     }
-                }]
+                ]
             }
         },
         "TreeFancy": {
@@ -4078,22 +4754,25 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Tree",
-                    "stretch": {
-                        "width": true
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Tree",
+                        "stretch": {
+                            "width": true
+                        },
+                        "arguments": {
+                            "macro": "Tree"
+                        }
                     },
-                    "arguments": {
-                        "macro": "Tree"
+                    {
+                        "type": "Random",
+                        "title": "TreeCoins",
+                        "stretch": {
+                            "width": true
+                        }
                     }
-                }, {
-                    "type": "Random",
-                    "title": "TreeCoins",
-                    "stretch": {
-                        "width": true
-                    }
-                }]
+                ]
             }
         },
         "Coin": {
@@ -4102,10 +4781,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "Coin"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Coin"
+                    }
+                ]
             }
         },
         "PipeRandom": {
@@ -4115,89 +4796,103 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 0
-                    }
-                }, {
-                    "type": "Known",
-                    "title": "Pipe",
-                    "sizing": {
-                        "height": 0
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 0
+                        }
                     },
-                    "arguments": [{
-                        "percent": 25,
-                        "values": {
-                            "macro": "Pipe",
-                            "piranha": true,
-                            "height": 16
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "macro": "Pipe",
-                            "height": 16
-                        }
-                    }, {
-                        "percent": 25,
-                        "values": {
-                            "macro": "Pipe",
-                            "piranha": true,
-                            "height": 24
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "macro": "Pipe",
-                            "height": 24
-                        }
-                    }, {
-                        "percent": 20,
-                        "values": {
-                            "macro": "Pipe",
-                            "piranha": true,
-                            "height": 32
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "macro": "Pipe",
-                            "height": 32
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "macro": "Pipe",
-                            "piranha": true,
-                            "transport": "Underworld",
-                            "height": 32
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "macro": "Pipe",
-                            "transport": "Underworld",
-                            "height": 32
-                        }
-                    }, {
-                        "percent": 3,
-                        "values": {
-                            "macro": "Pipe",
-                            "piranha": true,
-                            "transport": "Underwater",
-                            "height": 32
-                        }
-                    }, {
-                        "percent": 2,
-                        "values": {
-                            "macro": "Pipe",
-                            "transport": "Underwater",
-                            "height": 32
-                        }
-                    }]
-                }]
+                    {
+                        "type": "Known",
+                        "title": "Pipe",
+                        "sizing": {
+                            "height": 0
+                        },
+                        "arguments": [
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "piranha": true,
+                                    "height": 16
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "height": 16
+                                }
+                            },
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "piranha": true,
+                                    "height": 24
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "height": 24
+                                }
+                            },
+                            {
+                                "percent": 20,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "piranha": true,
+                                    "height": 32
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "height": 32
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "piranha": true,
+                                    "transport": "Underworld",
+                                    "height": 32
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "transport": "Underworld",
+                                    "height": 32
+                                }
+                            },
+                            {
+                                "percent": 3,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "piranha": true,
+                                    "transport": "Underwater",
+                                    "height": 32
+                                }
+                            },
+                            {
+                                "percent": 2,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "transport": "Underwater",
+                                    "height": 32
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "PipeRandomTransit": {
@@ -4207,30 +4902,35 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Pipe",
-                    "sizing": {
-                        "height": 0
-                    },
-                    "arguments": [{
-                        "percent": 50,
-                        "values": {
-                            "macro": "Pipe",
-                            "piranha": true,
-                            "height": 24,
-                            "transport": "Underworld"
-                        }
-                    }, {
-                        "percent": 50,
-                        "values": {
-                            "macro": "Pipe",
-                            "piranha": true,
-                            "height": 32,
-                            "transport": "Underworld"
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Pipe",
+                        "sizing": {
+                            "height": 0
+                        },
+                        "arguments": [
+                            {
+                                "percent": 50,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "piranha": true,
+                                    "height": 24,
+                                    "transport": "Underworld"
+                                }
+                            },
+                            {
+                                "percent": 50,
+                                "values": {
+                                    "macro": "Pipe",
+                                    "piranha": true,
+                                    "height": 32,
+                                    "transport": "Underworld"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "PipeFloating": {
@@ -4245,13 +4945,16 @@ MarioGame.MarioGame.settings.generator = {
                     "max": 32,
                     "units": 8
                 },
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "PipeFloatingContents"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PipeFloatingContents"
+                    }
+                ]
             }
         },
         "PipeFloatingContents": {
@@ -4261,19 +4964,24 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing"
-                }, {
-                    "type": "Random",
-                    "title": "PipeFloatingSolid"
-                }, {
-                    "type": "Random",
-                    "title": "PipeFloatingCenter"
-                }, {
-                    "type": "Random",
-                    "title": "PipeFloatingSolid"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PipeFloatingSolid"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PipeFloatingCenter"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PipeFloatingSolid"
+                    }
+                ]
             }
         },
         "PipeFloatingSolid": {
@@ -4282,15 +4990,18 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Random",
                 "direction": "right",
-                "children": [{
-                    "percent": 65,
-                    "type": "Random",
-                    "title": "Brick"
-                }, {
-                    "percent": 35,
-                    "type": "Random",
-                    "title": "Block"
-                }, ]
+                "children": [
+                    {
+                        "percent": 65,
+                        "type": "Random",
+                        "title": "Brick"
+                    },
+                    {
+                        "percent": 35,
+                        "type": "Random",
+                        "title": "Block"
+                    }
+                ]
             }
         },
         "PipeFloatingCenter": {
@@ -4299,16 +5010,19 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone",
-                    "arguments": {
-                        "width": 16
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone",
+                        "arguments": {
+                            "width": 16
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "PipeRandomTransit"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "PipeRandomTransit"
-                }]
+                ]
             }
         },
         "Pipe": {
@@ -4317,10 +5031,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Pipe"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Pipe"
+                    }
+                ]
             }
         },
         "PipeHorizontal": {
@@ -4329,10 +5045,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "PipeHorizontal"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "PipeHorizontal"
+                    }
+                ]
             }
         },
         "PipeVertical": {
@@ -4341,10 +5059,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "PipeVertical"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "PipeVertical"
+                    }
+                ]
             }
         },
         "PipeCorner": {
@@ -4353,13 +5073,15 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "PipeCorner",
-                    "arguments": {
-                        "macro": "PipeCorner"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "PipeCorner",
+                        "arguments": {
+                            "macro": "PipeCorner"
+                        }
                     }
-                }]
+                ]
             }
         },
         "CannonSmall": {
@@ -4368,11 +5090,13 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Final",
-                    "source": "CannonSmall",
-                    "title": "Cannon",
-                }]
+                "children": [
+                    {
+                        "type": "Final",
+                        "source": "CannonSmall",
+                        "title": "Cannon"
+                    }
+                ]
             }
         },
         "CannonMedium": {
@@ -4380,14 +5104,16 @@ MarioGame.MarioGame.settings.generator = {
             "height": 16,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Final",
-                    "source": "CannonMedium",
-                    "title": "Cannon",
-                    "arguments": {
-                        "height": 16
+                "children": [
+                    {
+                        "type": "Final",
+                        "source": "CannonMedium",
+                        "title": "Cannon",
+                        "arguments": {
+                            "height": 16
+                        }
                     }
-                }]
+                ]
             }
         },
         "CannonLarge": {
@@ -4395,14 +5121,16 @@ MarioGame.MarioGame.settings.generator = {
             "height": 24,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Final",
-                    "source": "CannonLarge",
-                    "title": "Cannon",
-                    "arguments": {
-                        "height": 24 
+                "children": [
+                    {
+                        "type": "Final",
+                        "source": "CannonLarge",
+                        "title": "Cannon",
+                        "arguments": {
+                            "height": 24
+                        }
                     }
-                }]
+                ]
             }
         },
         "Floor": {
@@ -4412,16 +5140,18 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "Floor",
-                    "stretch": {
-                        "width": true,
-                    },
-                    "arguments": {
-                        "height": "Infinity"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Floor",
+                        "stretch": {
+                            "width": true
+                        },
+                        "arguments": {
+                            "height": "Infinity"
+                        }
                     }
-                }]
+                ]
             }
         },
         "Springboard": {
@@ -4431,10 +5161,12 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Springboard"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Springboard"
+                    }
+                ]
             }
         },
         "Stone": {
@@ -4444,10 +5176,12 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Stone"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Stone"
+                    }
+                ]
             }
         },
         "CastleBlock": {
@@ -4455,10 +5189,12 @@ MarioGame.MarioGame.settings.generator = {
             "height": 8,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "CastleBlock"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "CastleBlock"
+                    }
+                ]
             }
         },
         "CastleBlockActive": {
@@ -4467,53 +5203,62 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "CastleBlock",
-                    "arguments": [{
-                        "percent": 30,
-                        "values": {}
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "fireballs": 6
-                        }
-                    }, {
-                        "percent": 30,
-                        "values": {
-                            "fireballs": 6,
-                            "direction": 1
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "fireballs": 12
-                        }
-                    }, {
-                        "percent": 5,
-                        "values": {
-                            "fireballs": 12,
-                            "direction": 1
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "CastleBlock",
+                        "arguments": [
+                            {
+                                "percent": 30,
+                                "values": {}
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "fireballs": 6
+                                }
+                            },
+                            {
+                                "percent": 30,
+                                "values": {
+                                    "fireballs": 6,
+                                    "direction": 1
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "fireballs": 12
+                                }
+                            },
+                            {
+                                "percent": 5,
+                                "values": {
+                                    "fireballs": 12,
+                                    "direction": 1
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
-        
-        
+
         /* Scenery
-        */
-        
+         */
+
         "Bush1": {
             "width": 16,
             "height": 8,
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Bush1"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Bush1"
+                    }
+                ]
             }
         },
         "Bush2": {
@@ -4522,10 +5267,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Bush2"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Bush2"
+                    }
+                ]
             }
         },
         "Bush3": {
@@ -4534,10 +5281,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Bush3"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Bush3"
+                    }
+                ]
             }
         },
         "Cloud1": {
@@ -4545,10 +5294,12 @@ MarioGame.MarioGame.settings.generator = {
             "height": 12,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "Cloud1"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Cloud1"
+                    }
+                ]
             }
         },
         "Cloud2": {
@@ -4556,10 +5307,12 @@ MarioGame.MarioGame.settings.generator = {
             "height": 12,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "Cloud2"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Cloud2"
+                    }
+                ]
             }
         },
         "Cloud3": {
@@ -4567,10 +5320,12 @@ MarioGame.MarioGame.settings.generator = {
             "height": 12,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "Cloud3"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Cloud3"
+                    }
+                ]
             }
         },
         "Fence": {
@@ -4579,10 +5334,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "Fence"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Fence"
+                    }
+                ]
             }
         },
         "HillSmall": {
@@ -4591,10 +5348,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "HillSmall"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "HillSmall"
+                    }
+                ]
             }
         },
         "HillLarge": {
@@ -4603,10 +5362,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "HillLarge"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "HillLarge"
+                    }
+                ]
             }
         },
         "PlantSmall": {
@@ -4615,10 +5376,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "PlantSmall"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "PlantSmall"
+                    }
+                ]
             }
         },
         "PlantLarge": {
@@ -4627,10 +5390,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "PlantLarge"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "PlantLarge"
+                    }
+                ]
             }
         },
         "Water": {
@@ -4640,35 +5405,38 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "snap": "bottom",
                 "direction": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "Water",
-                    "stretch": {
-                        "width": true
-                    },
-                    "arguments": {
-                        "macro": "Water",
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Water",
+                        "stretch": {
+                            "width": true
+                        },
+                        "arguments": {
+                            "macro": "Water"
+                        }
                     }
-                }]
+                ]
             }
         },
-        
-        
+
         /* General macros & helpers
-        */
-        
+         */
+
         "LakituStop": {
             "width": 8,
             "height": 8,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "LakituStop",
-                    "arguments": {
-                        "macro": "LakituStop"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "LakituStop",
+                        "arguments": {
+                            "macro": "LakituStop"
+                        }
                     }
-                }]
+                ]
             }
         },
         "Platform": {
@@ -4676,13 +5444,15 @@ MarioGame.MarioGame.settings.generator = {
             "height": 4,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "Platform",
-                    "stretch": {
-                        "width": true
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "Platform",
+                        "stretch": {
+                            "width": true
+                        }
                     }
-                }]
+                ]
             }
         },
         "PlatformGenerator": {
@@ -4690,35 +5460,42 @@ MarioGame.MarioGame.settings.generator = {
             "height": 80,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "PlatformGenerator",
-                    "arguments": [{
-                        "percent": 25,
-                        "values": {
-                            "macro": "PlatformGenerator"
-                        }
-                    }, {
-                        "percent": 25,
-                        "values": {
-                            "macro": "PlatformGenerator",
-                            "width": 24
-                        }
-                    }, {
-                        "percent": 25,
-                        "values": {
-                            "macro": "PlatformGenerator",
-                            "direction": -1,
-                            "width": 24
-                        }
-                    }, {
-                        "percent": 25,
-                        "values": {
-                            "macro": "PlatformGenerator",
-                            "direction": -1,
-                        }
-                    }]
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "PlatformGenerator",
+                        "arguments": [
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "PlatformGenerator"
+                                }
+                            },
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "PlatformGenerator",
+                                    "width": 24
+                                }
+                            },
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "PlatformGenerator",
+                                    "direction": -1,
+                                    "width": 24
+                                }
+                            },
+                            {
+                                "percent": 25,
+                                "values": {
+                                    "macro": "PlatformGenerator",
+                                    "direction": -1
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "OverworldEnd": {
@@ -4728,13 +5505,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "left",
-                "children": [{
-                    "type": "Random",
-                    "title": "OverworldEndFloor"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldEndLand"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "OverworldEndFloor"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldEndLand"
+                    }
+                ]
             }
         },
         "OverworldEndFloor": {
@@ -4742,10 +5522,12 @@ MarioGame.MarioGame.settings.generator = {
             "height": 8,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Random", 
-                    "title": "Floor"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Floor"
+                    }
+                ]
             }
         },
         "OverworldEndLand": {
@@ -4755,28 +5537,35 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "right",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Random",
-                    "title": "LakituStop"
-                }, {
-                    "type": "Random", 
-                    "title": "RampUpLarge"
-                }, {
-                    "type": "Random",
-                    "title": "StoneTowerLarge"
-                }, {
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "width": 64
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "LakituStop"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "RampUpLarge"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "StoneTowerLarge"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "width": 64
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldEndOutsideCastle"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "ScrollBlocker"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldEndOutsideCastle"
-                }, {
-                    "type": "Random",
-                    "title": "ScrollBlocker"
-                }]
+                ]
             }
         },
         "OverworldEndOutsideCastle": {
@@ -4786,13 +5575,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Multiple",
                 "direction": "right",
                 "spacing": -112,
-                "children": [{
-                    "type": "Random",
-                    "title": "EndOutsideCastle"
-                }, {
-                    "type": "Random",
-                    "title": "OverworldEndOutsideCastleScenery"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "EndOutsideCastle"
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldEndOutsideCastleScenery"
+                    }
+                ]
             }
         },
         "OverworldEndOutsideCastleScenery": {
@@ -4802,16 +5594,19 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Multiple",
                 "direction": "top",
                 "spacing": -8,
-                "children": [{
-                    "type": "Random",
-                    "title": "Nothing",
-                    "sizing": {
-                        "height": 0
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "Nothing",
+                        "sizing": {
+                            "height": 0
+                        }
+                    },
+                    {
+                        "type": "Random",
+                        "title": "OverworldScenery"
                     }
-                }, {
-                    "type": "Random",
-                    "title": "OverworldScenery"
-                }]
+                ]
             }
         },
         "EndOutsideCastle": {
@@ -4820,21 +5615,23 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "EndOutsideCastle",
-                    "arguments": {
-                        "macro": "EndOutsideCastle",
-                        "large": true,
-                        "transport": {
-                            "map": "Random",
-                            "location": "Castle"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "EndOutsideCastle",
+                        "arguments": {
+                            "macro": "EndOutsideCastle",
+                            "large": true,
+                            "transport": {
+                                "map": "Random",
+                                "location": "Castle"
+                            }
+                        },
+                        "sizing": {
+                            "height": 0
                         }
-                    },
-                    "sizing": {
-                        "height": 0
                     }
-                }]
+                ]
             }
         },
         "UnderworldEndOutsideCastle": {
@@ -4843,10 +5640,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Random",
-                    "title": "EndOutsideCastle"
-                }]
+                "children": [
+                    {
+                        "type": "Random",
+                        "title": "EndOutsideCastle"
+                    }
+                ]
             }
         },
         "StartInsideCastle": {
@@ -4856,14 +5655,16 @@ MarioGame.MarioGame.settings.generator = {
                 "mode": "Certain",
                 "direction": "top",
                 "snap": "bottom",
-                "children": [{
-                    "type": "Known",
-                    "title": "StartInsideCastle",
-                    "arguments": {
-                        "macro": "StartInsideCastle",
-                        "width": 112
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "StartInsideCastle",
+                        "arguments": {
+                            "macro": "StartInsideCastle",
+                            "width": 112
+                        }
                     }
-                }]
+                ]
             }
         },
         "EndInsideCastle": {
@@ -4872,23 +5673,25 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "top",
-                "children": [{
-                    "type": "Known",
-                    "title": "EndInsideCastle",
-                    "arguments": {
-                        "macro": "EndInsideCastle",
-                        "spawnType": "Bowser",
-                        "npc": "Peach",
-                        "transport": {
-                            "map": "Random",
-                            "location": "Overworld"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "EndInsideCastle",
+                        "arguments": {
+                            "macro": "EndInsideCastle",
+                            "spawnType": "Bowser",
+                            "npc": "Peach",
+                            "transport": {
+                                "map": "Random",
+                                "location": "Overworld"
+                            },
+                            "topScrollEnabler": true
                         },
-                        "topScrollEnabler": true
-                    },
-                    "sizing": {
-                        "height": 8
+                        "sizing": {
+                            "height": 8
+                        }
                     }
-                }]
+                ]
             }
         },
         "CheepsStart": {
@@ -4896,13 +5699,15 @@ MarioGame.MarioGame.settings.generator = {
             "height": 0,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "CheepsStart",
-                    "arguments": {
-                        "macro": "CheepsStart"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "CheepsStart",
+                        "arguments": {
+                            "macro": "CheepsStart"
+                        }
                     }
-                }]
+                ]
             }
         },
         "CheepsStop": {
@@ -4910,13 +5715,15 @@ MarioGame.MarioGame.settings.generator = {
             "height": 0,
             "contents": {
                 "mode": "Certain",
-                "children": [{
-                    "type": "Known",
-                    "title": "CheepsStop",
-                    "arguments": {
-                        "macro": "CheepsStop"
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "CheepsStop",
+                        "arguments": {
+                            "macro": "CheepsStop"
+                        }
                     }
-                }]
+                ]
             }
         },
         "ScrollEnabler": {
@@ -4925,10 +5732,12 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "ScrollEnabler"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "ScrollEnabler"
+                    }
+                ]
             }
         },
         "ScrollBlocker": {
@@ -4937,17 +5746,18 @@ MarioGame.MarioGame.settings.generator = {
             "contents": {
                 "mode": "Certain",
                 "direction": "right",
-                "children": [{
-                    "type": "Known",
-                    "title": "ScrollBlocker"
-                }]
+                "children": [
+                    {
+                        "type": "Known",
+                        "title": "ScrollBlocker"
+                    }
+                ]
             }
         },
-        
-        
+
         /* Misc.
-        */
-        
+         */
+
         "Nothing": {
             "width": 8,
             "height": 8,

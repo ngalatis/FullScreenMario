@@ -2,9 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["7-4"] = {
     "name": "7-4",
-    "locations": [
-        { "entry": "Castle" }
-    ],
+    "locations": [{ "entry": "Castle" }],
     "areas": [
         {
             "setting": "Castle",
@@ -30,7 +28,7 @@ MarioGame.MarioGame.settings.maps.library["7-4"] = {
                             { "thing": "Stone", "y": 88, "width": 48 },
                             { "thing": "Stone", "x": 16, "y": 32, "width": 32 },
                             { "thing": "Stone", "x": 32, "y": 40, "width": 16 },
-                            { "thing": "Stone", "x": 40, "y": 48, "width": 8 },
+                            { "thing": "Stone", "x": 40, "y": 48, "width": 8 }
                         ]
                     },
                     "stretch": {
@@ -55,11 +53,7 @@ MarioGame.MarioGame.settings.maps.library["7-4"] = {
                 {
                     "before": {
                         "width": 8,
-                        "creation": [
-                            { "macro": "Floor" },
-                            { "thing": "Stone", "y": 24 },
-                            { "thing": "Stone", "y": 88 }
-                        ]
+                        "creation": [{ "macro": "Floor" }, { "thing": "Stone", "y": 24 }, { "thing": "Stone", "y": 88 }]
                     },
                     "stretch": {
                         "width": 8,
@@ -136,9 +130,7 @@ MarioGame.MarioGame.settings.maps.library["7-4"] = {
                     },
                     "after": {
                         "width": 80,
-                        "creation": [
-                            { "macro": "Section", "section": 4 }
-                        ]
+                        "creation": [{ "macro": "Section", "section": 4 }]
                     }
                 },
                 {
@@ -182,7 +174,7 @@ MarioGame.MarioGame.settings.maps.library["7-4"] = {
                             { "thing": "Stone", "y": 88, "width": 32 },
                             { "thing": "Stone", "x": 8, "y": 56, "width": 24 },
                             { "macro": "Floor", "x": 16, "y": 8 },
-                            { "macro": "Floor", "x": 24, "y": 16 },
+                            { "macro": "Floor", "x": 24, "y": 16 }
                         ]
                     },
                     "stretch": {
@@ -200,7 +192,7 @@ MarioGame.MarioGame.settings.maps.library["7-4"] = {
                         "creation": [
                             { "macro": "Floor", "y": 24, "width": 56 },
                             { "thing": "Stone", "y": 88, "width": 56 },
-                            { "macro": "SectionDecider", "x": 56, "y": 80, "height": 56, "pass": 6, "fail": 3 },
+                            { "macro": "SectionDecider", "x": 56, "y": 80, "height": 56, "pass": 6, "fail": 3 }
                         ]
                     }
                 },
@@ -219,7 +211,13 @@ MarioGame.MarioGame.settings.maps.library["7-4"] = {
                             { "macro": "Floor", "x": 176, "y": 24, "width": 16 },
                             { "macro": "Floor", "x": 192, "width": 16 },
                             { "macro": "Floor", "x": 208, "y": 24, "width": 64 },
-                            { "macro": "EndInsideCastle", "x": 272, "spawnType": "HammerBro", "throwing": false, "transport": { "map": "8-1" } }
+                            {
+                                "macro": "EndInsideCastle",
+                                "x": 272,
+                                "spawnType": "HammerBro",
+                                "throwing": false,
+                                "transport": { "map": "8-1" }
+                            }
                         ]
                     }
                 }

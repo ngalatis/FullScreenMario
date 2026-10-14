@@ -21,7 +21,8 @@ MarioGame.MarioGame.settings.maps.library["1-2"] = {
                 { "thing": "PipeHorizontal", "x": 80, "y": 16, "transport": 1 },
                 { "macro": "Pipe", "x": 96, "height": 32 }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -117,7 +118,8 @@ MarioGame.MarioGame.settings.maps.library["1-2"] = {
                 { "macro": "Fill", "thing": "Brick", "x": 1504, "y": 8, "xnum": 2, "ynum": 11 },
                 { "thing": "ScrollBlocker", "x": 1518, "y": 8 }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -132,13 +134,14 @@ MarioGame.MarioGame.settings.maps.library["1-2"] = {
                 { "thing": "PipeHorizontal", "x": 104, "y": 16, "transport": 3 },
                 { "thing": "PipeVertical", "x": 120, "y": 100, "height": 100 }
             ]
-        }, {
+        },
+        {
             "setting": "Overworld",
             "blockBoundaries": true,
             "creation": [
                 { "macro": "Floor", "width": 464 },
                 { "macro": "Pipe", "height": 16, "piranha": true, "entrance": 4 },
-                { "macro": "Pattern", "pattern": "BackRegular", "x": 104, },
+                { "macro": "Pattern", "pattern": "BackRegular", "x": 104 },
                 { "thing": "Stone", "x": 16, "y": 8 },
                 { "thing": "Stone", "x": 24, "y": 16, "height": 16 },
                 { "thing": "Stone", "x": 32, "y": 24, "height": 24 },

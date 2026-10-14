@@ -1,6 +1,6 @@
 /**
  * A callback for when a piped event is triggered.
- * 
+ *
  * @param eventInformation   Some argument passed to the event by the
  *                           parent InputWritr.
  * @param event   The source Event causing the trigger.
@@ -16,7 +16,7 @@ export interface IInputWritrTriggerContainer {
     [i: string]: {
         [i: string]: IInputWritrTriggerCallback;
         [i: number]: IInputWritrTriggerCallback;
-    }
+    };
 }
 
 /**
@@ -93,14 +93,14 @@ export interface IInputWritrSettings {
     aliases?: {
         [i: string]: any[];
     };
-    
+
     /**
      * A quick lookup table of key aliases to their character codes.
      */
     keyAliasesToCodes?: {
         [i: string]: number;
     };
-    
+
     /**
      * A quick lookup table of character codes to their key aliases.
      */
@@ -122,12 +122,12 @@ export interface IInputWritrSettings {
 
 /**
  * A general utility for automating interactions with user-called events linked
- * with callbacks. Pipe functions are available that take in user input, switch 
- * on the event code, and call the appropriate callback. Further utilities allow 
+ * with callbacks. Pipe functions are available that take in user input, switch
+ * on the event code, and call the appropriate callback. Further utilities allow
  * for saving and playback of input histories in JSON format.
  */
 export interface IInputWritr {
-    /** 
+    /**
      * @returns The stored mapping of aliases to values.
      */
     getAliases(): any;
@@ -140,11 +140,11 @@ export interface IInputWritr {
 
     /**
      * Determines the allowed key strings for a given alias.
-     * 
+     *
      * @param alias   An alias allowed to be passed in, typically a
      *                character code.
      * @returns The mapped key Strings corresponding to that alias,
-     *          typically the human-readable Strings representing 
+     *          typically the human-readable Strings representing
      *          input names, such as "a" or "left".
      */
     getAliasAsKeyStrings(alias: any): string[];
@@ -164,14 +164,14 @@ export interface IInputWritr {
 
     /**
      * Getter for the currently recording history.
-     * 
+     *
      * @returns The currently recording history of inputs in JSON-friendly form.
      */
     getHistory(name?: string): any;
 
     /**
      * Getter for a single saved history.
-     * 
+     *
      * @param name   The identifier for the old history to return.
      * @returns A history of inputs in JSON-friendly form.
      */
@@ -189,41 +189,41 @@ export interface IInputWritr {
 
     /**
      * Sets whether this is to allow inputs.
-     * 
-     * @param canTriggerNew   Whether this is now allowing inputs. This 
-     *                        may be either a Function (to be evaluated 
+     *
+     * @param canTriggerNew   Whether this is now allowing inputs. This
+     *                        may be either a Function (to be evaluated
      *                        on each input) or a general Boolean.
      */
     setCanTrigger(canTriggerNew: boolean | IInputWriterBooleanGetter): void;
 
     /**
      * Sets whether this is recording.
-     * 
-     * @param isRecordingNew   Whether this is now recording inputs.    
+     *
+     * @param isRecordingNew   Whether this is now recording inputs.  
      */
     setIsRecording(isRecordingNew: boolean | IInputWriterBooleanGetter): void;
 
     /**
      * Sets the first argument for event callbacks.
-     * 
+     *
      * @param eventInformationNew   A new first argument for event callbacks.
      */
     setEventInformation(eventInformationNew: any): void;
 
     /**
      * Adds a list of values by which an event may be triggered.
-     * 
+     *
      * @param name   The name of the event that is being given aliases,
      *               such as "left".
-     * @param values   An array of aliases by which the event will also 
+     * @param values   An array of aliases by which the event will also
      *                 be callable.
      */
     addAliasValues(name: any, values: any[]): void;
 
     /**
      * Removes a list of values by which an event may be triggered.
-     * 
-     * @param name   The name of the event that is having aliases removed, 
+     *
+     * @param name   The name of the event that is having aliases removed,
      *               such as "left".
      * @param values   Aliases by which the event will no longer be callable.
      */
@@ -231,20 +231,20 @@ export interface IInputWritr {
 
     /**
      * Shortcut to remove old alias values and add new ones in.
-     * 
-     * 
+     *
+     *
      * @param name   The name of the event that is having aliases
      *               added and removed, such as "left".
      * @param valuesOld   An array of aliases by which the event will no
      *                    longer be callable.
-     * @param valuesNew   An array of aliases by which the event will 
+     * @param valuesNew   An array of aliases by which the event will
      *                    now be callable.
      */
     switchAliasValues(name: string, valuesOld: any[], valuesNew: any[]): void;
 
     /**
      * Adds a set of alises from an Object containing "name" => [values] pairs.
-     * 
+     *
      * @param aliasesRaw   Aliases to be added via this.addAliasvalues.
      */
     addAliases(aliasesRaw: any): void;
@@ -252,9 +252,9 @@ export interface IInputWritr {
     /**
      * Adds a triggerable event by marking a new callback under the trigger's
      * triggers. Any aliases for the label are also given the callback.
-     * 
+     *
      * @param trigger   The name of the triggered event.
-     * @param label   The code within the trigger to call within, 
+     * @param label   The code within the trigger to call within,
      *                typically either a character code or an alias.
      * @param callback   The callback Function to be triggered.
      */
@@ -263,17 +263,17 @@ export interface IInputWritr {
     /**
      * Removes a triggerable event by deleting any callbacks under the trigger's
      * triggers. Any aliases for the label are also given the callback.
-     * 
+     *
      * @param trigger   The name of the triggered event.
-     * @param label   The code within the trigger to call within, 
+     * @param label   The code within the trigger to call within,
      *                typically either a character code or an alias.
      */
     removeEvent(trigger: string, label: any): void;
 
     /**
-     * Stores the current history in the histories listing. this.restartHistory 
+     * Stores the current history in the histories listing. this.restartHistory
      * is typically called directly after.
-     * 
+     *
      * @param name   A key to store the history under (by default, one greater than
      *               the length of Object.keys(this.histories)).
      */
@@ -282,8 +282,8 @@ export interface IInputWritr {
     /**
      * Clears the currently tracked inputs history and resets the starting time,
      * and (optionally) saves the current history.
-     * 
-     * @param keepHistory   Whether the currently tracked history of inputs should 
+     *
+     * @param keepHistory   Whether the currently tracked history of inputs should
      *                      be added to the master listing (by default, true).
      */
     restartHistory(keepHistory?: boolean): void;
@@ -291,7 +291,7 @@ export interface IInputWritr {
     /**
      * "Plays" back a history of event information by simulating each keystroke
      * in a new call, timed by setTimeout.
-     * 
+     *
      * @param history   The events history to play back.
      * @remarks This will execute the same actions in the same order as before,
      *          but the arguments object may be different.
@@ -302,7 +302,7 @@ export interface IInputWritr {
     /**
      * Primary driver function to run an event. The event is chosen from the
      * triggers object, and called with eventInformation as the input.
-     * 
+     *
      * @param event   The event Function (or String alias thereof) to call.
      * @param [keyCode]   The alias of the event Function under triggers[event],
      *                    if event is a String.
@@ -314,13 +314,13 @@ export interface IInputWritr {
 
     /**
      * Creates and returns a Function to run a trigger.
-     * 
+     *
      * @param trigger   The label for the Array of functions that the
      *                  pipe function should choose from.
      * @param codeLabel   A mapping String for the alias to get the
      *                    alias from the event.
      * @param [preventDefaults]   Whether the input to the pipe Function
-     *                            will be an DOM-style event, where 
+     *                            will be an DOM-style event, where
      *                            .preventDefault() should be called.
      * @returns A Function that, when called on an event, runs this.callEvent
      *          on the appropriate trigger event.
@@ -328,12 +328,10 @@ export interface IInputWritr {
     makePipe(trigger: string, codeLabel: string | null, preventDefaults?: boolean): Function;
 }
 
-
-
 /**
  * A general utility for automating interactions with user-called events linked
- * with callbacks. Pipe functions are available that take in user input, switch 
- * on the event code, and call the appropriate callback. Further utilities allow 
+ * with callbacks. Pipe functions are available that take in user input, switch
+ * on the event code, and call the appropriate callback. Further utilities allow
  * for saving and playback of input histories in JSON format.
  */
 export class InputWritr implements IInputWritr {
@@ -395,7 +393,7 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Initializes a new instance of the InputWritr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IInputWritrSettings) {
@@ -417,11 +415,11 @@ export class InputWritr implements IInputWritr {
                 };
             } else {
                 this.getTimestamp = (
-                    performance.now
-                    || (<any>performance).webkitNow
-                    || (<any>performance).mozNow
-                    || (<any>performance).msNow
-                    || (<any>performance).oNow
+                    performance.now ||
+                    (<any>performance).webkitNow ||
+                    (<any>performance).mozNow ||
+                    (<any>performance).msNow ||
+                    (<any>performance).oNow
                 ).bind(performance);
             }
         } else {
@@ -433,13 +431,13 @@ export class InputWritr implements IInputWritr {
         this.canTrigger = settings.hasOwnProperty("canTrigger")
             ? <IInputWriterBooleanGetter>settings.canTrigger
             : function (): boolean {
-                return true;
-            };
+                  return true;
+              };
         this.isRecording = settings.hasOwnProperty("isRecording")
             ? <IInputWriterBooleanGetter>settings.isRecording
             : function (): boolean {
-                return true;
-            };
+                  return true;
+              };
 
         this.currentHistory = {};
         this.histories = {};
@@ -468,11 +466,10 @@ export class InputWritr implements IInputWritr {
         };
     }
 
-
     /* Simple gets
-    */
+     */
 
-    /** 
+    /**
      * @returns The stored mapping of aliases to values.
      */
     getAliases(): IAliases {
@@ -498,11 +495,11 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Determines the allowed key strings for a given alias.
-     * 
+     *
      * @param alias   An alias allowed to be passed in, typically a
      *                character code.
      * @returns The mapped key Strings corresponding to that alias,
-     *          typically the human-readable Strings representing 
+     *          typically the human-readable Strings representing
      *          input names, such as "a" or "left".
      */
     getAliasAsKeyStrings(alias: string): string[] {
@@ -527,9 +524,7 @@ export class InputWritr implements IInputWritr {
             return String.fromCharCode(alias);
         }
 
-        return typeof this.keyCodesToAliases[alias] !== "undefined"
-            ? this.keyCodesToAliases[alias]
-            : "?";
+        return typeof this.keyCodesToAliases[alias] !== "undefined" ? this.keyCodesToAliases[alias] : "?";
     }
 
     /**
@@ -545,14 +540,12 @@ export class InputWritr implements IInputWritr {
             return (<string>key).charCodeAt(0) - 32;
         }
 
-        return typeof this.keyAliasesToCodes[<string>key] !== "undefined"
-            ? this.keyAliasesToCodes[<string>key]
-            : -1;
+        return typeof this.keyAliasesToCodes[<string>key] !== "undefined" ? this.keyAliasesToCodes[<string>key] : -1;
     }
 
     /**
      * Getter for the currently recording history.
-     * 
+     *
      * @returns The currently recording history of inputs in JSON-friendly form.
      */
     getCurrentHistory(): IHistory {
@@ -561,7 +554,7 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Getter for a single saved history.
-     * 
+     *
      * @param name   The identifier for the old history to return.
      * @returns A history of inputs in JSON-friendly form.
      */
@@ -590,15 +583,14 @@ export class InputWritr implements IInputWritr {
         return this.isRecording;
     }
 
-
     /* Simple sets
-    */
+     */
 
     /**
      * Sets whether this is to allow inputs.
-     * 
-     * @param canTriggerNew   Whether this is now allowing inputs. This 
-     *                        may be either a Function (to be evaluated 
+     *
+     * @param canTriggerNew   Whether this is now allowing inputs. This
+     *                        may be either a Function (to be evaluated
      *                        on each input) or a general Boolean.
      */
     setCanTrigger(canTriggerNew: boolean | IInputWriterBooleanGetter): void {
@@ -613,8 +605,8 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Sets whether this is recording.
-     * 
-     * @param isRecordingNew   Whether this is now recording inputs.    
+     *
+     * @param isRecordingNew   Whether this is now recording inputs.  
      */
     setIsRecording(isRecordingNew: boolean | IInputWriterBooleanGetter): void {
         if (isRecordingNew.constructor === Boolean) {
@@ -628,29 +620,26 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Sets the first argument for event callbacks.
-     * 
+     *
      * @param eventInformationNew   A new first argument for event callbacks.
      */
     setEventInformation(eventInformationNew: any): void {
         this.eventInformation = eventInformationNew;
     }
 
-
     /* Aliases
-    */
+     */
 
     /**
      * Adds a list of values by which an event may be triggered.
-     * 
+     *
      * @param name   The name of the event that is being given aliases,
      *               such as "left".
-     * @param values   An array of aliases by which the event will also 
+     * @param values   An array of aliases by which the event will also
      *                 be callable.
      */
     addAliasValues(name: any, values: any[]): void {
-        var triggerName: any,
-            triggerGroup: any,
-            i: number;
+        var triggerName: any, triggerGroup: any, i: number;
 
         if (!this.aliases.hasOwnProperty(name)) {
             this.aliases[name] = values;
@@ -676,15 +665,13 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Removes a list of values by which an event may be triggered.
-     * 
-     * @param name   The name of the event that is having aliases removed, 
+     *
+     * @param name   The name of the event that is having aliases removed,
      *               such as "left".
      * @param values   Aliases by which the event will no longer be callable.
      */
     removeAliasValues(name: string, values: any[]): void {
-        var triggerName: any,
-            triggerGroup: any,
-            i: number;
+        var triggerName: any, triggerGroup: any, i: number;
 
         if (!this.aliases.hasOwnProperty(name)) {
             return;
@@ -714,13 +701,13 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Shortcut to remove old alias values and add new ones in.
-     * 
-     * 
+     *
+     *
      * @param name   The name of the event that is having aliases
      *               added and removed, such as "left".
      * @param valuesOld   An array of aliases by which the event will no
      *                    longer be callable.
-     * @param valuesNew   An array of aliases by which the event will 
+     * @param valuesNew   An array of aliases by which the event will
      *                    now be callable.
      */
     switchAliasValues(name: string, valuesOld: any[], valuesNew: any[]): void {
@@ -730,7 +717,7 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Adds a set of alises from an Object containing "name" => [values] pairs.
-     * 
+     *
      * @param aliasesRaw   Aliases to be added via this.addAliasvalues.
      */
     addAliases(aliasesRaw: any): void {
@@ -743,16 +730,15 @@ export class InputWritr implements IInputWritr {
         }
     }
 
-
     /* Functions
-    */
+     */
 
     /**
      * Adds a triggerable event by marking a new callback under the trigger's
      * triggers. Any aliases for the label are also given the callback.
-     * 
+     *
      * @param trigger   The name of the triggered event.
-     * @param label   The code within the trigger to call within, 
+     * @param label   The code within the trigger to call within,
      *                typically either a character code or an alias.
      * @param callback   The callback Function to be triggered.
      */
@@ -775,9 +761,9 @@ export class InputWritr implements IInputWritr {
     /**
      * Removes a triggerable event by deleting any callbacks under the trigger's
      * triggers. Any aliases for the label are also given the callback.
-     * 
+     *
      * @param trigger   The name of the triggered event.
-     * @param label   The code within the trigger to call within, 
+     * @param label   The code within the trigger to call within,
      *                typically either a character code or an alias.
      */
     removeEvent(trigger: string, label: any): void {
@@ -799,9 +785,9 @@ export class InputWritr implements IInputWritr {
     }
 
     /**
-     * Stores the current history in the histories listing. this.restartHistory 
+     * Stores the current history in the histories listing. this.restartHistory
      * is typically called directly after.
-     * 
+     *
      * @param name   A key to store the history under (by default, one greater than
      *               the length of Object.keys(this.histories)).
      */
@@ -812,8 +798,8 @@ export class InputWritr implements IInputWritr {
     /**
      * Clears the currently tracked inputs history and resets the starting time,
      * and (optionally) saves the current history.
-     * 
-     * @param keepHistory   Whether the currently tracked history of inputs should 
+     *
+     * @param keepHistory   Whether the currently tracked history of inputs should
      *                      be added to the master listing (by default, true).
      */
     restartHistory(keepHistory: boolean = true): void {
@@ -828,7 +814,7 @@ export class InputWritr implements IInputWritr {
     /**
      * "Plays" back a history of event information by simulating each keystroke
      * in a new call, timed by setTimeout.
-     * 
+     *
      * @param history   The events history to play back.
      * @remarks This will execute the same actions in the same order as before,
      *          but the arguments object may be different.
@@ -839,9 +825,7 @@ export class InputWritr implements IInputWritr {
 
         for (time in history) {
             if (history.hasOwnProperty(time)) {
-                setTimeout(
-                    this.makeEventCall(history[time]),
-                    (Number(time) - this.startingTime) | 0);
+                setTimeout(this.makeEventCall(history[time]), (Number(time) - this.startingTime) | 0);
             }
         }
     }
@@ -849,7 +833,7 @@ export class InputWritr implements IInputWritr {
     /**
      * Primary driver function to run an event. The event is chosen from the
      * triggers object, and called with eventInformation as the input.
-     * 
+     *
      * @param event   The event Function (or String alias thereof) to call.
      * @param [keyCode]   The alias of the event Function under triggers[event],
      *                    if event is a String.
@@ -875,13 +859,13 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Creates and returns a Function to run a trigger.
-     * 
+     *
      * @param trigger   The label for the Array of functions that the
      *                  pipe function should choose from.
      * @param codeLabel   A mapping String for the alias to get the
      *                    alias from the event.
      * @param [preventDefaults]   Whether the input to the pipe Function
-     *                            will be an DOM-style event, where 
+     *                            will be an DOM-style event, where
      *                            .preventDefault() should be called.
      * @returns A Function that, when called on an event, runs this.callEvent
      *          on the appropriate trigger event.
@@ -914,7 +898,7 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Curry utility to create a closure that runs callEvent when called.
-     * 
+     *
      * @param info   An array containing [trigger, alias].
      * @returns A closure that activates a trigger when called.
      */
@@ -929,7 +913,7 @@ export class InputWritr implements IInputWritr {
 
     /**
      * Records event information in this.currentHistory.
-     * 
+     *
      * @param info   Information on the event, as [trigger, alias].
      */
     private saveEventInformation(info: [string, any]): void {

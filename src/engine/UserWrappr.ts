@@ -58,7 +58,7 @@ export interface IGameStartrConstructor {
 
 /**
  * Generator for a user-facing HTML control.
- * 
+ *
  * @param schema   A general description of the control to create.
  * @returns An HTML element as described by the schema.
  */
@@ -182,7 +182,7 @@ export interface IUserWrappr {
      * Resets the internal GameStarter by storing it under window, adding
      * InputWritr pipes for input to the page, creating the HTML buttons,
      * and setting additional CSS styles and page visiblity.
-     * 
+     *
      * @param settings   Settings for the GameStartr constructor.
      * @param customs   Additional settings for sizing information.
      */
@@ -272,7 +272,7 @@ export interface IUserWrappr {
      * Sets the size of the GameStartr by resetting the game with the size
      * information as part of its customs object. Full screen status is
      * changed accordingly.
-     * 
+     *
      * @param size The size to set, as a String to retrieve the size from
      *             known info, or a container of settings.
      */
@@ -332,7 +332,7 @@ export namespace UISchemas {
 
     /**
      * A source Function for an option's individual value.
-     * 
+     *
      * @param GameStarter   The GameStarter instance this control is for.
      * @returns An initial value for an option control.
      */
@@ -346,7 +346,7 @@ export namespace UISchemas {
     export interface IChoiceElement extends HTMLElement {
         /**
          * A utility Function to set this HTMLElement's value.
-         * 
+         *
          * @param value   A new value for this element.
          */
         setValue(value: any): void;
@@ -371,7 +371,7 @@ export namespace UISchemas {
 
         /**
          * A utility Function to set this HTMLElement's value.
-         * 
+         *
          * @param value   A new value for this element.
          */
         setValue(value: any): void;
@@ -379,7 +379,7 @@ export namespace UISchemas {
 
     /**
      * Handler for a map being selected.
-     * 
+     *
      * @param GameStarter   The GameStarter whose level is being edited.
      * @param schema   The overall description of the editor control.
      * @param button   The button that was just clicked.
@@ -391,7 +391,7 @@ export namespace UISchemas {
 
     /**
      * Base class for options generators. These all store a UserWrapper and
-     * its GameStartr, along with a generate Function 
+     * its GameStartr, along with a generate Function
      */
     export abstract class OptionsGenerator implements IOptionsGenerator {
         /**
@@ -406,7 +406,7 @@ export namespace UISchemas {
 
         /**
          * Initializes a new instance of the OptionsGenerator class.
-         * 
+         *
          * @param UserWrappr   The container UserWrappr using this generator.
          */
         constructor(UserWrapper: UserWrappr) {
@@ -425,7 +425,7 @@ export namespace UISchemas {
         /**
          * Recursively searches for an element with the "control" class
          * that's a parent of the given element.
-         * 
+         *
          * @param element   An element to start searching on.
          * @returns The closest node with className "control" to the given element
          *          in its ancestry tree.
@@ -496,15 +496,16 @@ export namespace UISchemas {
     export class ButtonsGenerator extends OptionsGenerator implements IOptionsGenerator {
         /**
          * Generates a control element with buttons described in the schema.
-         * 
+         *
          * @param schema   A description of the element to create.
          * @returns An HTML element representing the schema.
          */
         generate(schema: IOptionsButtonsSchema): HTMLDivElement {
             var output: HTMLDivElement = document.createElement("div"),
-                options: IOptionsButtonSchema[] = schema.options instanceof Function
-                    ? (<IOptionSource>schema.options).call(self, this.GameStarter)
-                    : schema.options,
+                options: IOptionsButtonSchema[] =
+                    schema.options instanceof Function
+                        ? (<IOptionSource>schema.options).call(self, this.GameStarter)
+                        : schema.options,
                 classNameStart: string = "select-option options-button-option",
                 scope: ButtonsGenerator = this,
                 option: IOptionsButtonSchema,
@@ -556,12 +557,16 @@ export namespace UISchemas {
         /**
          * Ensures a value exists in localStorage, and has the given settings. If
          * it doesn't have a value, the schema's callback is used to provide one.
-         * 
+         *
          * @param child   The value's representational HTML element.
-         * @param details   Details 
-         * @param schema   
+         * @param details   Details
+         * @param schema  
          */
-        protected ensureLocalStorageButtonValue(child: HTMLDivElement, details: IOptionsButtonSchema, schema: IOptionsButtonsSchema): void {
+        protected ensureLocalStorageButtonValue(
+            child: HTMLDivElement,
+            details: IOptionsButtonSchema,
+            schema: IOptionsButtonsSchema
+        ): void {
             var key: string = schema.title + "::" + details.title,
                 valueDefault: string = details.source.call(this, this.GameStarter).toString(),
                 value: string;
@@ -602,7 +607,7 @@ export namespace UISchemas {
     export class LevelEditorGenerator extends OptionsGenerator implements IOptionsGenerator {
         /**
          * Generates a control for a level editor based on the provided schema.
-         * 
+         *
          * @param schema   The overall description of the editor control.
          * @returns An HTML element representing the schema.
          */
@@ -638,7 +643,7 @@ export namespace UISchemas {
         /**
          * Creates an HTML element that can be clicked or dragged on to upload a JSON file
          * into the level editor.
-         * 
+         *
          * @returns An element containing the uploader div.
          */
         protected createUploaderDiv(): HTMLDivElement {
@@ -655,7 +660,9 @@ export namespace UISchemas {
 
             uploader.ondragenter = <(event: DragEvent) => any>this.handleFileDragEnter.bind(this, uploader);
             uploader.ondragover = this.handleFileDragOver.bind(this, uploader);
-            uploader.ondragleave = input.ondragend = <(event: DragEvent) => any>this.handleFileDragLeave.bind(this, uploader);
+            uploader.ondragleave = input.ondragend = <(event: DragEvent) => any>(
+                this.handleFileDragLeave.bind(this, uploader)
+            );
             uploader.ondrop = <(event: DragEvent) => any>this.handleFileDrop.bind(this, input, uploader);
             uploader.onclick = input.click.bind(input);
 
@@ -667,34 +674,30 @@ export namespace UISchemas {
         /**
          * Creates an HTML element that allows a user to choose between maps to load into
          * the level editor.
-         * 
+         *
          * @param schema   The overall description of the container user control.
          * @returns An element containing the map selector.
          */
         protected createMapSelectorDiv(schema: IOptionsEditorSchema): HTMLDivElement {
             var expanded: boolean = true,
                 generatorName: string = "MapsGrid",
-                container: HTMLDivElement = <HTMLDivElement>this.GameStarter.createElement(
-                    "div",
-                    {
-                        "className": "select-options-group select-options-editor-maps-selector"
-                    }),
-                toggler: HTMLDivElement = <HTMLDivElement>this.GameStarter.createElement(
-                    "div",
-                    {
-                        "className": "select-option select-option-large options-button-option"
-                    }),
-                mapsOut: HTMLDivElement = <HTMLDivElement>this.GameStarter.createElement(
-                    "div",
-                    {
-                        "className": "select-options-holder select-options-editor-maps-holder"
-                    }),
+                container: HTMLDivElement = <HTMLDivElement>this.GameStarter.createElement("div", {
+                    "className": "select-options-group select-options-editor-maps-selector"
+                }),
+                toggler: HTMLDivElement = <HTMLDivElement>this.GameStarter.createElement("div", {
+                    "className": "select-option select-option-large options-button-option"
+                }),
+                mapsOut: HTMLDivElement = <HTMLDivElement>this.GameStarter.createElement("div", {
+                    "className": "select-options-holder select-options-editor-maps-holder"
+                }),
                 mapsIn: HTMLDivElement = this.UserWrapper.getGenerators()[generatorName].generate(
                     this.GameStarter.proliferate(
                         {
                             "callback": schema.callback
                         },
-                        schema.maps));
+                        schema.maps
+                    )
+                );
 
             toggler.onclick = function (event?: Event): void {
                 expanded = !expanded;
@@ -713,12 +716,11 @@ export namespace UISchemas {
                     return;
                 }
 
-                [].slice.call(container.parentElement.children)
-                    .forEach(function (element: HTMLElement): void {
-                        if (element !== container) {
-                            element.style.display = (expanded ? "none" : "block");
-                        }
-                    });
+                [].slice.call(container.parentElement.children).forEach(function (element: HTMLElement): void {
+                    if (element !== container) {
+                        element.style.display = expanded ? "none" : "block";
+                    }
+                });
             };
 
             toggler.onclick(<any>null);
@@ -732,7 +734,7 @@ export namespace UISchemas {
 
         /**
          * Handles a dragged file entering a map selector. Visual styles are updated.
-         * 
+         *
          * @param uploader   The element being dragged onto.
          * @param event   The event caused by the dragging.
          */
@@ -746,7 +748,7 @@ export namespace UISchemas {
 
         /**
          * Handles a dragged file moving over a map selector.
-         * 
+         *
          * @param uploader   The element being dragged onto.
          * @param event   The event caused by the dragging.
          */
@@ -757,7 +759,7 @@ export namespace UISchemas {
 
         /**
          * Handles a dragged file leaving a map selector. Visual styles are updated.
-         * 
+         *
          * @param uploader   The element being dragged onto.
          * @param event   The event caused by the dragging.
          */
@@ -772,12 +774,16 @@ export namespace UISchemas {
         /**
          * Handles a dragged file being dropped onto a map selector. The file is read, and
          * events attached to its progress.
-         * 
+         *
          * @param input   The HTMLInputElement triggering the file event.
          * @param uploader   The element being dragged onto.
          * @param event   The event caused by the dragging.
          */
-        protected handleFileDrop(input: HTMLInputElement, uploader: HTMLDivElement, event: LevelEditr.IDataMouseEvent): void {
+        protected handleFileDrop(
+            input: HTMLInputElement,
+            uploader: HTMLDivElement,
+            event: LevelEditr.IDataMouseEvent
+        ): void {
             var files: FileList = input.files || event.dataTransfer.files,
                 file: File = files[0],
                 reader: FileReader = new FileReader();
@@ -786,20 +792,28 @@ export namespace UISchemas {
             event.preventDefault();
             event.stopPropagation();
 
-            reader.onprogress = <(event: ProgressEvent<FileReader>) => any>this.handleFileUploadProgress.bind(this, file, uploader);
-            reader.onloadend = <(event: ProgressEvent<FileReader>) => any>this.handleFileUploadCompletion.bind(this, file, uploader);
+            reader.onprogress = <(event: ProgressEvent<FileReader>) => any>(
+                this.handleFileUploadProgress.bind(this, file, uploader)
+            );
+            reader.onloadend = <(event: ProgressEvent<FileReader>) => any>(
+                this.handleFileUploadCompletion.bind(this, file, uploader)
+            );
 
             reader.readAsText(file);
         }
 
         /**
          * Handles a file upload reporting some amount of progress.
-         * 
+         *
          * @param file   The file being uploaded.
          * @param uploader   The element the file was being dragged onto.
          * @param event   The event caused by the progress.
          */
-        protected handleFileUploadProgress(file: File, uploader: HTMLDivElement, event: LevelEditr.IDataProgressEvent): void {
+        protected handleFileUploadProgress(
+            file: File,
+            uploader: HTMLDivElement,
+            event: LevelEditr.IDataProgressEvent
+        ): void {
             if (!event.lengthComputable) {
                 return;
             }
@@ -816,12 +830,16 @@ export namespace UISchemas {
         /**
          * Handles a file upload completing. The file's contents are loaded into
          * the level editor.
-         * 
+         *
          * @param file   The file being uploaded.
          * @param uploader   The element the file was being dragged onto.
          * @param event   The event caused by the upload completing.
          */
-        protected handleFileUploadCompletion(file: File, uploader: HTMLDivElement, event: LevelEditr.IDataProgressEvent): void {
+        protected handleFileUploadCompletion(
+            file: File,
+            uploader: HTMLDivElement,
+            event: LevelEditr.IDataProgressEvent
+        ): void {
             this.GameStarter.LevelEditor.handleUploadCompletion(event);
             uploader.innerText = <string>uploader.getAttribute("textOld");
         }
@@ -894,7 +912,7 @@ export namespace UISchemas {
     export class MapsGridGenerator extends OptionsGenerator implements IOptionsGenerator {
         /**
          * Generates the HTML element for the maps.
-         * 
+         *
          * @param schema   The overall description of the editor control.
          * @returns An HTML element representing the schema.
          */
@@ -916,7 +934,7 @@ export namespace UISchemas {
 
         /**
          * Generates a table of map selection buttons from x- and y- ranges.
-         * 
+         *
          * @param schema   The overall description of the editor control.
          * @returns An HTMLTableElement with a grid of map selection buttons.
          */
@@ -938,11 +956,11 @@ export namespace UISchemas {
                     cell = document.createElement("td");
                     cell.className = "select-option maps-grid-option maps-grid-option-range";
                     cell.textContent = i + "-" + j;
-                    cell.onclick = (function (callback: () => any): void {
+                    cell.onclick = function (callback: () => any): void {
                         if (scope.getParentControlElement(cell).getAttribute("active") === "on") {
                             callback();
                         }
-                    }).bind(scope, <() => any>schema.callback.bind(scope, scope.GameStarter, schema, cell));
+                    }.bind(scope, <() => any>schema.callback.bind(scope, scope.GameStarter, schema, cell));
                     row.appendChild(cell);
                 }
 
@@ -954,15 +972,12 @@ export namespace UISchemas {
 
         /**
          * Adds any specified extra elements to this control's element.
-         * 
+         *
          * @param output   The element created by this generator.
          * @param schema   The overall discription of the editor control.
          */
         appendExtras(output: HTMLDivElement, schema: IOptionsMapGridSchema): void {
-            var element: HTMLDivElement,
-                extra: IOptionsMapGridExtra,
-                i: number,
-                j: number;
+            var element: HTMLDivElement, extra: IOptionsMapGridExtra, i: number, j: number;
 
             for (i = 0; i < (<IOptionsMapGridExtra[]>schema.extras).length; i += 1) {
                 extra = (<IOptionsMapGridExtra[]>schema.extras)[i];
@@ -976,9 +991,9 @@ export namespace UISchemas {
 
                 if (extra.extraElements) {
                     for (j = 0; j < extra.extraElements.length; j += 1) {
-                        output.appendChild(this.GameStarter.createElement(
-                            extra.extraElements[j].tag,
-                            extra.extraElements[j].options));
+                        output.appendChild(
+                            this.GameStarter.createElement(extra.extraElements[j].tag, extra.extraElements[j].options)
+                        );
                     }
                 }
             }
@@ -1011,7 +1026,7 @@ export namespace UISchemas {
 
         /**
          * Callback for when the button is triggered.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          */
         action: (GameStarter: IGameStartr) => void;
@@ -1038,14 +1053,14 @@ export namespace UISchemas {
     export interface IOptionsTableBooleanOption extends IOptionsTableOption {
         /**
          * Callback for when the value becomes false.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          */
         disable: (GameStarter: IGameStartr) => void;
 
         /**
          * Callback for when the value becomes true.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          */
         enable: (GameStarter: IGameStartr) => void;
@@ -1067,14 +1082,14 @@ export namespace UISchemas {
     export interface IOptionsTableKeysOption extends IOptionsTableOption {
         /**
          * Callback for when the value changes.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          */
         callback: (GameStarter: IGameStartr, valueOld?: string, valueNew?: string) => void;
 
         /**
          * A source for the allowed keys in the option.
-         * 
+         *
          * @returns The allowed keys in the option.
          */
         source: (GameStarter: IGameStartr) => string[];
@@ -1096,7 +1111,7 @@ export namespace UISchemas {
 
         /**
          * Callback for when the value changes.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          */
         update: (GameStarter: IGameStartr, value?: string) => void;
@@ -1108,7 +1123,7 @@ export namespace UISchemas {
     export interface IOptionsTableSelectOption extends IOptionsTableOption {
         /**
          * A source for the allowed keys in the option.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          * @returns The allowed keys in the option.
          */
@@ -1116,7 +1131,7 @@ export namespace UISchemas {
 
         /**
          * A source for the initially selected value.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          * @returns The allowed keys in the option.
          */
@@ -1124,7 +1139,7 @@ export namespace UISchemas {
 
         /**
          * Callback for when the value changes.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          * @param value   A new value, if this is triggered via a code callback.
          */
@@ -1137,15 +1152,15 @@ export namespace UISchemas {
     export interface IOptionsTableScreenSizeOption extends IOptionsTableOption {
         /**
          * A source for names of the allowed screen sizes.
-         * 
-         * @param GameStarter   The GameStarter this option is controlling. 
+         *
+         * @param GameStarter   The GameStarter this option is controlling.
          * @returns Names of the allowed screen sizes.
          */
         options: (GameStarter: IGameStartr) => string[];
 
         /**
          * A source for the initially selected value.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          * @returns The allowed keys in the option.
          */
@@ -1153,7 +1168,7 @@ export namespace UISchemas {
 
         /**
          * Callback for when the value changes.
-         * 
+         *
          * @param GameStarter   The GameStarter this option is controlling.
          * @param value   The newly selected size information.
          */
@@ -1185,7 +1200,7 @@ export namespace UISchemas {
 
         /**
          * Generates a control element with tabular information based on the provided schema.
-         * 
+         *
          * @param schema   A description of the tabular data to represent.
          * @returns An HTML element representing the schema.
          */
@@ -1248,13 +1263,17 @@ export namespace UISchemas {
 
         /**
          * Initializes an input for a boolean value.
-         * 
+         *
          * @param input   An input that will contain a boolean value.
          * @param details   Details for this individual value.
          * @param schema   Details for the overall table schema.
          * @returns An HTML element containing the input.
          */
-        protected setBooleanInput(input: IInputElement, details: IOptionsTableBooleanOption, schema: ISchema): IInputElement {
+        protected setBooleanInput(
+            input: IInputElement,
+            details: IOptionsTableBooleanOption,
+            schema: ISchema
+        ): IInputElement {
             var status: boolean = details.source.call(this, this.GameStarter),
                 statusClass: string = status ? "enabled" : "disabled",
                 scope: TableGenerator = this;
@@ -1295,13 +1314,17 @@ export namespace UISchemas {
 
         /**
          * Initializes an input for a keyboard key value.
-         * 
+         *
          * @param input   An input that will contain a keyboard key value.
          * @param details   Details for this individual value.
          * @param schema   Details for the overall table schema.
          * @returns An HTML element containing the input.
          */
-        protected setKeyInput(input: IInputElement, details: IOptionsTableKeysOption, schema: ISchema): ISelectElement[] {
+        protected setKeyInput(
+            input: IInputElement,
+            details: IOptionsTableKeysOption,
+            schema: ISchema
+        ): ISelectElement[] {
             var values: string[] = details.source.call(this, this.GameStarter),
                 possibleKeys: string[] = this.UserWrapper.getAllPossibleKeys(),
                 children: ISelectElement[] = [],
@@ -1327,12 +1350,12 @@ export namespace UISchemas {
                     }
                 }
 
-                child.onchange = (function (child: ISelectElement): void {
+                child.onchange = function (child: ISelectElement): void {
                     details.callback.call(scope, scope.GameStarter, child.valueOld, child.value);
                     if (details.storeLocally) {
                         scope.storeLocalStorageValue(child, child.value);
                     }
-                }).bind(undefined, child);
+                }.bind(undefined, child);
 
                 children.push(child);
                 input.appendChild(child);
@@ -1343,13 +1366,17 @@ export namespace UISchemas {
 
         /**
          * Initializes an input for a numeric value.
-         * 
+         *
          * @param input   An input that will contain a numeric value.
          * @param details   Details for this individual value.
          * @param schema   Details for the overall table schema.
          * @returns An HTML element containing the input.
          */
-        protected setNumberInput(input: IInputElement, details: IOptionsTableNumberOption, schema: ISchema): IInputElement {
+        protected setNumberInput(
+            input: IInputElement,
+            details: IOptionsTableNumberOption,
+            schema: ISchema
+        ): IInputElement {
             var child: IInputElement = <UISchemas.IInputElement>document.createElement("input"),
                 scope: TableGenerator = this;
 
@@ -1374,13 +1401,17 @@ export namespace UISchemas {
 
         /**
          * Initializes an input for a value with multiple preset options.
-         * 
+         *
          * @param input   An input that will contain a value with multiple present options.
          * @param details   Details for this individual value.
          * @param schema   Details for the overall table schema.
          * @returns An HTML element containing the input.
          */
-        protected setSelectInput(input: ISelectElement, details: IOptionsTableSelectOption, schema: ISchema): ISelectElement {
+        protected setSelectInput(
+            input: ISelectElement,
+            details: IOptionsTableSelectOption,
+            schema: ISchema
+        ): ISelectElement {
             var child: ISelectElement = <ISelectElement>document.createElement("select"),
                 options: string[] = details.options(this.GameStarter),
                 scope: TableGenerator = this,
@@ -1408,13 +1439,17 @@ export namespace UISchemas {
 
         /**
          * Initializes an input for setting the GameStartr's screen size.
-         * 
+         *
          * @param input   An input that will set a GameStartr's screen size.
          * @param details   Details for this individual value.
          * @param schema   Details for the overall table schema.
          * @returns An HTML element containing the input.
          */
-        protected setScreenSizeInput(input: ISelectElement, details: IOptionsTableScreenSizeOption, schema: ISchema): ISelectElement {
+        protected setScreenSizeInput(
+            input: ISelectElement,
+            details: IOptionsTableScreenSizeOption,
+            schema: ISchema
+        ): ISelectElement {
             var scope: TableGenerator = this,
                 child: ISelectElement;
 
@@ -1442,13 +1477,17 @@ export namespace UISchemas {
          * Ensures an input's required local storage value is being stored,
          * and adds it to the internal GameStarter.ItemsHolder if not. If it
          * is, and the child's value isn't equal to it, the value is set.
-         * 
-         * @param childRaw   An input or select element, or an Array thereof. 
-         * @param details   Details containing the title of the item and the 
+         *
+         * @param childRaw   An input or select element, or an Array thereof.
+         * @param details   Details containing the title of the item and the
          *                  source Function to get its value.
          * @param schema   The container schema this child is within.
          */
-        protected ensureLocalStorageInputValue(childRaw: IChoiceElement | IChoiceElement[], details: IOption, schema: ISchema): void {
+        protected ensureLocalStorageInputValue(
+            childRaw: IChoiceElement | IChoiceElement[],
+            details: IOption,
+            schema: ISchema
+        ): void {
             if (childRaw.constructor === Array) {
                 this.ensureLocalStorageValues(<IInputElement[]>childRaw, details, schema);
                 return;
@@ -1482,13 +1521,17 @@ export namespace UISchemas {
         /**
          * Ensures a collection of items all exist in localStorage. If their values
          * don't exist, their schema's .callback is used to provide them.
-         * 
+         *
          * @param childRaw   An Array of input or select elements.
-         * @param details   Details containing the title of the item and the source 
+         * @param details   Details containing the title of the item and the source
          *                  Function to get its value.
          * @param schema   The container schema this child is within.
          */
-        protected ensureLocalStorageValues(children: (IInputElement | ISelectElement)[], details: IOption, schema: ISchema): void {
+        protected ensureLocalStorageValues(
+            children: (IInputElement | ISelectElement)[],
+            details: IOption,
+            schema: ISchema
+        ): void {
             var keyGeneral: string = schema.title + "::" + details.title,
                 values: any[] = details.source.call(this, this.GameStarter),
                 key: string,
@@ -1522,7 +1565,7 @@ export namespace UISchemas {
         /**
          * Stores an element's value in the internal GameStarter.ItemsHolder,
          * if it has the "localStorageKey" attribute.
-         * 
+         *
          * @param {HTMLElement} child   An element with a value to store.
          * @param {Mixed} value   What value is to be stored under the key.
          */
@@ -1537,8 +1580,6 @@ export namespace UISchemas {
     }
 }
 
-
-
 /**
  * A user interface manager made to work on top of GameStartr implementations
  * and provide a configurable HTML display of options.
@@ -1548,9 +1589,39 @@ export class UserWrappr {
      * The default list of all allowed keyboard keys.
      */
     private static allPossibleKeys: string[] = [
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-        "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-        "up", "right", "down", "left", "space", "shift", "ctrl"
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+        "up",
+        "right",
+        "down",
+        "left",
+        "space",
+        "shift",
+        "ctrl"
     ];
 
     /**
@@ -1581,7 +1652,7 @@ export class UserWrappr {
     private customs: any;
 
     /**
-     * What the global object is called (typically "window" for browser 
+     * What the global object is called (typically "window" for browser
      * environments and "global" for node-style environments).
      */
     private globalName: string;
@@ -1672,23 +1743,27 @@ export class UserWrappr {
      * A browser-dependent method for request to enter full screen mode.
      */
     private requestFullScreen: () => void = (
-        this.documentElement.requestFullscreen
-        || (<any>this.documentElement).webkitRequestFullscreen
-        || function (): void { /* No Fullscreen API: nothing to do. */ }
+        this.documentElement.requestFullscreen ||
+        (<any>this.documentElement).webkitRequestFullscreen ||
+        function (): void {
+            /* No Fullscreen API: nothing to do. */
+        }
     ).bind(this.documentElement);
 
     /**
      * A browser-dependent method for request to exit full screen mode.
      */
     private cancelFullScreen: () => void = (
-        document.exitFullscreen
-        || (<any>document).webkitExitFullscreen
-        || function (): void { /* No Fullscreen API: nothing to do. */ }
+        document.exitFullscreen ||
+        (<any>document).webkitExitFullscreen ||
+        function (): void {
+            /* No Fullscreen API: nothing to do. */
+        }
     ).bind(document);
 
     /**
      * Initializes a new instance of the UserWrappr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IUserWrapprSettings) {
@@ -1737,7 +1812,7 @@ export class UserWrappr {
      * Resets the internal GameStarter by storing it under window, adding
      * InputWritr pipes for input to the page, creating the HTML buttons,
      * and setting additional CSS styles and page visiblity.
-     * 
+     *
      * @param settings   Settings for the GameStartr constructor.
      * @param customs   Additional settings for sizing information.
      */
@@ -1762,9 +1837,8 @@ export class UserWrappr {
         this.applyLayoutPause();
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns The GameStartr implementation this is wrapping around.
@@ -1878,15 +1952,14 @@ export class UserWrappr {
         return this.deviceChecker;
     }
 
-
     /* Externally allowed sets
-    */
+     */
 
     /**
      * Sets the size of the GameStartr by resetting the game with the size
      * information as part of its customs object. Full screen status is
      * changed accordingly.
-     * 
+     *
      * @param size The size to set, as a String to retrieve the size from
      *             known info, or a container of settings.
      */
@@ -1916,9 +1989,8 @@ export class UserWrappr {
         }
     }
 
-
     /* Devices
-    */
+     */
 
     /**
      * Starts the checkDevices loop to scan for gamepad status changes.
@@ -1937,19 +2009,19 @@ export class UserWrappr {
             this.checkDevices.bind(this),
             this.GameStarter.GamesRunner.getPaused()
                 ? 117
-                : this.GameStarter.GamesRunner.getInterval() / this.GameStarter.GamesRunner.getSpeed());
+                : this.GameStarter.GamesRunner.getInterval() / this.GameStarter.GamesRunner.getSpeed()
+        );
 
         this.GameStarter.DeviceLayer.checkNavigatorGamepads();
         this.GameStarter.DeviceLayer.activateAllGamepadTriggers();
     }
 
-
     /* Settings parsing
-    */
+     */
 
     /**
      * Creates as a copy of the given sizes with names as members.
-     * 
+     *
      * @param sizesRaw   The listing of preset sizes to go by.
      * @returns A copy of sizes, with names as members.
      */
@@ -1969,7 +2041,7 @@ export class UserWrappr {
     /**
      * Creates a copy of the given customs and adjusts sizing information,
      * such as for infinite width or height.
-     * 
+     *
      * @param customsRaw   Raw, user-provided customs.
      */
     private fixCustoms(customsRaw: IGameStartrCustoms): any {
@@ -1978,9 +2050,7 @@ export class UserWrappr {
         this.GameStartrConstructor.prototype.proliferate(customs, this.currentSize);
 
         if (!isFinite(customs.width)) {
-            customs.width = this.isCoarsePointer()
-                ? this.getCoarseWidth()
-                : document.body.clientWidth;
+            customs.width = this.isCoarsePointer() ? this.getCoarseWidth() : document.body.clientWidth;
         }
         if (!isFinite(customs.height) && this.isCoarsePointer()) {
             // Phones render at the native height and have the canvas scaled to fit (see fitGame)
@@ -2002,9 +2072,8 @@ export class UserWrappr {
         return customs;
     }
 
-
     /* Fitting the game to the screen
-    */
+     */
 
     /**
      * @returns Whether the primary pointer is coarse, as on a phone or tablet.
@@ -2041,7 +2110,8 @@ export class UserWrappr {
         var probe: HTMLElement = document.createElement("div"),
             width: number;
 
-        probe.style.cssText = "position: absolute; visibility: hidden; pointer-events: none; height: 0; width: var(--touch-gutter, 0px);";
+        probe.style.cssText =
+            "position: absolute; visibility: hidden; pointer-events: none; height: 0; width: var(--touch-gutter, 0px);";
         document.body.appendChild(probe);
         width = probe.getBoundingClientRect().width;
         document.body.removeChild(probe);
@@ -2235,12 +2305,11 @@ export class UserWrappr {
         }
     }
 
-
     /* Page visibility
-    */
+     */
 
     /**
-     * Adds a "visibilitychange" handler to the document bound to 
+     * Adds a "visibilitychange" handler to the document bound to
      * this.handleVisibilityChange.
      */
     private resetPageVisibilityHandlers(): void {
@@ -2296,14 +2365,13 @@ export class UserWrappr {
         }
     }
 
-
     /* Control section loaders
-    */
+     */
 
     /**
      * Loads the internal GameStarter, resetting it with the given customs
      * and attaching handlers to document.body and the holder elements.
-     * 
+     *
      * @param customs   Custom arguments to pass to this.GameStarter.
      */
     private loadGameStarter(customs: IGameStartrCustoms): void {
@@ -2354,7 +2422,7 @@ export class UserWrappr {
     /**
      * Loads the externally facing UI controls and the internal ItemsHolder,
      * appending the controls to the controls HTML element.
-     * 
+     *
      * @param schemas   The schemas for each UI control to be made.
      */
     private loadControls(schemas: UISchemas.ISchema[]): void {
@@ -2374,9 +2442,9 @@ export class UserWrappr {
         }
     }
 
-    /** 
+    /**
      * Creates an individual UI control element based on a UI schema.
-     * 
+     *
      * @param schemas   The schemas for a UI control to be made.
      * @returns An individual UI control element.
      */
@@ -2399,11 +2467,9 @@ export class UserWrappr {
         // Touch events often propogate to children before the control div has
         // been fully extended. Delaying the "active" attribute fixes that.
         control.onmouseover = function (): void {
-            setTimeout(
-                function (): void {
-                    control.setAttribute("active", "on");
-                },
-                35);
+            setTimeout(function (): void {
+                control.setAttribute("active", "on");
+            }, 35);
         };
 
         control.onmouseout = function (): void {

@@ -39,7 +39,10 @@ test.describe("audio lifetime across View Mode changes", () => {
             // The counts are the listeners alive right now: adds minus matching removes (the DOM ignores
             // a repeated add of the same listener and a remove of one that is not there, so do the same)
             const live = new Map<string, Set<unknown>>();
-            const captureOf = (options: unknown): boolean => (typeof options === "object" && options !== null ? !!(options as AddEventListenerOptions).capture : !!options);
+            const captureOf = (options: unknown): boolean =>
+                typeof options === "object" && options !== null
+                    ? !!(options as AddEventListenerOptions).capture
+                    : !!options;
 
             for (const target of [window, document] as const) {
                 const originalAdd = target.addEventListener.bind(target);
@@ -73,13 +76,17 @@ test.describe("audio lifetime across View Mode changes", () => {
                 contexts: (window as any).__audioContexts.length,
                 open: (window as any).__audioContexts.filter((c: AudioContext) => c.state !== "closed").length,
                 visibility: (window as any).__listenerCounts["document:visibilitychange"] || 0,
-                pointerdown: (window as any).__listenerCounts["window:pointerdown"] || 0,
+                pointerdown: (window as any).__listenerCounts["window:pointerdown"] || 0
             }));
         const before = await snapshot();
 
         // Let the first game finish its background preload, so its decoded buffers are what gets retained
-        await page.waitForFunction(() => Object.keys((window as any).FSM.AudioPlayer.buffers).length >= 40, undefined, { timeout: 45_000 });
-        await page.evaluate(() => { (window as any).__oldPlayers = []; });
+        await page.waitForFunction(() => Object.keys((window as any).FSM.AudioPlayer.buffers).length >= 40, undefined, {
+            timeout: 45_000
+        });
+        await page.evaluate(() => {
+            (window as any).__oldPlayers = [];
+        });
 
         for (const size of ["NES", "Large", "Wide", "NES", "Wide"]) {
             await page.evaluate(() => (window as any).__oldPlayers.push(new WeakRef((window as any).FSM.AudioPlayer)));
@@ -95,8 +102,13 @@ test.describe("audio lifetime across View Mode changes", () => {
             const alive = (window as any).__oldPlayers.map((ref: WeakRef<any>) => ref.deref()).filter(Boolean);
             let bytes = 0;
             for (const player of alive) {
-                const buffers: (AudioBuffer | undefined)[] = await Promise.all(Object.keys(player.buffers).map((name) => player.buffers[name]));
-                bytes += buffers.reduce((sum, buffer) => sum + (buffer ? buffer.length * buffer.numberOfChannels * 4 : 0), 0);
+                const buffers: (AudioBuffer | undefined)[] = await Promise.all(
+                    Object.keys(player.buffers).map((name) => player.buffers[name])
+                );
+                bytes += buffers.reduce(
+                    (sum, buffer) => sum + (buffer ? buffer.length * buffer.numberOfChannels * 4 : 0),
+                    0
+                );
             }
             return { oldPlayersAlive: alive.length, decodedMegabytesRetained: Math.round(bytes / 1048576) };
         });
@@ -114,10 +126,14 @@ test.describe("audio lifetime across View Mode changes", () => {
 
     test("decoded audio footprint after the background preload (informational)", async ({ page }) => {
         await bootGame(page);
-        await page.waitForFunction(() => {
-            const buffers = (window as any).FSM.AudioPlayer.buffers;
-            return Object.keys(buffers).length >= 40;
-        }, undefined, { timeout: 45_000 });
+        await page.waitForFunction(
+            () => {
+                const buffers = (window as any).FSM.AudioPlayer.buffers;
+                return Object.keys(buffers).length >= 40;
+            },
+            undefined,
+            { timeout: 45_000 }
+        );
 
         const footprint = await page.evaluate(async () => {
             const player = (window as any).FSM.AudioPlayer;
@@ -137,7 +153,13 @@ test.describe("audio lifetime across View Mode changes", () => {
                     perTheme[names[i]] = Math.round(size / 1048576);
                 }
             });
-            return { count: buffers.filter(Boolean).length, megabytes: Math.round(bytes / 1048576), seconds: Math.round(seconds), sampleRate: player.context.sampleRate, perTheme };
+            return {
+                count: buffers.filter(Boolean).length,
+                megabytes: Math.round(bytes / 1048576),
+                seconds: Math.round(seconds),
+                sampleRate: player.context.sampleRate,
+                perTheme
+            };
         });
         console.log("S-audio-footprint", JSON.stringify(footprint));
         expect(footprint.count).toBeGreaterThanOrEqual(40);
@@ -164,9 +186,13 @@ test.describe("desktop layout", () => {
         expect(choices).toEqual(expect.arrayContaining(["NES", "Wide", "Large"]));
 
         await viewMode.selectOption("NES", { force: true });
-        await page.waitForFunction(() => (window as any).FSM.UserWrapper.getCurrentSize().name === "NES" && !!(window as any).FSM.player);
+        await page.waitForFunction(
+            () => (window as any).FSM.UserWrapper.getCurrentSize().name === "NES" && !!(window as any).FSM.player
+        );
         await viewMode.selectOption("Wide", { force: true });
-        await page.waitForFunction(() => (window as any).FSM.UserWrapper.getCurrentSize().name === "Wide" && !!(window as any).FSM.player);
+        await page.waitForFunction(
+            () => (window as any).FSM.UserWrapper.getCurrentSize().name === "Wide" && !!(window as any).FSM.player
+        );
         await page.waitForTimeout(200);
 
         expect(dialogs).toEqual([]);
@@ -180,7 +206,13 @@ test.describe("desktop layout", () => {
         const sizes = await page.evaluate(() => {
             const canvas = (window as any).FSM.canvas as HTMLCanvasElement;
             const rect = canvas.getBoundingClientRect();
-            return { width: canvas.width, height: canvas.height, cssWidth: rect.width, cssHeight: rect.height, bodyWidth: document.body.clientWidth };
+            return {
+                width: canvas.width,
+                height: canvas.height,
+                cssWidth: rect.width,
+                cssHeight: rect.height,
+                bodyWidth: document.body.clientWidth
+            };
         });
         console.log("S-desktop-scale", JSON.stringify(sizes));
         expect(sizes.cssWidth).toBe(sizes.width);
@@ -206,13 +238,17 @@ test.describe("iPhone 13 landscape", () => {
                 left: canvasRect.left + player.left * scale,
                 top: canvasRect.top + player.top * scale,
                 right: canvasRect.left + player.right * scale,
-                bottom: canvasRect.top + player.bottom * scale,
+                bottom: canvasRect.top + player.bottom * scale
             };
             const pad = document.querySelector('[data-touch-control="DPad"] .control-inner')!.getBoundingClientRect();
             const overlapWidth = Math.max(0, Math.min(mario.right, pad.right) - Math.max(mario.left, pad.left));
             const overlapHeight = Math.max(0, Math.min(mario.bottom, pad.bottom) - Math.max(mario.top, pad.top));
             const area = (mario.right - mario.left) * (mario.bottom - mario.top);
-            return { mario, pad: { left: pad.left, top: pad.top, right: pad.right, bottom: pad.bottom }, covered: area ? (overlapWidth * overlapHeight) / area : 0 };
+            return {
+                mario,
+                pad: { left: pad.left, top: pad.top, right: pad.right, bottom: pad.bottom },
+                covered: area ? (overlapWidth * overlapHeight) / area : 0
+            };
         });
         console.log("S-dpad-mario", JSON.stringify(geometry));
         expect(geometry.covered).toBe(0);
@@ -232,11 +268,13 @@ const mimeTypes: Record<string, string> = {
     ".txt": "text/plain",
     ".woff": "font/woff",
     ".ttf": "font/ttf",
-    ".svg": "image/svg+xml",
+    ".svg": "image/svg+xml"
 };
 
 /** A static server whose root directory can be swapped, to play a sequence of deploys. */
-async function serveSwappable(initialRoot: string): Promise<{ url: string; setRoot: (root: string) => void; stop: () => Promise<void> }> {
+async function serveSwappable(
+    initialRoot: string
+): Promise<{ url: string; setRoot: (root: string) => void; stop: () => Promise<void> }> {
     let root = initialRoot;
     const server = createServer((request, response) => {
         const path = decodeURIComponent(new URL(request.url!, "http://localhost").pathname);
@@ -255,8 +293,14 @@ async function serveSwappable(initialRoot: string): Promise<{ url: string; setRo
     const port = (server.address() as { port: number }).port;
     return {
         url: `http://127.0.0.1:${port}/`,
-        setRoot: (next) => { root = next; },
-        stop: () => new Promise<void>((resolve) => { server.close(() => resolve()); server.closeAllConnections(); }),
+        setRoot: (next) => {
+            root = next;
+        },
+        stop: () =>
+            new Promise<void>((resolve) => {
+                server.close(() => resolve());
+                server.closeAllConnections();
+            })
     };
 }
 
@@ -275,33 +319,52 @@ function makeDeploys(): { base: string; v1: string; v2: string; v3: string; v1Bu
     for (const file of ["index.html", "sw.js"]) {
         writeFileSync(join(v2, file), readFileSync(join(v2, file), "utf8").split(bundle).join(renamed));
     }
-    writeFileSync(join(v2, "index.html"), readFileSync(join(v2, "index.html"), "utf8").replace("<head>", '<head><meta name="build" content="v2" />'));
-    writeFileSync(join(v2, "sw.js"), readFileSync(join(v2, "sw.js"), "utf8").replace(/CACHE_PREFIX \+ "[0-9a-f]+"/, 'CACHE_PREFIX + "v2deploy"'));
+    writeFileSync(
+        join(v2, "index.html"),
+        readFileSync(join(v2, "index.html"), "utf8").replace("<head>", '<head><meta name="build" content="v2" />')
+    );
+    writeFileSync(
+        join(v2, "sw.js"),
+        readFileSync(join(v2, "sw.js"), "utf8").replace(/CACHE_PREFIX \+ "[0-9a-f]+"/, 'CACHE_PREFIX + "v2deploy"')
+    );
 
     cpSync(v2, v3, { recursive: true });
-    writeFileSync(join(v3, "index.html"), readFileSync(join(v3, "index.html"), "utf8").replace('content="v2"', 'content="v3"'));
-    writeFileSync(join(v3, "sw.js"), readFileSync(join(v3, "sw.js"), "utf8")
-        .replace('"v2deploy"', '"v3deploy"')
-        .replace("const PRECACHE = [", 'const PRECACHE = [\n    "does-not-exist.txt",'));
+    writeFileSync(
+        join(v3, "index.html"),
+        readFileSync(join(v3, "index.html"), "utf8").replace('content="v2"', 'content="v3"')
+    );
+    writeFileSync(
+        join(v3, "sw.js"),
+        readFileSync(join(v3, "sw.js"), "utf8")
+            .replace('"v2deploy"', '"v3deploy"')
+            .replace("const PRECACHE = [", 'const PRECACHE = [\n    "does-not-exist.txt",')
+    );
 
     return { base, v1, v2, v3, v1Bundle: bundle };
 }
 
-const buildMarker = (page: Page) => page.evaluate(() => document.querySelector('meta[name="build"]')?.getAttribute("content") ?? "v1");
-const cacheNames = (page: Page) => page.evaluate(() => caches.keys().then((names) => names.filter((name) => name.startsWith("mario-")).sort()));
+const buildMarker = (page: Page) =>
+    page.evaluate(() => document.querySelector('meta[name="build"]')?.getAttribute("content") ?? "v1");
+const cacheNames = (page: Page) =>
+    page.evaluate(() => caches.keys().then((names) => names.filter((name) => name.startsWith("mario-")).sort()));
 
 test.describe("service worker deploys", () => {
-    test("a new deploy replaces the old cache, a broken deploy leaves the working one in place, and Range requests are honored", async ({ page }) => {
+    test("a new deploy replaces the old cache, a broken deploy leaves the working one in place, and Range requests are honored", async ({
+        page
+    }) => {
         test.setTimeout(120_000);
         const deploys = makeDeploys();
         const v1Bundle = deploys.v1Bundle;
         const server = await serveSwappable(deploys.v1);
         const errors = collectPageErrors(page);
         /** 200 only from the v1 worker (the v1 bundle is in no other cache and on no later server). */
-        const v1BundleStatus = () => page.evaluate((bundle) => fetch("assets/" + bundle).then((response) => response.status), v1Bundle);
+        const v1BundleStatus = () =>
+            page.evaluate((bundle) => fetch("assets/" + bundle).then((response) => response.status), v1Bundle);
 
         try {
-            await page.addInitScript((bundle) => { (window as any).__v1Bundle = bundle; }, v1Bundle);
+            await page.addInitScript((bundle) => {
+                (window as any).__v1Bundle = bundle;
+            }, v1Bundle);
             await page.goto(server.url);
             await page.waitForFunction(() => !!(window as any).FSM && !!(window as any).FSM.player);
             await page.evaluate(() => navigator.serviceWorker.ready.then(() => true));
@@ -319,7 +382,11 @@ test.describe("service worker deploys", () => {
                     try {
                         const response = await fetch(url, { headers: { Range: range } });
                         const body = await response.arrayBuffer();
-                        return { status: response.status, length: body.byteLength, contentRange: response.headers.get("Content-Range") };
+                        return {
+                            status: response.status,
+                            length: body.byteLength,
+                            contentRange: response.headers.get("Content-Range")
+                        };
                     } catch (error) {
                         return { status: 0, length: 0, contentRange: String(error) };
                     }
@@ -331,7 +398,7 @@ test.describe("service worker deploys", () => {
                     open: await probe("bytes=100-"),
                     multi: await probe("bytes=0-1,5-9"),
                     beyond: await probe("bytes=" + (size + 10) + "-"),
-                    inverted: await probe("bytes=50-10"),
+                    inverted: await probe("bytes=50-10")
                 };
             });
             console.log("S-sw-ranges", JSON.stringify(ranges));
@@ -344,13 +411,31 @@ test.describe("service worker deploys", () => {
 
             // Deploy v2 while the v1 page is open: the new worker installs, takes over and drops the v1 cache
             server.setRoot(deploys.v2);
-            await page.evaluate(() => navigator.serviceWorker.getRegistration().then((registration) => registration!.update()));
+            await page.evaluate(() =>
+                navigator.serviceWorker.getRegistration().then((registration) => registration!.update())
+            );
             // Node-side polling with short evaluates: a long in-page loop stalls under tracing
-            await expect.poll(() => cacheNames(page), { timeout: 30_000, message: "v2 cache alone" }).toEqual(["mario-v2deploy"]);
-            await expect.poll(() => page.evaluate(async () => !!navigator.serviceWorker.controller && navigator.serviceWorker.controller.state === "activated"
-                && (await fetch("assets/" + (window as any).__v1Bundle)).status === 404), { timeout: 30_000, message: "v2 worker in control" }).toBe(true);
+            await expect
+                .poll(() => cacheNames(page), { timeout: 30_000, message: "v2 cache alone" })
+                .toEqual(["mario-v2deploy"]);
+            await expect
+                .poll(
+                    () =>
+                        page.evaluate(
+                            async () =>
+                                !!navigator.serviceWorker.controller &&
+                                navigator.serviceWorker.controller.state === "activated" &&
+                                (await fetch("assets/" + (window as any).__v1Bundle)).status === 404
+                        ),
+                    { timeout: 30_000, message: "v2 worker in control" }
+                )
+                .toBe(true);
             // The old page keeps working for what it still needs (sounds are fetched lazily)
-            expect(await page.evaluate(() => fetch("Sounds/Sounds/mp3/Jump%20Small.mp3").then((response) => response.status))).toBe(200);
+            expect(
+                await page.evaluate(() =>
+                    fetch("Sounds/Sounds/mp3/Jump%20Small.mp3").then((response) => response.status)
+                )
+            ).toBe(200);
             expect(await buildMarker(page)).toBe("v1");
 
             await page.reload();
@@ -361,11 +446,21 @@ test.describe("service worker deploys", () => {
 
             // Deploy v3, whose precache has a file the server does not have: install fails, v2 stays
             server.setRoot(deploys.v3);
-            await page.evaluate(() => navigator.serviceWorker.getRegistration().then((registration) => registration!.update().catch(() => undefined)));
-            await expect.poll(() => page.evaluate(async () => {
-                const registration = await navigator.serviceWorker.getRegistration();
-                return !!registration && !registration.installing && !registration.waiting;
-            }), { timeout: 30_000, message: "v3 install settled" }).toBe(true);
+            await page.evaluate(() =>
+                navigator.serviceWorker
+                    .getRegistration()
+                    .then((registration) => registration!.update().catch(() => undefined))
+            );
+            await expect
+                .poll(
+                    () =>
+                        page.evaluate(async () => {
+                            const registration = await navigator.serviceWorker.getRegistration();
+                            return !!registration && !registration.installing && !registration.waiting;
+                        }),
+                    { timeout: 30_000, message: "v3 install settled" }
+                )
+                .toBe(true);
             await page.waitForTimeout(1000);
             const cachesAfterBrokenDeploy = await cacheNames(page);
             console.log("S-sw-broken-deploy", JSON.stringify({ caches: cachesAfterBrokenDeploy }));
@@ -411,11 +506,14 @@ test.describe("iPhone 13 landscape, pause interplay", () => {
 
     /** Fakes the tab being hidden or shown, the way the page sees it. */
     const setHidden = (page: Page, hidden: boolean) =>
-        page.evaluate((state) => {
-            Object.defineProperty(document, "visibilityState", { configurable: true, get: () => state });
-            Object.defineProperty(document, "hidden", { configurable: true, get: () => state === "hidden" });
-            document.dispatchEvent(new Event("visibilitychange"));
-        }, hidden ? "hidden" : "visible");
+        page.evaluate(
+            (state) => {
+                Object.defineProperty(document, "visibilityState", { configurable: true, get: () => state });
+                Object.defineProperty(document, "hidden", { configurable: true, get: () => state === "hidden" });
+                document.dispatchEvent(new Event("visibilitychange"));
+            },
+            hidden ? "hidden" : "visible"
+        );
 
     test("rotating to portrait and back keeps a game the player paused with Start paused", async ({ page }) => {
         const errors = collectPageErrors(page);
@@ -455,7 +553,9 @@ test.describe("iPhone 13 landscape, pause interplay", () => {
         expect(await isPaused(page)).toBe(true);
     });
 
-    test("a tab hidden in landscape and shown again in portrait stays paused until the phone is turned back", async ({ page }) => {
+    test("a tab hidden in landscape and shown again in portrait stays paused until the phone is turned back", async ({
+        page
+    }) => {
         await bootGame(page);
         await page.waitForTimeout(200);
         await setHidden(page, true);

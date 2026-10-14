@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["8-3"] = {
     "name": "8-3",
     "time": 300,
-    "locations": [
-        { "entry": "Plain" }
-    ],
+    "locations": [{ "entry": "Plain" }],
     "areas": [
         {
             "setting": "Overworld",
@@ -76,7 +74,14 @@ MarioGame.MarioGame.settings.maps.library["8-3"] = {
                 { "thing": "Fence", "x": 1664, "y": 8, "width": 16 },
                 { "thing": "Cloud1", "x": 1684, "y": 80 },
                 { "thing": "PlantLarge", "x": 1704, "y": 23 },
-                { "macro": "EndOutsideCastle", "x": 1712, "castleDistance": 48, "large": true, "walls": 13, "transport": { "map": "8-4" } },
+                {
+                    "macro": "EndOutsideCastle",
+                    "x": 1712,
+                    "castleDistance": 48,
+                    "large": true,
+                    "walls": 13,
+                    "transport": { "map": "8-4" }
+                },
                 { "thing": "PlantSmall", "x": 1720, "y": 15 },
                 { "thing": "PlantSmall", "x": 1728, "y": 15 },
                 { "thing": "Cloud1", "x": 1756, "y": 88 },

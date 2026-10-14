@@ -94,7 +94,8 @@ MarioGame.MarioGame.settings.maps.library["5-2"] = {
                 { "thing": "Stone", "x": 1520, "y": 64, "width": 16, "height": 64 },
                 { "macro": "EndOutsideCastle", "x": 1600, "transport": { "map": "5-3" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underwater",
             "blockBoundaries": true,
             "underwater": true,
@@ -137,7 +138,8 @@ MarioGame.MarioGame.settings.maps.library["5-2"] = {
                 { "thing": "PipeHorizontal", "x": 496, "y": 48, "transport": 1 },
                 { "thing": "Stone", "x": 504, "y": 88, "width": 16, "height": 88 }
             ]
-        }, {
+        },
+        {
             "setting": "Sky",
             "blockBoundaries": true,
             "exit": 2,

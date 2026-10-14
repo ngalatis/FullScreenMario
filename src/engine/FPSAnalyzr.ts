@@ -8,9 +8,11 @@ export interface ITimestampGetter {
 /**
  * Storage for internal FPS measurements, as either a Number[] or Object.
  */
-export type IMeasurementsContainer = number[] | {
-    [i: number]: number;
-}
+export type IMeasurementsContainer =
+    | number[]
+    | {
+          [i: number]: number;
+      };
 
 /**
  * Settings to initialize a new IFPSAnalyzr.
@@ -28,7 +30,7 @@ export interface IFPSAnalyzrSettings {
 }
 
 /**
- * A general utility for obtaining and analyzing framerate measurements. The 
+ * A general utility for obtaining and analyzing framerate measurements. The
  * most recent measurements are kept up to a certain point (either an infinite
  * number or a set amount). Options for analyzing the data such as getting the
  * mean, median, extremes, etc. are available.
@@ -43,7 +45,7 @@ export interface IFPSAnalyzr {
      * Standard public measurement function.
      * Marks the current timestamp as timeCurrent, and adds an FPS measurement
      * if there was a previous timeCurrent.
-     * 
+     *
      * @param [time]   An optional timestamp (by default, getTimestamp() is used).
      */
     measure(time?: number): void;
@@ -58,7 +60,7 @@ export interface IFPSAnalyzr {
     /**
      * Adds an FPS measurement to measurements, and increments the associated
      * count variables.
-     * 
+     *
      * @param fps   An FPS calculated as the difference between two timestamps.
      */
     addFPS(fps: number): void;
@@ -86,7 +88,7 @@ export interface IFPSAnalyzr {
     /**
      * Get function for a copy of the measurements listing (if the number of
      * measurements is less than the max, that size is used)
-     * 
+     *
      * @returns A Number[] of the most recent FPS measurements.
      */
     getMeasurements(): number[];
@@ -94,7 +96,7 @@ export interface IFPSAnalyzr {
     /**
      * Get function for a copy of the measurements listing, but with the FPS
      * measurements transformed back into time differences
-     * 
+     *
      * @returns A container of the most recent FPS time differences.
      */
     getDifferences(): number[];
@@ -112,7 +114,7 @@ export interface IFPSAnalyzr {
     getMedian(): number;
 
     /**
-     * @returns Array containing the lowest and highest recorded FPS 
+     * @returns Array containing the lowest and highest recorded FPS
      *          measurements, in that order.
      */
     getExtremes(): number[];
@@ -123,10 +125,8 @@ export interface IFPSAnalyzr {
     getRange(): number;
 }
 
-
-
 /**
- * A general utility for obtaining and analyzing framerate measurements. The 
+ * A general utility for obtaining and analyzing framerate measurements. The
  * most recent measurements are kept up to a certain point (either an infinite
  * number or a set amount). Options for analyzing the data such as getting the
  * mean, median, extremes, etc. are available.
@@ -165,7 +165,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
 
     /**
      * Initializes a new instance of the FPSAnalyzr class.
-     * 
+     *
      * @param [settings]
      */
     constructor(settings: IFPSAnalyzrSettings = {}) {
@@ -186,11 +186,11 @@ export class FPSAnalyzr implements IFPSAnalyzr {
                 };
             } else {
                 this.getTimestamp = (
-                    performance.now
-                    || (<any>performance).webkitNow
-                    || (<any>performance).mozNow
-                    || (<any>performance).msNow
-                    || (<any>performance).oNow
+                    performance.now ||
+                    (<any>performance).webkitNow ||
+                    (<any>performance).mozNow ||
+                    (<any>performance).msNow ||
+                    (<any>performance).oNow
                 ).bind(performance);
             }
         } else {
@@ -198,15 +198,14 @@ export class FPSAnalyzr implements IFPSAnalyzr {
         }
     }
 
-
     /* Public interface
-    */
+     */
 
     /**
      * Standard public measurement function.
      * Marks the current timestamp as timeCurrent, and adds an FPS measurement
      * if there was a previous timeCurrent.
-     * 
+     *
      * @param [time]   An optional timestamp (by default, getTimestamp() is used).
      */
     measure(time: number = this.getTimestamp()): void {
@@ -229,7 +228,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
     /**
      * Adds an FPS measurement to measurements, and increments the associated
      * count variables.
-     * 
+     *
      * @param fps   An FPS calculated as the difference between two timestamps.
      */
     addFPS(fps: number): void {
@@ -238,9 +237,8 @@ export class FPSAnalyzr implements IFPSAnalyzr {
         this.numRecorded += 1;
     }
 
-
     /* Gets
-    */
+     */
 
     /**
      * @returns The number of FPS measurements to keep.
@@ -273,7 +271,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
     /**
      * Get function for a copy of the measurements listing (if the number of
      * measurements is less than the max, that size is used)
-     * 
+     *
      * @returns A Number[] of the most recent FPS measurements.
      */
     getMeasurements(): number[] {
@@ -298,7 +296,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
     /**
      * Get function for a copy of the measurements listing, but with the FPS
      * measurements transformed back into time differences
-     * 
+     *
      * @returns A container of the most recent FPS time differences.
      */
     getDifferences(): number[] {
@@ -345,7 +343,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
     }
 
     /**
-     * @returns Array containing the lowest and highest recorded FPS 
+     * @returns Array containing the lowest and highest recorded FPS
      *          measurements, in that order.
      */
     getExtremes(): number[] {
@@ -378,15 +376,14 @@ export class FPSAnalyzr implements IFPSAnalyzr {
     /**
      * Converts all measurements to a Number[] in sorted order, regardless
      * of whether they're initially stored in an Array or Object.
-     * 
+     *
      * @returns All measurements, sorted.
      */
     private getMeasurementsSorted(): number[] {
-        var copy: number[],
-            i: string;
+        var copy: number[], i: string;
 
         if (this.measurements.constructor === Array) {
-            copy = [].slice.call((<number[]>this.measurements)).sort();
+            copy = [].slice.call(<number[]>this.measurements).sort();
         } else {
             copy = [];
 

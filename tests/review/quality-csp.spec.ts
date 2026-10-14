@@ -24,7 +24,7 @@ const mimeTypes: Record<string, string> = {
     ".txt": "text/plain",
     ".woff": "font/woff",
     ".ttf": "font/ttf",
-    ".svg": "image/svg+xml",
+    ".svg": "image/svg+xml"
 };
 
 const policy = [
@@ -35,7 +35,7 @@ const policy = [
     "img-src 'self' data: blob:",
     "media-src 'self' blob:",
     "font-src 'self'",
-    "connect-src 'self'",
+    "connect-src 'self'"
 ].join("; ");
 
 async function serveDistWithCsp(): Promise<{ url: string; stop: () => Promise<void> }> {
@@ -50,7 +50,7 @@ async function serveDistWithCsp(): Promise<{ url: string; stop: () => Promise<vo
 
             response.writeHead(200, {
                 "Content-Type": mimeTypes[extname(file)] ?? "application/octet-stream",
-                "Content-Security-Policy": policy,
+                "Content-Security-Policy": policy
             });
             response.end(readFileSync(file));
         } catch (error) {
@@ -68,7 +68,7 @@ async function serveDistWithCsp(): Promise<{ url: string; stop: () => Promise<vo
             new Promise<void>((resolve) => {
                 server.close(() => resolve());
                 server.closeAllConnections();
-            }),
+            })
     };
 }
 
@@ -89,9 +89,12 @@ test.describe("content security policy", () => {
             await page.goto(host.url);
             await page
                 .waitForFunction(() => !!(window as any).FSM && !!(window as any).FSM.player, undefined, {
-                    timeout: 15_000,
+                    timeout: 15_000
                 })
-                .then(() => (booted = true), () => (booted = false));
+                .then(
+                    () => (booted = true),
+                    () => (booted = false)
+                );
         } finally {
             await host.stop();
         }

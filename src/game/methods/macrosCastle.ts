@@ -8,13 +8,26 @@
  * thing.FSM.macroCastleSmall(...) keep working unchanged.
  */
 import * as MapsCreatr from "../../engine/MapsCreatr";
-import type { IArea, IMacroCastleSettings, IMacroEndInsideCastleSettings, IMacroEndOutsideCastleSettings, IMacroSectionDeciderSettings, IMacroSectionFailSettings, IMacroSectionPassSettings, IMacroSectionSettings, IMacroStartInsideCastleSettings, IMap, ISectionDetector, IThing } from "../types";
+import type {
+    IArea,
+    IMacroCastleSettings,
+    IMacroEndInsideCastleSettings,
+    IMacroEndOutsideCastleSettings,
+    IMacroSectionDeciderSettings,
+    IMacroSectionFailSettings,
+    IMacroSectionPassSettings,
+    IMacroSectionSettings,
+    IMacroStartInsideCastleSettings,
+    IMap,
+    ISectionDetector,
+    IThing
+} from "../types";
 import { MarioGame } from "../MarioGame";
 
 export const castleMacroMethods = {
     /**
      * Macro to place a small castle, which is really a collection of sceneries.
-     * 
+     *
      * @alias CastleSmall
      * @param reference   Settings for a CastleSmall macro.
      * @param prethings   The container Area's creation commands.
@@ -23,12 +36,14 @@ export const castleMacroMethods = {
      * @param FSM   The calling MarioGame.
      * @returns A small castle.
      */
-    macroCastleSmall(this: MarioGame, 
+    macroCastleSmall(
+        this: MarioGame,
         reference: IMacroCastleSettings,
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: MarioGame): any {
+        FSM: MarioGame
+    ): any {
         var output: any[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
@@ -36,7 +51,8 @@ export const castleMacroMethods = {
             j: number;
 
         // Base filling left
-        for (i = 0; i < 2; i += 1) { // x
+        for (i = 0; i < 2; i += 1) {
+            // x
             output.push({
                 "thing": "BrickHalf",
                 "x": x + i * 8,
@@ -44,7 +60,8 @@ export const castleMacroMethods = {
                 "position": "end"
             });
 
-            for (j = 1; j < 3; j += 1) { // y
+            for (j = 1; j < 3; j += 1) {
+                // y
                 output.push({
                     "thing": "BrickPlain",
                     "x": x + i * 8,
@@ -55,7 +72,8 @@ export const castleMacroMethods = {
         }
 
         // Base filling right
-        for (i = 0; i < 2; i += 1) { // x
+        for (i = 0; i < 2; i += 1) {
+            // x
             output.push({
                 "thing": "BrickHalf",
                 "x": x + 24 + i * 8,
@@ -63,7 +81,8 @@ export const castleMacroMethods = {
                 "position": "end"
             });
 
-            for (j = 1; j < 3; j += 1) { // y
+            for (j = 1; j < 3; j += 1) {
+                // y
                 output.push({
                     "thing": "BrickPlain",
                     "x": x + 24 + i * 8,
@@ -144,7 +163,7 @@ export const castleMacroMethods = {
     /**
      * Macro to place a large castle, which is really a collection of sceneries
      * underneath a small castle.
-     * 
+     *
      * @alias CastleLarge
      * @param reference   Settings for a CastleLarge macro.
      * @param prethings   The container Area's creation commands.
@@ -153,12 +172,14 @@ export const castleMacroMethods = {
      * @param FSM   The calling MarioGame.
      * @returns A large castle.
      */
-    macroCastleLarge(this: MarioGame, 
+    macroCastleLarge(
+        this: MarioGame,
         reference: IMacroCastleSettings,
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: MarioGame): any {
+        FSM: MarioGame
+    ): any {
         var output: any[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
@@ -172,7 +193,8 @@ export const castleMacroMethods = {
         });
 
         // CastleWalls left
-        for (i = 0; i < 2; i += 1) { // x
+        for (i = 0; i < 2; i += 1) {
+            // x
             output.push({
                 "thing": "CastleWall",
                 "x": x + i * 8,
@@ -181,7 +203,8 @@ export const castleMacroMethods = {
         }
 
         // Bottom doors with bricks on top
-        for (i = 0; i < 3; i += 1) { // x
+        for (i = 0; i < 3; i += 1) {
+            // x
             output.push({
                 "thing": "CastleDoor",
                 "x": x + 16 + i * 16,
@@ -203,8 +226,10 @@ export const castleMacroMethods = {
         }
 
         // Bottom bricks with doors on top
-        for (i = 0; i < 2; i += 1) { // x
-            for (j = 0; j < 3; j += 1) { // y
+        for (i = 0; i < 2; i += 1) {
+            // x
+            for (j = 0; j < 3; j += 1) {
+                // y
                 output.push({
                     "thing": "BrickPlain",
                     "x": x + 24 + i * 16,
@@ -219,7 +244,8 @@ export const castleMacroMethods = {
         }
 
         // Railing (filled)
-        for (i = 0; i < 5; i += 1) { // x
+        for (i = 0; i < 5; i += 1) {
+            // x
             output.push({
                 "thing": "CastleRailingFilled",
                 "x": x + 16 + i * 8,
@@ -229,7 +255,8 @@ export const castleMacroMethods = {
 
         // CastleWalls right
         j = reference.walls ?? 2;
-        for (i = 0; i < j; i += 1) { // x
+        for (i = 0; i < j; i += 1) {
+            // x
             output.push({
                 "thing": "CastleWall",
                 "x": x + 56 + i * 8,
@@ -256,7 +283,7 @@ export const castleMacroMethods = {
     /**
      * Macro to place the typical starting Things for the inside of a castle
      * area.
-     * 
+     *
      * @alias StartInsideCastle
      * @param reference   Settings for a StartInsideCastle macro.
      * @returns A starting zone for the inside of a castle.
@@ -286,7 +313,8 @@ export const castleMacroMethods = {
                     "y": y + 32,
                     "width": 8,
                     "height": Infinity
-                }];
+                }
+            ];
 
         if (width > 0) {
             output.push({
@@ -303,7 +331,7 @@ export const castleMacroMethods = {
     /**
      * Macro to place the typical ending Things for the inside of an outdoor
      * area.
-     * 
+     *
      * @alias EndOutsideCastle
      * @param reference   Settings for an EndOutsideCastle macro.
      * @param prethings   The container Area's creation commands.
@@ -312,24 +340,27 @@ export const castleMacroMethods = {
      * @param FSM   The calling MarioGame.
      * @returns An outdoors castle ending.
      */
-    macroEndOutsideCastle(this: MarioGame, 
+    macroEndOutsideCastle(
+        this: MarioGame,
         reference: IMacroEndOutsideCastleSettings,
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: MarioGame): any {
+        FSM: MarioGame
+    ): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
-            collectionName: string = "EndOutsideCastle-" + [
-                reference.x, reference.y, reference.large
-            ].join(","),
+            collectionName: string = "EndOutsideCastle-" + [reference.x, reference.y, reference.large].join(","),
             output: any[];
 
         // Output starts off with the general flag & collision detection
         output = [
             // Initial collision detector
             {
-                "thing": "DetectCollision", x: x, y: y + 108, height: 100,
+                "thing": "DetectCollision",
+                x: x,
+                y: y + 108,
+                height: 100,
                 "activate": MarioGame.prototype.collideFlagpole,
                 "activateFail": MarioGame.prototype.killNormal,
                 "noActivateDeath": true,
@@ -338,26 +369,35 @@ export const castleMacroMethods = {
             },
             // Flag (scenery)
             {
-                "thing": "Flag", "x": x - 4.5, "y": y + 79.5,
+                "thing": "Flag",
+                "x": x - 4.5,
+                "y": y + 79.5,
                 "collectionName": collectionName,
                 "collectionKey": "Flag"
             },
             {
-                "thing": "FlagTop", "x": x + 1.5, "y": y + 84,
+                "thing": "FlagTop",
+                "x": x + 1.5,
+                "y": y + 84,
                 "collectionName": collectionName,
                 "collectionKey": "FlagTop"
             },
             {
-                "thing": "FlagPole", "x": x + 3, "y": y + 80,
+                "thing": "FlagPole",
+                "x": x + 3,
+                "y": y + 80,
                 "collectionName": collectionName,
                 "collectionKey": "FlagPole"
             },
             // Bottom stone
             {
-                "thing": "Stone", "x": x, "y": y + 8,
+                "thing": "Stone",
+                "x": x,
+                "y": y + 8,
                 "collectionName": collectionName,
                 "collectionKey": "FlagPole"
-            }];
+            }
+        ];
 
         if (reference.large) {
             output.push({
@@ -381,7 +421,7 @@ export const castleMacroMethods = {
 
     /**
      * Macro to place the typical ending Things for the inside of a castle area.
-     * 
+     *
      * @alias EndInsideCastle
      * @param reference   Settings for an EndInsideCastle macro.
      * @param prethings   The container Area's creation commands.
@@ -390,12 +430,14 @@ export const castleMacroMethods = {
      * @param FSM   The calling MarioGame.
      * @returns An ending zone for inside a castle.
      */
-    macroEndInsideCastle(this: MarioGame, 
+    macroEndInsideCastle(
+        this: MarioGame,
         reference: IMacroEndInsideCastleSettings,
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: MarioGame): any {
+        FSM: MarioGame
+    ): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             npc: string = reference.npc || "Toad",
@@ -410,30 +452,36 @@ export const castleMacroMethods = {
                     "thing": "CustomText",
                     "x": x + 164,
                     "y": y + 64,
-                    "texts": [{
-                        "text": "THANK YOU MARIO!"
-                    }],
+                    "texts": [
+                        {
+                            "text": "THANK YOU MARIO!"
+                        }
+                    ],
                     "textAttributes": {
                         "hidden": true
                     },
                     "collectionName": "endInsideCastleText",
                     "collectionKey": "1"
-                }, {
+                },
+                {
                     "thing": "CustomText",
                     "x": x + 152,
                     "y": y + 48,
                     "texts": [
                         {
                             "text": "BUT OUR PRINCESS IS IN"
-                        }, {
+                        },
+                        {
                             "text": "ANOTHER CASTLE!"
-                        }],
+                        }
+                    ],
                     "textAttributes": {
                         "hidden": true
                     },
                     "collectionName": "endInsideCastleText",
                     "collectionKey": "2"
-                }];
+                }
+            ];
         } else if (npc === "Peach") {
             keys = ["1", "2", "3"];
             texts = [
@@ -441,15 +489,18 @@ export const castleMacroMethods = {
                     "thing": "CustomText",
                     "x": x + 164,
                     "y": y + 64,
-                    "texts": [{
-                        "text": "THANK YOU MARIO!"
-                    }],
+                    "texts": [
+                        {
+                            "text": "THANK YOU MARIO!"
+                        }
+                    ],
                     "textAttributes": {
                         "hidden": true
                     },
                     "collectionName": "endInsideCastleText",
                     "collectionKey": "1"
-                }, {
+                },
+                {
                     "thing": "CustomText",
                     "x": x + 152,
                     "y": y + 48,
@@ -457,15 +508,18 @@ export const castleMacroMethods = {
                         {
                             "text": "YOUR QUEST IS OVER.",
                             "offset": 12
-                        }, {
+                        },
+                        {
                             "text": "WE PRESENT YOU A NEW QUEST."
-                        }],
+                        }
+                    ],
                     "textAttributes": {
                         "hidden": true
                     },
                     "collectionName": "endInsideCastleText",
                     "collectionKey": "2"
-                }, {
+                },
+                {
                     "thing": "CustomText",
                     "x": x + 152,
                     "y": 32,
@@ -473,15 +527,18 @@ export const castleMacroMethods = {
                         {
                             "text": "PRESS BUTTON B",
                             "offset": 8
-                        }, {
+                        },
+                        {
                             "text": "TO SELECT A WORLD"
-                        }],
+                        }
+                    ],
                     "textAttributes": {
                         "hidden": true
                     },
                     "collectionName": "endInsideCastleText",
                     "collectionKey": "3"
-                }];
+                }
+            ];
         }
 
         output = [
@@ -490,7 +547,9 @@ export const castleMacroMethods = {
             // Bridge & Bowser area
             { "thing": "CastleBridge", "x": x, "y": y + 24, "width": 104 },
             {
-                "thing": "Bowser", "x": x + 69, "y": y + 42,
+                "thing": "Bowser",
+                "x": x + 69,
+                "y": y + 42,
                 "hard": reference.hard,
                 "spawnType": reference.spawnType || "Goomba",
                 "throwing": reference.throwing
@@ -501,16 +560,23 @@ export const castleMacroMethods = {
             { "thing": "ScrollBlocker", "x": x + 112 },
             { "macro": "Floor", "x": x + 104, "y": y, "width": 152 },
             {
-                "thing": "Stone", "x": x + 104, "y": y + 32,
-                "width": 24, "height": 32
+                "thing": "Stone",
+                "x": x + 104,
+                "y": y + 32,
+                "width": 24,
+                "height": 32
             },
             {
-                "thing": "Stone", "x": x + 112, "y": y + 80,
-                "width": 16, "height": 24
+                "thing": "Stone",
+                "x": x + 112,
+                "y": y + 80,
+                "width": 16,
+                "height": 24
             },
             // Peach's Magical Happy Chamber of Fantastic Love
             {
-                "thing": "DetectCollision", "x": x + 180,
+                "thing": "DetectCollision",
+                "x": x + 180,
                 "activate": FSM.collideCastleNPC,
                 "transport": reference.transport,
                 "collectionName": "endInsideCastleText",
@@ -524,13 +590,17 @@ export const castleMacroMethods = {
         if (reference.topScrollEnabler) {
             output.push({
                 "thing": "ScrollEnabler",
-                "x": x + 96, "y": y + 140,
-                "height": 52, "width": 16
+                "x": x + 96,
+                "y": y + 140,
+                "height": 52,
+                "width": 16
             });
             output.push({
                 "thing": "ScrollEnabler",
-                "x": x + 240, "y": y + 140,
-                "height": 52, "width": 16
+                "x": x + 240,
+                "y": y + 140,
+                "height": 52,
+                "width": 16
             });
         }
 
@@ -542,9 +612,9 @@ export const castleMacroMethods = {
     },
 
     /**
-     * Macro to place a DetectSpawn that will call activateSectionBefore to 
+     * Macro to place a DetectSpawn that will call activateSectionBefore to
      * start a stretch section.
-     * 
+     *
      * @alias Section
      * @param reference   Settings for a Section macro.
      * @param prethings   The container Area's creation commands.
@@ -553,12 +623,14 @@ export const castleMacroMethods = {
      * @param FSM   The calling MarioGame.
      * @returns A section.
      */
-    macroSection(this: MarioGame, 
+    macroSection(
+        this: MarioGame,
         reference: IMacroSectionSettings,
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: MarioGame): any {
+        FSM: MarioGame
+    ): any {
         return {
             "thing": "DetectSpawn",
             "x": reference.x || 0,
@@ -570,7 +642,7 @@ export const castleMacroMethods = {
 
     /**
      * Macro to place a DetectCollision to mark the current section as passed.
-     * 
+     *
      * @alias SectionPass
      * @param reference   Settings for a SectionPass macro.
      * @returns A section pass detector.
@@ -591,7 +663,7 @@ export const castleMacroMethods = {
 
     /**
      * Macro to place a DetectCollision to mark the current section as failed.
-     * 
+     *
      * @alias SectionFail
      * @param reference   Settings for a SectionFail macro.
      * @returns A section fail detector.
@@ -615,7 +687,7 @@ export const castleMacroMethods = {
     /**
      * Macro to place a DetectSpawn that will spawn a following section based on
      * whether the current one was marked as passed or failed.
-     * 
+     *
      * @alias SectionDecider
      * @param reference   Settings for a SectionDecider macro.
      * @param prethings   The container Area's creation commands.
@@ -638,7 +710,7 @@ export const castleMacroMethods = {
                 thing.FSM.activateSectionBefore(thing);
             }
         };
-    },
+    }
 };
 
 export type CastleMacroMethods = typeof castleMacroMethods;

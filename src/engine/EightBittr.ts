@@ -133,7 +133,7 @@ export interface IEightBittr {
     /**
      * Resets the EightBittr by calling all of the named reset member Functions
      * on itself.
-     * 
+     *
      * @param EightBitter
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
@@ -142,9 +142,9 @@ export interface IEightBittr {
 
     /**
      * Resets the EightBittr in a timed manner by calling all the named reset
-     * member Functions on itself and adding the time (in milliseconds) along 
+     * member Functions on itself and adding the time (in milliseconds) along
      * along with the total process time to an Array, which is then returned.
-     * 
+     *
      * @param EightBitter
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
@@ -153,7 +153,7 @@ export interface IEightBittr {
 
     /**
      * Creates and returns a new HTML <canvas> element with no image smoothing.
-     * 
+     *
      * @param width   How wide the canvas should be.
      * @param height   How tall the canvas should be.
      * @returns A canvas of the given width and height.
@@ -162,7 +162,7 @@ export interface IEightBittr {
 
     /**
      * Shifts a Thing vertically by changing its top and bottom attributes.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param dy   How far to shift the Thing.
      */
@@ -170,7 +170,7 @@ export interface IEightBittr {
 
     /**
      * Shifts a Thing horizontally by changing its top and bottom attributes.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param dy   How far to shift the Thing.
      */
@@ -179,7 +179,7 @@ export interface IEightBittr {
     /**
      * Sets the top of a Thing to a set number, changing the bottom based on its
      * height and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param top   Where the Thing's top should be.
      */
@@ -188,7 +188,7 @@ export interface IEightBittr {
     /**
      * Sets the right of a Thing to a set number, changing the left based on its
      * width and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param top   Where the Thing's right should be.
      */
@@ -197,7 +197,7 @@ export interface IEightBittr {
     /**
      * Sets the bottom of a Thing to a set number, changing the top based on its
      * height and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param top   Where the Thing's bottom should be.
      */
@@ -206,7 +206,7 @@ export interface IEightBittr {
     /**
      * Sets the left of a Thing to a set number, changing the right based on its
      * width and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param top   Where the Thing's left should be.
      */
@@ -214,7 +214,7 @@ export interface IEightBittr {
 
     /**
      * Shifts a Thing so that it is horizontally centered on the given x.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param x   Where the Thing's horizontal midpoint should be.
      */
@@ -222,7 +222,7 @@ export interface IEightBittr {
 
     /**
      * Shifts a Thing so that it is vertically centered on the given y.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param y   Where the Thing's vertical midpoint should be.
      */
@@ -230,7 +230,7 @@ export interface IEightBittr {
 
     /**
      * Shifts a Thing so that it is centered on the given x and y.
-     * 
+     *
      * @param thing   The Thing to shift vertically and horizontally.
      * @param x   Where the Thing's horizontal midpoint should be.
      * @param y   Where the Thing's vertical midpoint should be.
@@ -252,25 +252,25 @@ export interface IEightBittr {
     /**
      * Shifts a Thing so that its midpoint is centered on the midpoint of the
      * other Thing.
-     * 
+     *
      * @param thing   The Thing to be shifted.
      * @param other   The Thing whose midpoint is referenced.
      */
     setMidObj(thing: IThing, other: IThing): void;
 
     /**
-     * Shifts a Thing so that its horizontal midpoint is centered on the 
+     * Shifts a Thing so that its horizontal midpoint is centered on the
      * midpoint of the other Thing.
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param other   The Thing whose horizontal midpoint is referenced.
      */
     setMidXObj(thing: IThing, other: IThing): void;
 
     /**
-     * Shifts a Thing so that its vertical midpoint is centered on the 
+     * Shifts a Thing so that its vertical midpoint is centered on the
      * midpoint of the other Thing.
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param other   The Thing whose vertical midpoint is referenced.
      */
@@ -286,7 +286,7 @@ export interface IEightBittr {
     /**
      * Shifts a Thing's top up, then sets the bottom (similar to a shiftVert and
      * a setTop combined).
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param dy   How far to shift the Thing vertically.
      */
@@ -295,16 +295,16 @@ export interface IEightBittr {
     /**
      * Shifts a Thing's right, then sets the left (similar to a shiftHoriz and a
      * setRight combined).
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param dx   How far to shift the Thing horizontally.
      */
     updateRight(thing: IThing, dx: number): void;
 
     /**
-     * Shifts a Thing's bottom down, then sets the bottom (similar to a 
+     * Shifts a Thing's bottom down, then sets the bottom (similar to a
      * shiftVert and a setBottom combined).
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param dy   How far to shift the Thing vertically.
      */
@@ -313,7 +313,7 @@ export interface IEightBittr {
     /**
      * Shifts a Thing's left, then sets the right (similar to a shiftHoriz and a
      * setLeft combined).
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param dx   How far to shift the Thing horizontally.
      */
@@ -322,7 +322,7 @@ export interface IEightBittr {
     /**
      * Shifts a Thing toward a target x, but limits the total distance allowed.
      * Distance is computed as from the Thing's horizontal midpoint.
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param x   How far to shift the Thing horizontally.
      * @param maxDistance   The maximum distance the Thing can be shifted.
@@ -332,7 +332,7 @@ export interface IEightBittr {
     /**
      * Shifts a Thing toward a target y, but limits the total distance allowed.
      * Distance is computed as from the Thing's vertical midpoint.
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param x   How far to shift the Thing vertically.
      * @param maxDistance   The maximum distance the Thing can be shifted.
@@ -340,11 +340,11 @@ export interface IEightBittr {
     slideToY(thing: IThing, y: number, maxDistance: number): void;
 
     /**
-     * Ensures the current object is an EightBittr by throwing an error if it 
+     * Ensures the current object is an EightBittr by throwing an error if it
      * is not. This should be used for functions in any EightBittr descendants
      * that have to call 'this' to ensure their caller is what the programmer
      * expected it to be.
-     * 
+     *
      * @param current   The scope that should be an EightBittr.
      */
     ensureCorrectCaller(current: any): IEightBittr;
@@ -352,10 +352,10 @@ export interface IEightBittr {
     /**
      * "Proliferates" all properties of a donor onto a recipient by copying each
      * of them and recursing onto child Objects. This is a deep copy.
-     * 
+     *
      * @param recipient   An object to receive properties from the donor.
      * @param donor   An object do donoate properties to the recipient.
-     * @param noOverride   Whether pre-existing properties of the recipient should 
+     * @param noOverride   Whether pre-existing properties of the recipient should
      *                     be skipped (defaults to false).
      * @returns recipient
      */
@@ -364,10 +364,10 @@ export interface IEightBittr {
     /**
      * Identical to proliferate, but instead of checking whether the recipient
      * hasOwnProperty on properties, it just checks if they're truthy.
-     * 
+     *
      * @param recipient   An object to receive properties from the donor.
      * @param donor   An object do donoate properties to the recipient.
-     * @param noOverride   Whether pre-existing properties of the recipient should 
+     * @param noOverride   Whether pre-existing properties of the recipient should
      *                     be skipped (defaults to false).
      * @returns recipient
      */
@@ -375,12 +375,12 @@ export interface IEightBittr {
 
     /**
      * Identical to proliferate, but tailored for HTML elements because many
-     * element attributes don't play nicely with JavaScript Array standards. 
+     * element attributes don't play nicely with JavaScript Array standards.
      * Looking at you, HTMLCollection!
-     * 
+     *
      * @param recipient   An HTMLElement to receive properties from the donor.
      * @param donor   An object do donoate properties to the recipient.
-     * @param noOverride   Whether pre-existing properties of the recipient should 
+     * @param noOverride   Whether pre-existing properties of the recipient should
      *                     be skipped (defaults to false).
      * @returns recipient
      */
@@ -390,7 +390,7 @@ export interface IEightBittr {
      * Creates and returns an HTMLElement of the specified type. Any additional
      * settings Objects may be given to be proliferated onto the Element via
      * proliferateElement.
-     * 
+     *
      * @param type   The tag of the Element to be created.
      * @param settings   Additional settings to proliferated onto the Element.
      * @returns {HTMLElement}
@@ -399,7 +399,7 @@ export interface IEightBittr {
 
     /**
      * Follows a path inside an Object recursively, based on a given path.
-     * 
+     *
      * @param object   A container to follow a path inside.
      * @param path   The ordered names of attributes to descend into.
      * @param num   The starting index in path (by default, 0).
@@ -410,7 +410,7 @@ export interface IEightBittr {
 
     /**
      * Switches an object from one Array to another using splice and push.
-     * 
+     *
      * @param object    The object to move between Arrays.
      * @param arrayOld   The Array to take the object out of.
      * @param arrayNew   The Array to move the object into.
@@ -420,7 +420,7 @@ export interface IEightBittr {
     /**
      * Sets a Thing's position within an Array to the front by splicing and then
      * unshifting it.
-     * 
+     *
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
@@ -429,24 +429,22 @@ export interface IEightBittr {
     /**
      * Sets a Thing's position within an Array to the front by splicing and then
      * pushing it.
-     * 
+     *
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
     arrayToEnd(object: any, array: any[]): void;
 
     /**
-     * Sets a Thing's position within an Array to a specific index by splicing 
+     * Sets a Thing's position within an Array to a specific index by splicing
      * it out, then back in.
-     * 
+     *
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      * @param index   Where the object should be moved to in the Array.
      */
     arrayToIndex(object: any, array: any[], index: number): void;
 }
-
-
 
 /**
  * An abstract class used exclusively as the parent of GameStartr. EightBittr
@@ -479,7 +477,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Initializes a new instance of the EightBittr class. Constants are copied
      * onto the EightBittr from the designated source.
-     * 
+     *
      * @param settings   Any optional custom settings.
      */
     constructor(settings: IEightBittrSettings = {}) {
@@ -498,21 +496,19 @@ export class EightBittr implements IEightBittr {
         }
     }
 
-
     /* Resets
-    */
+     */
 
     /**
      * Resets the EightBittr by calling all of the named reset member Functions
      * on itself.
-     * 
+     *
      * @param EightBitter
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
      */
     reset(EightBitter: EightBittr, resets: string[], customs?: any): void {
-        var reset: string,
-            i: number;
+        var reset: string, i: number;
 
         EightBitter.customs = customs;
 
@@ -529,9 +525,9 @@ export class EightBittr implements IEightBittr {
 
     /**
      * Resets the EightBittr in a timed manner by calling all the named reset
-     * member Functions on itself and adding the time (in milliseconds) along 
+     * member Functions on itself and adding the time (in milliseconds) along
      * along with the total process time to an Array, which is then returned.
-     * 
+     *
      * @param EightBitter
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
@@ -571,13 +567,12 @@ export class EightBittr implements IEightBittr {
         };
     }
 
-
     /* HTML Functions
-    */
+     */
 
     /**
      * Creates and returns a new HTML <canvas> element with no image smoothing.
-     * 
+     *
      * @param width   How wide the canvas should be.
      * @param height   How tall the canvas should be.
      * @returns A canvas of the given width and height height.
@@ -606,13 +601,12 @@ export class EightBittr implements IEightBittr {
         return canvas;
     }
 
-
-    /* Physics functions 
-    */
+    /* Physics functions
+     */
 
     /**
      * Shifts a Thing vertically by changing its top and bottom attributes.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param dy   How far to shift the Thing.
      */
@@ -623,7 +617,7 @@ export class EightBittr implements IEightBittr {
 
     /**
      * Shifts a Thing horizontally by changing its top and bottom attributes.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param dy   How far to shift the Thing.
      */
@@ -635,7 +629,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Sets the top of a Thing to a set number, changing the bottom based on its
      * height and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param top   Where the Thing's top should be.
      */
@@ -647,7 +641,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Sets the right of a Thing to a set number, changing the left based on its
      * width and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param top   Where the Thing's right should be.
      */
@@ -659,7 +653,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Sets the bottom of a Thing to a set number, changing the top based on its
      * height and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param top   Where the Thing's bottom should be.
      */
@@ -671,7 +665,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Sets the left of a Thing to a set number, changing the right based on its
      * width and the EightBittr's unisize.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param top   Where the Thing's left should be.
      */
@@ -682,31 +676,27 @@ export class EightBittr implements IEightBittr {
 
     /**
      * Shifts a Thing so that it is horizontally centered on the given x.
-     * 
+     *
      * @param thing   The Thing to shift horizontally.
      * @param x   Where the Thing's horizontal midpoint should be.
      */
     setMidX(thing: IThing, x: number): void {
-        thing.EightBitter.setLeft(
-            thing,
-            x - thing.width * thing.EightBitter.unitsize / 2);
+        thing.EightBitter.setLeft(thing, x - (thing.width * thing.EightBitter.unitsize) / 2);
     }
 
     /**
      * Shifts a Thing so that it is vertically centered on the given y.
-     * 
+     *
      * @param thing   The Thing to shift vertically.
      * @param y   Where the Thing's vertical midpoint should be.
      */
     setMidY(thing: IThing, y: number): void {
-        thing.EightBitter.setTop(
-            thing,
-            y - thing.height * thing.EightBitter.unitsize / 2);
+        thing.EightBitter.setTop(thing, y - (thing.height * thing.EightBitter.unitsize) / 2);
     }
 
     /**
      * Shifts a Thing so that it is centered on the given x and y.
-     * 
+     *
      * @param thing   The Thing to shift vertically and horizontally.
      * @param x   Where the Thing's horizontal midpoint should be.
      * @param y   Where the Thing's vertical midpoint should be.
@@ -721,7 +711,7 @@ export class EightBittr implements IEightBittr {
      * @returns The horizontal midpoint of the Thing.
      */
     getMidX(thing: IThing): number {
-        return thing.left + thing.width * thing.EightBitter.unitsize / 2;
+        return thing.left + (thing.width * thing.EightBitter.unitsize) / 2;
     }
 
     /**
@@ -729,13 +719,13 @@ export class EightBittr implements IEightBittr {
      * @returns The vertical midpoint of the Thing.
      */
     getMidY(thing: IThing): number {
-        return thing.top + thing.height * thing.EightBitter.unitsize / 2;
+        return thing.top + (thing.height * thing.EightBitter.unitsize) / 2;
     }
 
     /**
      * Shifts a Thing so that its midpoint is centered on the midpoint of the
      * other Thing.
-     * 
+     *
      * @param thing   The Thing to be shifted.
      * @param other   The Thing whose midpoint is referenced.
      */
@@ -745,32 +735,30 @@ export class EightBittr implements IEightBittr {
     }
 
     /**
-     * Shifts a Thing so that its horizontal midpoint is centered on the 
+     * Shifts a Thing so that its horizontal midpoint is centered on the
      * midpoint of the other Thing.
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param other   The Thing whose horizontal midpoint is referenced.
      */
     setMidXObj(thing: IThing, other: IThing): void {
         thing.EightBitter.setLeft(
             thing,
-            thing.EightBitter.getMidX(other)
-            - (thing.width * thing.EightBitter.unitsize / 2)
+            thing.EightBitter.getMidX(other) - (thing.width * thing.EightBitter.unitsize) / 2
         );
     }
 
     /**
-     * Shifts a Thing so that its vertical midpoint is centered on the 
+     * Shifts a Thing so that its vertical midpoint is centered on the
      * midpoint of the other Thing.
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param other   The Thing whose vertical midpoint is referenced.
      */
     setMidYObj(thing: IThing, other: IThing): void {
         thing.EightBitter.setTop(
             thing,
-            thing.EightBitter.getMidY(other)
-            - (thing.height * thing.EightBitter.unitsize / 2)
+            thing.EightBitter.getMidY(other) - (thing.height * thing.EightBitter.unitsize) / 2
         );
     }
 
@@ -780,15 +768,13 @@ export class EightBittr implements IEightBittr {
      * @returns Whether the first Thing's midpoint is to the left of the other's.
      */
     objectToLeft(thing: IThing, other: IThing): boolean {
-        return (
-            thing.EightBitter.getMidX(thing) < thing.EightBitter.getMidX(other)
-        );
+        return thing.EightBitter.getMidX(thing) < thing.EightBitter.getMidX(other);
     }
 
     /**
      * Shifts a Thing's top up, then sets the bottom (similar to a shiftVert and
      * a setTop combined).
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param dy   How far to shift the Thing vertically.
      */
@@ -803,7 +789,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Shifts a Thing's right, then sets the left (similar to a shiftHoriz and a
      * setRight combined).
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param dx   How far to shift the Thing horizontally.
      */
@@ -816,9 +802,9 @@ export class EightBittr implements IEightBittr {
     }
 
     /**
-     * Shifts a Thing's bottom down, then sets the bottom (similar to a 
+     * Shifts a Thing's bottom down, then sets the bottom (similar to a
      * shiftVert and a setBottom combined).
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param dy   How far to shift the Thing vertically.
      */
@@ -833,7 +819,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Shifts a Thing's left, then sets the right (similar to a shiftHoriz and a
      * setLeft combined).
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param dx   How far to shift the Thing horizontally.
      */
@@ -848,7 +834,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Shifts a Thing toward a target x, but limits the total distance allowed.
      * Distance is computed as from the Thing's horizontal midpoint.
-     * 
+     *
      * @param thing   The Thing to be shifted horizontally.
      * @param x   How far to shift the Thing horizontally.
      * @param maxDistance   The maximum distance the Thing can be shifted.
@@ -871,7 +857,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Shifts a Thing toward a target y, but limits the total distance allowed.
      * Distance is computed as from the Thing's vertical midpoint.
-     * 
+     *
      * @param thing   The Thing to be shifted vertically.
      * @param x   How far to shift the Thing vertically.
      * @param maxDistance   The maximum distance the Thing can be shifted.
@@ -891,44 +877,44 @@ export class EightBittr implements IEightBittr {
         }
     }
 
-
     /* EightBittr utilities
-    */
+     */
 
     /**
-     * Ensures the current object is an EightBittr by throwing an error if it 
+     * Ensures the current object is an EightBittr by throwing an error if it
      * is not. This should be used for functions in any EightBittr descendants
      * that have to call 'this' to ensure their caller is what the programmer
      * expected it to be.
-     * 
+     *
      * @param current   The scope that should be an EightBittr.
      */
     ensureCorrectCaller(current: any): EightBittr {
         if (!(current instanceof EightBittr)) {
-            throw new Error("A function requires the caller ('this') to be the "
-                + "manipulated EightBittr object. Unfortunately, 'this' is a "
-                + typeof (this) + ".");
+            throw new Error(
+                "A function requires the caller ('this') to be the " +
+                    "manipulated EightBittr object. Unfortunately, 'this' is a " +
+                    typeof this +
+                    "."
+            );
         }
         return current;
     }
 
-
     /* General utilities
-    */
+     */
 
     /**
      * "Proliferates" all properties of a donor onto a recipient by copying each
      * of them and recursing onto child Objects. This is a deep copy.
-     * 
+     *
      * @param recipient   An object to receive properties from the donor.
      * @param donor   An object do donoate properties to the recipient.
-     * @param noOverride   Whether pre-existing properties of the recipient should 
+     * @param noOverride   Whether pre-existing properties of the recipient should
      *                     be skipped (defaults to false).
      * @returns recipient
      */
     proliferate(recipient: any, donor: any, noOverride: boolean = false): any {
-        var setting: any,
-            i: string;
+        var setting: any, i: string;
 
         // For each attribute of the donor:
         for (i in donor) {
@@ -958,16 +944,15 @@ export class EightBittr implements IEightBittr {
     /**
      * Identical to proliferate, but instead of checking whether the recipient
      * hasOwnProperty on properties, it just checks if they're truthy.
-     * 
+     *
      * @param recipient   An object to receive properties from the donor.
      * @param donor   An object do donoate properties to the recipient.
-     * @param noOverride   Whether pre-existing properties of the recipient should 
+     * @param noOverride   Whether pre-existing properties of the recipient should
      *                     be skipped (defaults to false).
      * @returns recipient
      */
     proliferateHard(recipient: any, donor: any, noOverride?: boolean): any {
-        var setting: any,
-            i: string;
+        var setting: any, i: string;
 
         // For each attribute of the donor:
         for (i in donor) {
@@ -995,19 +980,17 @@ export class EightBittr implements IEightBittr {
 
     /**
      * Identical to proliferate, but tailored for HTML elements because many
-     * element attributes don't play nicely with JavaScript Array standards. 
+     * element attributes don't play nicely with JavaScript Array standards.
      * Looking at you, HTMLCollection!
-     * 
+     *
      * @param recipient   An HTMLElement to receive properties from the donor.
      * @param donor   An object do donoate properties to the recipient.
-     * @param noOverride   Whether pre-existing properties of the recipient should 
+     * @param noOverride   Whether pre-existing properties of the recipient should
      *                     be skipped (defaults to false).
      * @returns recipient
      */
     proliferateElement(recipient: HTMLElement, donor: any, noOverride: boolean = false): HTMLElement {
-        var setting: any,
-            i: string,
-            j: number;
+        var setting: any, i: string, j: number;
 
         // For each attribute of the donor:
         for (i in donor) {
@@ -1024,7 +1007,7 @@ export class EightBittr implements IEightBittr {
                     // Children and options: just append all of them directly
                     case "children":
                     case "children":
-                        if (typeof (setting) !== "undefined") {
+                        if (typeof setting !== "undefined") {
                             for (j = 0; j < setting.length; j += 1) {
                                 recipient.appendChild(setting[j]);
                             }
@@ -1063,7 +1046,7 @@ export class EightBittr implements IEightBittr {
      * Creates and returns an HTMLElement of the specified type. Any additional
      * settings Objects may be given to be proliferated onto the Element via
      * proliferateElement.
-     * 
+     *
      * @param type   The tag of the Element to be created.
      * @param settings   Additional settings to proliferated onto the Element.
      * @returns {HTMLElement}
@@ -1083,7 +1066,7 @@ export class EightBittr implements IEightBittr {
 
     /**
      * Follows a path inside an Object recursively, based on a given path.
-     * 
+     *
      * @param object   A container to follow a path inside.
      * @param path   The ordered names of attributes to descend into.
      * @param num   The starting index in path (by default, 0).
@@ -1104,7 +1087,7 @@ export class EightBittr implements IEightBittr {
 
     /**
      * Switches an object from one Array to another using splice and push.
-     * 
+     *
      * @param object    The object to move between Arrays.
      * @param arrayOld   The Array to take the object out of.
      * @param arrayNew   The Array to move the object into.
@@ -1117,7 +1100,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Sets a Thing's position within an Array to the front by splicing and then
      * unshifting it.
-     * 
+     *
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
@@ -1129,7 +1112,7 @@ export class EightBittr implements IEightBittr {
     /**
      * Sets a Thing's position within an Array to the front by splicing and then
      * pushing it.
-     * 
+     *
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
@@ -1139,9 +1122,9 @@ export class EightBittr implements IEightBittr {
     }
 
     /**
-     * Sets a Thing's position within an Array to a specific index by splicing 
+     * Sets a Thing's position within an Array to a specific index by splicing
      * it out, then back in.
-     * 
+     *
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      * @param index   Where the object should be moved to in the Array.
@@ -1150,4 +1133,4 @@ export class EightBittr implements IEightBittr {
         array.splice(array.indexOf(object), 1);
         array.splice(index, 0, object);
     }
-};
+}

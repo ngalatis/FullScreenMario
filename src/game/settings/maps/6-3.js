@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["6-3"] = {
     "name": "6-3",
     "time": 300,
-    "locations": [
-        { "entry": "Plain" }
-    ],
+    "locations": [{ "entry": "Plain" }],
     "areas": [
         {
             "setting": "Overworld Night Alt2",
@@ -33,9 +31,25 @@ MarioGame.MarioGame.settings.maps.library["6-3"] = {
                 { "thing": "Platform", "x": 444, "y": 56, "width": 16, "sliding": true, "begin": 408, "end": 464 },
                 { "thing": "Platform", "x": 480, "y": 7, "width": 16, "floating": true, "begin": -8, "end": 52 },
                 { "macro": "Tree", "x": 520, "y": 32, "width": 40 },
-                { "macro": "Scale", "x": 572, "y": 86, "widthLeft": 16, "widthRight": 16, "between": 32, "dropRight": 56 },
+                {
+                    "macro": "Scale",
+                    "x": 572,
+                    "y": 86,
+                    "widthLeft": 16,
+                    "widthRight": 16,
+                    "between": 32,
+                    "dropRight": 56
+                },
                 { "macro": "Fill", "thing": "Coin", "x": 585, "y": 63, "xnum": 2, "xwidth": 8 },
-                { "macro": "Scale", "x": 636, "y": 86, "widthLeft": 16, "widthRight": 16, "between": 24, "dropRight": 56 },
+                {
+                    "macro": "Scale",
+                    "x": 636,
+                    "y": 86,
+                    "widthLeft": 16,
+                    "widthRight": 16,
+                    "between": 24,
+                    "dropRight": 56
+                },
                 { "macro": "Tree", "x": 680, "y": 24, "width": 40 },
                 { "macro": "Tree", "x": 680, "y": 80, "width": 24 },
                 { "macro": "Fill", "thing": "Coin", "x": 681, "y": 87, "xnum": 3, "xwidth": 8 },
@@ -49,7 +63,16 @@ MarioGame.MarioGame.settings.maps.library["6-3"] = {
                 { "thing": "Springboard", "x": 928, "y": 14.5 },
                 { "thing": "Platform", "x": 972, "y": 63, "width": 16, "sliding": true, "begin": 940, "end": 992 },
                 { "macro": "Tree", "x": 984, "width": 24 },
-                { "macro": "Scale", "x": 1020, "y": 86, "widthLeft": 16, "widthRight": 16, "between": 24, "dropLeft": 32, "dropRight": 56 },
+                {
+                    "macro": "Scale",
+                    "x": 1020,
+                    "y": 86,
+                    "widthLeft": 16,
+                    "widthRight": 16,
+                    "between": 24,
+                    "dropLeft": 32,
+                    "dropRight": 56
+                },
                 { "macro": "Fill", "thing": "Coin", "x": 1025, "y": 63, "xnum": 2, "xwidth": 8 },
                 { "macro": "Tree", "x": 1056, "width": 32 },
                 { "macro": "Tree", "x": 1056, "y": 64, "width": 24 },

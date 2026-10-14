@@ -38,7 +38,7 @@ const mimeTypes: Record<string, string> = {
     ".txt": "text/plain",
     ".woff": "font/woff",
     ".ttf": "font/ttf",
-    ".svg": "image/svg+xml",
+    ".svg": "image/svg+xml"
 };
 
 /**
@@ -74,7 +74,7 @@ async function serveDistInSubfolder(prefix: string): Promise<{ url: string; stop
             new Promise<void>((resolve) => {
                 server.close(() => resolve());
                 server.closeAllConnections();
-            }),
+            })
     };
 }
 
@@ -104,7 +104,7 @@ test.describe("installable app", () => {
             scope: "./",
             display: "fullscreen",
             display_override: ["fullscreen", "standalone"],
-            orientation: "landscape",
+            orientation: "landscape"
         });
         expect(manifest.background_color).toMatch(/^#[0-9a-f]{6}$/i);
         expect(manifest.theme_color).toMatch(/^#[0-9a-f]{6}$/i);
@@ -122,7 +122,8 @@ test.describe("installable app", () => {
         await expect(page.locator('meta[name="apple-mobile-web-app-capable"]')).toHaveAttribute("content", "yes");
         await expect(page.locator('meta[name="apple-mobile-web-app-status-bar-style"]')).toHaveAttribute(
             "content",
-            "black-translucent");
+            "black-translucent"
+        );
     });
 
     test("every icon loads as a PNG of the size it claims", async ({ page, request }) => {
@@ -132,7 +133,7 @@ test.describe("installable app", () => {
         const manifest = await (await request.get(manifestUrl.href)).json();
         const icons: { url: string; size: number }[] = manifest.icons.map((icon: any) => ({
             url: new URL(icon.src, manifestUrl).href,
-            size: Number(icon.sizes.split("x")[0]),
+            size: Number(icon.sizes.split("x")[0])
         }));
 
         const touchIcon = await page.locator('link[rel="apple-touch-icon"]').getAttribute("href");
@@ -212,7 +213,7 @@ test.describe("offline", () => {
                 size: (await whole.arrayBuffer()).byteLength,
                 partStatus: part.status,
                 partRange: part.headers.get("content-range"),
-                partSize: (await part.arrayBuffer()).byteLength,
+                partSize: (await part.arrayBuffer()).byteLength
             };
         }, soundPath);
 
@@ -232,15 +233,19 @@ test.describe("offline", () => {
         expect(errors).toEqual([]);
     });
 
-    test("the game still boots after the server is gone, even when hosted in a subfolder", async ({ context, page }) => {
+    test("the game still boots after the server is gone, even when hosted in a subfolder", async ({
+        context,
+        page
+    }) => {
         const host = await serveDistInSubfolder("/mario/");
 
         try {
             await page.goto(host.url);
             await page.waitForFunction(() => !!(window as any).FSM && !!(window as any).FSM.player);
             await installAndReload(page);
-            expect(new URL(await page.evaluate(() => navigator.serviceWorker.controller!.scriptURL)).pathname)
-                .toBe("/mario/sw.js");
+            expect(new URL(await page.evaluate(() => navigator.serviceWorker.controller!.scriptURL)).pathname).toBe(
+                "/mario/sw.js"
+            );
         } finally {
             await host.stop();
         }
@@ -253,14 +258,14 @@ test.describe("offline", () => {
         // Sounds and the manifest come from the cache too
         const offline = await page.evaluate(async () => ({
             sound: (await fetch("Sounds/Sounds/mp3/Coin.mp3")).status,
-            manifest: (await fetch("manifest.webmanifest")).status,
+            manifest: (await fetch("manifest.webmanifest")).status
         }));
         expect(offline).toEqual({ sound: 200, manifest: 200 });
     });
 
     for (const [name, script] of [
         ["rejects", "navigator.serviceWorker.register = () => Promise.reject(new Error('blocked'));"],
-        ["throws", "navigator.serviceWorker.register = () => { throw new Error('blocked'); };"],
+        ["throws", "navigator.serviceWorker.register = () => { throw new Error('blocked'); };"]
     ]) {
         test(`a registration that ${name} never shows up as a page error`, async ({ page }) => {
             const { errors } = collectPageErrors(page);

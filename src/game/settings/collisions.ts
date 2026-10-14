@@ -13,7 +13,7 @@ import { MarioGame } from "../MarioGame";
 function toGenerator<T extends ThingHittr.IThingFunction>(
     generator: (this: MarioGame) => (...args: any[]) => unknown
 ): ThingHittr.IThingFunctionGenerator<T> {
-    return <ThingHittr.IThingFunctionGenerator<T>><unknown>generator;
+    return <ThingHittr.IThingFunctionGenerator<T>>(<unknown>generator);
 }
 
 MarioGame.settings.collisions = {

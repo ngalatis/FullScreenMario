@@ -2,11 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["4-1"] = {
     "name": "4-1",
-    "locations": [
-        { "entry": "Plain" },
-        { "entry": "PipeVertical" },
-        { "area": 1 }
-    ],
+    "locations": [{ "entry": "Plain" }, { "entry": "PipeVertical" }, { "area": 1 }],
     "areas": [
         {
             "setting": "Overworld",
@@ -22,7 +18,16 @@ MarioGame.MarioGame.settings.maps.library["4-1"] = {
                 { "macro": "Floor", "x": 272, "width": 352 },
                 { "macro": "Fill", "thing": "Coin", "x": 329, "y": 31, "xnum": 2, "xwidth": 24 },
                 { "macro": "Fill", "thing": "Coin", "x": 337, "y": 39, "xnum": 2, "xwidth": 8 },
-                { "macro": "Fill", "thing": "Block", "x": 512, "y": 32, "xnum": 2, "ynum": 2, "xwidth": 24, "yheight": 32 },
+                {
+                    "macro": "Fill",
+                    "thing": "Block",
+                    "x": 512,
+                    "y": 32,
+                    "xnum": 2,
+                    "ynum": 2,
+                    "xwidth": 24,
+                    "yheight": 32
+                },
                 { "macro": "Floor", "x": 656, "width": 536 },
                 { "macro": "Fill", "thing": "Block", "x": 720, "y": 32, "xnum": 4 },
                 { "thing": "Block", "x": 736, "y": 64, "contents": "Mushroom1Up", "hidden": true },
@@ -55,7 +60,8 @@ MarioGame.MarioGame.settings.maps.library["4-1"] = {
                 { "thing": "Brick", "x": 1760, "y": 32, "contents": "Coin" },
                 { "macro": "EndOutsideCastle", "x": 1800, "transport": { "map": "4-2" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [

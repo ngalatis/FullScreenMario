@@ -68,7 +68,9 @@ function start(): void {
                 "GameStartrConstructor": MarioGame
             },
             MarioGame.settings.ui,
-            true));
+            true
+        )
+    );
 
     // UserWrappr exposes the game as a global named by settings.ui.globalName ("FSM"),
     // which is what the console cheats documented in the help menu rely on.
@@ -114,7 +116,8 @@ function blockPageZoom(): void {
                     event.preventDefault();
                 }
             },
-            { passive: false });
+            { passive: false }
+        );
     }
 }
 
@@ -187,7 +190,9 @@ function setupFullscreenButton(): void {
                 const exit = getExit();
                 Promise.resolve(exit && exit.call(document)).catch((): void => undefined);
             } else {
-                Promise.resolve(getRequest()!.call(stage)).then(lockLandscape).catch((): void => undefined);
+                Promise.resolve(getRequest()!.call(stage))
+                    .then(lockLandscape)
+                    .catch((): void => undefined);
             }
         } catch (error) {
             // Refused (for example, not from a user gesture): the game just stays windowed

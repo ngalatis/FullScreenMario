@@ -25,20 +25,20 @@ MarioGame.MarioGame.settings.maps = {
         "bottomPlatformMax": function (GameStarter) {
             var area = GameStarter.AreaSpawner.getArea(),
                 diff = GameStarter.MapScreener.bottomDeathDifference;
-                
+
             if (!area) {
                 return -1;
             }
-                
+
             return (area.floor + diff) * GameStarter.unitsize;
         },
         "gravity": function (GameStarter) {
             var area = GameStarter.AreaSpawner.getArea();
-            
+
             if (area && area.underwater) {
                 return GameStarter.gravity / 2.8;
             }
-            
+
             return GameStarter.gravity;
         }
     },
@@ -80,18 +80,17 @@ MarioGame.MarioGame.settings.maps = {
         "Walking": MarioGame.MarioGame.prototype.mapEntranceWalking,
         "Vine": MarioGame.MarioGame.prototype.mapEntranceVine,
         "PipeVertical": MarioGame.MarioGame.prototype.mapEntrancePipeVertical,
-        "PipeHorizontal": MarioGame.MarioGame.prototype.mapEntrancePipeHorizontal,
+        "PipeHorizontal": MarioGame.MarioGame.prototype.mapEntrancePipeHorizontal
     },
     "patterns": (function (patterns) {
-        var pattern,
-            i;
+        var pattern, i;
         for (i in patterns) {
             if (patterns.hasOwnProperty(i)) {
                 pattern = patterns[i];
                 if (!pattern.length) {
                     continue;
                 }
-                
+
                 // Pattern's last array should previously be ["blank", width]
                 pattern.width = pattern[pattern.length - 1][1];
                 pattern.pop();

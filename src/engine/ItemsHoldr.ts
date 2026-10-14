@@ -22,68 +22,68 @@ export interface IItemValueSettings {
      * An initial value to store.
      */
     value?: any;
-    
+
     /**
      * A default initial value to store, if value isn't provided.
      */
     valueDefault?: any;
-    
+
     /**
      * Whether the value should be stored in the IItemHoldr's localStorage.
      */
     storeLocally?: boolean;
-    
+
     /**
      * A mapping of values to callbacks that should be triggered when value
      * is equal to them.
      */
     triggers?: ITriggers;
-    
+
     /**
      * Whether an Element should be created and synced to the value.
      */
     hasElement?: boolean;
-    
+
     /**
      * An Element tag to use in creating the element, if hasElement is true.
      */
     elementTag?: string;
-    
+
     /**
      * A minimum value for the value to equal, if value is a number.
      */
     minimum?: number;
-    
+
     /**
      * A callback to call when the value reaches the minimum value.
      */
     onMinimum?: Function;
-    
+
     /**
      * A maximum value for the value to equal, if value is a number.
      */
     maximum?: number;
-    
+
     /**
      * A callback to call when the value reaches the maximum value.
      */
     onMaximum?: Function;
-    
+
     /**
      * A maximum number to modulo the value against, if value is a number.
      */
     modularity?: number;
-    
+
     /**
      * A callback to call when the value reaches modularity.
      */
     onModular?: Function;
-    
+
     /**
      * A Function to transform the value when it's being set.
      */
     transformGet?: Function;
-    
+
     /**
      * A Function to transform the value when it's being retrieved.
      */
@@ -99,88 +99,88 @@ export interface IItemValue {
      * The container IItemsHoldr governing usage of this ItemsValue.
      */
     ItemsHolder: IItemsHoldr;
-    
+
     /**
      * The unique key identifying this ItemValue in the ItemsHoldr.
      */
     key: string;
-    
+
     /**
      * A default initial value to store, if value isn't provided.
      */
     valueDefault: any;
-    
+
     /**
      * Whether the value should be stored in the ItemHoldr's localStorage.
      */
     storeLocally: boolean;
-    
+
     /**
      * A mapping of values to callbacks that should be triggered when value
      * is equal to them.
      */
     triggers?: ITriggers;
-    
+
     /**
      * An HTML element whose second child's textContent is always set to that of the element.
      */
     element?: HTMLElement;
-    
+
     /**
      * Whether an Element should be created and synced to the value.
      */
     hasElement: boolean;
-    
+
     /**
      * An Element tag to use in creating the element, if hasElement is true.
      */
     elementTag?: string;
-    
+
     /**
      * A maximum value for the value to equal, if value is a number.
      */
     maximum?: number;
-    
+
     /**
      * A callback to call when the value reaches the maximum value.
      */
     onMaximum?: Function;
-    
+
     /**
      * A minimum value for the value to equal, if value is a number.
      */
     minimum?: number;
-    
+
     /**
      * A callback to call when the value reaches the minimum value.
      */
     onMinimum?: Function;
-    
+
     /**
      * A maximum number to modulo the value against, if value is a number.
      */
     modularity?: number;
-    
+
     /**
      * A callback to call when the value reaches modularity.
      */
     onModular?: Function;
-    
+
     /**
      * A Function to transform the value when it's being set.
      */
     transformGet?: Function;
-    
+
     /**
      * A Function to transform the value when it's being retrieved.
      */
     transformSet?: Function;
-    
+
     /**
      * @returns The value being stored, with a transformGet applied if one exists.
      */
     getValue(): any;
-    
+
     /**
      * Sets the value being stored, with a is a transformSet applied if one exists.
      * Any attached triggers to the new value will be called.
@@ -188,17 +188,17 @@ export interface IItemValue {
      * @param value   The desired value to now store.
      */
     setValue(value: any): void;
-    
+
     /**
      * General update Function to be run whenever the internal value is changed.
      * It runs all the trigger, modular, etc. checks, updates the HTML element
      * if there is one, and updates localStorage if needed.
      */
     update(): void;
-    
+
     /**
      * Stores a ItemValue's value in localStorage under the prefix plus its key.
-     * 
+     *
      * @param overrideAutoSave   Whether the policy on saving should be ignored
      *                           so saving happens regardless. By default, false.
      */
@@ -213,47 +213,47 @@ export interface IItemsHoldrSettings {
      * Initial settings for IItemValues to store.
      */
     values?: IItemValueDefaults;
-    
+
     /**
      * Whether new items are allowed to be added (by default, true).
      */
     allowNewItems?: boolean;
-    
+
     /**
      * Whether values should be saved immediately upon being set.
      */
     autoSave?: boolean;
-    
+
     /**
      * Arguments to pass to triggered callback Functions.
      */
     callbackArgs?: any[];
-    
+
     /**
      * A localStorage object to use instead of the global localStorage.
      */
     localStorage?: any;
-    
+
     /**
      * A prefix to add before IItemsValue keys
      */
     prefix?: string;
-    
+
     /**
      * Default attributes for IItemValues.
      */
     defaults?: IItemValueDefaults;
-    
+
     /**
      * Any hardcoded changes to element content.
      */
     displayChanges?: { [i: string]: string };
-    
+
     /**
      * Whether an HTML container should be created to house the IItemValue elements.
      */
     doMakeContainer?: boolean;
-    
+
     /**
      * Arguments to pass to create the container, if not the default div and className.
      */
@@ -261,7 +261,7 @@ export interface IItemsHoldrSettings {
 }
 
 /**
- * A versatile container to store and manipulate values in localStorage, and 
+ * A versatile container to store and manipulate values in localStorage, and
  * optionally keep an updated HTML container showing these values.
  */
 export interface IItemsHoldr {
@@ -269,223 +269,221 @@ export interface IItemsHoldr {
      * @returns The values contained within, keyed by their keys.
      */
     getValues(): { [i: string]: IItemValue };
-    
+
     /**
      * @returns Default attributes for values.
      */
     getDefaults(): IItemValueDefaults;
-    
+
     /**
      * @returns A reference to localStorage or a replacment object.
      */
     getLocalStorage(): Storage;
-    
+
     /**
      * @returns Whether this should save changes to localStorage automatically.
      */
     getAutoSave(): boolean | undefined;
-    
+
     /**
      * @returns The prefix to store thigns under in localStorage.
      */
     getPrefix(): string;
-    
+
     /**
      * @returns The container HTML element, if it exists.
      */
     getContainer(): HTMLElement;
-    
+
     /**
      * @returns createElement arguments for HTML containers, outside-to-inside.
      */
     getContainersArguments(): [string, any][];
-    
+
     /**
      * @returns Any hard-coded changes to element content.
      */
     getDisplayChanges(): { [i: string]: string };
-    
+
     /**
      * @returns Arguments to be passed to triggered event callbacks.
      */
     getCallbackArgs(): any[];
-    
+
     /**
      * @returns String keys for each of the stored IItemValues.
      */
     getKeys(): string[];
-    
+
     /**
      * @param key   The key for a known value.
      * @returns The known value of a key, assuming that key exists.
      */
     getItem(key: string): any;
-    
+
     /**
      * @param key   The key for a known value.
      * @returns The settings for that particular key.
      */
     getObject(key: string): any;
-    
+
     /**
      * @param key   The key for a potentially known value.
      * @returns Whether there is a value under that key.
      */
     hasKey(key: string): boolean;
-    
+
     /**
      * @returns A mapping of key names to the actual values of all objects being stored.
      */
     exportItems(): any;
-    
+
     /**
      * Adds a new key & value pair to by linking to a newly created ItemValue.
-     * 
+     *
      * @param key   The key to reference by new ItemValue by.
      * @param settings   The settings for the new ItemValue.
      * @returns The newly created ItemValue.
      */
     addItem(key: string, settings: any): IItemValue;
-    
+
     /**
      * Clears a value from the listing, and removes its element from the
      * container (if they both exist).
-     * 
+     *
      * @param key   The key of the element to remove.
      */
     removeItem(key: string): void;
-    
+
     /**
      * Completely clears all values from the ItemsHoldr, removing their
      * elements from the container (if they both exist) as well.
      */
     clear(): void;
-    
+
     /**
      * Sets the value for the ItemValue under the given key, then updates the ItemValue
      * (including the ItemValue's element and localStorage, if needed).
-     * 
+     *
      * @param key   The key of the ItemValue.
      * @param value   The new value for the ItemValue.
      */
     setItem(key: string, value: any): void;
-    
+
     /**
      * Increases the value for the ItemValue under the given key, via addition for
      * Numbers or concatenation for Strings.
-     * 
+     *
      * @param key   The key of the ItemValue.
      * @param amount   The amount to increase by (by default, 1).
      */
     increase(key: string, amount?: number | string): void;
-    
+
     /**
      * Increases the value for the ItemValue under the given key, via addition for
      * Numbers or concatenation for Strings.
-     * 
+     *
      * @param key   The key of the ItemValue.
      * @param amount   The amount to increase by (by default, 1).
      */
     decrease(key: string, amount?: number): void;
-    
+
     /**
      * Toggles whether a value is true or false.
-     * 
+     *
      * @param key   The key of the ItemValue.
      */
     toggle(key: string): void;
-    
+
     /**
      * Ensures a key exists in values. If it doesn't, and new values are
      * allowed, it creates it; otherwise, it throws an Error.
-     * 
+     *
      * @param key
      */
     checkExistence(key: string): void;
 
     /**
      * Manually saves an item's value to localStorage, ignoring the autoSave flag.
-     * 
+     *
      * @param key   The key of the item to save.
      */
     saveItem(key: string): void;
 
     /**
-     * Manually saves all values to localStorage, ignoring the autoSave flag. 
+     * Manually saves all values to localStorage, ignoring the autoSave flag.
      */
     saveAll(): void;
-    
+
     /**
      * Hides the container Element by setting its visibility to hidden.
      */
     hideContainer(): void;
-    
+
     /**
      * Shows the container Element by setting its visibility to visible.
      */
     displayContainer(): void;
-    
+
     /**
      * Creates the container Element, which contains a child for each ItemValue that
      * specifies hasElement to be true.
-     * 
+     *
      * @param containers   An Array representing the Element to be created and the
-     *                     children between it and the contained ItemValues. 
-     *                     Each contained Object has a String tag name as its 
-     *                     first member, followed by any number of Objects to apply 
+     *                     children between it and the contained ItemValues.
+     *                     Each contained Object has a String tag name as its
+     *                     first member, followed by any number of Objects to apply
      *                     via createElement.
      * @returns A newly created Element that can be used as a container.
      */
     makeContainer(containers: [string, any][]): HTMLElement;
-    
+
     /**
      * @returns Whether displayChanges has an entry for a particular value.
      */
     hasDisplayChange(value: string): boolean;
-    
+
     /**
      * @returns The displayChanges entry for a particular value.
      */
     getDisplayChange(value: string): string;
-    
+
     /**
      * Creates a new HTMLElement of the given type. For each Object given as
      * arguments after, each member is proliferated onto the element.
-     * 
+     *
      * @param tag   The type of the HTMLElement (by default, "div").
-     * @param args   Any number of Objects to be proliferated onto the 
+     * @param args   Any number of Objects to be proliferated onto the
      *               new HTMLElement.
      * @returns A newly created HTMLElement of the given tag.
      */
     createElement(tag?: string, ...args: any[]): HTMLElement;
-    
+
     /**
      * Proliferates all members of the donor to the recipient recursively, as
      * a deep copy.
-     * 
+     *
      * @param recipient   An object receiving the donor's members.
      * @param donor   An object whose members are copied to recipient.
-     * @param noOverride   If recipient properties may be overriden (by 
+     * @param noOverride   If recipient properties may be overriden (by
      *                     default, false).
      * @returns The recipient, which should have the donor proliferated onto it.
      */
     proliferate(recipient: any, donor: any, noOverride?: boolean): any;
-    
+
     /**
      * Identical to proliferate, but tailored for HTML elements because many
-     * element attributes don't play nicely with JavaScript Array standards. 
+     * element attributes don't play nicely with JavaScript Array standards.
      * Looking at you, HTMLCollection!
-     * 
+     *
      * @param recipient   An HTMLElement receiving the donor's members.
      * @param donor   An object whose members are copied to recipient.
-     * @param noOverride   If recipient properties may be overriden (by 
+     * @param noOverride   If recipient properties may be overriden (by
      *                     default, false).
      * @returns The recipient, which should have the donor proliferated onto it.
      */
     proliferateElement(recipient: any, donor: any, noOverride?: boolean): any;
 }
-
-
 
 /**
  * Storage container for a single ItemsHoldr value. The value may have triggers
@@ -581,7 +579,7 @@ export class ItemValue implements IItemValue {
     /**
      * Creates a new ItemValue with the given key and settings. Defaults are given
      * to the value via proliferate before the settings.
-     * 
+     *
      * @constructor
      * @param ItemsHolder   The container for this value.
      * @param key   The key to reference this new ItemValue by.
@@ -603,16 +601,20 @@ export class ItemValue implements IItemValue {
             this.element = ItemsHolder.createElement(this.elementTag || "div", {
                 className: ItemsHolder.getPrefix() + "_value " + key
             });
-            this.element.appendChild(ItemsHolder.createElement("div", {
-                "textContent": key
-            }));
-            this.element.appendChild(ItemsHolder.createElement("div", {
-                "textContent": this.value
-            }));
+            this.element.appendChild(
+                ItemsHolder.createElement("div", {
+                    "textContent": key
+                })
+            );
+            this.element.appendChild(
+                ItemsHolder.createElement("div", {
+                    "textContent": this.value
+                })
+            );
         }
 
         if (this.storeLocally) {
-            // If there exists an old version of this property, get it 
+            // If there exists an old version of this property, get it
             if (ItemsHolder.getLocalStorage().hasOwnProperty(ItemsHolder.getPrefix() + key)) {
                 this.value = this.retrieveLocalStorage();
                 this.update();
@@ -688,7 +690,7 @@ export class ItemValue implements IItemValue {
 
     /**
      * Stores a ItemValue's value in localStorage under the prefix plus its key.
-     * 
+     *
      * @param {Boolean} [overrideAutoSave]   Whether the policy on saving should
      *                                       be ignored (so saving happens
      *                                       regardless). By default, false.
@@ -712,7 +714,7 @@ export class ItemValue implements IItemValue {
 
     /**
      * Checks if the current value is greater than the modularity (assuming
-     * modular is a non-zero Numbers), and if so, continuously reduces value and 
+     * modular is a non-zero Numbers), and if so, continuously reduces value and
      * calls this.onModular.
      */
     private checkModularity(): void {
@@ -744,7 +746,7 @@ export class ItemValue implements IItemValue {
     /**
      * Retrieves a ItemValue's value from localStorage, making sure not to try to
      * JSON.parse an undefined or null value.
-     * 
+     *
      * @returns {Mixed}
      */
     private retrieveLocalStorage(): void {
@@ -764,7 +766,7 @@ export class ItemValue implements IItemValue {
 
 /**
  * A versatile container to store and manipulate values in localStorage, and
- * optionally keep an updated HTML container showing these values. 
+ * optionally keep an updated HTML container showing these values.
  */
 export class ItemsHoldr implements IItemsHoldr {
     /**
@@ -824,7 +826,7 @@ export class ItemsHoldr implements IItemsHoldr {
 
     /**
      * Initializes a new instance of the ItemsHoldr class.
-     * 
+     *
      * @param settings   Any optional custom settings.
      */
     constructor(settings: IItemsHoldrSettings = {}) {
@@ -834,8 +836,7 @@ export class ItemsHoldr implements IItemsHoldr {
         this.autoSave = settings.autoSave;
         this.callbackArgs = settings.callbackArgs || [];
 
-        this.allowNewItems = settings.allowNewItems === undefined
-            ? true : settings.allowNewItems;
+        this.allowNewItems = settings.allowNewItems === undefined ? true : settings.allowNewItems;
 
         if (settings.localStorage) {
             this.localStorage = settings.localStorage;
@@ -863,20 +864,22 @@ export class ItemsHoldr implements IItemsHoldr {
 
         if (settings.doMakeContainer) {
             this.containersArguments = settings.containersArguments || [
-                ["div", {
-                    "className": this.prefix + "_container"
-                }]
+                [
+                    "div",
+                    {
+                        "className": this.prefix + "_container"
+                    }
+                ]
             ];
             this.container = this.makeContainer(this.containersArguments);
         }
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
-     * 
+     *
      */
     key(index: number): string {
         return this.itemKeys[index];
@@ -945,9 +948,8 @@ export class ItemsHoldr implements IItemsHoldr {
         return this.callbackArgs;
     }
 
-
     /* Retrieval
-    */
+     */
 
     /**
      * @returns String keys for each of the stored ItemValues.
@@ -998,13 +1000,12 @@ export class ItemsHoldr implements IItemsHoldr {
         return output;
     }
 
-
     /* ItemValues
-    */
+     */
 
     /**
      * Adds a new key & value pair to by linking to a newly created ItemValue.
-     * 
+     *
      * @param key   The key to reference by new ItemValue by.
      * @param settings   The settings for the new ItemValue.
      * @returns The newly created ItemValue.
@@ -1018,7 +1019,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Clears a value from the listing, and removes its element from the
      * container (if they both exist).
-     * 
+     *
      * @param key   The key of the element to remove.
      */
     removeItem(key: string): void {
@@ -1057,7 +1058,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Sets the value for the ItemValue under the given key, then updates the ItemValue
      * (including the ItemValue's element and localStorage, if needed).
-     * 
+     *
      * @param key   The key of the ItemValue.
      * @param value   The new value for the ItemValue.
      */
@@ -1070,7 +1071,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Increases the value for the ItemValue under the given key, via addition for
      * Numbers or concatenation for Strings.
-     * 
+     *
      * @param key   The key of the ItemValue.
      * @param amount   The amount to increase by (by default, 1).
      */
@@ -1087,7 +1088,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Increases the value for the ItemValue under the given key, via addition for
      * Numbers or concatenation for Strings.
-     * 
+     *
      * @param key   The key of the ItemValue.
      * @param amount   The amount to increase by (by default, 1).
      */
@@ -1103,7 +1104,7 @@ export class ItemsHoldr implements IItemsHoldr {
 
     /**
      * Toggles whether a value is true or false.
-     * 
+     *
      * @param key   The key of the ItemValue.
      */
     toggle(key: string): void {
@@ -1119,7 +1120,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Ensures a key exists in values. If it doesn't, and new values are
      * allowed, it creates it; otherwise, it throws an Error.
-     * 
+     *
      * @param key
      */
     checkExistence(key: string): void {
@@ -1134,7 +1135,7 @@ export class ItemsHoldr implements IItemsHoldr {
 
     /**
      * Manually saves an item's value to localStorage, ignoring the autoSave flag.
-     * 
+     *
      * @param key   The key of the item to save.
      */
     saveItem(key: string): void {
@@ -1146,7 +1147,7 @@ export class ItemsHoldr implements IItemsHoldr {
     }
 
     /**
-     * Manually saves all values to localStorage, ignoring the autoSave flag. 
+     * Manually saves all values to localStorage, ignoring the autoSave flag.
      */
     saveAll(): void {
         var key: string;
@@ -1158,9 +1159,8 @@ export class ItemsHoldr implements IItemsHoldr {
         }
     }
 
-
     /* HTML helpers
-    */
+     */
 
     /**
      * Hides the container Element by setting its visibility to hidden.
@@ -1179,11 +1179,11 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Creates the container Element, which contains a child for each ItemValue that
      * specifies hasElement to be true.
-     * 
+     *
      * @param containers   An Array representing the Element to be created and the
-     *                     children between it and the contained ItemValues. 
-     *                     Each contained Object has a String tag name as its 
-     *                     first member, followed by any number of Objects to apply 
+     *                     children between it and the contained ItemValues.
+     *                     Each contained Object has a String tag name as its
+     *                     first member, followed by any number of Objects to apply
      *                     via createElement.
      * @returns A newly created Element that can be used as a container.
      */
@@ -1223,16 +1223,15 @@ export class ItemsHoldr implements IItemsHoldr {
         return this.displayChanges[value];
     }
 
-
     /* Utilities
-    */
+     */
 
     /**
      * Creates a new HTMLElement of the given type. For each Object given as
      * arguments after, each member is proliferated onto the element.
-     * 
+     *
      * @param tag   The type of the HTMLElement (by default, "div").
-     * @param args   Any number of Objects to be proliferated onto the 
+     * @param args   Any number of Objects to be proliferated onto the
      *               new HTMLElement.
      * @returns A newly created HTMLElement of the given tag.
      */
@@ -1251,16 +1250,15 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Proliferates all members of the donor to the recipient recursively, as
      * a deep copy.
-     * 
+     *
      * @param recipient   An object receiving the donor's members.
      * @param donor   An object whose members are copied to recipient.
-     * @param noOverride   If recipient properties may be overriden (by 
+     * @param noOverride   If recipient properties may be overriden (by
      *                     default, false).
      * @returns The recipient, which should have the donor proliferated onto it.
      */
     proliferate(recipient: any, donor: any, noOverride?: boolean): any {
-        var setting: any,
-            i: string;
+        var setting: any, i: string;
 
         // For each attribute of the donor:
         for (i in donor) {
@@ -1288,19 +1286,17 @@ export class ItemsHoldr implements IItemsHoldr {
 
     /**
      * Identical to proliferate, but tailored for HTML elements because many
-     * element attributes don't play nicely with JavaScript Array standards. 
+     * element attributes don't play nicely with JavaScript Array standards.
      * Looking at you, HTMLCollection!
-     * 
+     *
      * @param recipient   An HTMLElement receiving the donor's members.
      * @param donor   An object whose members are copied to recipient.
-     * @param noOverride   If recipient properties may be overriden (by 
+     * @param noOverride   If recipient properties may be overriden (by
      *                     default, false).
      * @returns The recipient, which should have the donor proliferated onto it.
      */
     proliferateElement(recipient: any, donor: any, noOverride?: boolean): HTMLElement {
-        var setting: any,
-            i: string,
-            j: number;
+        var setting: any, i: string, j: number;
 
         // For each attribute of the donor:
         for (i in donor) {
@@ -1316,7 +1312,7 @@ export class ItemsHoldr implements IItemsHoldr {
                 switch (i) {
                     // Children: just append all of them directly
                     case "children":
-                        if (typeof (setting) !== "undefined") {
+                        if (typeof setting !== "undefined") {
                             for (j = 0; j < setting.length; j += 1) {
                                 recipient.appendChild(setting[j]);
                             }
@@ -1351,7 +1347,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Creates an Object that can be used to create a new LocalStorage
      * replacement, if the JavaScript environment doesn't have one.
-     * 
+     *
      * @returns {Object}
      */
     private createPlaceholderStorage(): Storage {

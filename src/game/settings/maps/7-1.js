@@ -2,11 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["7-1"] = {
     "name": "7-1",
-    "locations": [
-        { "entry": "Plain" },
-        { "entry": "PipeVertical" },
-        { "area": 1 }
-    ],
+    "locations": [{ "entry": "Plain" }, { "entry": "PipeVertical" }, { "area": 1 }],
     "areas": [
         {
             "setting": "Overworld Alt",
@@ -76,7 +72,8 @@ MarioGame.MarioGame.settings.maps.library["7-1"] = {
                 { "thing": "Beetle", "x": 1360, "y": 72.5 },
                 { "macro": "EndOutsideCastle", "x": 1432, "transport": { "map": "7-2" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -84,7 +81,16 @@ MarioGame.MarioGame.settings.maps.library["7-1"] = {
                 { "macro": "Floor", "width": 136 },
                 { "macro": "Fill", "thing": "Brick", "y": 8, "ynum": 11 },
                 { "macro": "Fill", "thing": "Brick", "x": 32, "y": 8, "xnum": 7, "ynum": 3 },
-                { "macro": "Fill", "thing": "Coin", "x": 33, "y": 31, "xnum": 7, "ynum": 2, "xwidth": 8, "yheight": 16 },
+                {
+                    "macro": "Fill",
+                    "thing": "Coin",
+                    "x": 33,
+                    "y": 31,
+                    "xnum": 7,
+                    "ynum": 2,
+                    "xwidth": 8,
+                    "yheight": 16
+                },
                 { "macro": "Fill", "thing": "Coin", "x": 41, "y": 63, "xnum": 5, "xwidth": 8 },
                 { "thing": "PipeHorizontal", "x": 104, "y": 16 },
                 { "thing": "PipeVertical", "x": 120, "y": 88, "height": 88 }

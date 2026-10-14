@@ -9,16 +9,46 @@
 import * as AreaSpawnr from "../../engine/AreaSpawnr";
 import * as MapScreenr from "../../engine/MapScreenr";
 import * as MapsCreatr from "../../engine/MapsCreatr";
-import type { IArea, IBlooper, IBowser, IBulletBill, ICannon, ICastleBlock, ICastleFireball, ICharacter, ICheepCheep, ICustomText, ICustomTextInfo, IDetectCollision, IDetectWindow, IDetector, IMarioGame, IHammerBro, ILakitu, IPiranha, IPlatform, IPlayer, IPodoboo, IRandomSpawner, IRestingStone, IScrollBlocker, ISectionDetector, IText, IThing, IThingFloating, IThingSliding } from "../types";
+import type {
+    IArea,
+    IBlooper,
+    IBowser,
+    IBulletBill,
+    ICannon,
+    ICastleBlock,
+    ICastleFireball,
+    ICharacter,
+    ICheepCheep,
+    ICustomText,
+    ICustomTextInfo,
+    IDetectCollision,
+    IDetectWindow,
+    IDetector,
+    IMarioGame,
+    IHammerBro,
+    ILakitu,
+    IPiranha,
+    IPlatform,
+    IPlayer,
+    IPodoboo,
+    IRandomSpawner,
+    IRestingStone,
+    IScrollBlocker,
+    ISectionDetector,
+    IText,
+    IThing,
+    IThingFloating,
+    IThingSliding
+} from "../types";
 import { MarioGame } from "../MarioGame";
 
 export const spawnMethods = {
     /* Spawn / activate functions
-    */
+     */
 
     /**
      * Spawn callback for DeadGoombas. They simply disappear after 21 steps.
-     * 
+     *
      * @param thing   A DeadGoomba being spawned.
      */
     spawnDeadGoomba(this: MarioGame, thing: IThing): void {
@@ -29,7 +59,7 @@ export const spawnMethods = {
      * Spawn callback for HammerBros. Gravity is reduced, and the hammer and
      * jump event intervals are started. The cyclical movement counter is set to
      * 0.
-     * 
+     *
      * @param thing   A HammerBro being spawned.
      */
     spawnHammerBro(this: MarioGame, thing: IHammerBro): void {
@@ -41,11 +71,11 @@ export const spawnMethods = {
         thing.FSM.TimeHandler.addEventInterval(thing.FSM.animateJump, 140, Infinity, thing);
     },
 
-    /** 
+    /**
      * Spawn callback for Bowsers. The cyclical movement counter is set to 0 and
-     * the firing and jumping event intervals are started. If it also specifies 
+     * the firing and jumping event intervals are started. If it also specifies
      * a throwing interval, that's started too.
-     * 
+     *
      * @param thing   A Bowser being spawned.
      */
     spawnBowser(this: MarioGame, thing: IBowser): void {
@@ -55,19 +85,11 @@ export const spawnMethods = {
         thing.deathcount = 0;
 
         for (i = 0; i < thing.fireTimes.length; i += 1) {
-            thing.FSM.TimeHandler.addEventInterval(
-                thing.FSM.animateBowserFire,
-                thing.fireTimes[i],
-                Infinity,
-                thing);
+            thing.FSM.TimeHandler.addEventInterval(thing.FSM.animateBowserFire, thing.fireTimes[i], Infinity, thing);
         }
 
         for (i = 0; i < thing.jumpTimes.length; i += 1) {
-            thing.FSM.TimeHandler.addEventInterval(
-                thing.FSM.animateBowserJump,
-                thing.jumpTimes[i],
-                Infinity,
-                thing);
+            thing.FSM.TimeHandler.addEventInterval(thing.FSM.animateBowserJump, thing.jumpTimes[i], Infinity, thing);
         }
 
         if (thing.throwing) {
@@ -78,9 +100,11 @@ export const spawnMethods = {
                             thing.FSM.animateBowserThrow,
                             thing.throwPeriod,
                             Infinity,
-                            thing);
+                            thing
+                        );
                     },
-                    thing.throwDelay + i * thing.throwBetween);
+                    thing.throwDelay + i * thing.throwBetween
+                );
             }
         }
     },
@@ -88,7 +112,7 @@ export const spawnMethods = {
     /**
      * Spawn callback for Piranhas. The movement counter and direction are
      * reset, and if the Piranha is on a pipe, it has a reduced height (6).
-     * 
+     *
      * @param thing   A Piranha being spawned.
      */
     spawnPiranha(this: MarioGame, thing: IPiranha): void {
@@ -105,9 +129,9 @@ export const spawnMethods = {
     },
 
     /**
-     * Spawn callback for Bloopers. Its squeeze and movement counters are 
+     * Spawn callback for Bloopers. Its squeeze and movement counters are
      * set to 0.
-     * 
+     *
      * @param thing   A Blooper being spawned.
      */
     spawnBlooper(this: MarioGame, thing: IBlooper): void {
@@ -118,34 +142,29 @@ export const spawnMethods = {
     /**
      * Spawn callback for Podoboos. The jumping interval is set to the Thing's
      * frequency.
-     * 
+     *
      * @param thing   A Podoboo being spawned.
      */
     spawnPodoboo(this: MarioGame, thing: IPodoboo): void {
-        thing.FSM.TimeHandler.addEventInterval(
-            thing.FSM.animatePodobooJumpUp,
-            thing.frequency,
-            Infinity,
-            thing);
+        thing.FSM.TimeHandler.addEventInterval(thing.FSM.animatePodobooJumpUp, thing.frequency, Infinity, thing);
     },
 
     /**
      * Spawn callback for Lakitus. MapScreenr registers the most recently
      * added Lakitu as some areas spawn them every once in a while.
-     * 
+     *
      * @param thing   A Lakitu being spawned.
      */
     spawnLakitu(this: MarioGame, thing: ILakitu): void {
         thing.FSM.MapScreener.lakitu = thing;
 
-        thing.FSM.TimeHandler.addEventInterval(
-            thing.FSM.animateLakituThrowingSpiny, 140, Infinity, thing);
+        thing.FSM.TimeHandler.addEventInterval(thing.FSM.animateLakituThrowingSpiny, 140, Infinity, thing);
     },
 
     /**
      * Spawning callback for Cannons. Unless specified by the noBullets flag,
      * the firing interval is set to the Thing's frequency.
-     * 
+     *
      * @param thing   A Cannon being spawned.
      */
     spawnCannon(this: MarioGame, thing: ICannon): void {
@@ -153,18 +172,14 @@ export const spawnMethods = {
             return;
         }
 
-        thing.FSM.TimeHandler.addEventInterval(
-            thing.FSM.animateCannonFiring,
-            thing.frequency,
-            thing.frequency,
-            thing);
+        thing.FSM.TimeHandler.addEventInterval(thing.FSM.animateCannonFiring, thing.frequency, thing.frequency, thing);
     },
 
     /**
      * Spawning callback for CastleBlocks. If the Thing has fireballs, an Array
      * of them are made and animated to tick around the block like a clock, set
      * by the thing's speed and direction.
-     * 
+     *
      * @param thing   A CastleBlock being spawned.
      */
     spawnCastleBlock(this: MarioGame, thing: ICastleBlock): void {
@@ -197,14 +212,15 @@ export const spawnMethods = {
             Math.round(7 / Math.abs(thing.speed)),
             Infinity,
             thing,
-            balls);
+            balls
+        );
     },
 
     /**
      * Spawning callback for floating Things, such as Koopas and Platforms. The
      * Thing's begin and end attributes are set relative to the MapScreener's
      * floor, so its movement can handle cycling between the two.
-     * 
+     *
      * @param thing   A Thing being spawned to float around.
      */
     spawnMoveFloating(this: MarioGame, thing: IThingFloating): void {
@@ -217,9 +233,9 @@ export const spawnMethods = {
     },
 
     /**
-     * Spawning callback for sliding Things, such as Platforms. The Thing's 
+     * Spawning callback for sliding Things, such as Platforms. The Thing's
      * begin and end attributes do not need to be relative to anything.
-     * 
+     *
      * @param thing   A Thing being spawned to slide back and forth.
      */
     spawnMoveSliding(this: MarioGame, thing: IThingSliding): void {
@@ -229,7 +245,7 @@ export const spawnMethods = {
 
     /**
      * Spawning callback for a Platform that's a part of a Scale.
-     * 
+     *
      * @param thing   A Platform being spawned within a Scale group.
      */
     spawnScalePlatform(this: MarioGame, thing: IPlatform): void {
@@ -248,7 +264,7 @@ export const spawnMethods = {
      * Generator callback to create a random CheepCheep. The spawn is given a
      * random x-velocity, is placed at a random point just below the screen, and
      * is oriented towards a Player.
-     * 
+     *
      * @param FSM
      * @returns Whether CheepCheep spawning has been cancelled.
      */
@@ -278,7 +294,7 @@ export const spawnMethods = {
      * Generator callback to create a BulleBill. The spawn moves horizontally
      * at a constant rate towards the left side of the bill, and is placed at a
      * random point to the right side of the screen.
-     * 
+     *
      * @param FSM
      * @returns Whether BulletBill spawning has been cancelled.
      */
@@ -296,9 +312,8 @@ export const spawnMethods = {
         FSM.addThing(
             spawn,
             FSM.MapScreener.width,
-            Math.floor(
-                FSM.NumberMaker.randomIntWithin(0, FSM.MapScreener.floor) / 8
-            ) * 8 * FSM.unitsize);
+            Math.floor(FSM.NumberMaker.randomIntWithin(0, FSM.MapScreener.floor) / 8) * 8 * FSM.unitsize
+        );
 
         return false;
     },
@@ -307,7 +322,7 @@ export const spawnMethods = {
      * Spawns a CustomText by killing it and placing the contents of its texts
      * member variable. These are written with a determined amount of spacing
      * between them, as if by a typewriter.
-     * 
+     *
      * @param thing   A CustomText being spawned.
      */
     spawnCustomText(this: MarioGame, thing: ICustomText): void {
@@ -363,9 +378,9 @@ export const spawnMethods = {
     },
 
     /**
-     * Spawning callback for generic detectors, activated as soon as they are 
+     * Spawning callback for generic detectors, activated as soon as they are
      * placed. The Thing's activate trigger is called, then it is killed.
-     * 
+     *
      * @param thing   A Detector being spawned.
      */
     spawnDetector(this: MarioGame, thing: IDetector): void {
@@ -374,9 +389,9 @@ export const spawnMethods = {
     },
 
     /**
-     * Spawning callback for ScrollBlockers. If the Thing is to the right of 
+     * Spawning callback for ScrollBlockers. If the Thing is to the right of
      * the visible viewframe, it should limit scrolling when triggered.
-     * 
+     *
      * @param thing   A ScrollBlocker being spawned.
      */
     spawnScrollBlocker(this: MarioGame, thing: IScrollBlocker): void {
@@ -385,11 +400,11 @@ export const spawnMethods = {
         }
     },
 
-    /** 
+    /**
      * Used by Things in a collection to register themselves as a part of their
-     * container collection Object. This is called by onThingMake, so they're 
+     * container collection Object. This is called by onThingMake, so they're
      * immediately put in the collection and have it as a member variable.
-     * 
+     *
      * @param collection   The collection Object shared by all members.
      * @param thing   A member of the collection being spawned.
      */
@@ -402,10 +417,10 @@ export const spawnMethods = {
     },
 
     /**
-     * Spawning callback for RandomSpawner Things, which generate a set of 
-     * commands using the WorldSeeder to be piped into the AreaSpawnr, then 
+     * Spawning callback for RandomSpawner Things, which generate a set of
+     * commands using the WorldSeeder to be piped into the AreaSpawnr, then
      * spawn the immediate area.
-     * 
+     *
      * @param thing   A RandomSpawner being spawned.
      */
     spawnRandomSpawner(this: MarioGame, thing: IRandomSpawner): void {
@@ -429,13 +444,14 @@ export const spawnMethods = {
             FSM.QuadsKeeper.top / FSM.unitsize,
             FSM.QuadsKeeper.right / FSM.unitsize,
             FSM.QuadsKeeper.bottom / FSM.unitsize,
-            FSM.QuadsKeeper.left / FSM.unitsize);
+            FSM.QuadsKeeper.left / FSM.unitsize
+        );
     },
 
     /**
      * Activation callback for starting spawnRandomCheep on an interval.
      * MapScreener is notified that spawningCheeps is true.
-     * 
+     *
      * @param thing   A Detector activated to start spawning CheepCheeps.
      */
     activateCheepsStart(this: MarioGame, thing: IDetector): void {
@@ -446,7 +462,7 @@ export const spawnMethods = {
     /**
      * Activation callback to stop spawning CheepCheeps. MapScreener is notified
      * that spawningCheeps is false.
-     * 
+     *
      * @param thing   A Detector activated to stop spawning CheepCheeps.
      */
     activateCheepsStop(this: MarioGame, thing: IDetector): void {
@@ -456,7 +472,7 @@ export const spawnMethods = {
     /**
      * Activation callback for starting spawnRandomBulletBill on an interval.
      * MapScreener is notified that spawningBulletBills is true.
-     * 
+     *
      * @param thing   A Detector activated to start spawning BulletBills.
      */
     activateBulletBillsStart(this: MarioGame, thing: IDetector): void {
@@ -467,7 +483,7 @@ export const spawnMethods = {
     /**
      * Activation callback to stop spawning BulletBills. MapScreener is notified
      * that spawningBulletBills is false.
-     * 
+     *
      * @param thing   A Detector activated to stop spawning BulletBills.
      */
     activateBulletBillsStop(this: MarioGame, thing: IDetector): void {
@@ -475,9 +491,9 @@ export const spawnMethods = {
     },
 
     /**
-     * Activation callback to tell the area's Lakitu, if it exists, to start 
+     * Activation callback to tell the area's Lakitu, if it exists, to start
      * fleeing the scene.
-     * 
+     *
      * @param thing   A Detector activated to make the Lakitu flee.
      */
     activateLakituStop(this: MarioGame, thing: IDetector): void {
@@ -492,10 +508,10 @@ export const spawnMethods = {
     },
 
     /**
-     * Activation callback for a warp world area, triggered by a Player 
+     * Activation callback for a warp world area, triggered by a Player
      * touching a collider on top of it. Piranhas disappear and texts are
      * revealed.
-     * 
+     *
      * @param thing   A Player activating the warp world.
      * @param other   A Detector triggered by thing to activate a warp world.
      */
@@ -537,11 +553,11 @@ export const spawnMethods = {
     },
 
     /**
-     * Activation callback for when a Player lands on a RestingStone. The 
-     * stone "appears" (via opacity), the regular theme plays if it wasn't 
+     * Activation callback for when a Player lands on a RestingStone. The
+     * stone "appears" (via opacity), the regular theme plays if it wasn't
      * already, and the RestingStone waits to kill itself when a Player isn't
      * touching it.
-     * 
+     *
      * @param thing   A RestingStone being landed on.
      * @param other   A Player landing on thing.
      */
@@ -564,15 +580,16 @@ export const spawnMethods = {
                 return true;
             },
             1,
-            Infinity);
+            Infinity
+        );
     },
 
     /**
-     * Generic activation callback for DetectWindow Things. This is typically 
-     * set as a .movement Function, so it waits until the calling Thing is 
-     * within the MapScreener's area to call the activate Function and kill 
+     * Generic activation callback for DetectWindow Things. This is typically
+     * set as a .movement Function, so it waits until the calling Thing is
+     * within the MapScreener's area to call the activate Function and kill
      * itself.
-     * 
+     *
      * @param thing   A DetectWindow that might be activated.
      */
     activateWindowDetector(this: MarioGame, thing: IDetectWindow): void {
@@ -589,7 +606,7 @@ export const spawnMethods = {
      * that set MapScreener.canscroll to false when they're triggered. If the
      * latest scrollWindow call pushed it too far to the left, it scrolls back
      * the other way.
-     * 
+     *
      * @param thing   A ScrollBlocker that might be activated.
      */
     activateScrollBlocker(this: MarioGame, thing: IScrollBlocker): void {
@@ -603,8 +620,8 @@ export const spawnMethods = {
 
     /**
      * Activation callback for ScrollBlocker Things. These are DetectCollision
-     * that set MapScreener.canscroll to true when they're triggered. 
-     * 
+     * that set MapScreener.canscroll to true when they're triggered.
+     *
      * @param thing   An activated ScrollEnabler.
      */
     activateScrollEnabler(this: MarioGame, thing: IDetectCollision): void {
@@ -613,10 +630,10 @@ export const spawnMethods = {
 
     /**
      * Activates the "before" component of a stretchable section. The creation
-     * commands of the section are loaded onto the screen as is and a 
-     * DetectWindow is added to their immediate right that will trigger the 
+     * commands of the section are loaded onto the screen as is and a
+     * DetectWindow is added to their immediate right that will trigger the
      * equivalent activateSectionStretch.
-     * 
+     *
      * @param thing   An activated SectionDecider.
      */
     activateSectionBefore(this: MarioGame, thing: ISectionDetector): void {
@@ -636,7 +653,7 @@ export const spawnMethods = {
         // If there is a before, parse each command into the prethings array
         if (before) {
             for (i = 0; i < before.length; i += 1) {
-                // A copy of the command must be used to not modify the original 
+                // A copy of the command must be used to not modify the original
                 command = FSM.proliferate({}, before[i]);
 
                 // The command's x must be shifted by the thing's placement
@@ -659,7 +676,8 @@ export const spawnMethods = {
         // Add a prething at the end of all this to trigger the stretch part
         command = {
             "thing": "DetectWindow",
-            "x": left + (before ? section.before.width : 0), "y": 0,
+            "x": left + (before ? section.before.width : 0),
+            "y": 0,
             "activate": FSM.activateSectionStretch,
             "section": thing.section || 0
         };
@@ -672,7 +690,8 @@ export const spawnMethods = {
             MapScreener.top / FSM.unitsize,
             (MapScreener.left + FSM.QuadsKeeper.right) / FSM.unitsize,
             MapScreener.bottom / FSM.unitsize,
-            left);
+            left
+        );
     },
 
     /**
@@ -681,7 +700,7 @@ export const spawnMethods = {
      * set to take up the entire width of the screen. A DetectWindow is added
      * to their immediate right that will trigger the equivalent
      * activateSectionAfter.
-     * 
+     *
      * @param thing   An activated SectionDetector.
      */
     activateSectionStretch(this: MarioGame, thing: ISectionDetector): void {
@@ -726,15 +745,16 @@ export const spawnMethods = {
         AreaSpawner.spawnArea(
             "xInc",
             MapScreener.top / FSM.unitsize,
-            left + (MapScreener.width / FSM.unitsize),
+            left + MapScreener.width / FSM.unitsize,
             MapScreener.bottom / FSM.unitsize,
-            left);
+            left
+        );
     },
 
     /**
      * Activates the "after" component of a stretchable sectin. The creation
      * commands of the stretch are loaded onto the screen as is.
-     * 
+     *
      * @param thing   An activated SectioNDetector.
      */
     activateSectionAfter(this: MarioGame, thing: ISectionDetector): void {
@@ -779,10 +799,11 @@ export const spawnMethods = {
         AreaSpawner.spawnArea(
             "xInc",
             MapScreener.top / FSM.unitsize,
-            left + (MapScreener.right / FSM.unitsize),
+            left + MapScreener.right / FSM.unitsize,
             MapScreener.bottom / FSM.unitsize,
-            left);
-    },
+            left
+        );
+    }
 };
 
 export type SpawnMethods = typeof spawnMethods;

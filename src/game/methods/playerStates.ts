@@ -13,13 +13,13 @@ import { MarioGame } from "../MarioGame";
 
 export const playerStateMethods = {
     /* Collision reactions
-    */
+     */
 
     /**
-     * Externally facing Function to gain some number of lives. ItemsHolder 
-     * increases the "score" statistic, an audio is played, and the mod event is 
+     * Externally facing Function to gain some number of lives. ItemsHolder
+     * increases the "score" statistic, an audio is played, and the mod event is
      * fired.
-     * 
+     *
      * @param amount   How many lives to gain (by default, 1).
      * @param nosound   Whether the sound should be skipped (by default,
      *                  false).
@@ -39,9 +39,9 @@ export const playerStateMethods = {
     },
 
     /**
-     * Basic Function for an item to jump slightly into the air, such as from 
-     * a Player hitting a solid below it. 
-     * 
+     * Basic Function for an item to jump slightly into the air, such as from
+     * a Player hitting a solid below it.
+     *
      * @param thing   An item.
      * @remarks This simply moves the thing up slightly and decreases its
      *          y-velocity, without considering x-direction.
@@ -54,7 +54,7 @@ export const playerStateMethods = {
     /**
      * Generic Function for when a Player jumps on top of an enemy. The enemy
      * is killed, a Player's velocity points upward, and score is gained.
-     * 
+     *
      * @param thing   A Player jumping on other.
      * @param other   An Enemy being jumped upon.
      */
@@ -79,14 +79,15 @@ export const playerStateMethods = {
                 thing.jumpers -= 1;
             },
             1,
-            thing);
+            thing
+        );
     },
 
     /**
      * Callback for a Player hitting a Mushroom or FireFlower. A player's
      * power and the ItemsHolder's "power" statistic both go up, and the
      * corresponding animations and mod event are triggered.
-     * 
+     *
      * @param thing   A Player powering up.
      * @param other   A Mushroom powering up hte Player.
      */
@@ -117,9 +118,9 @@ export const playerStateMethods = {
     },
 
     /**
-     * Callback for a Player hitting a Mushroom1Up. The game simply calls 
+     * Callback for a Player hitting a Mushroom1Up. The game simply calls
      * gainLife and triggers the mod event.
-     * 
+     *
      * @param thing   A Player gaining a life.
      * @param other   The Mushroom1Up giving the life.
      */
@@ -133,12 +134,12 @@ export const playerStateMethods = {
     },
 
     /**
-     * Callback for a Player hitting a Star. A set of animation loops and 
+     * Callback for a Player hitting a Star. A set of animation loops and
      * sounds play, and the mod event is triggered. After some long period time,
      * playerStarDown is called to start the process of removing star power.
-     * 
+     *
      * @param thing   A Player gaining star powers.
-     * @param timeout   How long to wait before calling playerStarDown 
+     * @param timeout   How long to wait before calling playerStarDown
      *                  (by default, 560).
      */
     playerStarUp(this: MarioGame, thing: IPlayer, timeout: number = 560): void {
@@ -150,20 +151,12 @@ export const playerStateMethods = {
         thing.FSM.AudioPlayer.addEventListener(
             "Powerup",
             "ended",
-            thing.FSM.AudioPlayer.playTheme.bind(
-                thing.FSM.AudioPlayer, "Star", true
-            ));
+            thing.FSM.AudioPlayer.playTheme.bind(thing.FSM.AudioPlayer, "Star", true)
+        );
 
-        thing.FSM.TimeHandler.addClassCycle(
-            thing,
-            ["star1", "star2", "star3", "star4"],
-            "star",
-            2);
+        thing.FSM.TimeHandler.addClassCycle(thing, ["star1", "star2", "star3", "star4"], "star", 2);
 
-        thing.FSM.TimeHandler.addEvent(
-            thing.FSM.playerStarDown,
-            timeout || 560,
-            thing);
+        thing.FSM.TimeHandler.addEvent(thing.FSM.playerStarDown, timeout || 560, thing);
 
         thing.FSM.ModAttacher.fireEvent("onPlayerStarUp", thing);
     },
@@ -171,7 +164,7 @@ export const playerStateMethods = {
     /**
      * Trigger to commence reducing a Player's star power. This slows the
      * class cycle, times a playerStarOffCycle trigger, and fires the mod event.
-     * 
+     *
      * @param thing   A Player losing star powers.
      */
     playerStarDown(this: MarioGame, thing: IPlayer): void {
@@ -180,19 +173,9 @@ export const playerStateMethods = {
         }
 
         thing.FSM.TimeHandler.cancelClassCycle(thing, "star");
-        thing.FSM.TimeHandler.addClassCycle(
-            thing,
-            [
-                "star1", "star2", "star3", "star4"
-            ],
-            "star",
-            5);
+        thing.FSM.TimeHandler.addClassCycle(thing, ["star1", "star2", "star3", "star4"], "star", 5);
 
-        thing.FSM.TimeHandler.addEvent(
-            thing.FSM.playerStarOffCycle,
-            140,
-            thing
-        );
+        thing.FSM.TimeHandler.addEvent(thing.FSM.playerStarOffCycle, 140, thing);
 
         thing.FSM.AudioPlayer.removeEventListeners("Powerup", "ended");
 
@@ -200,10 +183,10 @@ export const playerStateMethods = {
     },
 
     /**
-     * Trigger to continue reducing a Player's star power. This resumes 
+     * Trigger to continue reducing a Player's star power. This resumes
      * playing the regular theme, times a playerStarOffFinal trigger, and fires
      * the mod event.
-     * 
+     *
      * @param thing   A Player losing star powers.
      */
     playerStarOffCycle(this: MarioGame, thing: IPlayer): void {
@@ -229,9 +212,9 @@ export const playerStateMethods = {
 
     /**
      * Trigger to finish reducing a Player's star power. This actually reduces
-     * a Player's star attribute, cancels the sprite cycle, adds the previous 
+     * a Player's star attribute, cancels the sprite cycle, adds the previous
      * classes back, and fires the mod event.
-     * 
+     *
      * @param thing   A Player losing star powers.
      */
     playerStarOffFinal(this: MarioGame, thing: IPlayer): void {
@@ -253,9 +236,9 @@ export const playerStateMethods = {
 
     /**
      * Sizing modifier for a Player, typically called when entering a location
-     * or colliding with a Mushroom. This sets a Player's size to the large 
+     * or colliding with a Mushroom. This sets a Player's size to the large
      * mode and optionally plays the animation. The mod event is then fired.
-     * 
+     *
      * @param thing   A Player increasing in size.
      * @param noAnimation   Whether to skip the animation (by default,
      *                      false).
@@ -278,14 +261,18 @@ export const playerStateMethods = {
     /**
      * Animation scheduler for a Player getting big. The shrooming classes are
      * cycled through rapidly while a Player's velocity is paused.
-     * 
+     *
      * @param thing   A Player increasing in size.
      */
     playerGetsBigAnimation(this: MarioGame, thing: IPlayer): void {
         var stages: (string | TimeHandlr.IClassCalculator)[] = [
-            "shrooming1", "shrooming2",
-            "shrooming1", "shrooming2",
-            "shrooming3", "shrooming2", "shrooming3"
+            "shrooming1",
+            "shrooming2",
+            "shrooming1",
+            "shrooming2",
+            "shrooming3",
+            "shrooming2",
+            "shrooming3"
         ];
 
         thing.FSM.addClass(thing, "shrooming");
@@ -307,11 +294,11 @@ export const playerStateMethods = {
     },
 
     /**
-     * Sizing modifier for a Player, typically called when going down to 
+     * Sizing modifier for a Player, typically called when going down to
      * normal size after being large. This containst eha nimation scheduling
-     * to cycle through paddling classes, then flickers a Player. The mod 
+     * to cycle through paddling classes, then flickers a Player. The mod
      * event is fired.
-     * 
+     *
      * @param thing   A Player decreasing in size.
      */
     playerGetsSmall(this: MarioGame, thing: IPlayer): void {
@@ -322,9 +309,7 @@ export const playerStateMethods = {
         // Step one
         thing.nocollidechar = true;
         thing.FSM.animateFlicker(thing);
-        thing.FSM.removeClasses(
-            thing, "running skidding jumping fiery"
-        );
+        thing.FSM.removeClasses(thing, "running skidding jumping fiery");
         thing.FSM.addClasses(thing, "paddling small");
 
         // Step two (t+21)
@@ -332,12 +317,11 @@ export const playerStateMethods = {
             function (thing: IPlayer): void {
                 thing.FSM.removeClass(thing, "large");
                 thing.FSM.setPlayerSizeSmall(thing);
-                thing.FSM.setBottom(
-                    thing, bottom - MarioGame.unitsize
-                );
+                thing.FSM.setBottom(thing, bottom - MarioGame.unitsize);
             },
             21,
-            thing);
+            thing
+        );
 
         // Step three (t+42)
         thing.FSM.TimeHandler.addEvent(
@@ -350,7 +334,8 @@ export const playerStateMethods = {
                 thing.FSM.PixelDrawer.setThingSprite(thing);
             },
             42,
-            thing);
+            thing
+        );
 
         // Step four (t+70)
         thing.FSM.TimeHandler.addEvent(
@@ -358,15 +343,16 @@ export const playerStateMethods = {
                 thing.nocollidechar = false;
             },
             70,
-            thing);
+            thing
+        );
 
         thing.FSM.ModAttacher.fireEvent("onPlayerGetsSmall");
     },
 
     /**
-     * Visual changer for when a Player collides with a FireFlower. The 
+     * Visual changer for when a Player collides with a FireFlower. The
      * "fiery" class is added, and the mod event is fired.
-     * 
+     *
      * @param thing   A Player gaining fire powers.
      */
     playerGetsFire(this: MarioGame, thing: IPlayer): void {
@@ -380,9 +366,9 @@ export const playerStateMethods = {
     },
 
     /**
-     * Actually sets the size for a player to small (8x8) via setSize and 
+     * Actually sets the size for a player to small (8x8) via setSize and
      * updateSize.
-     * 
+     *
      * @param thing   A Player decreasing in size.
      */
     setPlayerSizeSmall(this: MarioGame, thing: IPlayer): void {
@@ -391,9 +377,9 @@ export const playerStateMethods = {
     },
 
     /**
-     * Actually sets the size for a player to large (8x16) via setSize and 
+     * Actually sets the size for a player to large (8x16) via setSize and
      * updateSize.
-     * 
+     *
      * @param thing   A Player increasing in size.
      */
     setPlayerSizeLarge(this: MarioGame, thing: IPlayer): void {
@@ -402,9 +388,9 @@ export const playerStateMethods = {
     },
 
     /**
-     * Removes the crouching flag from a Player and re-adds the running cycle. 
+     * Removes the crouching flag from a Player and re-adds the running cycle.
      * If a Player is large (has power > 1), size and classes must be set.
-     * 
+     *
      * @param thing   A Player that is no longer crouching.
      */
     animatePlayerRemoveCrouch(this: MarioGame, thing: IPlayer): void {
@@ -423,9 +409,9 @@ export const playerStateMethods = {
 
     /**
      * Officially unattaches a player from a solid. The thing's physics flags
-     * are reset to normal, the two have their attachment flags set, and the 
+     * are reset to normal, the two have their attachment flags set, and the
      * thing is set to be jumping off.
-     * 
+     *
      * @param thing   A Player attached to other.
      * @param other   A Solid thing is attached to.
      */
@@ -447,14 +433,13 @@ export const playerStateMethods = {
      * Adds an invisible RestingStone underneath a Player. It is hidden and
      * unable to collide until a Player falls to its level, at which point the
      * stone is set underneath a Player to be rested upon.
-     * 
+     *
      * @param thing   A Player respawning into the game.
      */
     playerAddRestingStone(this: MarioGame, thing: IPlayer): void {
-        var stone: IRestingStone = <IRestingStone>thing.FSM.addThing(
-            "RestingStone",
-            thing.left,
-            thing.top + thing.FSM.unitsize * 48);
+        var stone: IRestingStone = <IRestingStone>(
+            thing.FSM.addThing("RestingStone", thing.left, thing.top + thing.FSM.unitsize * 48)
+        );
 
         thing.nocollide = true;
 
@@ -470,13 +455,14 @@ export const playerStateMethods = {
                 return true;
             },
             1,
-            Infinity);
+            Infinity
+        );
     },
 
     /**
-     * Marks a new overlapping Thing in the first Thing's overlaps Array, 
+     * Marks a new overlapping Thing in the first Thing's overlaps Array,
      * creating the Array if needed.
-     * 
+     *
      * @param thing   The Thing that is overlapping another Thing.
      * @param other   The Thing being added to the overlaps Array.
      */
@@ -486,7 +472,7 @@ export const playerStateMethods = {
         } else {
             thing.overlaps.push(other);
         }
-    },
+    }
 };
 
 export type PlayerStateMethods = typeof playerStateMethods;

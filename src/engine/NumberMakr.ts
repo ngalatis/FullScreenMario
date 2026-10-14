@@ -69,14 +69,14 @@ export interface INumberMakr {
 
     /**
      * Initializes state from a new seed.
-     * 
+     *
      * @param seedNew   A new seed to reset from.
      */
     resetFromSeed(seedNew?: number | number[]): void;
 
     /**
      * Initializes state from an Array.
-     * 
+     *
      * @param keyInitial   An initial state to reset from.
      * @param [keyLength]   The length of keyInitial (by default, keyInitial.length).
      * @remarks   There was a slight change for C++, 2004/2/26.
@@ -150,13 +150,13 @@ export interface INumberMakr {
     /**
      * @param probability   How likely the returned Boolean will be
      *                      true, in [0, 1]. If >= 1, always true.
-     * @returns Either true or false, with the probability of true 
+     * @returns Either true or false, with the probability of true
      *          equal to the given probability.
      */
     randomBooleanProbability(probability: number): boolean;
 
     /**
-     * @param numerator   The numerator of a fraction. 
+     * @param numerator   The numerator of a fraction.
      * @param denominator   The denominator of a fraction.
      * @returns   Either true or false, with a probability equal to the
      *            given fraction.
@@ -176,12 +176,11 @@ export interface INumberMakr {
     randomArrayMember(array: any[]): any;
 }
 
-
 /**
- * An updated version of the traditional MersenneTwister JavaScript class by 
- * Sean McCullough (2010), based on code by Takuji Nishimura and Makoto 
+ * An updated version of the traditional MersenneTwister JavaScript class by
+ * Sean McCullough (2010), based on code by Takuji Nishimura and Makoto
  * Matsumoto (1997 - 2002).
- * 
+ *
  * For the 2010 code, see https://gist.github.com/banksean/300494.
  */
 /*
@@ -301,7 +300,7 @@ export class NumberMakr implements INumberMakr {
 
     /**
      * Initializes a new instance of the NumberMakr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: INumberMakrSettings = {}) {
@@ -318,9 +317,8 @@ export class NumberMakr implements INumberMakr {
         this.resetFromSeed(settings.seed || new Date().getTime());
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns The starting seed used to initialize.
@@ -364,27 +362,24 @@ export class NumberMakr implements INumberMakr {
         return this.maskLower;
     }
 
-
     /* Resets
-    */
+     */
 
     /**
      * Initializes state from a new seed.
-     * 
+     *
      * @param seedNew   A new seed to reset from.
      */
     resetFromSeed(seedNew: number | number[]): void {
         var s: number;
 
-        this.stateVector[0] = <number>seedNew >>> 0;
+        this.stateVector[0] = (<number>seedNew) >>> 0;
 
         for (this.stateIndex = 1; this.stateIndex < this.stateLength; this.stateIndex += 1) {
             s = this.stateVector[this.stateIndex - 1] ^ (this.stateVector[this.stateIndex - 1] >>> 30);
-            this.stateVector[this.stateIndex] = (
-                (((((s & 0xffff0000) >>> 16) * 1812433253) << 16)
-                    + (s & 0x0000ffff) * 1812433253
-                ) + this.stateIndex
-            ) >>> 0;
+            this.stateVector[this.stateIndex] =
+                (((((s & 0xffff0000) >>> 16) * 1812433253) << 16) + (s & 0x0000ffff) * 1812433253 + this.stateIndex) >>>
+                0;
         }
 
         this.seed = seedNew;
@@ -392,7 +387,7 @@ export class NumberMakr implements INumberMakr {
 
     /**
      * Initializes state from an Array.
-     * 
+     *
      * @param keyInitial   An initial state to reset from.
      * @param [keyLength]   The length of keyInitial (by default, keyInitial.length).
      * @remarks   There was a slight change for C++, 2004/2/26.
@@ -405,7 +400,7 @@ export class NumberMakr implements INumberMakr {
 
         this.resetFromSeed(19650218);
 
-        if (typeof (keyLength) === "undefined") {
+        if (typeof keyLength === "undefined") {
             keyLength = keyInitial.length;
         }
 
@@ -413,11 +408,13 @@ export class NumberMakr implements INumberMakr {
 
         while (k > 0) {
             s = this.stateVector[i - 1] ^ (this.stateVector[i - 1] >>> 30);
-            this.stateVector[i] = (this.stateVector[i] ^ (
-                ((((s & 0xffff0000) >>> 16) * 1664525) << 16)
-                + ((s & 0x0000ffff) * 1664525)
-            ) + keyInitial[j] + j
-            ) >>> 0;
+            this.stateVector[i] =
+                (this.stateVector[i] ^
+                    (((((s & 0xffff0000) >>> 16) * 1664525) << 16) +
+                        (s & 0x0000ffff) * 1664525 +
+                        keyInitial[j] +
+                        j)) >>>
+                0;
 
             i += 1;
             j += 1;
@@ -434,11 +431,11 @@ export class NumberMakr implements INumberMakr {
 
         for (k = this.stateLength - 1; k; k -= 1) {
             s = this.stateVector[i - 1] ^ (this.stateVector[i - 1] >>> 30);
-            this.stateVector[i] = ((this.stateVector[i] ^ (
-                ((((s & 0xffff0000) >>> 16) * 1566083941) << 16)
-                + (s & 0x0000ffff) * 1566083941)
-            ) - i
-            ) >>> 0;
+            this.stateVector[i] =
+                ((this.stateVector[i] ^
+                    (((((s & 0xffff0000) >>> 16) * 1566083941) << 16) + (s & 0x0000ffff) * 1566083941)) -
+                    i) >>>
+                0;
 
             i += 1;
 
@@ -452,16 +449,14 @@ export class NumberMakr implements INumberMakr {
         this.seed = keyInitial;
     }
 
-
     /* Random number generation
-    */
+     */
 
     /**
      * @returns A random Number in [0,0xffffffff].
      */
     randomInt32(): number {
-        var y: number,
-            kk: number;
+        var y: number, kk: number;
 
         if (this.stateIndex >= this.stateLength) {
             if (this.stateIndex === this.stateLength + 1) {
@@ -469,28 +464,24 @@ export class NumberMakr implements INumberMakr {
             }
 
             for (kk = 0; kk < this.stateLength - this.statePeriod; kk += 1) {
-                y = (this.stateVector[kk] & this.maskUpper)
-                    | (this.stateVector[kk + 1] & this.maskLower);
+                y = (this.stateVector[kk] & this.maskUpper) | (this.stateVector[kk + 1] & this.maskLower);
 
-                this.stateVector[kk] = this.stateVector[kk + this.statePeriod]
-                    ^ (y >>> 1)
-                    ^ this.matrixAMagic[y & 0x1];
+                this.stateVector[kk] = this.stateVector[kk + this.statePeriod] ^ (y >>> 1) ^ this.matrixAMagic[y & 0x1];
             }
 
             for (; kk < this.stateLength - 1; kk += 1) {
-                y = (this.stateVector[kk] & this.maskUpper)
-                    | (this.stateVector[kk + 1] & this.maskLower);
+                y = (this.stateVector[kk] & this.maskUpper) | (this.stateVector[kk + 1] & this.maskLower);
 
-                this.stateVector[kk] = this.stateVector[kk + (this.statePeriod - this.stateLength)]
-                    ^ (y >>> 1)
-                    ^ this.matrixAMagic[y & 0x1];
+                this.stateVector[kk] =
+                    this.stateVector[kk + (this.statePeriod - this.stateLength)] ^
+                    (y >>> 1) ^
+                    this.matrixAMagic[y & 0x1];
             }
 
-            y = (this.stateVector[this.stateLength - 1] & this.maskUpper)
-                | (this.stateVector[0] & this.maskLower);
+            y = (this.stateVector[this.stateLength - 1] & this.maskUpper) | (this.stateVector[0] & this.maskLower);
 
-            this.stateVector[this.stateLength - 1] = this.stateVector[this.statePeriod - 1]
-                ^ (y >>> 1) ^ this.matrixAMagic[y & 0x1];
+            this.stateVector[this.stateLength - 1] =
+                this.stateVector[this.statePeriod - 1] ^ (y >>> 1) ^ this.matrixAMagic[y & 0x1];
 
             this.stateIndex = 0;
         }
@@ -498,10 +489,10 @@ export class NumberMakr implements INumberMakr {
         y = this.stateVector[this.stateIndex];
         this.stateIndex += 1;
 
-        y ^= (y >>> 11);
+        y ^= y >>> 11;
         y ^= (y << 7) & 0x9d2c5680;
         y ^= (y << 15) & 0xefc60000;
-        y ^= (y >>> 18);
+        y ^= y >>> 18;
 
         return y >>> 0;
     }
@@ -521,9 +512,8 @@ export class NumberMakr implements INumberMakr {
         return this.randomInt32() >>> 1;
     }
 
-
     /* Real number generators (due to Isaku Wada, 2002/01/09)
-    */
+     */
 
     /**
      * @returns A random real Number in [0,1].
@@ -551,9 +541,8 @@ export class NumberMakr implements INumberMakr {
         return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
     }
 
-
     /* Ranged Number generators
-    */
+     */
 
     /**
      * @param max   A maximum value to return under.
@@ -572,9 +561,8 @@ export class NumberMakr implements INumberMakr {
         return this.randomUnder(max - min) + min;
     }
 
-
     /* Ranged integer generators
-    */
+     */
 
     /**
      * @param max   A maximum value to return under.
@@ -603,7 +591,7 @@ export class NumberMakr implements INumberMakr {
     /**
      * @param probability   How likely the returned Boolean will be
      *                      true, in [0, 1]. If >= 1, always true.
-     * @returns Either true or false, with the probability of true 
+     * @returns Either true or false, with the probability of true
      *          equal to the given probability.
      */
     randomBooleanProbability(probability: number): boolean {
@@ -611,13 +599,13 @@ export class NumberMakr implements INumberMakr {
     }
 
     /**
-     * @param numerator   The numerator of a fraction. 
+     * @param numerator   The numerator of a fraction.
      * @param denominator   The denominator of a fraction.
      * @returns   Either true or false, with a probability equal to the
      *            given fraction.
      */
     randomBooleanFraction(numerator: number, denominator: number): boolean {
-        return this.random() <= (numerator / denominator);
+        return this.random() <= numerator / denominator;
     }
 
     /**

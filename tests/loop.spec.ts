@@ -41,7 +41,7 @@ async function installFakeClock(page: Page): Promise<void> {
                     queue = [];
                     due.forEach((entry) => entry.callback(now));
                     return [w.__counts.upkeeps - upkeeps, w.__counts.renders - renders];
-                }),
+                })
         };
     });
 }
@@ -80,8 +80,7 @@ async function startClock(page: Page, hz: number): Promise<void> {
     expect(upkeeps).toBe(0);
 }
 
-const total = (frames: [number, number][], index = 0): number =>
-    frames.reduce((sum, frame) => sum + frame[index], 0);
+const total = (frames: [number, number][], index = 0): number => frames.reduce((sum, frame) => sum + frame[index], 0);
 
 const steady = (hz: number, seconds = 1): number[] => new Array(Math.round(hz * seconds)).fill(1000 / hz);
 
@@ -123,11 +122,17 @@ test.describe("fixed timestep loop (fake requestAnimationFrame)", () => {
     test("timestamp noise does not flip frames between zero and two upkeeps", async ({ page }) => {
         // Timestamps rounded to 0.1 ms, as browsers do, average out to exactly 60 Hz: 16.6, 16.7, 16.7, ...
         await startClock(page, 60);
-        const sixty = await runFrames(page, Array.from({ length: 180 }, (_, i) => (i % 3 === 0 ? 16.6 : 16.7)));
+        const sixty = await runFrames(
+            page,
+            Array.from({ length: 180 }, (_, i) => (i % 3 === 0 ? 16.6 : 16.7))
+        );
         expect(sixty.every(([upkeeps]) => upkeeps === 1)).toBe(true);
 
         // Likewise 120 Hz (8.3, 8.3, 8.4, ...): one upkeep on every other frame, steadily
-        const hundredTwenty = await runFrames(page, Array.from({ length: 240 }, (_, i) => (i % 3 === 2 ? 8.4 : 8.3)));
+        const hundredTwenty = await runFrames(
+            page,
+            Array.from({ length: 240 }, (_, i) => (i % 3 === 2 ? 8.4 : 8.3))
+        );
         expect(hundredTwenty.every(([upkeeps], i) => upkeeps === (i % 2 === 1 ? 1 : 0))).toBe(true);
     });
 
@@ -300,7 +305,9 @@ test.describe("fixed timestep loop (fake requestAnimationFrame)", () => {
 });
 
 test.describe("configurable scheduler", () => {
-    test("a custom upkeepScheduler and upkeepCanceller drive the loop, with timestamps from the FPSAnalyzer", async ({ page }) => {
+    test("a custom upkeepScheduler and upkeepCanceller drive the loop, with timestamps from the FPSAnalyzer", async ({
+        page
+    }) => {
         await bootGame(page);
 
         const result = await page.evaluate(() => {
@@ -315,12 +322,26 @@ test.describe("configurable scheduler", () => {
             let renders = 0;
 
             const runner = new GamesRunnr({
-                games: [() => { upkeeps += 1; }],
-                renderers: [() => { renders += 1; }],
+                games: [
+                    () => {
+                        upkeeps += 1;
+                    }
+                ],
+                renderers: [
+                    () => {
+                        renders += 1;
+                    }
+                ],
                 FPSAnalyzer: new FPSAnalyzr({ getTimestamp: () => time }),
                 // A setTimeout-like scheduler: it never passes a timestamp
-                upkeepScheduler: (callback: () => void) => { scheduled = callback; return 7; },
-                upkeepCanceller: (handle: number) => { cancelled.push(handle); scheduled = undefined; },
+                upkeepScheduler: (callback: () => void) => {
+                    scheduled = callback;
+                    return 7;
+                },
+                upkeepCanceller: (handle: number) => {
+                    cancelled.push(handle);
+                    scheduled = undefined;
+                }
             });
 
             runner.play();
@@ -340,7 +361,7 @@ test.describe("configurable scheduler", () => {
                 renders,
                 cancelled,
                 scheduledAfterPause: !!scheduled,
-                average: runner.getFPSAnalyzer().getAverage(),
+                average: runner.getFPSAnalyzer().getAverage()
             };
         });
 

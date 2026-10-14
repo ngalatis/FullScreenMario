@@ -2,11 +2,7 @@ import * as MarioGame from "../../MarioGame";
 
 MarioGame.MarioGame.settings.maps.library["5-1"] = {
     "name": "5-1",
-    "locations": [
-        { "entry": "Plain" },
-        { "entry": "PipeVertical" },
-        { "area": 1 }
-    ],
+    "locations": [{ "entry": "Plain" }, { "entry": "PipeVertical" }, { "area": 1 }],
     "areas": [
         {
             "setting": "Overworld Alt",
@@ -58,7 +54,8 @@ MarioGame.MarioGame.settings.maps.library["5-1"] = {
                 { "thing": "Stone", "x": 1512, "y": 64, "width": 16, "height": 48 },
                 { "macro": "EndOutsideCastle", "x": 1592, "transport": { "map": "5-2" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [

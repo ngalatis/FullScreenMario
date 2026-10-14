@@ -3,11 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["8-1"] = {
     "name": "8-1",
     "time": 300,
-    "locations": [
-        { "entry": "Plain" },
-        { "entry": "PipeVertical" },
-        { "area": 1 }
-    ],
+    "locations": [{ "entry": "Plain" }, { "entry": "PipeVertical" }, { "area": 1 }],
     "areas": [
         {
             "setting": "Overworld",
@@ -111,9 +107,15 @@ MarioGame.MarioGame.settings.maps.library["8-1"] = {
                 { "macro": "Floor", "x": 2928, "width": 288 },
                 { "thing": "Stone", "x": 2928, "y": 64, "width": 16, "height": 64 },
                 { "macro": "EndOutsideCastle", "x": 3008, "transport": { "map": "8-2" } },
-                { "macro": "Pattern", "pattern": "BackFence", "x": 3072, "skips": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] }
+                {
+                    "macro": "Pattern",
+                    "pattern": "BackFence",
+                    "x": 3072,
+                    "skips": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+                }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [

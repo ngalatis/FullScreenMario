@@ -37,12 +37,12 @@ npm test           # Playwright tests (builds the game, then runs them in Chromi
 The game is exposed as the global `FSM`. Open the browser console and run `FSM.UsageHelper.displayHelpOptions();` for the full list. Common ones:
 
 ```js
-FSM.setMap("1-2");                     // jump to a level (also "Random")
-FSM.addThing("Goomba", 256, 384);      // spawn a thing
-FSM.playerShroom(FSM.player);          // grow Mario
-FSM.playerStarUp(FSM.player);          // starman power
-FSM.player.gravity = FSM.MapScreener.gravity / 2;  // half gravity
-FSM.ItemsHolder.setItem("lives", 99);  // change a stored value
+FSM.setMap("1-2"); // jump to a level (also "Random")
+FSM.addThing("Goomba", 256, 384); // spawn a thing
+FSM.playerShroom(FSM.player); // grow Mario
+FSM.playerStarUp(FSM.player); // starman power
+FSM.player.gravity = FSM.MapScreener.gravity / 2; // half gravity
+FSM.ItemsHolder.setItem("lives", 99); // change a stored value
 FSM.ItemsHolder.increase("coins", 10);
 FSM.ModAttacher.enableMod("Low Gravity");
 ```

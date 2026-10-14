@@ -34,7 +34,8 @@ function audioState(page: Page) {
             themeName: player.getThemeName() as string,
             themePaused: theme ? (theme.paused as boolean) : undefined,
             themeAudible: theme ? (theme.audible as boolean) : undefined,
-            loopingSources: ((window as any).__sources || []).filter((s: any) => s.loop && s.duration > 5).length as number,
+            loopingSources: ((window as any).__sources || []).filter((s: any) => s.loop && s.duration > 5)
+                .length as number
         };
     });
 }
@@ -133,7 +134,7 @@ test.describe("autoplay", () => {
                     const player = (window as any).FSM.AudioPlayer;
                     player.play("Pause");
                     player.addEventImmediate("Pause", "ended", resolve);
-                }),
+                })
         );
         expect(Date.now() - started).toBeLessThan(5000);
         expect(errors).toEqual([]);
@@ -220,9 +221,13 @@ test.describe("playback", () => {
         await page.mouse.click(100, 100);
         await page.evaluate(() => (window as any).FSM.AudioPlayer.playThemePrefixed("Hurry"));
 
-        await page.waitForFunction(() => (window as any).FSM.AudioPlayer.getThemeName() === "Hurry Overworld", undefined, {
-            timeout: 15000,
-        });
+        await page.waitForFunction(
+            () => (window as any).FSM.AudioPlayer.getThemeName() === "Hurry Overworld",
+            undefined,
+            {
+                timeout: 15000
+            }
+        );
         await page.waitForFunction(() => {
             const theme = (window as any).FSM.AudioPlayer.getTheme();
             return !theme.paused && theme.audible && theme.loop;
@@ -362,9 +367,9 @@ test.describe("sounds that fail to load", () => {
                 const fsm = (window as any).FSM;
                 return {
                     failed: fsm.AudioPlayer.getLibrary()["Player Dies"].failed,
-                    playing: "Player Dies" in fsm.AudioPlayer.getSounds(),
+                    playing: "Player Dies" in fsm.AudioPlayer.getSounds()
                 };
-            }),
+            })
         ).toEqual({ failed: true, playing: false });
 
         // The game carries on: a life is lost and the level restarts with a fresh player.
@@ -374,7 +379,7 @@ test.describe("sounds that fail to load", () => {
                 return fsm.player && fsm.player !== (window as any).__firstPlayer && !fsm.player.dead;
             },
             undefined,
-            { timeout: 20000 },
+            { timeout: 20000 }
         );
         expect(await page.evaluate(() => (window as any).FSM.ItemsHolder.getItem("lives"))).toBe(lives - 1);
 
@@ -400,13 +405,13 @@ test.describe("sounds that fail to load", () => {
                         clearTimeout(timeout);
                         resolve("released");
                     });
-                }),
+                })
         );
         expect(released).toBe("released");
 
         // An undecodable file behaves the same way.
         await page.route(/Powerup(%20| )Appears\.mp3/, (route) =>
-            route.fulfill({ status: 200, contentType: "audio/mpeg", body: "this is not an mp3" }),
+            route.fulfill({ status: 200, contentType: "audio/mpeg", body: "this is not an mp3" })
         );
         const decoded = await page.evaluate(
             () =>
@@ -418,7 +423,7 @@ test.describe("sounds that fail to load", () => {
                         clearTimeout(timeout);
                         resolve("ended");
                     });
-                }),
+                })
         );
         expect(decoded).toBe("ended");
 

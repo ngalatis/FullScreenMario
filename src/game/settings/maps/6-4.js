@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["6-4"] = {
     "name": "6-4",
     "time": 300,
-    "locations": [
-        { "entry": "Castle" }
-    ],
+    "locations": [{ "entry": "Castle" }],
     "areas": [
         {
             "setting": "Castle",
@@ -42,12 +40,36 @@ MarioGame.MarioGame.settings.maps.library["6-4"] = {
                 { "thing": "CastleBlock", "x": 704, "y": 72, "fireballs": 6, "direction": 1 },
                 { "thing": "CastleBlock", "x": 736, "y": 32, "fireballs": 6 },
                 { "thing": "Stone", "x": 776, "y": 80, "width": 56, "height": 16 },
-                { "macro": "Fill", "thing": "Block", "x": 848, "y": 32, "xnum": 3, "xwidth": 24, "contents": "Coin", "hidden": true },
-                { "macro": "Fill", "thing": "Block", "x": 856, "y": 64, "xnum": 3, "xwidth": 24, "contents": "Coin", "hidden": true },
+                {
+                    "macro": "Fill",
+                    "thing": "Block",
+                    "x": 848,
+                    "y": 32,
+                    "xnum": 3,
+                    "xwidth": 24,
+                    "contents": "Coin",
+                    "hidden": true
+                },
+                {
+                    "macro": "Fill",
+                    "thing": "Block",
+                    "x": 856,
+                    "y": 64,
+                    "xnum": 3,
+                    "xwidth": 24,
+                    "contents": "Coin",
+                    "hidden": true
+                },
                 { "thing": "Stone", "x": 928, "y": 24, "width": 32, "height": 24 },
                 { "thing": "Stone", "x": 984, "y": 24, "width": 40, "height": 24 },
                 { "thing": "Stone", "x": 984, "y": 80, "width": 40, "height": 16 },
-                { "macro": "EndInsideCastle", "x": 1024, "spawnType": "Blooper", "throwing": true, "transport": { "map": "7-1" } }
+                {
+                    "macro": "EndInsideCastle",
+                    "x": 1024,
+                    "spawnType": "Blooper",
+                    "throwing": true,
+                    "transport": { "map": "7-1" }
+                }
             ]
         }
     ]

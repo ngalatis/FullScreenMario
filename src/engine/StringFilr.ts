@@ -35,7 +35,7 @@ export interface IStringFilrSettings {
 
 /**
  * A general utility for retrieving data from an Object based on nested class
- * names. Class names may be given in any order ro retrieve nested data. 
+ * names. Class names may be given in any order ro retrieve nested data.
  */
 export interface IStringFilr {
     /**
@@ -65,25 +65,23 @@ export interface IStringFilr {
 
     /**
      * Clears the cached entry for a key.
-     * 
+     *
      * @param keyRaw   The raw key whose lookup is to be cleared.
      */
     clearCached(key: string): void;
 
     /**
-     * Retrieves the deepest matching data in the library for a key. 
-     * 
+     * Retrieves the deepest matching data in the library for a key.
+     *
      * @param keyRaw   The raw key for data to look up, in String form.
      * @returns The deepest matching data in the library.
      */
     get(keyRaw: string): any;
 }
 
-
-
 /**
  * A general utility for retrieving data from an Object based on nested class
- * names. Class names may be given in any order ro retrieve nested data. 
+ * names. Class names may be given in any order ro retrieve nested data.
  */
 export class StringFilr implements IStringFilr {
     /**
@@ -108,7 +106,7 @@ export class StringFilr implements IStringFilr {
 
     /**
      * Initializes a new instance of the StringFilr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IStringFilrSettings) {
@@ -171,7 +169,7 @@ export class StringFilr implements IStringFilr {
 
     /**
      * Clears the cached entry for a key.
-     * 
+     *
      * @param keyRaw   The raw key whose lookup is to be cleared.
      */
     clearCached(keyRaw: string): void {
@@ -183,14 +181,13 @@ export class StringFilr implements IStringFilr {
     }
 
     /**
-     * Retrieves the deepest matching data in the library for a key. 
-     * 
+     * Retrieves the deepest matching data in the library for a key.
+     *
      * @param keyRaw   The raw key for data to look up, in String form.
      * @returns The deepest matching data in the library.
      */
     get(keyRaw: string): any {
-        var key: string,
-            result: any;
+        var key: string, result: any;
 
         if (this.normal) {
             key = keyRaw.replace(this.normal, "");
@@ -211,18 +208,17 @@ export class StringFilr implements IStringFilr {
     }
 
     /**
-     * Utility Function to follow a path into the library (this is the driver 
+     * Utility Function to follow a path into the library (this is the driver
      * for searching into the library). For each available key, if it matches
      * a key in current, it is removed from keys and recursion happens on the
      * sub-directory in current.
-     * 
+     *
      * @param keys   The currently available keys to search within.
      * @param current   The current location being searched within the library.
      * @returns The most deeply matched part of the library.
      */
     private followClass(keys: string[], current: any): any {
-        var key: string,
-            i: number;
+        var key: string, i: number;
 
         // If keys runs out, we're done
         if (!keys || !keys.length) {
@@ -250,10 +246,10 @@ export class StringFilr implements IStringFilr {
     }
 
     /**
-     * Utility helper to recursively check for tree branches in the library 
+     * Utility helper to recursively check for tree branches in the library
      * that don't have a key equal to the normal. For each sub-directory that
      * is caught, the path to it is added to output.
-     * 
+     *
      * @param current   The current location being searched within the library.
      * @param path   The current path within the library.
      * @param output   Paths to parts that don't have a matching key.
@@ -283,9 +279,14 @@ export class StringFilr implements IStringFilr {
         var caught: string[] = this.findLackingNormal(this.library, "base", []);
 
         if (caught.length) {
-            throw new Error("Found " + caught.length + " library "
-                + "sub-directories missing the normal: "
-                + "\r\n  " + caught.join("\r\n  "));
+            throw new Error(
+                "Found " +
+                    caught.length +
+                    " library " +
+                    "sub-directories missing the normal: " +
+                    "\r\n  " +
+                    caught.join("\r\n  ")
+            );
         }
     }
 }

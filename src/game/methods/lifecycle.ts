@@ -7,12 +7,23 @@
  * declared on the MarioGame class through interface merging, so callers such as
  * thing.FSM.gameStart(...) keep working unchanged.
  */
-import type { IArea, ICharacter, ICharacterOverlapping, ICustomText, IMapScreenr, IPlayer, IPreThing, IScenery, ISolid, IThing } from "../types";
+import type {
+    IArea,
+    ICharacter,
+    ICharacterOverlapping,
+    ICustomText,
+    IMapScreenr,
+    IPlayer,
+    IPreThing,
+    IScenery,
+    ISolid,
+    IThing
+} from "../types";
 import { MarioGame } from "../MarioGame";
 
 export const lifecycleMethods = {
     /* Global manipulations
-    */
+     */
 
     /**
      * Completely restarts the game. Lives are reset to 3, the map goes back
@@ -22,24 +33,24 @@ export const lifecycleMethods = {
         var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this);
 
         FSM.setMap(FSM.settings.maps.mapDefault, FSM.settings.maps.locationDefault);
-        FSM.ItemsHolder.setItem(
-            "lives",
-            (<any>FSM.settings.items.values).lives.valueDefault);
+        FSM.ItemsHolder.setItem("lives", (<any>FSM.settings.items.values).lives.valueDefault);
 
         FSM.ModAttacher.fireEvent("onGameStart");
     },
 
     /**
-     * Completely ends the game. All Thing groups are clared, sounds are 
-     * stopped, the screen goes to black, "GAME OVER" is displayed. After a 
+     * Completely ends the game. All Thing groups are clared, sounds are
+     * stopped, the screen goes to black, "GAME OVER" is displayed. After a
      * while, the game restarts again via gameStart.
      */
     gameOver(this: MarioGame): void {
         var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             text: ICustomText = <ICustomText>FSM.ObjectMaker.make("CustomText", {
-                "texts": [{
-                    "text": "GAME OVER"
-                }]
+                "texts": [
+                    {
+                        "text": "GAME OVER"
+                    }
+                ]
             }),
             texts: IThing[],
             textWidth: number,
@@ -63,12 +74,10 @@ export const lifecycleMethods = {
             FSM.shiftHoriz(texts[i], textWidth);
         }
 
-        FSM.TimeHandler.addEvent(
-            function (): void {
-                FSM.gameStart();
-                FSM.ItemsHolder.displayContainer();
-            },
-            420);
+        FSM.TimeHandler.addEvent(function (): void {
+            FSM.gameStart();
+            FSM.ItemsHolder.displayContainer();
+        }, 420);
 
         FSM.ModAttacher.fireEvent("onGameOver");
     },
@@ -77,20 +86,26 @@ export const lifecycleMethods = {
      * Generates a key for a Thing based off the current area and the Thing's
      * basic attributes. This should be used for PixelRender.get calls, to
      * cache the Thing's sprite.
-     * 
+     *
      * @param thing
      * @returns A key that to identify the Thing's sprite.
      */
     generateThingKey(this: MarioGame, thing: IThing): string {
-        return (<IArea>thing.GameStarter.AreaSpawner.getArea()).setting
-            + " " + thing.groupType + " "
-            + thing.title + " " + thing.className;
+        return (
+            (<IArea>thing.GameStarter.AreaSpawner.getArea()).setting +
+            " " +
+            thing.groupType +
+            " " +
+            thing.title +
+            " " +
+            thing.className
+        );
     },
 
     /**
      * Adds a Thing via addPreThing based on the specifications in a PreThing.
      * This is done relative to MapScreener.left and MapScreener.floor.
-     * 
+     *
      * @param prething   A PreThing whose Thing is to be added to the game.
      */
     addPreThing(this: MarioGame, prething: IPreThing): void {
@@ -100,7 +115,8 @@ export const lifecycleMethods = {
         thing.FSM.addThing(
             thing,
             prething.left * thing.FSM.unitsize - thing.FSM.MapScreener.left,
-            ((<IMapScreenr>thing.FSM.MapScreener).floor - prething.top) * thing.FSM.unitsize);
+            ((<IMapScreenr>thing.FSM.MapScreener).floor - prething.top) * thing.FSM.unitsize
+        );
 
         // Either the prething or thing, in that order, may request to be in the
         // front or back of its container using the "position" attribute
@@ -124,7 +140,7 @@ export const lifecycleMethods = {
 
     /**
      * Shortcut to call scrollThing on a Player.
-     * 
+     *
      * @param dx   How far to scroll horizontally.
      * @param dy   How far to scroll vertically.
      */
@@ -139,7 +155,7 @@ export const lifecycleMethods = {
     /**
      * Triggered Function for when the game is paused. Music stops, the pause
      * bleep is played, and the mod event is fired.
-     * 
+     *
      * @param FSM
      */
     onGamePause(this: MarioGame, FSM: MarioGame): void {
@@ -149,9 +165,9 @@ export const lifecycleMethods = {
     },
 
     /**
-     * Triggered Function for when the game is played or unpause. Music resumes 
+     * Triggered Function for when the game is played or unpause. Music resumes
      * and the mod event is fired.
-     * 
+     *
      * @param FSM
      */
     onGamePlay(this: MarioGame, FSM: MarioGame): void {
@@ -160,11 +176,11 @@ export const lifecycleMethods = {
     },
 
     /* Upkeep maintenence
-    */
+     */
 
     /**
      * Regular maintenance Function called to decrease time every 25 game ticks.
-     * 
+     *
      * @param FSM
      * @returns Whether time should stop counting, which is whether it's <= 0.
      */
@@ -185,7 +201,7 @@ export const lifecycleMethods = {
      * Regular maintenance Function called on the Scenery group every 350
      * upkeeps (slightly over 5 seconds). Things are checked for being alive
      * and to the left of QuadsKeeper.left; if they aren't, they are removed.
-     * 
+     *
      * @param FSM
      */
     maintainScenery(this: MarioGame, FSM: MarioGame): void {
@@ -206,10 +222,10 @@ export const lifecycleMethods = {
 
     /**
      * Regular maintenance Function called on the Solids group every upkeep.  
-     * Things are checked for being alive and to the right of QuadsKeeper.left; 
+     * Things are checked for being alive and to the right of QuadsKeeper.left;
      * if they aren't, they are removed. Each Thing is also allowed a movement
      * Function.
-     * 
+     *
      * @param FSM
      * @param solids   FSM's GroupHolder's Solid group.
      */
@@ -239,7 +255,7 @@ export const lifecycleMethods = {
      * Things have gravity and y-velocities, collision detection, and resting
      * checks applied before they're checked for being alive. If they are, they
      * are allowed a movement Function; if not, they are removed.
-     * 
+     *
      * @param FSM
      * @param characters   FSM's GroupHolder's Characters group.
      */
@@ -290,12 +306,11 @@ export const lifecycleMethods = {
             // Movement or deletion
             // To do: rethink this...
             if (character.alive) {
-                if (!character.player &&
+                if (
+                    !character.player &&
                     (character.numquads === 0 || character.left > delx) &&
-                    (!character.outerok || (
-                        character.outerok !== 2
-                        && character.right < FSM.MapScreener.width - delx
-                    ))) {
+                    (!character.outerok || (character.outerok !== 2 && character.right < FSM.MapScreener.width - delx))
+                ) {
                     FSM.arrayDeleteThing(character, characters, i);
                     i -= 1;
                 } else {
@@ -311,12 +326,12 @@ export const lifecycleMethods = {
     },
 
     /**
-     * Maintenance Function only triggered for Things that are known to have 
+     * Maintenance Function only triggered for Things that are known to have
      * overlapping Solids stored in their overlaps attribute. This will slide
      * the offending Thing away from the midpoint of those overlaps once a call
-     * until it's past the boundary (and check for those boundaries if not 
+     * until it's past the boundary (and check for those boundaries if not
      * already set).
-     * 
+     *
      * @param character   A Character that is known to be overlapping Solid(s).
      */
     maintainOverlaps(this: MarioGame, character: ICharacterOverlapping): void {
@@ -354,9 +369,9 @@ export const lifecycleMethods = {
      * Sets the overlapping properties of a Thing when it is first detected as
      * overlapping in maintainOverlaps. All Solids in its overlaps Array are
      * checked to find the leftmost and rightmost extremes and midpoint.
-     * Then, the Thing is checked for being to the left or right of the 
+     * Then, the Thing is checked for being to the left or right of the
      * midpoint, and the goal set to move it away from the midpoint.
-     * 
+     *
      * @param thing
      * @returns Whether the Thing's overlaps were successfully recorded.
      */
@@ -411,7 +426,7 @@ export const lifecycleMethods = {
      * of tests are applied, namely falling/jumping, dieing, x- and y-velocities,
      * running, and scrolling. This is separate from the movePlayer movement
      * Function that will be called in maintainCharacters.
-     * 
+     *
      * @param FSM
      */
     maintainPlayer(this: MarioGame, FSM: MarioGame): void {
@@ -478,7 +493,7 @@ export const lifecycleMethods = {
                 FSM.scrollWindow(Math.min(player.scrollspeed, scrolloffset));
             }
         }
-    },
+    }
 };
 
 export type LifecycleMethods = typeof lifecycleMethods;

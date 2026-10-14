@@ -6,18 +6,31 @@
  * declared on the MarioGame class through interface merging, so callers such as
  * thing.FSM.killNormal(...) keep working unchanged.
  */
-import type { IArea, IBowser, IBrick, ICharacter, IMarioGame, IGoomba, IKoopa, ILakitu, IPlayer, IShell, ISolid, IThing } from "../types";
+import type {
+    IArea,
+    IBowser,
+    IBrick,
+    ICharacter,
+    IMarioGame,
+    IGoomba,
+    IKoopa,
+    ILakitu,
+    IPlayer,
+    IShell,
+    ISolid,
+    IThing
+} from "../types";
 import { MarioGame } from "../MarioGame";
 
 export const deathMethods = {
     /* Death functions
-    */
+     */
 
     /**
      * Standard Function to kill a Thing, which means marking it as dead and
      * clearing its numquads, resting, movement, and cycles. It will later be
      * marked as gone by its maintain* Function (Solids or Characters).
-     * 
+     *
      * @param thing   A Thing to kill.
      */
     killNormal(this: MarioGame, thing: IThing): void {
@@ -44,9 +57,9 @@ export const deathMethods = {
     /**
      * Death Function commonly called on characters to animate a small flip
      * before killNormal is called.
-     * 
+     *
      * @param thing   A Thing to kill.
-     * @param extra   How much time to wait beyond the standard 70 steps 
+     * @param extra   How much time to wait beyond the standard 70 steps
      *                before calling killNormal (by default, 0).
      */
     killFlip(this: MarioGame, thing: ICharacter, extra: number = 0): void {
@@ -61,14 +74,13 @@ export const deathMethods = {
         thing.nofall = false;
         thing.resting = thing.movement = undefined;
         thing.yvel = -thing.FSM.unitsize;
-        thing.FSM.TimeHandler.addEvent(
-            thing.FSM.killNormal, 70 + extra, thing);
+        thing.FSM.TimeHandler.addEvent(thing.FSM.killNormal, 70 + extra, thing);
     },
 
     /**
      * Kill Function to replace a Thing with a spawned Thing, determined by the
      * thing's spawnType, in the same location.
-     * 
+     *
      * @param thing    A Thing to kill.
      * @param big   Whether this should skip creating the spawn (by default,
      *              false).
@@ -83,9 +95,7 @@ export const deathMethods = {
             throw new Error("Thing " + thing.title + " has no .spawnType.");
         }
 
-        var spawn: IThing = thing.FSM.ObjectMaker.make(
-            thing.spawnType,
-            thing.spawnSettings || {});
+        var spawn: IThing = thing.FSM.ObjectMaker.make(thing.spawnType, thing.spawnSettings || {});
         thing.FSM.addThing(spawn);
         thing.FSM.setBottom(spawn, thing.bottom);
         thing.FSM.setMidXObj(spawn, thing);
@@ -96,20 +106,25 @@ export const deathMethods = {
     },
 
     /**
-     * A kill Function similar to killSpawn but more configurable. A spawned 
+     * A kill Function similar to killSpawn but more configurable. A spawned
      * Thing is created with the given attributes and copies over any specified
      * attributes from the original Thing.
-     * 
+     *
      * @param thing   A Thing to kill.
      * @param title   The type of new Thing to create, such as "Goomba".
      * @param attributes   An optional object to pass in to the ObjectMaker.make
      *                     call (by default, {}).
-     * @param attributesCopied   An optional listing of attributes to copy from 
+     * @param attributesCopied   An optional listing of attributes to copy from
      *                           the original Thing (by default, none).
      */
-    killReplace(this: MarioGame, thing: IThing, title: string, attributes: any = {}, attributesCopied?: string[]): IThing {
-        var spawn: IThing,
-            i: number;
+    killReplace(
+        this: MarioGame,
+        thing: IThing,
+        title: string,
+        attributes: any = {},
+        attributesCopied?: string[]
+    ): IThing {
+        var spawn: IThing, i: number;
 
         if (typeof attributesCopied !== "undefined") {
             for (i = 0; i < attributesCopied.length; i += 1) {
@@ -134,9 +149,9 @@ export const deathMethods = {
     },
 
     /**
-     * Kill Function for Goombas. If big isn't specified, it replaces the 
+     * Kill Function for Goombas. If big isn't specified, it replaces the
      * killed Goomba with a DeadGoomba via killSpawn.
-     * 
+     *
      * @param thing   A Goomba to kill.
      * @param big   Whether to call killFlip on the Thing instead of
      *              killSpawn, such as when a Shell hits it.
@@ -154,7 +169,7 @@ export const deathMethods = {
      * Kill Function for Koopas. Jumping and floating Koopas are replacing with
      * an equivalent Koopa that's just walking, while walking Koopas become
      * Shells.
-     * 
+     *
      * @param thing   A Koopa to kill.
      * @param big   Whether shells should be immediately killed.
      * @remarks This isn't called when a Shell hits a Koopa.
@@ -163,9 +178,7 @@ export const deathMethods = {
         var spawn: ICharacter;
 
         if (thing.jumping || thing.floating) {
-            spawn = <ICharacter>thing.FSM.killReplace(
-                thing, "Koopa", undefined, ["smart", "direction", "moveleft"]
-            );
+            spawn = <ICharacter>thing.FSM.killReplace(thing, "Koopa", undefined, ["smart", "direction", "moveleft"]);
             spawn.xvel = spawn.moveleft ? -spawn.speed : spawn.speed;
         } else {
             spawn = thing.FSM.killToShell(thing, Number(big));
@@ -177,7 +190,7 @@ export const deathMethods = {
     /**
      * Kill Function for Lakitus. If this is the last Lakitu in Characters,
      * a new one is scheduled to be spawned at the same y-position.
-     * 
+     *
      * @param thing   A Lakitu to kill.
      */
     killLakitu(this: MarioGame, thing: ILakitu): void {
@@ -201,14 +214,15 @@ export const deathMethods = {
             350,
             "Lakitu",
             thing.FSM.MapScreener.right,
-            thing.top);
+            thing.top
+        );
     },
 
     /**
      * Kill Function for Bowsers. In reality this is only called when a Player
-     * Fireballs him or all NPCs are to be killed. It takes five Fireballs to 
+     * Fireballs him or all NPCs are to be killed. It takes five Fireballs to
      * killFlip a Bowser, which scores 5000 points.
-     * 
+     *
      * @param thing   A Bowser to kill.
      * @param big   Whether this should default to killFlip, as in an
      *              EndInsideCastle cutscene.
@@ -235,15 +249,13 @@ export const deathMethods = {
      * BeetleShell (determined by thing.shelltype). The spawn inherits smartness
      * and location from its parent, and is temporarily given nocollidechar to
      * stop double collision detections.
-     * 
+     *
      * @param thing   A Character to kill.
      * @param big   Whether the spawned Shell should be killed
      *              immediately (by default, false).
      */
     killToShell(this: MarioGame, thing: ICharacter, big?: number): IShell {
-        var spawn: IShell,
-            nocollidecharold: boolean | undefined,
-            nocollideplayerold: boolean | undefined;
+        var spawn: IShell, nocollidecharold: boolean | undefined, nocollideplayerold: boolean | undefined;
 
         thing.spawnSettings = {
             "smart": thing.smart
@@ -265,12 +277,10 @@ export const deathMethods = {
         spawn.nocollidechar = true;
         spawn.nocollideplayer = true;
 
-        thing.FSM.TimeHandler.addEvent(
-            function (): void {
-                spawn.nocollidechar = nocollidecharold;
-                spawn.nocollideplayer = nocollideplayerold;
-            },
-            7);
+        thing.FSM.TimeHandler.addEvent(function (): void {
+            spawn.nocollidechar = nocollidecharold;
+            spawn.nocollideplayer = nocollideplayerold;
+        }, 7);
 
         thing.FSM.killNormal(thing);
 
@@ -287,7 +297,7 @@ export const deathMethods = {
      * For characters, they're deleted if .nokillonend isn't truthy. If they
      * have a .killonend function, that's called on them.
      * Solids are only deleted if their .killonend is true.
-     * 
+     *
      * @remarks If thing.killonend is a Function, it is called on the Thing.
      */
     killNPCs(this: MarioGame): void {
@@ -329,19 +339,17 @@ export const deathMethods = {
     /**
      * Kill Function for Bricks. The Brick is killed an an animateBrickShards
      * animation is timed. If other is provided, it's also marked as the Brick's
-     * up, which will kill colliding characters: this works because 
+     * up, which will kill colliding characters: this works because
      * maintainSolids happens before maintainCharacters, so the killNormal won't
      * come into play until after the next maintainCharacters call.
-     * 
+     *
      * @param thing   A Brick to kill.
-     * @param other   An optional Character to mark as the cause of the 
-     *                Brick's death (its up attribute). 
+     * @param other   An optional Character to mark as the cause of the
+     *                Brick's death (its up attribute).
      */
     killBrick(this: MarioGame, thing: IBrick, other?: ICharacter): void {
         thing.FSM.AudioPlayer.play("Break Block");
-        thing.FSM.TimeHandler.addEvent(
-            thing.FSM.animateBrickShards, 1, thing
-        );
+        thing.FSM.TimeHandler.addEvent(thing.FSM.animateBrickShards, 1, thing);
         thing.FSM.killNormal(thing);
 
         if (other instanceof thing.FSM.ObjectMaker.getFunction("Thing")) {
@@ -356,11 +364,11 @@ export const deathMethods = {
      * 1. If big === 2, just kill it altogether
      * 2. If a Player is large and big isn't true, just power down a Player.
      * 3. A player can't survive this, so animate the "shrug" class and an
-     *    up-then-down movement. 
+     *    up-then-down movement.
      * At the end of 1. and 3., decrease the "lives" and "power" statistics and
      * call the equivalent onPlayerDeath or onGameOver callbacks, depending on
      * how many lives are left. The mod event is also fired.
-     * 
+     *
      * @param thing   A Player to kill.
      * @param big   The severity of this death: 0 for normal, 1 for not
      *              survivable, or 2 for immediate death.
@@ -395,22 +403,19 @@ export const deathMethods = {
                 FSM.updateSize(thing);
                 FSM.setClass(thing, "character player dead");
                 FSM.animateCharacterPauseVelocity(thing);
-                FSM.arrayToEnd(
-                    thing, <any[]>FSM.GroupHolder.getGroup(thing.groupType));
+                FSM.arrayToEnd(thing, <any[]>FSM.GroupHolder.getGroup(thing.groupType));
 
                 FSM.MapScreener.notime = true;
                 FSM.MapScreener.nokeys = true;
 
                 FSM.TimeHandler.cancelAllCycles(thing);
-                FSM.TimeHandler.addEvent(
-                    function (): void {
-                        FSM.animateCharacterResumeVelocity(thing, true);
-                        thing.nocollide = true;
-                        thing.movement = thing.resting = undefined;
-                        thing.gravity = FSM.MapScreener.gravity / 2.1;
-                        thing.yvel = MarioGame.unitsize * -1.4;
-                    },
-                    7);
+                FSM.TimeHandler.addEvent(function (): void {
+                    FSM.animateCharacterResumeVelocity(thing, true);
+                    thing.nocollide = true;
+                    thing.movement = thing.resting = undefined;
+                    thing.gravity = FSM.MapScreener.gravity / 2.1;
+                    thing.yvel = MarioGame.unitsize * -1.4;
+                }, 7);
             }
         }
 
@@ -422,18 +427,11 @@ export const deathMethods = {
         FSM.ItemsHolder.setItem("power", 1);
 
         if (FSM.ItemsHolder.getItem("lives") > 0) {
-            FSM.TimeHandler.addEvent(
-                area.onPlayerDeath.bind(FSM),
-                area.onPlayerDeathTimeout,
-                FSM
-            );
+            FSM.TimeHandler.addEvent(area.onPlayerDeath.bind(FSM), area.onPlayerDeathTimeout, FSM);
         } else {
-            FSM.TimeHandler.addEvent(
-                area.onGameOver.bind(FSM),
-                area.onGameOverTimeout,
-                FSM);
+            FSM.TimeHandler.addEvent(area.onGameOver.bind(FSM), area.onGameOverTimeout, FSM);
         }
-    },
+    }
 };
 
 export type DeathMethods = typeof deathMethods;

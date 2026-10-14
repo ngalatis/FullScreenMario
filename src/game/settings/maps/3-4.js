@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["3-4"] = {
     "name": "3-4",
     "time": 300,
-    "locations": [
-        { "entry": "Castle" }
-    ],
+    "locations": [{ "entry": "Castle" }],
     "areas": [
         {
             "setting": "Castle",
@@ -36,8 +34,26 @@ MarioGame.MarioGame.settings.maps.library["3-4"] = {
                 { "macro": "Water", "x": 368, "width": 16 },
                 { "macro": "Floor", "x": 384, "width": 320 },
                 { "macro": "Fill", "thing": "Stone", "x": 424, "y": 8, "xnum": 2, "xwidth": 80, "width": 24 },
-                { "macro": "Fill", "thing": "Stone", "x": 424, "y": 80, "xnum": 2, "xwidth": 80, "width": 24, "height": 16 },
-                { "macro": "Fill", "thing": "CastleBlock", "x": 432, "y": 16, "xnum": 2, "xwidth": 80, "fireballs": 6, "direction": 1 },
+                {
+                    "macro": "Fill",
+                    "thing": "Stone",
+                    "x": 424,
+                    "y": 80,
+                    "xnum": 2,
+                    "xwidth": 80,
+                    "width": 24,
+                    "height": 16
+                },
+                {
+                    "macro": "Fill",
+                    "thing": "CastleBlock",
+                    "x": 432,
+                    "y": 16,
+                    "xnum": 2,
+                    "xwidth": 80,
+                    "fireballs": 6,
+                    "direction": 1
+                },
                 { "macro": "Fill", "thing": "CastleBlock", "x": 432, "y": 64, "xnum": 2, "xwidth": 80, "fireballs": 6 },
                 { "thing": "Stone", "x": 632, "y": 8, "width": 24 },
                 { "thing": "Stone", "x": 632, "y": 80, "width": 24, "height": 16 },

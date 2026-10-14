@@ -21,7 +21,8 @@ MarioGame.MarioGame.settings.maps.library["4-2"] = {
                 { "thing": "PipeHorizontal", "x": 80, "y": 16, "transport": 1 },
                 { "macro": "Pipe", "x": 96, "height": 32 }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -120,7 +121,8 @@ MarioGame.MarioGame.settings.maps.library["4-2"] = {
                 { "macro": "WarpWorld", "x": 1672, "warps": [5] },
                 { "macro": "Fill", "thing": "Brick", "x": 1776, "y": 8, "xnum": 2, "ynum": 11 }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -136,7 +138,8 @@ MarioGame.MarioGame.settings.maps.library["4-2"] = {
                 { "thing": "PipeHorizontal", "x": 104, "y": 16, "transport": 2 },
                 { "thing": "PipeVertical", "x": 120, "y": 88, "height": 88 }
             ]
-        }, {
+        },
+        {
             "setting": "Overworld",
             "blockBoundaries": true,
             "creation": [
@@ -153,7 +156,8 @@ MarioGame.MarioGame.settings.maps.library["4-2"] = {
                 { "thing": "Stone", "x": 72, "y": 64, "width": 16, "height": 64 },
                 { "macro": "EndOutsideCastle", "x": 152, "transport": { "map": "4-3" } }
             ]
-        }, {
+        },
+        {
             "setting": "Overworld",
             "blockBoundaries": true,
             "creation": [

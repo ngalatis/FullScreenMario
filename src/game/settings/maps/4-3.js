@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["4-3"] = {
     "name": "4-3",
     "time": 300,
-    "locations": [
-        { "entry": "Plain" }
-    ],
+    "locations": [{ "entry": "Plain" }],
     "areas": [
         {
             "setting": "Overworld Shrooms",
@@ -22,7 +20,16 @@ MarioGame.MarioGame.settings.maps.library["4-3"] = {
                 { "macro": "Fill", "thing": "Koopa", "x": 224, "y": 44, "xnum": 2, "smart": true },
                 { "macro": "Shroom", "x": 256, "y": 72, "width": 24 },
                 { "macro": "Shroom", "x": 288, "y": 8, "width": 56 },
-                { "thing": "Koopa", "x": 288, "y": 84, "smart": true, "floating": true, "jumping": true, "begin": 32, "end": 88 },
+                {
+                    "thing": "Koopa",
+                    "x": 288,
+                    "y": 84,
+                    "smart": true,
+                    "floating": true,
+                    "jumping": true,
+                    "begin": 32,
+                    "end": 88
+                },
                 { "thing": "Coin", "x": 302, "y": 15 },
                 { "thing": "Koopa", "x": 312, "y": 20, "smart": true },
                 { "macro": "Shroom", "x": 312, "y": 64, "width": 40 },

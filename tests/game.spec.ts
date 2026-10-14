@@ -21,7 +21,7 @@ test.describe("boot", () => {
 
         await bootGame(page);
         const modNames: string[] = await page.evaluate(() =>
-            (window as any).FSM.settings.mods.mods.map((mod: { name: string }) => mod.name),
+            (window as any).FSM.settings.mods.mods.map((mod: { name: string }) => mod.name)
         );
         expect(modNames.length).toBeGreaterThan(5);
 
@@ -56,7 +56,7 @@ test.describe("maps", () => {
             // Ported from the old mocha suite: every location of the map must load too.
             const locations: string[] = await page.evaluate(
                 (name) => Object.keys((window as any).FSM.settings.maps.library[name].locations),
-                mapName,
+                mapName
             );
             for (const location of locations) {
                 await page.evaluate(([name, loc]) => (window as any).FSM.setMap(name, loc), [mapName, location]);
@@ -74,7 +74,7 @@ test.describe("screen sizes", () => {
     for (const [width, height] of [
         [512, 464],
         [2048, 1152],
-        [320, 288],
+        [320, 288]
     ]) {
         test(`boots at ${width}x${height}`, async ({ page }) => {
             const { errors } = collectPageErrors(page);
@@ -110,13 +110,11 @@ test.describe("level editor", () => {
         // and text that is not valid JSON yet is left alone for the user to finish.
         const formatted: string = await page.evaluate(
             (json) => (window as any).FSM.LevelEditor.beautify(json),
-            JSON.stringify(level),
+            JSON.stringify(level)
         );
         expect(formatted).toBe(exported);
         expect(JSON.parse(formatted)).toEqual(level);
-        expect(
-            await page.evaluate(() => (window as any).FSM.LevelEditor.beautify('{"a": 1,')),
-        ).toBe('{"a": 1,');
+        expect(await page.evaluate(() => (window as any).FSM.LevelEditor.beautify('{"a": 1,'))).toBe('{"a": 1,');
 
         // Importing compact text puts the readable form back in the editor without errors.
         const reimported = await page.evaluate((json) => {
@@ -124,7 +122,7 @@ test.describe("level editor", () => {
             editor.setCurrentJSON(json);
             return {
                 text: (document.querySelector(".EditorJSONInput") as HTMLTextAreaElement).value,
-                message: (document.querySelector(".EditorJSONInfo") as HTMLElement).textContent,
+                message: (document.querySelector(".EditorJSONInfo") as HTMLElement).textContent
             };
         }, JSON.stringify(level));
 

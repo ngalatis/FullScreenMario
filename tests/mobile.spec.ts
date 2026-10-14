@@ -16,13 +16,16 @@ async function centerOf(page: Page, selector: string): Promise<{ x: number; y: n
 
 /** Real touches, which Playwright's tap() cannot hold down: dispatched through the DevTools protocol. */
 class Fingers {
-    private constructor(private readonly cdp: CDPSession) { }
+    private constructor(private readonly cdp: CDPSession) {}
 
     static async attach(page: Page): Promise<Fingers> {
         return new Fingers(await page.context().newCDPSession(page));
     }
 
-    private send(type: "touchStart" | "touchMove" | "touchEnd", touchPoints: { x: number; y: number; id: number }[]): Promise<unknown> {
+    private send(
+        type: "touchStart" | "touchMove" | "touchEnd",
+        touchPoints: { x: number; y: number; id: number }[]
+    ): Promise<unknown> {
         return this.cdp.send("Input.dispatchTouchEvent", { type, touchPoints });
     }
 
@@ -51,7 +54,7 @@ const readPlayer = (page: Page) =>
             rightDown: !!player.keys.rightDown,
             leftDown: !!player.keys.leftDown,
             crouch: !!player.keys.crouch,
-            up: !!player.keys.up,
+            up: !!player.keys.up
         };
     });
 
@@ -74,7 +77,7 @@ test.describe("iPhone 13, landscape", () => {
             bodyScrollWidth: document.body.scrollWidth,
             innerWidth: window.innerWidth,
             // A phone must be laid out at device width, not as a shrunken 980px desktop page.
-            layoutWidth: document.documentElement.clientWidth,
+            layoutWidth: document.documentElement.clientWidth
         }));
         expect(scroll.layoutWidth).toBeLessThanOrEqual(scroll.innerWidth);
         expect(scroll.innerWidth).toBeLessThan(980);
@@ -91,7 +94,7 @@ test.describe("iPhone 13, landscape", () => {
             const rect = document.querySelector("canvas")!.getBoundingClientRect();
             return {
                 canvas: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom },
-                viewport: { width: window.innerWidth, height: window.innerHeight },
+                viewport: { width: window.innerWidth, height: window.innerHeight }
             };
         });
 
@@ -101,7 +104,7 @@ test.describe("iPhone 13, landscape", () => {
         expect(canvas.bottom).toBeLessThanOrEqual(viewport.height + 0.5);
         // "Fills": at least one dimension is the whole viewport (the other may be letterboxed a little).
         expect(Math.max(canvas.right - canvas.left, canvas.bottom - canvas.top)).toBeGreaterThan(
-            Math.min(viewport.width, viewport.height) * 0.95,
+            Math.min(viewport.width, viewport.height) * 0.95
         );
         expect(canvas.bottom - canvas.top).toBeGreaterThan(viewport.height * 0.9);
         // The touch controls have a gutter on each side of the picture, so it is not as wide as the screen.
@@ -109,7 +112,7 @@ test.describe("iPhone 13, landscape", () => {
     });
 
     test("shows no rotate overlay, and the touch controls are on, translucent and clear of the HUD", async ({
-        page,
+        page
     }) => {
         await bootGame(page);
         await page.waitForTimeout(500);
@@ -138,14 +141,14 @@ test.describe("iPhone 13, landscape", () => {
         // Nothing reaches into the top half of the picture, where the HUD is.
         for (const name of names) {
             expect(boxes[name].y, `${name} should stay below the HUD`).toBeGreaterThan(
-                canvasBox.y + canvasBox.height * 0.45,
+                canvasBox.y + canvasBox.height * 0.45
             );
             expect(boxes[name].y + boxes[name].height).toBeLessThanOrEqual(canvasBox.y + canvasBox.height + 0.5);
         }
 
-        const opacity = await page.locator('[data-touch-control="DPad"]').evaluate((element) =>
-            Number(getComputedStyle(element).opacity),
-        );
+        const opacity = await page
+            .locator('[data-touch-control="DPad"]')
+            .evaluate((element) => Number(getComputedStyle(element).opacity));
         expect(opacity).toBeGreaterThan(0.2);
         expect(opacity).toBeLessThan(0.9);
     });
@@ -235,7 +238,7 @@ test.describe("iPhone 13, landscape", () => {
         const touchAction = await page.evaluate(() => ({
             game: getComputedStyle(document.querySelector("#game")!).touchAction,
             controls: getComputedStyle(document.querySelector(".touch-passer-container")!).touchAction,
-            overscroll: getComputedStyle(document.body).overscrollBehaviorY,
+            overscroll: getComputedStyle(document.body).overscrollBehaviorY
         }));
         expect(touchAction).toEqual({ game: "none", controls: "none", overscroll: "none" });
     });
@@ -252,7 +255,7 @@ test.describe("iPhone 13, landscape", () => {
 
         for (const size of [
             { width: 640, height: 300 },
-            { width: 844, height: 390 },
+            { width: 844, height: 390 }
         ]) {
             await page.setViewportSize(size);
             await page.waitForTimeout(300);
@@ -292,7 +295,9 @@ test.describe("iPhone 13, landscape", () => {
         await page.waitForTimeout(300);
 
         await page.locator("#menu-button").tap();
-        const toggle = page.locator("#control-Options tr", { hasText: "Touch Controls" }).locator(".options-button-option");
+        const toggle = page
+            .locator("#control-Options tr", { hasText: "Touch Controls" })
+            .locator(".options-button-option");
         await expect(toggle).toHaveText("on");
 
         await toggle.tap();
@@ -328,9 +333,7 @@ test.describe("iPhone 13, portrait", () => {
         expect(covers).toBe(true);
 
         await expect.poll(() => page.evaluate(() => (window as any).FSM.GamesRunner.getPaused())).toBe(true);
-        expect(
-            await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
-        ).toBe(true);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
         expect(errors).toEqual([]);
     });
 
@@ -368,7 +371,7 @@ test.describe("desktop", () => {
 
         const layout = await page.evaluate(() => ({
             canvasBottom: document.querySelector("canvas")!.getBoundingClientRect().bottom,
-            controlsTop: document.querySelector("#controls")!.getBoundingClientRect().top,
+            controlsTop: document.querySelector("#controls")!.getBoundingClientRect().top
         }));
         expect(layout.controlsTop).toBeGreaterThanOrEqual(layout.canvasBottom - 1);
     });
@@ -376,7 +379,9 @@ test.describe("desktop", () => {
     test("the Touch Controls option turns them on and off", async ({ page }) => {
         await bootGame(page);
 
-        const toggle = page.locator("#control-Options tr", { hasText: "Touch Controls" }).locator(".options-button-option");
+        const toggle = page
+            .locator("#control-Options tr", { hasText: "Touch Controls" })
+            .locator(".options-button-option");
         await expect(toggle).toHaveText("off");
 
         await toggle.dispatchEvent("click");
@@ -388,9 +393,7 @@ test.describe("desktop", () => {
         await expect(page.locator(".touch-passer-container")).toBeHidden();
     });
 
-    test("has a fullscreen button that asks for the game container, then tries a landscape lock", async ({
-        page,
-    }) => {
+    test("has a fullscreen button that asks for the game container, then tries a landscape lock", async ({ page }) => {
         await bootGame(page);
 
         const button = page.locator("#fullscreen-button");
@@ -413,9 +416,7 @@ test.describe("desktop", () => {
         });
 
         await button.click();
-        await expect
-            .poll(() => page.evaluate(() => (window as any).__fullscreenCalls))
-            .toEqual(["stage"]);
+        await expect.poll(() => page.evaluate(() => (window as any).__fullscreenCalls)).toEqual(["stage"]);
         // A refused lock must not surface as a page error.
         await expect.poll(() => page.evaluate(() => (window as any).__lockCalls)).toEqual(["landscape"]);
 
@@ -425,7 +426,7 @@ test.describe("desktop", () => {
             return [
                 stage.contains(document.querySelector("canvas")),
                 stage.contains(document.querySelector(".touch-passer-container")),
-                stage.contains(document.getElementById("fullscreen-button")),
+                stage.contains(document.getElementById("fullscreen-button"))
             ];
         });
         expect(holds).toEqual([true, true, true]);
@@ -445,7 +446,10 @@ test.describe("desktop", () => {
     test("scales the canvas with nearest-neighbor, never smoothing", async ({ page }) => {
         await bootGame(page);
 
-        const rendering = await page.locator("canvas").first().evaluate((canvas) => getComputedStyle(canvas).imageRendering);
+        const rendering = await page
+            .locator("canvas")
+            .first()
+            .evaluate((canvas) => getComputedStyle(canvas).imageRendering);
         expect(rendering).toBe("pixelated");
     });
 
@@ -461,7 +465,9 @@ test.describe("desktop", () => {
         expect(wide!.width).toBeGreaterThan(900);
 
         await page.setViewportSize({ width: 600, height: 700 });
-        await expect.poll(async () => (await page.locator("canvas").first().boundingBox())!.width).toBeLessThanOrEqual(600);
+        await expect
+            .poll(async () => (await page.locator("canvas").first().boundingBox())!.width)
+            .toBeLessThanOrEqual(600);
         await expect
             .poll(async () => {
                 const box = (await page.locator("canvas").first().boundingBox())!;

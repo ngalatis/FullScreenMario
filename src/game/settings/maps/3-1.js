@@ -75,11 +75,29 @@ MarioGame.MarioGame.settings.maps.library["3-1"] = {
                 { "thing": "Stone", "x": 1128, "y": 48, "height": 48 },
                 { "macro": "Floor", "x": 1152, "width": 264 },
                 { "thing": "Koopa", "x": 1192, "y": 12 },
-                { "macro": "Fill", "thing": "Brick", "x": 1200, "y": 32, "xnum": 2, "ynum": 2, "xwidth": 16, "yheight": 32 },
+                {
+                    "macro": "Fill",
+                    "thing": "Brick",
+                    "x": 1200,
+                    "y": 32,
+                    "xnum": 2,
+                    "ynum": 2,
+                    "xwidth": 16,
+                    "yheight": 32
+                },
                 { "macro": "Fill", "thing": "Block", "x": 1208, "y": 32, "ynum": 2, "yheight": 32 },
                 { "thing": "Koopa", "x": 1216, "y": 76 },
                 { "macro": "Fill", "thing": "Goomba", "x": 1232, "y": 8, "xnum": 3, "xwidth": 12 },
-                { "macro": "Fill", "thing": "Brick", "x": 1240, "y": 32, "xnum": 2, "ynum": 2, "xwidth": 16, "yheight": 32 },
+                {
+                    "macro": "Fill",
+                    "thing": "Brick",
+                    "x": 1240,
+                    "y": 32,
+                    "xnum": 2,
+                    "ynum": 2,
+                    "xwidth": 16,
+                    "yheight": 32
+                },
                 { "thing": "Block", "x": 1248, "y": 32, "contents": "Mushroom" },
                 { "thing": "Block", "x": 1248, "y": 64 },
                 { "thing": "Koopa", "x": 1320, "y": 12, "jumping": true },
@@ -104,7 +122,8 @@ MarioGame.MarioGame.settings.maps.library["3-1"] = {
                 { "thing": "Koopa", "x": 1528, "y": 76 },
                 { "macro": "EndOutsideCastle", "x": 1600, "transport": { "map": "3-2" } }
             ]
-        }, {
+        },
+        {
             "setting": "Underworld",
             "blockBoundaries": true,
             "creation": [
@@ -118,14 +137,24 @@ MarioGame.MarioGame.settings.maps.library["3-1"] = {
                 { "thing": "Brick", "x": 40, "y": 64, "contents": "Mushroom" },
                 { "macro": "Fill", "thing": "Coin", "x": 41, "y": 47, "xnum": 2, "xwidth": 40 },
                 { "macro": "Fill", "thing": "Brick", "x": 48, "y": 48, "xnum": 2, "xwidth": 24 },
-                { "macro": "Fill", "thing": "Coin", "x": 49, "y": 55, "xnum": 2, "ynum": 2, "xwidth": 24, "yheight": 16 },
+                {
+                    "macro": "Fill",
+                    "thing": "Coin",
+                    "x": 49,
+                    "y": 55,
+                    "xnum": 2,
+                    "ynum": 2,
+                    "xwidth": 24,
+                    "yheight": 16
+                },
                 { "macro": "Fill", "thing": "Brick", "x": 56, "y": 56, "xnum": 2, "ynum": 2 },
                 { "macro": "Fill", "thing": "Coin", "x": 57, "y": 71, "xnum": 2, "ynum": 2, "xwidth": 8, "yheight": 8 },
                 { "thing": "Brick", "x": 80, "y": 64 },
                 { "thing": "PipeHorizontal", "x": 104, "y": 16, "entrance": 1 },
                 { "thing": "PipeVertical", "x": 120, "y": 88, "height": 88 }
             ]
-        }, {
+        },
+        {
             "setting": "Sky Night",
             "blockBoundaries": false,
             "exit": 2,

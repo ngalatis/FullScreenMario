@@ -11,19 +11,19 @@ export default defineConfig({
     reporter: [["list"]],
     use: {
         baseURL: `http://localhost:${port}`,
-        trace: "retain-on-failure",
+        trace: "retain-on-failure"
     },
     projects: [
         {
             name: "chromium",
-            use: { ...devices["Desktop Chrome"] },
-        },
+            use: { ...devices["Desktop Chrome"] }
+        }
     ],
     webServer: {
         // Tests run against the production build, served by `vite preview`.
         command: `npm run build && npm run preview -- --port ${port} --strictPort`,
         url: `http://localhost:${port}`,
         reuseExistingServer: false,
-        timeout: 120_000,
-    },
+        timeout: 120_000
+    }
 });

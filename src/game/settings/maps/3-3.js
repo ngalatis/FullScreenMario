@@ -3,9 +3,7 @@ import * as MarioGame from "../../MarioGame";
 MarioGame.MarioGame.settings.maps.library["3-3"] = {
     "name": "3-3",
     "time": 300,
-    "locations": [
-        { "entry": "Plain" }
-    ],
+    "locations": [{ "entry": "Plain" }],
     "areas": [
         {
             "setting": "Overworld Night",
@@ -54,7 +52,16 @@ MarioGame.MarioGame.settings.maps.library["3-3"] = {
                 { "thing": "Coin", "x": 865, "y": 23 },
                 { "macro": "Tree", "x": 864, "y": 48, "width": 24 },
                 { "thing": "Coin", "x": 873, "y": 55 },
-                { "thing": "Koopa", "x": 912, "y": 66, "smart": true, "jumping": true, "floating": true, "begin": 14, "end": 66 },
+                {
+                    "thing": "Koopa",
+                    "x": 912,
+                    "y": 66,
+                    "smart": true,
+                    "jumping": true,
+                    "floating": true,
+                    "begin": 14,
+                    "end": 66
+                },
                 { "macro": "Tree", "x": 928, "width": 24 },
                 { "macro": "Tree", "x": 952, "y": 24, "width": 96, "solidTrunk": true },
                 { "macro": "Fill", "thing": "Koopa", "x": 992, "y": 36, "xnum": 2, "xwidth": 14, "smart": true },

@@ -501,9 +501,8 @@ export class GamesRunnr implements IGamesRunnr {
         this.setIntervalReal();
     }
 
-
     /* Gets
-    */
+     */
 
     /**
      * @returns The FPSAnalyzer used in the GamesRunnr.
@@ -589,9 +588,8 @@ export class GamesRunnr implements IGamesRunnr {
         return this.upkeepCanceller;
     }
 
-
     /* Runtime
-    */
+     */
 
     /**
      * Meaty function, run once per fixed timestep (every <interval/speed>
@@ -706,9 +704,8 @@ export class GamesRunnr implements IGamesRunnr {
         this.paused ? this.play() : this.pause();
     }
 
-
     /* Games manipulations
-    */
+     */
 
     /**
      * Sets the interval between between upkeeps.
@@ -758,9 +755,8 @@ export class GamesRunnr implements IGamesRunnr {
         this.maxUpdatesPerFrame = limit;
     }
 
-
     /* Frame loop
-    */
+     */
 
     /**
      * Starts a run of frames. The first frame only marks a starting point,
@@ -879,9 +875,8 @@ export class GamesRunnr implements IGamesRunnr {
             return delta;
         }
 
-        var snapped: number = delta >= step
-            ? Math.round(delta / step) * step
-            : step / Math.max(1, Math.round(step / delta));
+        var snapped: number =
+            delta >= step ? Math.round(delta / step) * step : step / Math.max(1, Math.round(step / delta));
 
         if (Math.abs(delta - snapped) > SNAP_TOLERANCE) {
             return delta;
@@ -947,9 +942,8 @@ export class GamesRunnr implements IGamesRunnr {
         }
     }
 
-
     /* Utilities
-    */
+     */
 
     /**
      * Sets the intervalReal variable, which is interval * (inverse of speed).

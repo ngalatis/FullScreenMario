@@ -104,10 +104,10 @@ MarioGame.settings.ui = {
                         return ["60fps", "30fps"];
                     },
                     "source": (FSM: IMarioGame): string => {
-                        return (1 / FSM.PixelDrawer.getFramerateSkip() * 60) + "fps";
+                        return (1 / FSM.PixelDrawer.getFramerateSkip()) * 60 + "fps";
                     },
                     "update": (FSM: IMarioGame, value: string): void => {
-                        FSM.PixelDrawer.setFramerateSkip(1 / Number(value.replace("fps", "")) * 60);
+                        FSM.PixelDrawer.setFramerateSkip((1 / Number(value.replace("fps", ""))) * 60);
                     },
                     "storeLocally": true
                 },
@@ -146,7 +146,8 @@ MarioGame.settings.ui = {
                     }
                 }
             ]
-        }, {
+        },
+        {
             "title": "Controls",
             "generator": "OptionsTable",
             "options": ((controls: string[]): UserWrappr.UISchemas.IOptionsButtonSchema[] => {
@@ -156,9 +157,9 @@ MarioGame.settings.ui = {
                         "type": "Keys",
                         "storeLocally": true,
                         "source": (FSM: UserWrappr.IGameStartr): string[] => {
-                            return FSM.InputWriter
-                                .getAliasAsKeyStrings(title)
-                                .map((string: string) => string.toLowerCase());
+                            return FSM.InputWriter.getAliasAsKeyStrings(title).map((string: string) =>
+                                string.toLowerCase()
+                            );
                         },
                         "callback": (FSM: UserWrappr.IGameStartr, valueOld: any, valueNew: any): void => {
                             FSM.InputWriter.switchAliasValues(
@@ -170,7 +171,8 @@ MarioGame.settings.ui = {
                     };
                 });
             })(["left", "right", "up", "down", "sprint", "pause"])
-        }, {
+        },
+        {
             "title": "Mods!",
             "generator": "OptionsButtons",
             "keyActive": "enabled",
@@ -210,22 +212,21 @@ MarioGame.settings.ui = {
                     FSM.ItemsHolder.saveItem(key);
                 }
             }
-        }, {
+        },
+        {
             "title": "Editor",
             "generator": "LevelEditor",
             "maps": {
                 "rangeX": [1, 4],
                 "rangeY": [1, 8],
-                "callback": (
-                    FSM: IMarioGame,
-                    schema: UserWrappr.UISchemas.ISchema,
-                    button: HTMLElement): void => {
+                "callback": (FSM: IMarioGame, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
                     FSM.LevelEditor.enable();
                     FSM.LevelEditor.setCurrentJSON(JSON.stringify(FSM.MapsCreator.getMapRaw(button.textContent)));
                     FSM.LevelEditor.startBuilding();
                 }
             }
-        }, {
+        },
+        {
             "title": "Maps",
             "generator": "MapsGrid",
             "rangeX": [1, 4],
@@ -233,13 +234,16 @@ MarioGame.settings.ui = {
             "extras": [
                 ((): UserWrappr.UISchemas.IOptionsMapGridExtra => {
                     function getNewSeed(): string {
-                        return new Date().getTime()
-                            .toString()
-                            .split("")
-                            // Same function used in browserchoice.eu :)
-                            .sort((): number => 0.5 - Math.random())
-                            .reverse()
-                            .join("");
+                        return (
+                            new Date()
+                                .getTime()
+                                .toString()
+                                .split("")
+                                // Same function used in browserchoice.eu :)
+                                .sort((): number => 0.5 - Math.random())
+                                .reverse()
+                                .join("")
+                        );
                     }
 
                     return {
@@ -248,7 +252,8 @@ MarioGame.settings.ui = {
                             GameStarter: UserWrappr.IGameStartr,
                             schema: UserWrappr.UISchemas.ISchema,
                             button: HTMLElement,
-                            event: Event): void => {
+                            event: Event
+                        ): void => {
                             var FSM: IMarioGame = <IMarioGame>GameStarter,
                                 parent: HTMLElement | null = (<HTMLElement>event.target).parentElement;
 

@@ -7,13 +7,13 @@ export interface IChangeLinrTransforms {
 
 /**
  * A transformation Function to apply to input.
- * 
+ *
  * @param data   The raw input data to be transformed.
  * @param [key]   They key under which the data is to be stored.
  * @param [attributes]   Any extra attributes to be given to the transforms.
  * @param [scope]   The ChangeLinr calling the transformation.
  * @returns The input data, transformed.
- * @remarks All the parameters after data are listed as optional, but they 
+ * @remarks All the parameters after data are listed as optional, but they
  *          will be passed in by the calling ChangeLinr.
  */
 export interface IChangeLinrTransform {
@@ -34,7 +34,7 @@ export interface IChangeLinrCache {
 export interface IChangeLinrCacheFull {
     [i: string]: {
         [j: string]: any;
-    }
+    };
 }
 
 /**
@@ -63,7 +63,7 @@ export interface IChangeLinrSettings {
 }
 
 /**
- * A general utility class for transforming raw input to processed output. 
+ * A general utility class for transforming raw input to processed output.
  * Transformation functions for inputs are kept along with an order.
  */
 export interface IChangeLinr {
@@ -79,7 +79,7 @@ export interface IChangeLinr {
     getCached(key: string): any;
 
     /**
-     * @returns A complete listing of the cached outputs from all 
+     * @returns A complete listing of the cached outputs from all
      *          processed information, from each pipeline transform.
      */
     getCacheFull(): IChangeLinrCacheFull;
@@ -98,7 +98,7 @@ export interface IChangeLinr {
     /**
      * Applies a series of transforms to input data. If doMakeCache is on, the
      * outputs of this are stored in cache and cacheFull.
-     * 
+     *
      * @param data   The data to be transformed.
      * @param [key]   They key under which the data is to be stored.
      *                If needed but not provided, defaults to data.
@@ -109,9 +109,9 @@ export interface IChangeLinr {
     process(data: any, key?: string, attributes?: any): any;
 
     /**
-     * A version of this.process that returns the complete output from each 
+     * A version of this.process that returns the complete output from each
      * pipelined transform Function in an Object.
-     * 
+     *
      * @param data   The data to be transformed.
      * @param key   They key under which the data is to be stored.
      * @param [attributes]   Any extra attributes to be given to the transforms.
@@ -120,10 +120,8 @@ export interface IChangeLinr {
     processFull(data: any, key: string, attributes?: any): any;
 }
 
-
-
 /**
- * A general utility class for transforming raw input to processed output. 
+ * A general utility class for transforming raw input to processed output.
  * Transformation functions for inputs are kept along with an order.
  */
 export class ChangeLinr implements IChangeLinr {
@@ -177,11 +175,9 @@ export class ChangeLinr implements IChangeLinr {
 
         this.transforms = settings.transforms || {};
 
-        this.doMakeCache = typeof settings.doMakeCache === "undefined"
-            ? true : settings.doMakeCache;
+        this.doMakeCache = typeof settings.doMakeCache === "undefined" ? true : settings.doMakeCache;
 
-        this.doUseCache = typeof settings.doUseCache === "undefined"
-            ? true : settings.doUseCache;
+        this.doUseCache = typeof settings.doUseCache === "undefined" ? true : settings.doUseCache;
 
         this.cache = {};
         this.cacheFull = {};
@@ -196,16 +192,17 @@ export class ChangeLinr implements IChangeLinr {
             }
 
             if (!(this.transforms[this.pipeline[i]] instanceof Function)) {
-                throw new Error("Pipe[" + i + "] ('" + this.pipeline[i] + "') is not a valid Function from transforms.");
+                throw new Error(
+                    "Pipe[" + i + "] ('" + this.pipeline[i] + "') is not a valid Function from transforms."
+                );
             }
 
             this.cacheFull[i] = this.cacheFull[this.pipeline[i]] = {};
         }
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns The cached output of this.process and this.processFull.
@@ -223,7 +220,7 @@ export class ChangeLinr implements IChangeLinr {
     }
 
     /**
-     * @returns A complete listing of the cached outputs from all 
+     * @returns A complete listing of the cached outputs from all
      *          processed information, from each pipeline transform.
      */
     getCacheFull(): IChangeLinrCacheFull {
@@ -245,14 +242,13 @@ export class ChangeLinr implements IChangeLinr {
         return this.doUseCache;
     }
 
-
     /* Core processing
-    */
+     */
 
     /**
      * Applies a series of transforms to input data. If doMakeCache is on, the
      * outputs of this are stored in cache and cacheFull.
-     * 
+     *
      * @param data   The data to be transformed.
      * @param [key]   They key under which the data is to be stored. If needed
      *                for caching but not provided, defaults to data.
@@ -288,9 +284,9 @@ export class ChangeLinr implements IChangeLinr {
     }
 
     /**
-     * A version of this.process that returns the complete output from each 
+     * A version of this.process that returns the complete output from each
      * pipelined transform Function in an Object.
-     * 
+     *
      * @param data   The data to be transformed.
      * @param key   They key under which the data is to be stored.
      * @param [attributes]   Any extra attributes to be given to the transforms.

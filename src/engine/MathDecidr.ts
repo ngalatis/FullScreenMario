@@ -7,7 +7,7 @@ export interface IConstants {
 
 /**
  * A calculation Function.
- * 
+ *
  * @param constants   Useful constants from a MathDecidr.
  * @param equations   Other calculation Functions stored in the MathDecidr.
  * @param args   Any other arguments to pass to the equation.
@@ -55,7 +55,7 @@ export interface IMathDecidr {
     getConstant(name: string): any;
 
     /**
-     * @returns Stored equations with the internal members bound as 
+     * @returns Stored equations with the internal members bound as
      *          their arguments.
      */
     getEquations(): IEquationContainer;
@@ -79,7 +79,7 @@ export interface IMathDecidr {
 
     /**
      * Adds a constant of the given name and value.
-     * 
+     *
      * @param name   The name of the constant to add.
      * @param value   A value for the constant.
      */
@@ -87,7 +87,7 @@ export interface IMathDecidr {
 
     /**
      * Adds an equation Function under the given name.
-     * 
+     *
      * @param name   The name of the equation to add.
      * @param value   A value for the equation.
      */
@@ -95,14 +95,12 @@ export interface IMathDecidr {
 
     /**
      * Runs a stored equation with any number of arguments, returning the result.
-     * 
+     *
      * @param name   The name of the equation to run.
      * @param args   Any arguments to pass to the equation.
      */
     compute(name: string, ...args: any[]): any;
 }
-
-
 
 /**
  * A computation utility to automate running common equations with access
@@ -127,7 +125,7 @@ export class MathDecidr implements IMathDecidr {
 
     /**
      * Initializes a new instance of the MathDecidr class.
-     * 
+     *
      * @param [settings]   Settings to be used for initialization.
      */
     constructor(settings: IMathDecidrSettings = {}) {
@@ -146,9 +144,8 @@ export class MathDecidr implements IMathDecidr {
         }
     }
 
-
     /* Simple gets
-    */
+     */
 
     /**
      * @returns Useful constants the MathDecidr may use in equations.
@@ -166,7 +163,7 @@ export class MathDecidr implements IMathDecidr {
     }
 
     /**
-     * @returns Stored equations with the internal members bound as 
+     * @returns Stored equations with the internal members bound as
      *          their arguments.
      */
     getEquations(): IEquationContainer {
@@ -196,13 +193,12 @@ export class MathDecidr implements IMathDecidr {
         return this.equationsRaw[name];
     }
 
-
     /* Simple additions
-    */
+     */
 
     /**
      * Adds a constant of the given name and value.
-     * 
+     *
      * @param name   The name of the constant to add.
      * @param value   A value for the constant.
      */
@@ -212,7 +208,7 @@ export class MathDecidr implements IMathDecidr {
 
     /**
      * Adds an equation Function under the given name.
-     * 
+     *
      * @param name   The name of the equation to add.
      * @param value   A value for the equation.
      */
@@ -221,13 +217,12 @@ export class MathDecidr implements IMathDecidr {
         this.equations[name] = value.bind(this, this.constants, this.equations);
     }
 
-
     /* Computations
-    */
+     */
 
     /**
      * Runs a stored equation with any number of arguments, returning the result.
-     * 
+     *
      * @param name   The name of the equation to run.
      * @param args   Any arguments to pass to the equation.
      * @returns The result of the equation.

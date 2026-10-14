@@ -21,7 +21,12 @@ MarioGame.MarioGame.settings.runner = {
         },
         function () {
             this.TimeHandler.handleEvents();
-        },
+        }
+    ],
+    // Drawing only reads game state, so it runs once per displayed frame (after
+    // however many of the logic updates above that frame was owed) instead of
+    // once per update. See GamesRunnr.
+    "renderers": [
         function () {
             this.PixelDrawer.refillGlobalCanvas(this.AreaSpawner.getArea().background);
         }

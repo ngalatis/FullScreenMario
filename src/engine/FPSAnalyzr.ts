@@ -49,6 +49,13 @@ export interface IFPSAnalyzr {
     measure(time?: number): void;
 
     /**
+     * Forgets the most recent timestamp, so the next measure only marks a new
+     * starting point instead of recording an FPS across the gap. Used when
+     * playback resumes or the timeline of the timestamps changes.
+     */
+    resetTimestamp?(): void;
+
+    /**
      * Adds an FPS measurement to measurements, and increments the associated
      * count variables.
      * 
@@ -208,6 +215,15 @@ export class FPSAnalyzr implements IFPSAnalyzr {
         }
 
         this.timeCurrent = time;
+    }
+
+    /**
+     * Forgets the most recent timestamp, so the next measure only marks a new
+     * starting point instead of recording an FPS across the gap. Used when
+     * playback resumes or the timeline of the timestamps changes.
+     */
+    resetTimestamp(): void {
+        this.timeCurrent = undefined;
     }
 
     /**

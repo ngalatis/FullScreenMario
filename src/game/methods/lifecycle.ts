@@ -380,9 +380,11 @@ export const lifecycleMethods = {
             other = overlaps[i];
 
             if (other.right > rightX) {
+                rightX = other.right;
                 rightThing = other;
             }
             if (other.left < leftX) {
+                leftX = other.left;
                 leftThing = other;
             }
         }

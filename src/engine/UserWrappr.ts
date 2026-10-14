@@ -34,7 +34,9 @@ export interface IGameStartr {
     InputWriter: InputWritr.IInputWritr;
     LevelEditor: LevelEditr.ILevelEditr;
     UserWrapper: IUserWrappr;
+    canvas: HTMLCanvasElement;
     container: HTMLElement;
+    player?: any;
     addPageStyles(styles: any): void;
     gameStart(): void;
     createElement(tag: string, ...args: any[]): HTMLElement;
@@ -120,6 +122,14 @@ export interface IUserWrapprSettings {
      * The default starting size.
      */
     sizeDefault: string;
+
+    /**
+     * On devices whose primary pointer is coarse (phones and tablets), the
+     * height in game pixels to render at when a size has no finite height. The
+     * canvas is then scaled by the browser to fit the screen, so the game keeps
+     * the same vertical field of view on any phone. Defaults to 464.
+     */
+    coarseHeight?: number;
 
     /**
      * Schemas for each UI control to be made.
@@ -266,6 +276,23 @@ export interface IUserWrappr {
      *             known info, or a container of settings.
      */
     setCurrentSize(size: string | ISizeSummary): void;
+
+    /**
+     * Fits the game's canvas to the space available for it, without restarting
+     * the game. Called automatically when the window, orientation, or full
+     * screen state changes.
+     */
+    fitGame(): void;
+
+    /**
+     * Pauses the game for a layout reason (such as the "rotate your phone"
+     * overlay or an open menu), or resumes it once no reason remains. A game
+     * the player paused personally is never resumed on their behalf.
+     *
+     * @param reason   Name of the reason, such as "rotate".
+     * @param paused   Whether the reason applies.
+     */
+    setLayoutPaused(reason: string, paused: boolean): void;
 }
 
 /**
@@ -1594,6 +1621,28 @@ export class UserWrappr {
     private isPageHidden: boolean;
 
     /**
+     * Layout reasons (such as "rotate" or "menu") the game is currently held
+     * paused for, keyed by name.
+     */
+    private layoutPauseReasons: { [reason: string]: boolean } = {};
+
+    /**
+     * Whether the game is paused because of layoutPauseReasons, rather than by
+     * the player, so it is up to the UserWrappr to resume it.
+     */
+    private pausedByLayout: boolean = false;
+
+    /**
+     * Whether the window and game section are being watched for size changes.
+     */
+    private isObservingLayout: boolean = false;
+
+    /**
+     * Handle of the animation frame a size change is waiting on, if any.
+     */
+    private fitFrame: number;
+
+    /**
      * A utility Function to log messages, commonly console.log.
      */
     private logger: (...args: any[]) => any;
@@ -1712,6 +1761,7 @@ export class UserWrappr {
         this.GameStarter.gameStart();
 
         this.startCheckingDevices();
+        this.applyLayoutPause();
     }
 
 
@@ -1929,9 +1979,14 @@ export class UserWrappr {
         this.GameStartrConstructor.prototype.proliferate(customs, this.currentSize);
 
         if (!isFinite(customs.width)) {
-            customs.width = document.body.clientWidth;
+            customs.width = this.isCoarsePointer()
+                ? this.getCoarseWidth()
+                : document.body.clientWidth;
         }
-        if (!isFinite(customs.height)) {
+        if (!isFinite(customs.height) && this.isCoarsePointer()) {
+            // Phones render at the native height and have the canvas scaled to fit (see fitGame)
+            customs.height = this.settings.coarseHeight || 464;
+        } else if (!isFinite(customs.height)) {
             if (customs.full) {
                 customs.height = screen.height;
             } else if (this.isFullScreen) {
@@ -1946,6 +2001,220 @@ export class UserWrappr {
         }
 
         return customs;
+    }
+
+
+    /* Fitting the game to the screen
+    */
+
+    /**
+     * @returns Whether the primary pointer is coarse, as on a phone or tablet.
+     */
+    isCoarsePointer(): boolean {
+        return typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
+    }
+
+    /**
+     * Computes how wide, in game pixels, a game at the coarse height should be
+     * to fill the screen. It uses the longer side over the shorter one so the
+     * answer is the same whichever way the phone is being held when it loads.
+     *
+     * @returns A width in game pixels.
+     */
+    private getCoarseWidth(): number {
+        var box: { width: number; height: number } = this.getStageBox(),
+            long: number = Math.max(box.width, box.height),
+            short: number = Math.min(box.width, box.height),
+            // Between 16:9 and 22:9, which spans every current phone
+            aspect: number = short > 0 ? Math.min(Math.max(long / short, 16 / 9), 22 / 9) : 16 / 9;
+
+        return Math.round((this.settings.coarseHeight || 464) * aspect);
+    }
+
+    /**
+     * @returns The room available to the game: the content box of its section
+     *          (so padding for things like safe-area insets is left out).
+     */
+    private getStageBox(): { width: number; height: number } {
+        var section: HTMLElement = <HTMLElement>document.querySelector(this.gameElementSelector),
+            style: CSSStyleDeclaration;
+
+        if (!section) {
+            return { width: window.innerWidth, height: window.innerHeight };
+        }
+
+        style = window.getComputedStyle(section);
+
+        return {
+            width: section.clientWidth - (parseFloat(style.paddingLeft) || 0) - (parseFloat(style.paddingRight) || 0),
+            height: section.clientHeight - (parseFloat(style.paddingTop) || 0) - (parseFloat(style.paddingBottom) || 0)
+        };
+    }
+
+    /**
+     * Fits the game's canvas to the room available for it, with CSS only, so
+     * the game itself (its size in game pixels, and its progress) is untouched.
+     * On touch devices and in full screen the game is scaled up or down to fill
+     * the room, keeping its aspect ratio; elsewhere it is only ever scaled down,
+     * if the window has become narrower than the game. The page styles the canvas
+     * with image-rendering: pixelated so scaling stays crisp.
+     */
+    fitGame(): void {
+        var GameStarter: IGameStartr = this.GameStarter,
+            canvas: HTMLCanvasElement = GameStarter && GameStarter.canvas,
+            box: { width: number; height: number },
+            fill: boolean,
+            scale: number,
+            width: string,
+            height: string;
+
+        if (!canvas || !GameStarter.container || !canvas.width || !canvas.height) {
+            return;
+        }
+
+        box = this.getStageBox();
+        if (!(box.width > 0) || !(box.height > 0)) {
+            return;
+        }
+
+        fill = this.isCoarsePointer() || !!(document.fullscreenElement || (<any>document).webkitFullscreenElement);
+
+        scale = box.width / canvas.width;
+        if (fill) {
+            scale = Math.min(scale, box.height / canvas.height);
+        } else {
+            scale = Math.min(1, scale);
+        }
+
+        width = Math.max(1, Math.floor(canvas.width * scale)) + "px";
+        height = Math.max(1, Math.floor(canvas.height * scale)) + "px";
+
+        GameStarter.container.style.width = width;
+        GameStarter.container.style.height = height;
+        canvas.style.width = width;
+        canvas.style.height = height;
+
+        // The HUD (and anything else laid out in game pixels inside the container) is HTML
+        // rather than canvas, so it is scaled the same amount. The touch controls are not:
+        // they are sized for thumbs, relative to the picture they sit on.
+        scale = parseFloat(width) / canvas.width;
+        this.scaleOverlays(scale);
+    }
+
+    /**
+     * Scales the game's HTML overlays (such as the HUD) to match a scaled canvas.
+     *
+     * @param scale   The canvas's scale; 1 means unscaled.
+     */
+    private scaleOverlays(scale: number): void {
+        var container: HTMLElement = this.GameStarter.container,
+            canvas: HTMLCanvasElement = this.GameStarter.canvas,
+            child: HTMLElement,
+            i: number;
+
+        for (i = 0; i < container.children.length; i += 1) {
+            child = <HTMLElement>container.children[i];
+
+            if (child === canvas || child.classList.contains("touch-passer-container")) {
+                continue;
+            }
+
+            child.style.transformOrigin = "0 0";
+            child.style.transform = Math.abs(scale - 1) < 0.0005 ? "" : "scale(" + scale + ")";
+        }
+    }
+
+    /**
+     * Starts watching for anything that changes the room available to the game
+     * (window resizes, orientation changes, full screen, the page's own layout),
+     * and fits the game again when it happens. Safe to call repeatedly.
+     */
+    private observeLayout(): void {
+        var scheduleFit: () => void = this.scheduleFit.bind(this),
+            section: HTMLElement = <HTMLElement>document.querySelector(this.gameElementSelector);
+
+        if (this.isObservingLayout) {
+            return;
+        }
+        this.isObservingLayout = true;
+
+        window.addEventListener("resize", scheduleFit);
+        window.addEventListener("orientationchange", (): void => {
+            scheduleFit();
+            // Some browsers report the old size for a moment after rotating
+            setTimeout(scheduleFit, 250);
+        });
+        document.addEventListener("fullscreenchange", scheduleFit);
+        document.addEventListener("webkitfullscreenchange", scheduleFit);
+
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener("resize", scheduleFit);
+        }
+
+        if (section && typeof ResizeObserver === "function") {
+            new ResizeObserver(scheduleFit).observe(section);
+        }
+    }
+
+    /**
+     * Fits the game on the next animation frame, once for any number of requests.
+     */
+    private scheduleFit(): void {
+        if (this.fitFrame) {
+            return;
+        }
+
+        this.fitFrame = window.requestAnimationFrame((): void => {
+            this.fitFrame = undefined;
+            this.fitGame();
+        });
+    }
+
+    /**
+     * Pauses the game for a layout reason (such as the "rotate your phone"
+     * overlay or an open menu), or resumes it once no reason remains. A game
+     * the player paused personally is never resumed on their behalf.
+     *
+     * @param reason   Name of the reason, such as "rotate".
+     * @param paused   Whether the reason applies.
+     */
+    setLayoutPaused(reason: string, paused: boolean): void {
+        if (paused) {
+            this.layoutPauseReasons[reason] = true;
+        } else {
+            delete this.layoutPauseReasons[reason];
+        }
+
+        this.applyLayoutPause();
+    }
+
+    /**
+     * Pauses or resumes the game to match layoutPauseReasons. A game that has
+     * not finished starting up (it has no player yet) is checked again shortly,
+     * because pausing it that early would stop it from ever finishing.
+     */
+    private applyLayoutPause(): void {
+        var GameStarter: IGameStartr = this.GameStarter,
+            wanted: boolean = Object.keys(this.layoutPauseReasons).length > 0;
+
+        if (!GameStarter) {
+            return;
+        }
+
+        if (wanted && !this.pausedByLayout) {
+            if (!GameStarter.player) {
+                setTimeout(this.applyLayoutPause.bind(this), 100);
+                return;
+            }
+
+            if (!GameStarter.GamesRunner.getPaused()) {
+                GameStarter.GamesRunner.pause();
+                this.pausedByLayout = true;
+            }
+        } else if (!wanted && this.pausedByLayout) {
+            this.pausedByLayout = false;
+            GameStarter.GamesRunner.play();
+        }
     }
 
 
@@ -1993,7 +2262,13 @@ export class UserWrappr {
     private onPageVisible(): void {
         if (this.isPageHidden) {
             this.isPageHidden = false;
-            this.GameStarter.GamesRunner.play();
+
+            if (Object.keys(this.layoutPauseReasons).length > 0) {
+                // Something else (such as the rotate overlay) still wants the game paused
+                this.pausedByLayout = true;
+            } else {
+                this.GameStarter.GamesRunner.play();
+            }
         }
     }
 
@@ -2015,9 +2290,13 @@ export class UserWrappr {
         }
 
         this.GameStarter = new this.GameStartrConstructor(customs);
+        this.pausedByLayout = false;
 
         section.textContent = "";
         section.appendChild(this.GameStarter.container);
+
+        this.fitGame();
+        this.observeLayout();
 
         this.GameStarter.proliferate(document.body, {
             "onkeydown": this.GameStarter.InputWriter.makePipe("onkeydown", "keyCode"),

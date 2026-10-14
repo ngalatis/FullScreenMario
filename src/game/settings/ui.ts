@@ -1,12 +1,12 @@
-import { FullScreenMario } from "../FullScreenMario";
-import type { IFullScreenMario } from "../types";
+import { MarioGame } from "../MarioGame";
+import type { IMarioGame } from "../types";
 import * as ModAttachr from "../../engine/ModAttachr";
 import * as UserWrappr from "../../engine/UserWrappr";
 
-FullScreenMario.settings.ui = {
+MarioGame.settings.ui = {
     "globalName": "FSM",
     "styleSheet": {
-        ".FullScreenMario": {
+        ".MarioGame": {
             "color": "white"
         },
         "@font-face": {
@@ -55,36 +55,36 @@ FullScreenMario.settings.ui = {
                     "type": "Number",
                     "minimum": 0,
                     "maximum": 100,
-                    "source": (FSM: IFullScreenMario): number => {
+                    "source": (FSM: IMarioGame): number => {
                         return Math.round(FSM.AudioPlayer.getVolume() * 100);
                     },
-                    "update": (FSM: IFullScreenMario, value: number): void => {
+                    "update": (FSM: IMarioGame, value: number): void => {
                         FSM.AudioPlayer.setVolume(value / 100);
                     }
                 },
                 {
                     "title": "Mute",
                     "type": "Boolean",
-                    "source": (FSM: IFullScreenMario): boolean => {
+                    "source": (FSM: IMarioGame): boolean => {
                         return FSM.AudioPlayer.getMuted();
                     },
-                    "enable": (FSM: IFullScreenMario): void => {
+                    "enable": (FSM: IMarioGame): void => {
                         FSM.AudioPlayer.setMutedOn();
                     },
-                    "disable": (FSM: IFullScreenMario): void => {
+                    "disable": (FSM: IMarioGame): void => {
                         FSM.AudioPlayer.setMutedOff();
                     }
                 },
                 {
                     "title": "Speed",
                     "type": "Select",
-                    "options": (FSM: IFullScreenMario): string[] => {
+                    "options": (FSM: IMarioGame): string[] => {
                         return [".25x", ".5x", "1x", "2x", "5x"];
                     },
-                    "source": (FSM: IFullScreenMario): string => {
+                    "source": (FSM: IMarioGame): string => {
                         return "1x";
                     },
-                    "update": (FSM: IFullScreenMario, value: string): void => {
+                    "update": (FSM: IMarioGame, value: string): void => {
                         FSM.GamesRunner.setSpeed(Number(value.replace("x", "")));
                     },
                     "storeLocally": true
@@ -96,13 +96,13 @@ FullScreenMario.settings.ui = {
                 {
                     "title": "Framerate",
                     "type": "Select",
-                    "options": (FSM: IFullScreenMario): string[] => {
+                    "options": (FSM: IMarioGame): string[] => {
                         return ["60fps", "30fps"];
                     },
-                    "source": (FSM: IFullScreenMario): string => {
+                    "source": (FSM: IMarioGame): string => {
                         return (1 / FSM.PixelDrawer.getFramerateSkip() * 60) + "fps";
                     },
-                    "update": (FSM: IFullScreenMario, value: string): void => {
+                    "update": (FSM: IMarioGame, value: string): void => {
                         FSM.PixelDrawer.setFramerateSkip(1 / Number(value.replace("fps", "")) * 60);
                     },
                     "storeLocally": true
@@ -111,11 +111,11 @@ FullScreenMario.settings.ui = {
                     "title": "Touch Controls",
                     "type": "Boolean",
                     "storeLocally": true,
-                    "source": (FSM: IFullScreenMario): boolean => false,
-                    "enable": (FSM: IFullScreenMario): void => {
+                    "source": (FSM: IMarioGame): boolean => false,
+                    "enable": (FSM: IMarioGame): void => {
                         setTimeout((): void => FSM.TouchPasser.enable());
                     },
-                    "disable": (FSM: IFullScreenMario): void => {
+                    "disable": (FSM: IMarioGame): void => {
                         setTimeout((): void => FSM.TouchPasser.disable());
                     }
                 },
@@ -123,11 +123,11 @@ FullScreenMario.settings.ui = {
                     "title": "Tilt Controls",
                     "type": "Boolean",
                     "storeLocally": true,
-                    "source": (FSM: IFullScreenMario): boolean => false,
-                    "enable": (FSM: IFullScreenMario): void => {
+                    "source": (FSM: IMarioGame): boolean => false,
+                    "enable": (FSM: IMarioGame): void => {
                         window.ondevicemotion = <any>FSM.InputWriter.makePipe("ondevicemotion", "type");
                     },
-                    "disable": (FSM: IFullScreenMario): void => {
+                    "disable": (FSM: IMarioGame): void => {
                         window.ondevicemotion = undefined;
                     }
                 }
@@ -135,8 +135,8 @@ FullScreenMario.settings.ui = {
             "actions": [
                 {
                     "title": "Screenshot",
-                    "action": (FSM: IFullScreenMario): void => {
-                        FSM.takeScreenshot("FullScreenMario " + new Date().getTime());
+                    "action": (FSM: IMarioGame): void => {
+                        FSM.takeScreenshot("Super Mario Bros " + new Date().getTime());
                     }
                 }
             ]
@@ -149,12 +149,12 @@ FullScreenMario.settings.ui = {
                         "title": title[0].toUpperCase() + title.substr(1),
                         "type": "Keys",
                         "storeLocally": true,
-                        "source": (FSM: IFullScreenMario): string[] => {
+                        "source": (FSM: IMarioGame): string[] => {
                             return FSM.InputWriter
                                 .getAliasAsKeyStrings(title)
                                 .map((string: string) => string.toLowerCase());
                         },
-                        "callback": (FSM: IFullScreenMario, valueOld: any, valueNew: any): void => {
+                        "callback": (FSM: IMarioGame, valueOld: any, valueNew: any): void => {
                             FSM.InputWriter.switchAliasValues(
                                 title,
                                 [FSM.InputWriter.convertKeyStringToAlias(valueOld)],
@@ -169,7 +169,7 @@ FullScreenMario.settings.ui = {
             "generator": "OptionsButtons",
             "keyActive": "enabled",
             "assumeInactive": true,
-            "options": (FSM: IFullScreenMario): UserWrappr.UISchemas.IOptionsButtonSchema[] => {
+            "options": (FSM: IMarioGame): UserWrappr.UISchemas.IOptionsButtonSchema[] => {
                 var mods: ModAttachr.IModAttachrMods = FSM.ModAttacher.getMods(),
                     output: UserWrappr.UISchemas.IOptionsButtonSchema[] = [],
                     mod: ModAttachr.IModAttachrMod,
@@ -192,7 +192,7 @@ FullScreenMario.settings.ui = {
 
                 return output;
             },
-            "callback": (FSM: IFullScreenMario, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
+            "callback": (FSM: IMarioGame, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
                 var name: string = button.textContent,
                     key: string = button.getAttribute("localStorageKey"),
                     mod: ModAttachr.IModAttachrMod = FSM.ModAttacher.getMod(name);
@@ -208,7 +208,7 @@ FullScreenMario.settings.ui = {
                 "rangeX": [1, 4],
                 "rangeY": [1, 8],
                 "callback": (
-                    FSM: IFullScreenMario,
+                    FSM: IMarioGame,
                     schema: UserWrappr.UISchemas.ISchema,
                     button: HTMLElement): void => {
                     FSM.LevelEditor.enable();
@@ -236,7 +236,7 @@ FullScreenMario.settings.ui = {
                     return {
                         "title": "Map Generator!",
                         "callback": (
-                            FSM: IFullScreenMario,
+                            FSM: IMarioGame,
                             schema: UserWrappr.UISchemas.ISchema,
                             button: HTMLElement,
                             event: Event): void => {
@@ -272,7 +272,7 @@ FullScreenMario.settings.ui = {
                     };
                 })()
             ],
-            "callback": (FSM: IFullScreenMario, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
+            "callback": (FSM: IMarioGame, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
                 FSM.LevelEditor.disable();
                 FSM.setMap(button.getAttribute("value") || button.textContent);
             }

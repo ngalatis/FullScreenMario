@@ -1527,7 +1527,7 @@ export class UserWrappr {
 
     /**
      * The GameStartr implementation this is wrapping around, such as
-     * FullScreenMario or FullScreenPokemon.
+     * MarioGame.
      */
     private GameStartrConstructor: IGameStartrConstructor;
 

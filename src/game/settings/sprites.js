@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.sprites = {
+MarioGame.MarioGame.settings.sprites = {
     "spriteWidth": "spritewidthpixels",
     "spriteHeight": "spriteheightpixels",
     "flipVert": "flip-vert",

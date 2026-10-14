@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.devices = {
+MarioGame.MarioGame.settings.devices = {
     "triggers": {
         "a": {
             "trigger": "up"

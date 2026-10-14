@@ -1,8 +1,8 @@
-import { FullScreenMario } from "../FullScreenMario";
+import { MarioGame } from "../MarioGame";
 import type { ICastleAxe, IMapScreenr, IPlayer, ISpringboard, IThing } from "../types";
 import * as MathDecidr from "../../engine/MathDecidr";
 
-FullScreenMario.settings.math = {
+MarioGame.settings.math = {
     "equations": {
         /**
          * Determines whether a player is within touching distance of a castle axe

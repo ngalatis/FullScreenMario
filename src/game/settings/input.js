@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.input = {
+MarioGame.MarioGame.settings.input = {
     "InputWritrArgs": {
         "aliases": {
             // Keyboard aliases
@@ -15,28 +15,28 @@ FullScreenMario.FullScreenMario.settings.input = {
         },
         "triggers": {
             "onkeydown": {
-                "left": FullScreenMario.FullScreenMario.prototype.keyDownLeft,
-                "right": FullScreenMario.FullScreenMario.prototype.keyDownRight,
-                "up": FullScreenMario.FullScreenMario.prototype.keyDownUp,
-                "down": FullScreenMario.FullScreenMario.prototype.keyDownDown,
-                "sprint": FullScreenMario.FullScreenMario.prototype.keyDownSprint,
-                "pause": FullScreenMario.FullScreenMario.prototype.keyDownPause,
-                "mute": FullScreenMario.FullScreenMario.prototype.keyDownMute,
+                "left": MarioGame.MarioGame.prototype.keyDownLeft,
+                "right": MarioGame.MarioGame.prototype.keyDownRight,
+                "up": MarioGame.MarioGame.prototype.keyDownUp,
+                "down": MarioGame.MarioGame.prototype.keyDownDown,
+                "sprint": MarioGame.MarioGame.prototype.keyDownSprint,
+                "pause": MarioGame.MarioGame.prototype.keyDownPause,
+                "mute": MarioGame.MarioGame.prototype.keyDownMute,
             },
             "onkeyup": {
-                "left": FullScreenMario.FullScreenMario.prototype.keyUpLeft,
-                "right": FullScreenMario.FullScreenMario.prototype.keyUpRight,
-                "up": FullScreenMario.FullScreenMario.prototype.keyUpUp,
-                "down": FullScreenMario.FullScreenMario.prototype.keyUpDown,
-                "sprint": FullScreenMario.FullScreenMario.prototype.keyUpSprint,
-                "pause": FullScreenMario.FullScreenMario.prototype.keyUpPause
+                "left": MarioGame.MarioGame.prototype.keyUpLeft,
+                "right": MarioGame.MarioGame.prototype.keyUpRight,
+                "up": MarioGame.MarioGame.prototype.keyUpUp,
+                "down": MarioGame.MarioGame.prototype.keyUpDown,
+                "sprint": MarioGame.MarioGame.prototype.keyUpSprint,
+                "pause": MarioGame.MarioGame.prototype.keyUpPause
             },
             "onmousedown": {
-                "rightclick": FullScreenMario.FullScreenMario.prototype.mouseDownRight
+                "rightclick": MarioGame.MarioGame.prototype.mouseDownRight
             },
             "oncontextmenu": {},
             "ondevicemotion": {
-                "devicemotion": FullScreenMario.FullScreenMario.prototype.deviceMotion
+                "devicemotion": MarioGame.MarioGame.prototype.deviceMotion
             }
         }
     }

@@ -1,15 +1,11 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.mods = {
+MarioGame.MarioGame.settings.mods = {
     "storeLocally": true,
     "mods": [
         {
             "name": "Bouncy Bounce",
             "description": "Mario landing causes him to jump.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onPlayerLanding": function (mod) {
@@ -38,10 +34,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Dark is the Night",
             "description": "The night is darkest before the dawn, but I promise you: the dawn is coming.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
@@ -85,10 +77,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Earthquake!",
             "description": "Mario landing causes everything else to jump.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onPlayerLanding": (function () {
@@ -161,10 +149,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Gradient Skies",
             "description": "Skies fade out to black in the heavens above.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
@@ -248,10 +232,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
             // http://www.themushroomkingdom.net/smb_breakdown.shtml#hard
             "name": "Hard Mode",
             "description": "Like in Super Mario Bros Deluxe!",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onAddThing": function (mod, thing) {
@@ -275,7 +255,7 @@ FullScreenMario.FullScreenMario.settings.mods = {
                     }
                 },
                 "onModEnable": function (mod) {
-                    var FSM = FullScreenMario.FullScreenMario.prototype.ensureCorrectCaller(this),
+                    var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         characters = FSM.GroupHolder.getCharacterGroup(),
                         solids = FSM.GroupHolder.getSolidGroup(),
                         attributes = ["direction", "moveleft", "lookleft", "xvel", "yvel", "speed"],
@@ -309,7 +289,7 @@ FullScreenMario.FullScreenMario.settings.mods = {
                     }
                 },
                 "onModDisable": function (mod) {
-                    var FSM = FullScreenMario.FullScreenMario.prototype.ensureCorrectCaller(this),
+                    var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         characters = FSM.GroupHolder.getCharacterGroup(),
                         solids = FSM.GroupHolder.getSolidGroup(),
                         attributes = ["direction", "moveleft", "lookleft", "xvel", "yvel", "speed"],
@@ -341,10 +321,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "High Speed",
             "description": "Mario's maximum speed is quadrupled.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
@@ -375,14 +351,10 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Infinite Lives",
             "description": "Mario never really dies.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
-                    var FSM = FullScreenMario.FullScreenMario.prototype.ensureCorrectCaller(this),
+                    var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         proto = FSM.ObjectMaker.getFunction("Area").prototype,
                         stats = FSM.settings.items.values.lives;
                     
@@ -395,7 +367,7 @@ FullScreenMario.FullScreenMario.settings.mods = {
                     FSM.ItemsHolder.setItem("lives", Infinity);
                 },
                 "onModDisable": function (mod) {
-                    var FSM = FullScreenMario.FullScreenMario.prototype.ensureCorrectCaller(this),
+                    var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         proto = FSM.ObjectMaker.getFunction("Area").prototype,
                         stats = FSM.settings.items.values.lives;
                     
@@ -413,10 +385,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Invincibility",
             "description": "Mario is constantly given star power.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function () {
@@ -443,10 +411,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Parallax Clouds",
             "description": "Clouds in the sky scroll at about 63% the normal rate.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function () {
@@ -459,10 +423,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Low Gravity",
             "description": "I believe I can fly!",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function () {
@@ -477,10 +437,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Luigi",
             "description": "The little brother who could!",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function () {
@@ -507,10 +463,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, { 
             "name": "Tilt Gravity",
             "description": "Tilting your device pushes characters around",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onDeviceMotion": function (mod, event) {
@@ -550,10 +502,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Palette Swap",
             "description": "Swaps the color palette around randomly for each area.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
@@ -616,14 +564,10 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "QCount",
             "description": "QQQQQQQ",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
-                    var FSM = FullScreenMario.FullScreenMario.prototype.ensureCorrectCaller(this),
+                    var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         characters = mod.settings.characters,
                         charactersFSM = FSM.GroupHolder.getCharacterGroup(),
                         level;
@@ -689,10 +633,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Super Fireballs",
             "description": "Fireballs blow up solids, and Mario has unlimited.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {
@@ -707,10 +647,6 @@ FullScreenMario.FullScreenMario.settings.mods = {
         }, {
             "name": "Trip of Acid",
             "description": "Sprites aren't cleared from the screen each game tick.",
-            "author": {
-                "name": "Josh Goldberg",
-                "email": "josh@fullscreenmario.com"
-            },
             "enabled": false,
             "events": {
                 "onModEnable": function (mod) {

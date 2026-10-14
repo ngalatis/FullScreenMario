@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../../FullScreenMario";
+import * as MarioGame from "../../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.maps.library.Random = {
+MarioGame.MarioGame.settings.maps.library.Random = {
     "name": "Random",
     "locations": {
         "0": { "entry": "Plain", "area": "Overworld" },

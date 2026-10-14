@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../../FullScreenMario";
+import * as MarioGame from "../../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.maps.library["3-4"] = {
+MarioGame.MarioGame.settings.maps.library["3-4"] = {
     "name": "3-4",
     "time": 300,
     "locations": [

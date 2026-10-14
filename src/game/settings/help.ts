@@ -1,14 +1,13 @@
-import { FullScreenMario } from "../FullScreenMario";
+import { MarioGame } from "../MarioGame";
 
-FullScreenMario.settings.help = {
+MarioGame.settings.help = {
     "globalName": "FSM",
     "aliases": [
         ["{GAME}", "FSM"]
     ],
     "openings": [
-        ["%cHi, thanks for playing FullScreenMario!%c :)", "head"],
-        ["If you'd like to know the common cheats, enter %c{GAME}.UsageHelper.displayHelpOptions();%c here.", "code"],
-        "http://www.github.com/FullScreenShenanigans/FullScreenMario"
+        ["%cHi, thanks for playing!%c :)", "head"],
+        ["If you'd like to know the common cheats, enter %c{GAME}.UsageHelper.displayHelpOptions();%c here.", "code"]
     ],
     "options": {
         "Map": [

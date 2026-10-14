@@ -1,9 +1,9 @@
 import "./styles.css";
 
 import * as UserWrappr from "./engine/UserWrappr";
-import { FullScreenMario } from "./game/FullScreenMario";
+import { MarioGame } from "./game/MarioGame";
 
-// The settings modules are side-effect scripts that fill in FullScreenMario.settings.*.
+// The settings modules are side-effect scripts that fill in MarioGame.settings.*.
 // They must be imported in this exact order (it is the order the original index.html
 // loaded them in): maps.ts is imported before the individual map files.
 import "./game/settings/audio";
@@ -61,21 +61,17 @@ import "./game/settings/sprites";
 import "./game/settings/touch";
 import "./game/settings/ui";
 
-const startTime = Date.now();
-
 function start(): void {
     const userWrapper = new UserWrappr.UserWrappr(
-        FullScreenMario.prototype.proliferate(
+        MarioGame.prototype.proliferate(
             {
-                "GameStartrConstructor": FullScreenMario
+                "GameStartrConstructor": MarioGame
             },
-            FullScreenMario.settings.ui,
+            MarioGame.settings.ui,
             true));
 
     // UserWrappr exposes the game as a global named by settings.ui.globalName ("FSM"),
     // which is what the console cheats documented in the help menu rely on.
-    console.log("It took " + (Date.now() - startTime) + " milliseconds to start.");
-
     (<any>userWrapper.getGameStarter()).UsageHelper.displayHelpMenu();
 }
 

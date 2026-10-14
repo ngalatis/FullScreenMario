@@ -5,24 +5,24 @@ import * as MapsCreatr from "../engine/MapsCreatr";
 import * as MathDecidr from "../engine/MathDecidr";
 import * as ObjectMakr from "../engine/ObjectMakr";
 import * as TimeHandlr from "../engine/TimeHandlr";
-import type { IArea, IBlock, IBlooper, IBowser, IBowserFire, IBrick, IBrickShard, IBulletBill, ICannon, ICastleAxe, ICastleBlock, ICastleFireball, ICharacter, ICharacterOverlapping, ICheepCheep, ICoin, ICustomText, ICustomTextInfo, IDetectCollision, IDetectWindow, IDetector, IDeviceMotionStatus, IEnemy, IFireball, IFirework, IFullScreenMario, IFullScreenMarioStoredSettings, IGoomba, IHammerBro, IItem, IKoopa, ILakitu, ILocation, IMacroBridgeSettings, IMacroBulletBillsStartSettings, IMacroBulletBillsStopSettings, IMacroCastleSettings, IMacroCeilingSettings, IMacroCheepsStartSettings, IMacroCheepsStopSettings, IMacroEndInsideCastleSettings, IMacroEndOutsideCastleSettings, IMacroFillPrePatternSettings, IMacroFillPreThingsSettings, IMacroFloorSettings, IMacroLakituStopSettings, IMacroPipeCornerSettings, IMacroPipeSettings, IMacroPlatformGeneratorSettings, IMacroScaleSettings, IMacroSectionDeciderSettings, IMacroSectionFailSettings, IMacroSectionPassSettings, IMacroSectionSettings, IMacroShroomSettings, IMacroStartInsideCastleSettings, IMacroTreeSettings, IMacroWarpWorldSettings, IMacroWaterSettings, IMap, IMapScreenr, IPipe, IPiranha, IPlatform, IPlayer, IPodoboo, IPreThing, IRandomSpawner, IRestingStone, IScenery, IScrollBlocker, ISectionDetector, IShell, ISolid, ISpiny, ISpinyEgg, ISpringboard, IStar, IText, ITextMappings, IThing, IThingFloating, IThingSliding, IVine } from "./types";
+import type { IArea, IBlock, IBlooper, IBowser, IBowserFire, IBrick, IBrickShard, IBulletBill, ICannon, ICastleAxe, ICastleBlock, ICastleFireball, ICharacter, ICharacterOverlapping, ICheepCheep, ICoin, ICustomText, ICustomTextInfo, IDetectCollision, IDetectWindow, IDetector, IDeviceMotionStatus, IEnemy, IFireball, IFirework, IMarioGame, IMarioGameStoredSettings, IGoomba, IHammerBro, IItem, IKoopa, ILakitu, ILocation, IMacroBridgeSettings, IMacroBulletBillsStartSettings, IMacroBulletBillsStopSettings, IMacroCastleSettings, IMacroCeilingSettings, IMacroCheepsStartSettings, IMacroCheepsStopSettings, IMacroEndInsideCastleSettings, IMacroEndOutsideCastleSettings, IMacroFillPrePatternSettings, IMacroFillPreThingsSettings, IMacroFloorSettings, IMacroLakituStopSettings, IMacroPipeCornerSettings, IMacroPipeSettings, IMacroPlatformGeneratorSettings, IMacroScaleSettings, IMacroSectionDeciderSettings, IMacroSectionFailSettings, IMacroSectionPassSettings, IMacroSectionSettings, IMacroShroomSettings, IMacroStartInsideCastleSettings, IMacroTreeSettings, IMacroWarpWorldSettings, IMacroWaterSettings, IMap, IMapScreenr, IPipe, IPiranha, IPlatform, IPlayer, IPodoboo, IPreThing, IRandomSpawner, IRestingStone, IScenery, IScrollBlocker, ISectionDetector, IShell, ISolid, ISpiny, ISpinyEgg, ISpringboard, IStar, IText, ITextMappings, IThing, IThingFloating, IThingSliding, IVine } from "./types";
 
 /**
  * A free HTML5 remake of Nintendo's original Super Mario Bros, expanded for the
  * modern web. It includes the original 32 levels, a random map generator, a 
  * level editor, and over a dozen custom mods.
  */
-export class FullScreenMario extends GameStartr.GameStartr implements IFullScreenMario {
+export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     // For the sake of reset functions, constants are stored as members of the 
-    // FullScreenMario Function itself - this allows prototype setters to use 
+    // MarioGame Function itself - this allows prototype setters to use 
     // them regardless of whether the prototype has been instantiated yet.
 
     /**
      * Static settings passed to individual reset Functions. Each of these
-     * should be filled out separately, after the FullScreenMario class
+     * should be filled out separately, after the MarioGame class
      * has been declared but before an instance has been instantiated.
      */
-    public static settings: IFullScreenMarioStoredSettings = {
+    public static settings: IMarioGameStoredSettings = {
         "audio": undefined,
         "collisions": undefined,
         "devices": undefined,
@@ -59,7 +59,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
     /**
      * How much falling Characters accelerate downward by default.
      */
-    public static gravity: number = Math.round(12 * FullScreenMario.unitsize) / 100;
+    public static gravity: number = Math.round(12 * MarioGame.unitsize) / 100;
 
     /**
      * Levels of points to award for hopping on / shelling enemies.
@@ -79,14 +79,14 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
     };
 
     /**
-     * Overriden MapScreenr refers to the IMapScreenr defined in FullScreenMario.d.ts.
+     * Overriden MapScreenr refers to the IMapScreenr defined in MarioGame.d.ts.
      */
     public MapScreener: IMapScreenr;
 
     /**
      * Stored settings to be stored separately and kept within a GameStartr.
      */
-    public settings: IFullScreenMarioStoredSettings;
+    public settings: IMarioGameStoredSettings;
 
     /**
      * How much to expand each pixel from raw sizing measurements to in-game.
@@ -118,24 +118,24 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
     public deviceMotionStatus: IDeviceMotionStatus;
 
     /**
-     * Initializes a new instance of the FullScreenMario class using the static
-     * settings stored in `FullScreenMario.setting`.
+     * Initializes a new instance of the MarioGame class using the static
+     * settings stored in `MarioGame.setting`.
      * 
      * @param settings   Extra settings such as screen size.
      */
     constructor(settings: GameStartr.IGameStartrSettings) {
         // Native classes forbid touching `this` before super(). The base constructor
         // runs the reset chain, which reads `this.settings`, so the static settings are
-        // exposed through the prototype (see FullScreenMario.prototype.settings below).
+        // exposed through the prototype (see MarioGame.prototype.settings below).
         super(
-            FullScreenMario.prototype.proliferate(
+            MarioGame.prototype.proliferate(
                 {
-                    constantsSource: FullScreenMario,
+                    constantsSource: MarioGame,
                     constants: ["unitsize", "scale", "gravity", "pointLevels", "customTextMappings"]
                 },
                 settings));
 
-        this.settings = FullScreenMario.settings;
+        this.settings = MarioGame.settings;
 
         this.deviceMotionStatus = {
             motionLeft: false,
@@ -159,7 +159,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetObjectMaker(FSM: FullScreenMario, settings: GameStartr.IGameStartrSettings): void {
+    resetObjectMaker(FSM: MarioGame, settings: GameStartr.IGameStartrSettings): void {
         FSM.ObjectMaker = new ObjectMakr.ObjectMakr(
             FSM.proliferate(
                 {
@@ -185,7 +185,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetAudioPlayer(FSM: FullScreenMario, settings: GameStartr.IGameStartrSettings): void {
+    resetAudioPlayer(FSM: MarioGame, settings: GameStartr.IGameStartrSettings): void {
         super.resetAudioPlayer(FSM, settings);
 
         FSM.AudioPlayer.setGetVolumeLocal(FSM.getVolumeLocal.bind(FSM, FSM));
@@ -199,7 +199,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetAreaSpawner(FSM: FullScreenMario, settings: GameStartr.IGameStartrSettings): void {
+    resetAreaSpawner(FSM: MarioGame, settings: GameStartr.IGameStartrSettings): void {
         FSM.AreaSpawner = new AreaSpawnr.AreaSpawnr({
             "MapsCreator": FSM.MapsCreator,
             "MapScreener": FSM.MapScreener,
@@ -218,7 +218,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetItemsHolder(FSM: FullScreenMario, settings: GameStartr.IGameStartrSettings): void {
+    resetItemsHolder(FSM: MarioGame, settings: GameStartr.IGameStartrSettings): void {
         super.resetItemsHolder(FSM, settings);
 
         if (settings.width < 560) {
@@ -232,7 +232,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetMathDecider(FSM: FullScreenMario, customs: GameStartr.IMathDecidrCustoms): void {
+    resetMathDecider(FSM: MarioGame, customs: GameStartr.IMathDecidrCustoms): void {
         FSM.MathDecider = new MathDecidr.MathDecidr(
             FSM.proliferate(
                 {
@@ -251,11 +251,11 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetContainer(FSM: FullScreenMario, settings: GameStartr.IGameStartrSettings): void {
+    resetContainer(FSM: MarioGame, settings: GameStartr.IGameStartrSettings): void {
         super.resetContainer(FSM, settings);
 
         FSM.container.style.fontFamily = "Press Start";
-        FSM.container.className += " FullScreenMario";
+        FSM.container.className += " MarioGame";
 
         FSM.PixelDrawer.setThingArrays([
             <GameStartr.IThing[]>FSM.GroupHolder.getGroup("Scenery"),
@@ -277,7 +277,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * to default, and the onGameStart mod trigger is fired.
      */
     gameStart(): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this);
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this);
 
         FSM.setMap(FSM.settings.maps.mapDefault, FSM.settings.maps.locationDefault);
         FSM.ItemsHolder.setItem(
@@ -293,7 +293,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * while, the game restarts again via gameStart.
      */
     gameOver(): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             text: ICustomText = <ICustomText>FSM.ObjectMaker.make("CustomText", {
                 "texts": [{
                     "text": "GAME OVER"
@@ -411,7 +411,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @returns A newly created Player in the game.
      */
     addPlayer(left: number = this.unitsize * 16, bottom: number = this.unitsize * 16): IPlayer {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             player: IPlayer;
 
         player = FSM.player = <IPlayer>FSM.ObjectMaker.make("Player", {
@@ -459,7 +459,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param dy   How far to scroll vertically.
      */
     scrollPlayer(dx: number, dy?: number): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this);
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this);
 
         FSM.scrollThing(FSM.player, dx, dy);
 
@@ -472,7 +472,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param FSM
      */
-    onGamePause(FSM: FullScreenMario): void {
+    onGamePause(FSM: MarioGame): void {
         FSM.AudioPlayer.pauseAll();
         FSM.AudioPlayer.play("Pause");
         FSM.ModAttacher.fireEvent("onGamePause");
@@ -484,7 +484,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param FSM
      */
-    onGamePlay(FSM: FullScreenMario): void {
+    onGamePlay(FSM: MarioGame): void {
         FSM.AudioPlayer.resumeAll();
         FSM.ModAttacher.fireEvent("onGamePlay");
     }
@@ -500,7 +500,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownLeft(FSM: FullScreenMario, event?: Event): void {
+    keyDownLeft(FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
             return;
         }
@@ -519,7 +519,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownRight(FSM: FullScreenMario, event?: Event): void {
+    keyDownRight(FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
             return;
         }
@@ -542,7 +542,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownUp(FSM: FullScreenMario, event?: Event): void {
+    keyDownUp(FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
             return;
         }
@@ -585,7 +585,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownDown(FSM: FullScreenMario, event?: Event): void {
+    keyDownDown(FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
             return;
         }
@@ -607,7 +607,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownSprint(FSM: FullScreenMario, event?: Event): void {
+    keyDownSprint(FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
             return;
         }
@@ -633,7 +633,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownPause(FSM: FullScreenMario, event?: Event): void {
+    keyDownPause(FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
             FSM.GamesRunner.play();
         } else {
@@ -654,7 +654,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownMute(FSM: FullScreenMario, event?: Event): void {
+    keyDownMute(FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
             return;
         }
@@ -674,7 +674,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpLeft(FSM: FullScreenMario, event?: Event): void {
+    keyUpLeft(FSM: MarioGame, event?: Event): void {
         var player: IPlayer = FSM.player;
 
         player.keys.run = 0;
@@ -694,7 +694,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpRight(FSM: FullScreenMario, event?: Event): void {
+    keyUpRight(FSM: MarioGame, event?: Event): void {
         var player: IPlayer = FSM.player;
 
         player.keys.run = 0;
@@ -714,7 +714,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpUp(FSM: FullScreenMario, event?: Event): void {
+    keyUpUp(FSM: MarioGame, event?: Event): void {
         var player: IPlayer = FSM.player;
 
         if (!FSM.MapScreener.underwater) {
@@ -736,7 +736,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpDown(FSM: FullScreenMario, event?: Event): void {
+    keyUpDown(FSM: MarioGame, event?: Event): void {
         var player: IPlayer = FSM.player;
 
         player.keys.crouch = false;
@@ -759,7 +759,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpSprint(FSM: FullScreenMario, event?: Event): void {
+    keyUpSprint(FSM: MarioGame, event?: Event): void {
         var player: IPlayer = FSM.player;
 
         player.keys.sprint = false;
@@ -776,7 +776,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpPause(FSM: FullScreenMario, event?: Event): void {
+    keyUpPause(FSM: MarioGame, event?: Event): void {
         FSM.ModAttacher.fireEvent("onKeyUpPause");
 
         if (event && event.preventDefault !== undefined) {
@@ -791,7 +791,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    mouseDownRight(FSM: FullScreenMario, event?: Event): void {
+    mouseDownRight(FSM: MarioGame, event?: Event): void {
         FSM.GamesRunner.togglePause();
         FSM.ModAttacher.fireEvent("onMouseDownRight");
 
@@ -808,7 +808,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    deviceMotion(FSM: FullScreenMario, event: DeviceMotionEvent): void {
+    deviceMotion(FSM: MarioGame, event: DeviceMotionEvent): void {
         var player: IPlayer = FSM.player,
             deviceMotionStatus: IDeviceMotionStatus = FSM.deviceMotionStatus,
             acceleration: DeviceMotionEventAcceleration = event.accelerationIncludingGravity;
@@ -856,7 +856,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @returns Whether inputs are allowed to trigger.
      */
-    canInputsTrigger(FSM: FullScreenMario): boolean {
+    canInputsTrigger(FSM: MarioGame): boolean {
         return !FSM.MapScreener.nokeys;
     }
 
@@ -870,7 +870,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @returns Whether time should stop counting, which is whether it's <= 0.
      */
-    maintainTime(FSM: FullScreenMario): boolean {
+    maintainTime(FSM: MarioGame): boolean {
         if (!(<IMapScreenr>FSM.MapScreener).notime) {
             FSM.ItemsHolder.decrease("time", 1);
             return false;
@@ -890,7 +890,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param FSM
      */
-    maintainScenery(FSM: FullScreenMario): void {
+    maintainScenery(FSM: MarioGame): void {
         var things: IScenery[] = <IScenery[]>FSM.GroupHolder.getGroup("Scenery"),
             delx: number = FSM.QuadsKeeper.left,
             thing: IThing,
@@ -915,7 +915,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param solids   FSM's GroupHolder's Solid group.
      */
-    maintainSolids(FSM: FullScreenMario, solids: ISolid[]): void {
+    maintainSolids(FSM: MarioGame, solids: ISolid[]): void {
         var delx: number = FSM.QuadsKeeper.left,
             solid: IThing,
             i: number;
@@ -945,7 +945,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param characters   FSM's GroupHolder's Characters group.
      */
-    maintainCharacters(FSM: FullScreenMario, characters: ICharacter[]): void {
+    maintainCharacters(FSM: MarioGame, characters: ICharacter[]): void {
         var delx: number = FSM.QuadsKeeper.right,
             character: ICharacter,
             i: number;
@@ -1114,7 +1114,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param FSM
      */
-    maintainPlayer(FSM: FullScreenMario): void {
+    maintainPlayer(FSM: MarioGame): void {
         var player: IPlayer = FSM.player;
         if (!FSM.isThingAlive(player)) {
             return;
@@ -1530,7 +1530,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      *                  false).
      */
     gainLife(amount: number, nosound?: boolean): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this);
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this);
 
         amount = Number(amount) || 1;
 
@@ -1552,8 +1552,8 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      *          y-velocity, without considering x-direction.
      */
     itemJump(thing: IItem): void {
-        thing.yvel -= FullScreenMario.unitsize * 1.4;
-        this.shiftVert(thing, -FullScreenMario.unitsize);
+        thing.yvel -= MarioGame.unitsize * 1.4;
+        this.shiftVert(thing, -MarioGame.unitsize);
     }
 
     /**
@@ -1836,7 +1836,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
                 thing.FSM.removeClass(thing, "large");
                 thing.FSM.setPlayerSizeSmall(thing);
                 thing.FSM.setBottom(
-                    thing, bottom - FullScreenMario.unitsize
+                    thing, bottom - MarioGame.unitsize
                 );
             },
             21,
@@ -2001,7 +2001,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param thing   A DeadGoomba being spawned.
      */
     spawnDeadGoomba(thing: IThing): void {
-        thing.FSM.TimeHandler.addEvent(FullScreenMario.prototype.killNormal, 21, thing);
+        thing.FSM.TimeHandler.addEvent(MarioGame.prototype.killNormal, 21, thing);
     }
 
     /**
@@ -2231,7 +2231,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @returns Whether CheepCheep spawning has been cancelled.
      */
-    spawnRandomCheep(FSM: FullScreenMario): boolean {
+    spawnRandomCheep(FSM: MarioGame): boolean {
         if (!FSM.MapScreener.spawningCheeps) {
             return true;
         }
@@ -2261,7 +2261,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @returns Whether BulletBill spawning has been cancelled.
      */
-    spawnRandomBulletBill(FSM: FullScreenMario): boolean {
+    spawnRandomBulletBill(FSM: MarioGame): boolean {
         if (!FSM.MapScreener.spawningBulletBills) {
             return true;
         }
@@ -2385,7 +2385,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param thing   A RandomSpawner being spawned.
      */
     spawnRandomSpawner(thing: IRandomSpawner): void {
-        var FSM: IFullScreenMario = thing.FSM,
+        var FSM: IMarioGame = thing.FSM,
             left: number = (thing.left + FSM.MapScreener.left) / FSM.unitsize;
 
         FSM.WorldSeeder.clearGeneratedCommands();
@@ -2596,7 +2596,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param thing   An activated SectionDecider.
      */
     activateSectionBefore(thing: ISectionDetector): void {
-        var FSM: IFullScreenMario = thing.FSM,
+        var FSM: IMarioGame = thing.FSM,
             MapsCreator: MapsCreatr.IMapsCreatr = FSM.MapsCreator,
             MapScreener: MapScreenr.MapScreenr = FSM.MapScreener,
             AreaSpawner: AreaSpawnr.IAreaSpawnr = FSM.AreaSpawner,
@@ -2661,7 +2661,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param thing   An activated SectionDetector.
      */
     activateSectionStretch(thing: ISectionDetector): void {
-        var FSM: IFullScreenMario = thing.FSM,
+        var FSM: IMarioGame = thing.FSM,
             MapsCreator: MapsCreatr.IMapsCreatr = FSM.MapsCreator,
             MapScreener: MapScreenr.MapScreenr = FSM.MapScreener,
             AreaSpawner: AreaSpawnr.IAreaSpawnr = FSM.AreaSpawner,
@@ -2715,7 +2715,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      */
     activateSectionAfter(thing: ISectionDetector): void {
         // Since the section was passed, do the rest of things normally
-        var FSM: IFullScreenMario = thing.FSM,
+        var FSM: IMarioGame = thing.FSM,
             MapsCreator: MapsCreatr.IMapsCreatr = FSM.MapsCreator,
             MapScreener: MapScreenr.MapScreenr = FSM.MapScreener,
             AreaSpawner: AreaSpawnr.IAreaSpawnr = FSM.AreaSpawner,
@@ -4155,7 +4155,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         if (thing === player.spring) {
             if (!thing.FSM.isThingTouchingThing(player, thing)) {
                 player.spring = undefined;
-                player.movement = FullScreenMario.prototype.movePlayer;
+                player.movement = MarioGame.prototype.movePlayer;
             }
         }
     }
@@ -6143,7 +6143,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @remarks If thing.killonend is a Function, it is called on the Thing.
      */
     killNPCs(): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             group: IThing[],
             character: ICharacter,
             solid: ISolid,
@@ -6222,7 +6222,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
             return;
         }
 
-        var FSM: IFullScreenMario = thing.FSM,
+        var FSM: IMarioGame = thing.FSM,
             area: IArea = <IArea>thing.FSM.AreaSpawner.getArea();
 
         // Large big: real, no-animation death
@@ -6260,7 +6260,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
                         thing.nocollide = true;
                         thing.movement = thing.resting = undefined;
                         thing.gravity = FSM.MapScreener.gravity / 2.1;
-                        thing.yvel = FullScreenMario.unitsize * -1.4;
+                        thing.yvel = MarioGame.unitsize * -1.4;
                     },
                     7);
             }
@@ -6299,7 +6299,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @returns How many points should be gained (or 0, for having gained a life).
      */
     findScore(level: number): number {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this);
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this);
 
         if (level < FSM.pointLevels.length) {
             return FSM.pointLevels[level];
@@ -6326,7 +6326,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         if (!value) {
             return;
         }
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this);
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this);
 
         FSM.scoreOn(value, FSM.player, true);
 
@@ -6478,7 +6478,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param xloc   The x-location of the sound's source.
      * @returns How loud the sound should be, in [0,1].
      */
-    getVolumeLocal(FSM: FullScreenMario, xloc: number): number {
+    getVolumeLocal(FSM: MarioGame, xloc: number): number {
         if (xloc > FSM.MapScreener.right) {
             return 0;
         }
@@ -6501,7 +6501,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @returns The default theme for the current area.
      */
-    getAudioThemeDefault(FSM: FullScreenMario): string {
+    getAudioThemeDefault(FSM: MarioGame): string {
         return (<IArea>FSM.AreaSpawner.getArea()).setting.split(" ")[0];
     }
 
@@ -6519,12 +6519,12 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      *                   default, 0 for the first in Array form).
      * @remarks Most of the work here is done by setLocation.
      */
-    setMap(name?: string | IFullScreenMario, location?: string | number): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+    setMap(name?: string | IMarioGame, location?: string | number): void {
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             time: number,
             map: IMap;
 
-        if (typeof name === "undefined" || name.constructor === FullScreenMario) {
+        if (typeof name === "undefined" || name.constructor === MarioGame) {
             name = FSM.AreaSpawner.getMapName();
         }
 
@@ -6557,7 +6557,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      *               default, 0 for the first in Array form).
      */
     setLocation(name: string | number = 0): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             location: ILocation;
 
         (<IMapScreenr>FSM.MapScreener).nokeys = false;
@@ -6602,7 +6602,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntranceNormal(FSM: FullScreenMario, location?: ILocation): void {
+    mapEntranceNormal(FSM: MarioGame, location?: ILocation): void {
         if (location && location.xloc) {
             FSM.scrollWindow(location.xloc * FSM.unitsize);
         }
@@ -6619,7 +6619,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntrancePlain(FSM: FullScreenMario, location?: ILocation): void {
+    mapEntrancePlain(FSM: MarioGame, location?: ILocation): void {
         if (location && location.xloc) {
             FSM.scrollWindow(location.xloc * FSM.unitsize);
         }
@@ -6638,7 +6638,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntranceWalking(FSM: FullScreenMario, location?: ILocation): void {
+    mapEntranceWalking(FSM: MarioGame, location?: ILocation): void {
         FSM.mapEntrancePlain(FSM, location);
 
         FSM.player.keys.run = 1;
@@ -6654,7 +6654,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param FSM
      */
-    mapEntranceCastle(FSM: FullScreenMario): void {
+    mapEntranceCastle(FSM: MarioGame): void {
         FSM.addPlayer(FSM.unitsize * 2, FSM.unitsize * 56);
     }
 
@@ -6666,7 +6666,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param FSM
      */
-    mapEntranceVine(FSM: FullScreenMario): void {
+    mapEntranceVine(FSM: MarioGame): void {
         var threshold: number = FSM.MapScreener.bottom - FSM.unitsize * 40,
             vine: IVine = <IVine>FSM.addThing(
                 "Vine",
@@ -6695,7 +6695,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param vine   A Vine bringing a Player up.
      */
-    mapEntranceVinePlayer(FSM: FullScreenMario, vine: IVine): void {
+    mapEntranceVinePlayer(FSM: MarioGame, vine: IVine): void {
         var threshold: number = FSM.MapScreener.bottom - FSM.unitsize * 24,
             speed: number = FSM.unitsize / -4,
             player: IPlayer = FSM.addPlayer(
@@ -6731,7 +6731,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntrancePipeVertical(FSM: FullScreenMario, location?: ILocation): void {
+    mapEntrancePipeVertical(FSM: MarioGame, location?: ILocation): void {
         if (location && location.xloc) {
             FSM.scrollWindow(location.xloc * FSM.unitsize);
         }
@@ -6773,7 +6773,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntrancePipeHorizontal(FSM: FullScreenMario, location?: ILocation): void {
+    mapEntrancePipeHorizontal(FSM: MarioGame, location?: ILocation): void {
         throw new Error("mapEntrancePipeHorizontal is not yet implemented.");
     }
 
@@ -6784,7 +6784,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param FSM
      */
-    mapEntranceRespawn(FSM: FullScreenMario): void {
+    mapEntranceRespawn(FSM: MarioGame): void {
         FSM.MapScreener.nokeys = false;
         FSM.MapScreener.notime = false;
         FSM.MapScreener.canscroll = true;
@@ -6910,7 +6910,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         if (scope.attributes) {
             for (i in scope.attributes) {
                 if (scope.hasOwnProperty(i) && scope[i]) {
-                    FullScreenMario.prototype.proliferate(scope, scope.attributes[i]);
+                    MarioGame.prototype.proliferate(scope, scope.attributes[i]);
                 }
             }
         }
@@ -6955,7 +6955,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @returns The absolute height of the y-location.
      */
     getAbsoluteHeight(yloc: number, correctUnitsize?: boolean): number {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             height: number = yloc + FSM.MapScreener.height;
 
         if (!correctUnitsize) {
@@ -6973,7 +6973,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @returns A strethed Thing, newly added via addThing.
      */
     mapAddStretched(prethingRaw: string | MapsCreatr.IPreThingSettings): IThing {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             boundaries: any = FSM.AreaSpawner.getArea().boundaries,
             prething: MapsCreatr.IPreThingSettings = prethingRaw instanceof String
                 ? { "thing": prething }
@@ -6998,7 +6998,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethingRaw   A raw PreThing descriptor.
      */
     mapAddAfter(prethingRaw: string | MapsCreatr.IPreThingSettings): void {
-        var FSM: FullScreenMario = FullScreenMario.prototype.ensureCorrectCaller(this),
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             MapsCreator: MapsCreatr.IMapsCreatr = FSM.MapsCreator,
             AreaSpawner: AreaSpawnr.IAreaSpawnr = FSM.AreaSpawner,
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
@@ -7029,7 +7029,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleStartSlidingDown(FSM: FullScreenMario, settings: any): void {
+    cutsceneFlagpoleStartSlidingDown(FSM: MarioGame, settings: any): void {
         var thing: IPlayer = settings.player,
             other: IDetectCollision = settings.collider,
             height: number = (other.bottom - thing.bottom) | 0,
@@ -7118,7 +7118,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleHitBottom(FSM: FullScreenMario, settings: any): void {
+    cutsceneFlagpoleHitBottom(FSM: MarioGame, settings: any): void {
         var thing: IPlayer = settings.player;
 
         thing.keys.run = 1;
@@ -7144,7 +7144,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleCountdown(FSM: FullScreenMario, settings: any): void {
+    cutsceneFlagpoleCountdown(FSM: MarioGame, settings: any): void {
         FSM.TimeHandler.addEventInterval(
             function (): boolean {
                 FSM.ItemsHolder.decrease("time");
@@ -7170,7 +7170,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleFireworks(FSM: FullScreenMario, settings: any): void {
+    cutsceneFlagpoleFireworks(FSM: MarioGame, settings: any): void {
         var numFireworks: number = FSM.MathDecider.compute("numberOfFireworks", settings.time),
             player: IPlayer = settings.player,
             detector: IDetectCollision = settings.detector,
@@ -7245,7 +7245,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneBowserVictoryCollideCastleAxe(FSM: FullScreenMario, settings: any): void {
+    cutsceneBowserVictoryCollideCastleAxe(FSM: MarioGame, settings: any): void {
         var player: IPlayer = settings.player,
             axe: ICastleAxe = settings.axe;
 
@@ -7279,7 +7279,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @remarks The castle bridge's animateCastleBridgeOpen (called via killNPCs
      *          as the bridge's .killonend attribute) is what triggers this.
      */
-    cutsceneBowserVictoryCastleBridgeOpen(FSM: FullScreenMario, settings: any): void {
+    cutsceneBowserVictoryCastleBridgeOpen(FSM: MarioGame, settings: any): void {
         var bridge: ISolid = settings.routineArguments[0];
 
         FSM.TimeHandler.addEventInterval(
@@ -7307,7 +7307,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @remarks This is called by the CastleBridgeOpen routine, once the bridge
      *          has been reduced to no width.
      */
-    cutsceneBowserVictoryBowserFalls(FSM: FullScreenMario, settings: any): void {
+    cutsceneBowserVictoryBowserFalls(FSM: MarioGame, settings: any): void {
         FSM.AudioPlayer.play("Bowser Falls");
 
         // Bowser won't exist if a Player already killed him with a star or fireballs
@@ -7324,7 +7324,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param FSM
      * @remarks This is called by collideCastleNPC.
      */
-    cutsceneBowserVictoryDialog(FSM: FullScreenMario, settings: any): void {
+    cutsceneBowserVictoryDialog(FSM: MarioGame, settings: any): void {
         var player: IPlayer = settings.player,
             detector: IDetectCollision = settings.detector,
             keys: any[] = settings.keys,
@@ -7371,7 +7371,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A single type of Thing any number of times.
      */
     macroFillPreThings(
@@ -7379,7 +7379,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var defaults: any = FSM.ObjectMaker.getFullPropertiesOf(reference.thing),
             xnum: number = reference.xnum || 1,
             ynum: number = reference.ynum || 1,
@@ -7421,7 +7421,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns Preset Things in a pattern.
      */
     macroFillPrePattern(
@@ -7429,7 +7429,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         if (!FSM.settings.maps.patterns[reference.pattern]) {
             throw new Error("An unknown pattern is referenced: " + reference);
         }
@@ -7494,7 +7494,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A single Floor.
      */
     macroFloor(
@@ -7502,7 +7502,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             floor: any = FSM.proliferate(
@@ -7531,7 +7531,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A Pipe, and potentially a Piranha.
      */
     macroPipe(
@@ -7539,11 +7539,11 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        scope: FullScreenMario): any {
+        scope: MarioGame): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             height: number | string = reference.height || 16,
-            pipe: any = FullScreenMario.prototype.proliferate(
+            pipe: any = MarioGame.prototype.proliferate(
                 {
                     "thing": "Pipe",
                     "x": x,
@@ -7586,7 +7586,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A horizontal Pipe and a vertical Pipe.
      */
     macroPipeCorner(
@@ -7641,7 +7641,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A Tree and its trunk.
      */
     macroTree(
@@ -7649,7 +7649,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        scope: FullScreenMario): any {
+        scope: MarioGame): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             width: number = reference.width || 24,
@@ -7684,7 +7684,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A Shroom and its trunk.
      */
     macroShroom(
@@ -7692,7 +7692,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        scope: FullScreenMario): any {
+        scope: MarioGame): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             width: number = reference.width || 24,
@@ -7727,7 +7727,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A Water scenery.
      */
     macroWater(
@@ -7735,7 +7735,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         return FSM.proliferate(
             {
                 "thing": "Water",
@@ -7818,7 +7818,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A scale group.
      */
     macroScale(
@@ -7826,7 +7826,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             unitsize: number = FSM.unitsize,
@@ -7901,7 +7901,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns Multiple Platforms.
      */
     macroPlatformGenerator(
@@ -7909,7 +7909,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var output: any[] = [],
             direction: number = reference.direction || 1,
             levels: number[] = direction > 0 ? [0, 48] : [8, 56],
@@ -7949,7 +7949,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A Warp World group.
      */
     macroWarpWorld(
@@ -7957,7 +7957,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var output: any[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
@@ -8042,7 +8042,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A detector to start spawning CheepCheeps.
      */
     macroCheepsStart(
@@ -8050,7 +8050,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -8070,7 +8070,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A detector to stop spawning CheepCheeps.
      */
     macroCheepsStop(
@@ -8078,7 +8078,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -8098,7 +8098,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A detector to start spawning BulletBills.
      */
     macroBulletBillsStart(
@@ -8106,7 +8106,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -8126,7 +8126,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A detector to stop spawning BulletBills.
      */
     macroBulletBillsStop(
@@ -8134,7 +8134,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -8154,7 +8154,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A detector to cause any current Lakitu to flee.
      */
     macroLakituStop(
@@ -8162,7 +8162,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -8181,7 +8181,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A small castle.
      */
     macroCastleSmall(
@@ -8189,7 +8189,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var output: any[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
@@ -8311,7 +8311,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A large castle.
      */
     macroCastleLarge(
@@ -8319,7 +8319,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var output: any[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
@@ -8470,7 +8470,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns An outdoors castle ending.
      */
     macroEndOutsideCastle(
@@ -8478,7 +8478,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             collectionName: string = "EndOutsideCastle-" + [
@@ -8491,8 +8491,8 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
             // Initial collision detector
             {
                 "thing": "DetectCollision", x: x, y: y + 108, height: 100,
-                "activate": FullScreenMario.prototype.collideFlagpole,
-                "activateFail": FullScreenMario.prototype.killNormal,
+                "activate": MarioGame.prototype.collideFlagpole,
+                "activateFail": MarioGame.prototype.killNormal,
                 "noActivateDeath": true,
                 "collectionName": collectionName,
                 "collectionKey": "DetectCollision"
@@ -8548,7 +8548,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns An ending zone for inside a castle.
      */
     macroEndInsideCastle(
@@ -8556,7 +8556,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             npc: string = reference.npc || "Toad",
@@ -8708,7 +8708,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A section.
      */
     macroSection(
@@ -8716,7 +8716,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: FullScreenMario): any {
+        FSM: MarioGame): any {
         return {
             "thing": "DetectSpawn",
             "x": reference.x || 0,
@@ -8779,7 +8779,7 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling FullScreenMario.
+     * @param FSM   The calling MarioGame.
      * @returns A section decider detector.
      */
     macroSectionDecider(reference: IMacroSectionDeciderSettings): any {
@@ -8810,10 +8810,10 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
      * 
      * @param {Mixed} current   
      */
-    ensureCorrectCaller(current: any): FullScreenMario {
-        if (!(current instanceof FullScreenMario)) {
+    ensureCorrectCaller(current: any): MarioGame {
+        if (!(current instanceof MarioGame)) {
             throw new Error("A function requires the scope ('this') to be the "
-                + "manipulated FullScreenMario object. Unfortunately, 'this' is a "
+                + "manipulated MarioGame object. Unfortunately, 'this' is a "
                 + typeof (this) + ".");
         }
         return current;
@@ -8822,4 +8822,4 @@ export class FullScreenMario extends GameStartr.GameStartr implements IFullScree
 
 // The GameStartr constructor resets all modules from `this.settings` before this
 // class's own constructor body runs, so the static settings are also exposed here.
-FullScreenMario.prototype.settings = FullScreenMario.settings;
+MarioGame.prototype.settings = MarioGame.settings;

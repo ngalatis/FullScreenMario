@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.runner = {
+MarioGame.MarioGame.settings.runner = {
     "games": [
         function () {
             this.DeviceLayer.checkNavigatorGamepads();

@@ -1,22 +1,22 @@
-import { FullScreenMario } from "../FullScreenMario";
+import { MarioGame } from "../MarioGame";
 
-FullScreenMario.settings.collisions = {
+MarioGame.settings.collisions = {
     "keyGroupName": "groupType",
     "keyTypeName": "title",
     "globalCheckGenerators": {
-        "Character": FullScreenMario.prototype.generateCanThingCollide,
-        "Solid": FullScreenMario.prototype.generateCanThingCollide
+        "Character": MarioGame.prototype.generateCanThingCollide,
+        "Solid": MarioGame.prototype.generateCanThingCollide
     },
     "hitCheckGenerators": {
         "Character": {
-            "Character": FullScreenMario.prototype.generateIsCharacterTouchingCharacter,
-            "Solid": FullScreenMario.prototype.generateIsCharacterTouchingSolid
+            "Character": MarioGame.prototype.generateIsCharacterTouchingCharacter,
+            "Solid": MarioGame.prototype.generateIsCharacterTouchingSolid
         }
     },
     "hitCallbackGenerators": {
         "Character": {
-            "Solid": FullScreenMario.prototype.generateHitCharacterSolid,
-            "Character": FullScreenMario.prototype.generateHitCharacterCharacter
+            "Solid": MarioGame.prototype.generateHitCharacterSolid,
+            "Character": MarioGame.prototype.generateHitCharacterCharacter
         }
     }
 };

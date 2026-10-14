@@ -137,7 +137,7 @@ export interface IArea extends MapsCreatr.IMapsCreatrArea {
      * 
      * @param FSM
      */
-    onGameOver: (FSM: IFullScreenMario) => void;
+    onGameOver: (FSM: IMarioGame) => void;
 
     /**
      * How long to wait before calling onGameOver.
@@ -149,7 +149,7 @@ export interface IArea extends MapsCreatr.IMapsCreatrArea {
      * 
      * @param FSM
      */
-    onPlayerDeath: (FSM: IFullScreenMario) => void;
+    onPlayerDeath: (FSM: IMarioGame) => void;
 
     /**
      * How long to wait before calling onPlayerDeath.
@@ -227,9 +227,9 @@ export interface IPreThing extends MapsCreatr.IPreThing {
  */
 export interface IThing extends GameStartr.IThing {
     /**
-     * The parent IFullScreenMario controlling this Thing.
+     * The parent IMarioGame controlling this Thing.
      */
-    FSM: IFullScreenMario;
+    FSM: IMarioGame;
 
     /**
      * Whether this is currently alive and able to move.
@@ -2105,9 +2105,9 @@ export interface IMapCustoms extends GameStartr.IMapCustoms {
 }
 
 /**
- * Stored settings to be stored separately and kept within FullScreenMario.
+ * Stored settings to be stored separately and kept within MarioGame.
  */
-export interface IFullScreenMarioStoredSettings extends GameStartr.IGameStartrStoredSettings {
+export interface IMarioGameStoredSettings extends GameStartr.IGameStartrStoredSettings {
     /**
      * Settings regarding maps, particularly for an IAreaSpawnr, an
      * IMapScreenr, and an IMapsCreatr.
@@ -2120,16 +2120,16 @@ export interface IFullScreenMarioStoredSettings extends GameStartr.IGameStartrSt
  * modern web. It includes the original 32 levels, a random map generator, a 
  * level editor, and over a dozen custom mods.
  */
-export interface IFullScreenMario extends GameStartr.IGameStartr {
+export interface IMarioGame extends GameStartr.IGameStartr {
     /**
-     * Overriden MapScreenr refers to the IMapScreenr defined in IFullScreenMario.d.ts.
+     * Overriden MapScreenr refers to the IMapScreenr defined in IMarioGame.d.ts.
      */
     MapScreener: IMapScreenr;
 
     /**
      * Stored settings to be stored separately and kept within a GameStartr.
      */
-    settings: IFullScreenMarioStoredSettings;
+    settings: IMarioGameStoredSettings;
 
     /**
      * How much to expand each pixel from raw sizing measurements to in-game.
@@ -2169,7 +2169,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetObjectMaker(FSM: IFullScreenMario, settings: GameStartr.IGameStartrSettings): void;
+    resetObjectMaker(FSM: IMarioGame, settings: GameStartr.IGameStartrSettings): void;
 
     /**
      * Sets this.AudioPlayer.
@@ -2177,7 +2177,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetAudioPlayer(FSM: IFullScreenMario, settings: GameStartr.IGameStartrSettings): void;
+    resetAudioPlayer(FSM: IMarioGame, settings: GameStartr.IGameStartrSettings): void;
 
     /**
      * Sets this.AreaSpawner.
@@ -2185,7 +2185,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetAreaSpawner(FSM: IFullScreenMario, settings: GameStartr.IGameStartrSettings): void;
+    resetAreaSpawner(FSM: IMarioGame, settings: GameStartr.IGameStartrSettings): void;
 
     /**
      * Resets this.ItemsHolder via the parent GameStartr resetItemsHolder.
@@ -2195,7 +2195,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetItemsHolder(FSM: IFullScreenMario, settings: GameStartr.IGameStartrSettings): void;
+    resetItemsHolder(FSM: IMarioGame, settings: GameStartr.IGameStartrSettings): void;
 
     /**
      * Sets this.MathDecider, using its existing MapScreenr as its constants.
@@ -2203,7 +2203,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetMathDecider(FSM: IFullScreenMario, customs: GameStartr.IMathDecidrCustoms): void;
+    resetMathDecider(FSM: IMarioGame, customs: GameStartr.IMathDecidrCustoms): void;
 
     /**
      * Sets this.container via the parent GameStartr resetContaienr.
@@ -2215,7 +2215,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param customs   Any optional custom settings.
      */
-    resetContainer(FSM: IFullScreenMario, settings: GameStartr.IGameStartrSettings): void;
+    resetContainer(FSM: IMarioGame, settings: GameStartr.IGameStartrSettings): void;
 
     /**
      * Completely restarts the game. Lives are reset to 3, the map goes back
@@ -2285,7 +2285,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param FSM
      */
-    onGamePause(FSM: IFullScreenMario): void;
+    onGamePause(FSM: IMarioGame): void;
 
     /**
      * Triggered Function for when the game is played or unpause. Music resumes
@@ -2293,7 +2293,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param FSM
      */
-    onGamePlay(FSM: IFullScreenMario): void;
+    onGamePlay(FSM: IMarioGame): void;
 
     /**
      * Reacts to the left key being pressed. keys.run and leftDown are marked
@@ -2302,7 +2302,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownLeft(FSM: IFullScreenMario, event?: Event): void;
+    keyDownLeft(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the right key being pressed. keys.run and keys.rightDown are
@@ -2311,7 +2311,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownRight(FSM: IFullScreenMario, event?: Event): void;
+    keyDownRight(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the up key being pressed. If a Player can jump, it does, and
@@ -2320,7 +2320,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownUp(FSM: IFullScreenMario, event?: Event): void;
+    keyDownUp(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the down key being pressed. A player's keys.crouch is marked
@@ -2329,7 +2329,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownDown(FSM: IFullScreenMario, event?: Event): void;
+    keyDownDown(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the sprint key being pressed. Firing happens if a Player is
@@ -2338,7 +2338,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownSprint(FSM: IFullScreenMario, event?: Event): void;
+    keyDownSprint(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the pause key being pressed. The game is either paused or unpaused,
@@ -2347,7 +2347,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownPause(FSM: IFullScreenMario, event?: Event): void;
+    keyDownPause(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the mute key being lifted. Muting is toggled and the mod event
@@ -2356,7 +2356,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyDownMute(FSM: IFullScreenMario, event?: Event): void;
+    keyDownMute(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the left key being lifted. keys.run and keys.leftDown are
@@ -2365,7 +2365,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpLeft(FSM: IFullScreenMario, event?: Event): void;
+    keyUpLeft(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the right key being lifted. keys.run and keys.rightDown are
@@ -2374,7 +2374,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpRight(FSM: IFullScreenMario, event?: Event): void;
+    keyUpRight(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the up key being lifted. Jumping stops and the mod event is
@@ -2383,7 +2383,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpUp(FSM: IFullScreenMario, event?: Event): void;
+    keyUpUp(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the down key being lifted. keys.crouch is marked, crouch
@@ -2392,7 +2392,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpDown(FSM: IFullScreenMario, event?: Event): void;
+    keyUpDown(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the spring key being lifted. keys.sprint is marked and the mod
@@ -2401,7 +2401,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpSprint(FSM: IFullScreenMario, event?: Event): void;
+    keyUpSprint(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to the pause key being lifted. The mod event is fired.
@@ -2409,7 +2409,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    keyUpPause(FSM: IFullScreenMario, event?: Event): void;
+    keyUpPause(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to a right click being pressed. Pausing is toggled and the mod
@@ -2418,7 +2418,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    mouseDownRight(FSM: IFullScreenMario, event?: Event): void;
+    mouseDownRight(FSM: IMarioGame, event?: Event): void;
 
     /**
      * Reacts to a regularly caused device motion event. Acceleration is checked
@@ -2428,7 +2428,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param event   The original user-caused Event.
      */
-    deviceMotion(FSM: IFullScreenMario, event: DeviceMotionEvent): void;
+    deviceMotion(FSM: IMarioGame, event: DeviceMotionEvent): void;
 
     /**
      * Checks whether inputs can be fired, which is equivalent to the status of
@@ -2437,7 +2437,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @returns Whether inputs are allowed to trigger.
      */
-    canInputsTrigger(FSM: IFullScreenMario): boolean;
+    canInputsTrigger(FSM: IMarioGame): boolean;
 
     /**
      * Regular maintenance Function called to decrease time every 25 game ticks.
@@ -2445,7 +2445,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @returns Whether time should stop counting, which is whether it's <= 0.
      */
-    maintainTime(FSM: IFullScreenMario): boolean;
+    maintainTime(FSM: IMarioGame): boolean;
 
     /**
      * Regular maintenance Function called on the Scenery group every 350
@@ -2454,7 +2454,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param FSM
      */
-    maintainScenery(FSM: IFullScreenMario): void;
+    maintainScenery(FSM: IMarioGame): void;
 
     /**
      * Regular maintenance Function called on the Solids group every upkeep.
@@ -2465,7 +2465,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param solids   FSM's GroupHolder's Solid group.
      */
-    maintainSolids(FSM: IFullScreenMario, solids: ISolid[]): void;
+    maintainSolids(FSM: IMarioGame, solids: ISolid[]): void;
 
     /**
      * Regular maintenance Function called on the Characters group every upkeep.
@@ -2476,7 +2476,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param characters   FSM's GroupHolder's Characters group.
      */
-    maintainCharacters(FSM: IFullScreenMario, characters: ICharacter[]): void;
+    maintainCharacters(FSM: IMarioGame, characters: ICharacter[]): void;
 
     /**
      * Maintenance Function only triggered for Things that are known to have
@@ -2509,7 +2509,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param FSM
      */
-    maintainPlayer(FSM: IFullScreenMario): void;
+    maintainPlayer(FSM: IMarioGame): void;
 
     /**
      * Function generator for the generic canThingCollide checker. This is used
@@ -2915,7 +2915,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @returns Whether CheepCheep spawning has been cancelled.
      */
-    spawnRandomCheep(FSM: IFullScreenMario): boolean;
+    spawnRandomCheep(FSM: IMarioGame): boolean;
 
     /**
      * Generator callback to create a BulleBill. The spawn moves horizontally
@@ -2925,7 +2925,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @returns Whether BulletBill spawning has been cancelled.
      */
-    spawnRandomBulletBill(FSM: IFullScreenMario): boolean;
+    spawnRandomBulletBill(FSM: IMarioGame): boolean;
 
     /**
      * Spawns a CustomText by killing it and placing the contents of its texts
@@ -4311,7 +4311,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param xloc   The x-location of the sound's source.
      * @returns How loud the sound should be, in [0,1].
      */
-    getVolumeLocal(FSM: IFullScreenMario, xloc: number): number;
+    getVolumeLocal(FSM: IMarioGame, xloc: number): number;
 
     /**
      * Determines the name of the default theme for the current area,
@@ -4320,7 +4320,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @returns The default theme for the current area.
      */
-    getAudioThemeDefault(FSM: IFullScreenMario): string;
+    getAudioThemeDefault(FSM: IMarioGame): string;
 
     /**
      * Sets the game state to a new map, resetting all Things and inputs in the
@@ -4332,7 +4332,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *                   default, 0 for the first in Array form).
      * @remarks Most of the work here is done by setLocation.
      */
-    setMap(name?: string | IFullScreenMario, location?: string | number): void;
+    setMap(name?: string | IMarioGame, location?: string | number): void;
 
     /**
      * Sets the game state to a location within the current map, resetting all
@@ -4354,7 +4354,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntranceNormal(FSM: IFullScreenMario, location?: ILocation): void;
+    mapEntranceNormal(FSM: IMarioGame, location?: ILocation): void;
 
     /**
      * Standard map entrance Function for starting on the ground. A new player
@@ -4365,7 +4365,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntrancePlain(FSM: IFullScreenMario, location?: ILocation): void;
+    mapEntrancePlain(FSM: IMarioGame, location?: ILocation): void;
 
     /**
      * Map entrance Function for starting on the ground and immediately walking
@@ -4377,7 +4377,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntranceWalking(FSM: IFullScreenMario, location?: ILocation): void;
+    mapEntranceWalking(FSM: IMarioGame, location?: ILocation): void;
 
     /**
      * Map entrance Function for entering a castle area. A player is simply
@@ -4385,7 +4385,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param FSM
      */
-    mapEntranceCastle(FSM: IFullScreenMario): void;
+    mapEntranceCastle(FSM: IMarioGame): void;
 
     /**
      * Map entrance Function for entering an area climbing a Vine. The Vine
@@ -4395,7 +4395,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param FSM
      */
-    mapEntranceVine(FSM: IFullScreenMario): void;
+    mapEntranceVine(FSM: IMarioGame): void;
 
     /**
      * Continuation of mapEntranceVine for a Player's actions. A player
@@ -4405,7 +4405,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param vine   A Vine bringing a Player up.
      */
-    mapEntranceVinePlayer(FSM: IFullScreenMario, vine: IVine): void;
+    mapEntranceVinePlayer(FSM: IMarioGame, vine: IVine): void;
 
     /**
      * Map entrance Function for coming in through a vertical Pipe. A player
@@ -4416,7 +4416,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntrancePipeVertical(FSM: IFullScreenMario, location?: ILocation): void;
+    mapEntrancePipeVertical(FSM: IMarioGame, location?: ILocation): void;
 
     /**
      * Map entrance Function for coming in through a horizontal Pipe. A player
@@ -4427,7 +4427,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param location   The calling Location entering into (by default,
      *                   not used).
      */
-    mapEntrancePipeHorizontal(FSM: IFullScreenMario, location?: ILocation): void;
+    mapEntrancePipeHorizontal(FSM: IMarioGame, location?: ILocation): void;
 
     /**
      * Map entrance Function for a Player reincarnating into a level,
@@ -4436,7 +4436,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param FSM
      */
-    mapEntranceRespawn(FSM: IFullScreenMario): void;
+    mapEntranceRespawn(FSM: IMarioGame): void;
 
     /**
      * Map exit Function for leaving through a vertical Pipe. A player is
@@ -4519,7 +4519,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleStartSlidingDown(FSM: IFullScreenMario, settings: any): void;
+    cutsceneFlagpoleStartSlidingDown(FSM: IMarioGame, settings: any): void;
 
     /**
      * Routine for when a player hits the bottom of a flagpole. It is
@@ -4529,7 +4529,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleHitBottom(FSM: IFullScreenMario, settings: any): void;
+    cutsceneFlagpoleHitBottom(FSM: IMarioGame, settings: any): void;
 
     /**
      * Routine for counting down time and increasing score at the end of
@@ -4538,7 +4538,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleCountdown(FSM: IFullScreenMario, settings: any): void;
+    cutsceneFlagpoleCountdown(FSM: IMarioGame, settings: any): void;
 
     /**
      * Animation routine for the fireworks found at the end of EndOutsideCastle.
@@ -4548,7 +4548,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleFireworks(FSM: IFullScreenMario, settings: any): void;
+    cutsceneFlagpoleFireworks(FSM: IMarioGame, settings: any): void;
 
     /**
      * Routine for when a player collides with a castle axe. All unimportant NPCs
@@ -4557,7 +4557,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneBowserVictoryCollideCastleAxe(FSM: IFullScreenMario, settings: any): void;
+    cutsceneBowserVictoryCollideCastleAxe(FSM: IMarioGame, settings: any): void;
 
     /**
      * Routine for a castle bridge opening. Its width is reduced repeatedly on an
@@ -4568,7 +4568,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @remarks The castle bridge's animateCastleBridgeOpen (called via killNPCs
      *          as the bridge's .killonend attribute) is what triggers this.
      */
-    cutsceneBowserVictoryCastleBridgeOpen(FSM: IFullScreenMario, settings: any): void;
+    cutsceneBowserVictoryCastleBridgeOpen(FSM: IMarioGame, settings: any): void;
 
     /**
      * Routine for Bowser falling after his bridge opens.
@@ -4578,7 +4578,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @remarks This is called by the CastleBridgeOpen routine, once the bridge
      *          has been reduced to no width.
      */
-    cutsceneBowserVictoryBowserFalls(FSM: IFullScreenMario, settings: any): void;
+    cutsceneBowserVictoryBowserFalls(FSM: IMarioGame, settings: any): void;
 
     /**
      * Routine for displaying text above a castle NPC. Each "layer" of text
@@ -4588,7 +4588,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param FSM
      * @remarks This is called by collideCastleNPC.
      */
-    cutsceneBowserVictoryDialog(FSM: IFullScreenMario, settings: any): void;
+    cutsceneBowserVictoryDialog(FSM: IMarioGame, settings: any): void;
 
     /**
      * Macro to place a single type of Thing multiple times, drawing from a
@@ -4599,10 +4599,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A single type of Thing any number of times.
      */
-    macroFillPreThings(reference: IMacroFillPreThingsSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroFillPreThings(reference: IMacroFillPreThingsSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to continuously place a listing of Things multiple times, from left
@@ -4613,10 +4613,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns Preset Things in a pattern.
      */
-    macroFillPrePattern(reference: IMacroFillPrePatternSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroFillPrePattern(reference: IMacroFillPrePatternSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a Floor Thing with infinite height. All settings are
@@ -4627,10 +4627,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A single Floor.
      */
-    macroFloor(reference: IMacroFloorSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroFloor(reference: IMacroFloorSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a Pipe, possibly with a pirahna, location hooks, and/or
@@ -4642,10 +4642,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A Pipe, and potentially a Piranha.
      */
-    macroPipe(reference: IMacroPipeSettings, prethings: any[], area: IArea, map: IMap, scope: IFullScreenMario): any;
+    macroPipe(reference: IMacroPipeSettings, prethings: any[], area: IArea, map: IMap, scope: IMarioGame): any;
 
     /**
      * Macro to place a horizontal Pipe with a vertical one, likely with
@@ -4656,7 +4656,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A horizontal Pipe and a vertical Pipe.
      */
     macroPipeCorner(reference: IMacroPipeCornerSettings, prethings: any[], area: IArea, map: IMap, scope: any): any;
@@ -4669,10 +4669,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A Tree and its trunk.
      */
-    macroTree(reference: IMacroTreeSettings, prethings: any[], area: IArea, map: IMap, scope: IFullScreenMario): any;
+    macroTree(reference: IMacroTreeSettings, prethings: any[], area: IArea, map: IMap, scope: IMarioGame): any;
 
     /**
      * Macro to place a large Shroom (a Tree that looks like a large Mushroom).
@@ -4682,10 +4682,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A Shroom and its trunk.
      */
-    macroShroom(reference: IMacroShroomSettings, prethings: any[], area: IArea, map: IMap, scope: IFullScreenMario): any;
+    macroShroom(reference: IMacroShroomSettings, prethings: any[], area: IArea, map: IMap, scope: IMarioGame): any;
 
     /**
      * Macro to place Water of infinite height. All settings are copied to the
@@ -4696,10 +4696,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A Water scenery.
      */
-    macroWater(reference: IMacroWaterSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroWater(reference: IMacroWaterSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a row of Bricks at y = 88.
@@ -4728,10 +4728,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A scale group.
      */
-    macroScale(reference: IMacroScaleSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroScale(reference: IMacroScaleSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place Platforms traveling and spawning vertically.
@@ -4741,7 +4741,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns Multiple Platforms.
      */
     macroPlatformGenerator(
@@ -4749,7 +4749,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IFullScreenMario): any;
+        FSM: IMarioGame): any;
 
     /**
      * Macro to place a Warp World group of Pipes, Texts, Piranhas, and
@@ -4760,10 +4760,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A Warp World group.
      */
-    macroWarpWorld(reference: IMacroWarpWorldSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroWarpWorld(reference: IMacroWarpWorldSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a DetectCollision that will start the map spawning random
@@ -4774,10 +4774,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A detector to start spawning CheepCheeps.
      */
-    macroCheepsStart(reference: IMacroCheepsStartSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroCheepsStart(reference: IMacroCheepsStartSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a DetectCollision that will stop the map spawning random
@@ -4788,10 +4788,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A detector to stop spawning CheepCheeps.
      */
-    macroCheepsStop(reference: IMacroCheepsStopSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroCheepsStop(reference: IMacroCheepsStopSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a DetectCollision that will start the map spawning random
@@ -4802,7 +4802,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A detector to start spawning BulletBills.
      */
     macroBulletBillsStart(
@@ -4810,7 +4810,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IFullScreenMario): any;
+        FSM: IMarioGame): any;
 
     /**
      * Macro to place a DetectCollision that will stop the map spawning random
@@ -4821,7 +4821,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A detector to stop spawning BulletBills.
      */
     macroBulletBillsStop(
@@ -4829,7 +4829,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IFullScreenMario): any;
+        FSM: IMarioGame): any;
 
     /**
      * Macro to place a DetectCollision that will tell any current Lakitu to
@@ -4840,10 +4840,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A detector to cause any current Lakitu to flee.
      */
-    macroLakituStop(reference: IMacroLakituStopSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroLakituStop(reference: IMacroLakituStopSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a small castle, which is really a collection of sceneries.
@@ -4853,10 +4853,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A small castle.
      */
-    macroCastleSmall(reference: IMacroCastleSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroCastleSmall(reference: IMacroCastleSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a large castle, which is really a collection of sceneries
@@ -4867,7 +4867,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A large castle.
      */
     macroCastleLarge(
@@ -4875,7 +4875,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: IFullScreenMario): any;
+        FSM: IMarioGame): any;
 
     /**
      * Macro to place the typical starting Things for the inside of a castle
@@ -4896,7 +4896,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns An outdoors castle ending.
      */
     macroEndOutsideCastle(
@@ -4904,7 +4904,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
         prethings: any[],
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
-        FSM: IFullScreenMario): any;
+        FSM: IMarioGame): any;
 
     /**
      * Macro to place the typical ending Things for the inside of a castle area.
@@ -4914,7 +4914,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns An ending zone for inside a castle.
      */
     macroEndInsideCastle(
@@ -4922,7 +4922,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
         prethings: any[],
         area: IArea,
         map: IMap,
-        FSM: IFullScreenMario): any;
+        FSM: IMarioGame): any;
 
     /**
      * Macro to place a DetectSpawn that will call activateSectionBefore to
@@ -4933,10 +4933,10 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A section.
      */
-    macroSection(reference: IMacroSectionSettings, prethings: any[], area: IArea, map: IMap, FSM: IFullScreenMario): any;
+    macroSection(reference: IMacroSectionSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
 
     /**
      * Macro to place a DetectCollision to mark the current section as passed.
@@ -4965,7 +4965,7 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      * @param prethings   The container Area's creation commands.
      * @param area   The container Area.
      * @param map   The container Map.
-     * @param FSM   The calling IFullScreenMario.
+     * @param FSM   The calling IMarioGame.
      * @returns A section decider detector.
      */
     macroSectionDecider(reference: IMacroSectionDeciderSettings): any;
@@ -4978,5 +4978,5 @@ export interface IFullScreenMario extends GameStartr.IGameStartr {
      *
      * @param {Mixed} current
      */
-    ensureCorrectCaller(current: any): IFullScreenMario;
+    ensureCorrectCaller(current: any): IMarioGame;
 }

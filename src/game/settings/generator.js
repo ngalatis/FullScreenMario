@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.generator = {
+MarioGame.MarioGame.settings.generator = {
     "possibilities": {
         
         /* Overworld

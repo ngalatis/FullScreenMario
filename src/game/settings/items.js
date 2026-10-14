@@ -1,7 +1,7 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.items = {
-    "prefix": "FullScreenMario",
+MarioGame.MarioGame.settings.items = {
+    "prefix": "WeFixItMario",
     "doMakeContainer": true,
     "displayChanges": {
         "Infinity": "INF"

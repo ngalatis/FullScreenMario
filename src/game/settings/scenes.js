@@ -1,23 +1,23 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.scenes = {
+MarioGame.MarioGame.settings.scenes = {
     "cutscenes": {
 		"Flagpole": {
 			"firstRoutine": "StartSlidingDown",
 			"routines": {
-				"StartSlidingDown": FullScreenMario.FullScreenMario.prototype.cutsceneFlagpoleStartSlidingDown,
-				"HitBottom": FullScreenMario.FullScreenMario.prototype.cutsceneFlagpoleHitBottom ,
-				"Countdown": FullScreenMario.FullScreenMario.prototype.cutsceneFlagpoleCountdown,
-				"Fireworks": FullScreenMario.FullScreenMario.prototype.cutsceneFlagpoleFireworks
+				"StartSlidingDown": MarioGame.MarioGame.prototype.cutsceneFlagpoleStartSlidingDown,
+				"HitBottom": MarioGame.MarioGame.prototype.cutsceneFlagpoleHitBottom ,
+				"Countdown": MarioGame.MarioGame.prototype.cutsceneFlagpoleCountdown,
+				"Fireworks": MarioGame.MarioGame.prototype.cutsceneFlagpoleFireworks
 			}
 		},
 		"BowserVictory": {
 		    "firstRoutine": "CollideCastleAxe",
 		    "routines": {
-		        "CollideCastleAxe": FullScreenMario.FullScreenMario.prototype.cutsceneBowserVictoryCollideCastleAxe,
-		        "CastleBridgeOpen": FullScreenMario.FullScreenMario.prototype.cutsceneBowserVictoryCastleBridgeOpen,
-		        "BowserFalls": FullScreenMario.FullScreenMario.prototype.cutsceneBowserVictoryBowserFalls,
-		        "Dialog": FullScreenMario.FullScreenMario.prototype.cutsceneBowserVictoryDialog
+		        "CollideCastleAxe": MarioGame.MarioGame.prototype.cutsceneBowserVictoryCollideCastleAxe,
+		        "CastleBridgeOpen": MarioGame.MarioGame.prototype.cutsceneBowserVictoryCastleBridgeOpen,
+		        "BowserFalls": MarioGame.MarioGame.prototype.cutsceneBowserVictoryBowserFalls,
+		        "Dialog": MarioGame.MarioGame.prototype.cutsceneBowserVictoryDialog
 		    }
 		}
 	}

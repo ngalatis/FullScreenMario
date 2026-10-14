@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.renderer = {
+MarioGame.MarioGame.settings.renderer = {
     "groupNames": ["Text", "Character", "Solid", "Scenery"],
     "spriteCacheCutoff": 2048
 };

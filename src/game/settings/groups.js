@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.groups = {
+MarioGame.MarioGame.settings.groups = {
     "groupNames": ["Solid", "Character", "Scenery", "Text"],
     "groupTypes": "Array",
 };

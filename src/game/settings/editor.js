@@ -1,8 +1,8 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.editor = (function (prethings, macros) {
+MarioGame.MarioGame.settings.editor = (function (prethings, macros) {
     return {
-        "blocksize": FullScreenMario.FullScreenMario.unitsize * 4,
+        "blocksize": MarioGame.MarioGame.unitsize * 4,
         "mapDefault": {
             "name": "New Map",
             "time": "Infinity",

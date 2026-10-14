@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.events = {
+MarioGame.MarioGame.settings.events = {
     "keyOnClassCycleStart": "onThingAdd",
     "keyDoClassCycleStart": "placed",
     "keyCycleCheckValidity": "alive",

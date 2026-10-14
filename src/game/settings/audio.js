@@ -1,6 +1,6 @@
-import * as FullScreenMario from "../FullScreenMario";
+import * as MarioGame from "../MarioGame";
 
-FullScreenMario.FullScreenMario.settings.audio = {
+MarioGame.MarioGame.settings.audio = {
     "directory": "Sounds",
     "fileTypes": ["mp3", "ogg"],
     "library": {

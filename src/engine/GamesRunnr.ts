@@ -8,10 +8,17 @@ export interface ITriggerCallback {
 }
 
 /**
- * A callback to schedule each upkeep.
+ * A callback to schedule each frame of the loop.
  *
- * @param callback   The next upkeep to run.
- * @param timeout   How long to wait before calling the next upkeep.
+ * The default scheduler is requestAnimationFrame and ignores the timeout,
+ * because the loop works out for itself how many upkeeps each frame is owed.
+ * A custom scheduler (for example one built on setTimeout) is still honored:
+ * it only has to call the callback later, optionally passing a timestamp in
+ * milliseconds as the first argument (otherwise the FPSAnalyzer's clock is
+ * read).
+ *
+ * @param callback   The next frame to run.
+ * @param timeout   A hint of how long until the next upkeep is due.
  * @returns A unique identifier that can be passed to an upkeep cancellation.
  */
 export interface IUpkeepScheduler {
@@ -19,9 +26,9 @@ export interface IUpkeepScheduler {
 }
 
 /**
- * A callback to disable an upkeep.
- * 
- * @param handle   The unique identifier of the upkeep to cancel.
+ * A callback to disable a scheduled frame.
+ *
+ * @param handle   The unique identifier of the frame to cancel.
  */
 export interface IUpkeepCanceller {
     (handle: number): void;
@@ -32,9 +39,18 @@ export interface IUpkeepCanceller {
  */
 export interface IGamesRunnrSettings {
     /**
-     * The Array of Functions to run on each upkeep.
+     * The Array of Functions to run on each upkeep (each fixed logic update).
      */
     games: Function[];
+
+    /**
+     * Functions to run once per displayed frame, after the upkeeps that frame
+     * is owed (and after a manual upkeep, step or play). Rendering belongs
+     * here: when several upkeeps are owed in one frame, only the final state
+     * is drawn. If omitted, nothing extra is run, so a renderer left in games
+     * is simply run on every upkeep as before.
+     */
+    renderers?: Function[];
 
     /**
      * How often, in milliseconds, to call upkeep (by default, 1000/60).
@@ -47,9 +63,17 @@ export interface IGamesRunnrSettings {
     speed?: number;
 
     /**
-     * Whether scheduling timeouts should adjust to elapsed upkeep time.
+     * Kept for compatibility. Timing is always compensated by the fixed
+     * timestep accumulator, so there is nothing left to adjust.
      */
     adjustFramerate?: boolean;
+
+    /**
+     * The most upkeeps a single frame may run to catch up (by default, 5, at
+     * speed 1; the limit grows in proportion to speed above 1). Any time owed
+     * beyond it is dropped, so a stall never fast-forwards the game.
+     */
+    maxUpdatesPerFrame?: number;
 
     /**
      * A callback to run when upkeep is paused.
@@ -67,12 +91,12 @@ export interface IGamesRunnrSettings {
     callbackArguments?: any[];
 
     /**
-     * A Function to replace setTimeout as the upkeepScheduler.
+     * A Function to replace requestAnimationFrame as the upkeepScheduler.
      */
     upkeepScheduler?: IUpkeepScheduler;
 
     /**
-     * A Function to replace clearTimeout as the upkeepCanceller.
+     * A Function to replace cancelAnimationFrame as the upkeepCanceller.
      */
     upkeepCanceller?: IUpkeepCanceller;
 
@@ -82,7 +106,7 @@ export interface IGamesRunnrSettings {
     scope?: any;
 
     /**
-     * An FPSAnalyzr to provide statistics on automated playback. If not 
+     * An FPSAnalyzr to provide statistics on automated playback. If not
      * provided, a new one will be made.
      */
     FPSAnalyzer?: FPSAnalyzr.IFPSAnalyzr;
@@ -94,14 +118,14 @@ export interface IGamesRunnrSettings {
 }
 
 /**
- * A class to continuously series of "game" Functions. Each game is run in a 
+ * A class to continuously series of "game" Functions. Each game is run in a
  * set order and the group is run as a whole at a particular interval, with a
- * configurable speed. Playback can be triggered manually, or driven by a timer
- * with pause and play hooks. For automated playback, statistics are 
- * available via an internal FPSAnalyzer.
+ * configurable speed. Playback can be triggered manually, or driven by the
+ * display's frames with pause and play hooks. For automated playback,
+ * statistics are available via an internal FPSAnalyzer.
  */
 export interface IGamesRunnr {
-    /** 
+    /**
      * @returns The FPSAnalyzer used in the GamesRunnr.
      */
     getFPSAnalyzer(): FPSAnalyzr.IFPSAnalyzr;
@@ -117,6 +141,11 @@ export interface IGamesRunnr {
     getGames(): any[];
 
     /**
+     * @returns The Array of render Functions, run once per displayed frame.
+     */
+    getRenderers(): any[];
+
+    /**
      * @returns The interval between upkeeps.
      */
     getInterval(): number;
@@ -125,6 +154,11 @@ export interface IGamesRunnr {
      * @returns The speed multiplier being applied to the interval.
      */
     getSpeed(): number;
+
+    /**
+     * @returns The most upkeeps one frame may run to catch up, at speed 1.
+     */
+    getMaxUpdatesPerFrame(): number;
 
     /**
      * @returns The optional trigger to be called on pause.
@@ -142,44 +176,54 @@ export interface IGamesRunnr {
     getCallbackArguments(): any[];
 
     /**
-     * @returns Function used to schedule the next upkeep.
+     * @returns Function used to schedule the next frame.
      */
     getUpkeepScheduler(): IUpkeepScheduler;
 
     /**
-     * @returns {Function} Function used to cancel the next upkeep.
+     * @returns {Function} Function used to cancel the next frame.
      */
     getUpkeepCanceller(): IUpkeepCanceller;
 
     /**
-     * Meaty function, run every <interval*speed> milliseconds, to mark an FPS
-     * measurement and run every game once.
+     * Meaty function, run once per fixed timestep (every <interval/speed>
+     * milliseconds of display time), to run every game once and mark an FPS
+     * measurement. The frame loop calls this as many times as each frame is
+     * owed; calling it by hand (outside a frame) also runs the renderers.
+     *
+     * @param [time]   A timestamp for the FPS measurement (by default, the
+     *                 FPSAnalyzer's clock is read).
      */
-    upkeep(): void;
+    upkeep(time?: number): void;
 
     /**
      * A utility for this.upkeep that calls the same games.forEach(run), timing
      * the total execution time.
-     * 
+     *
      * @returns The total time spent, in milliseconds.
      */
     upkeepTimed(): number;
 
     /**
-     * Continues execution of this.upkeep by calling it. If an onPlay has been
-     * defined, it's called before.
+     * Runs every renderer once.
+     */
+    render(): void;
+
+    /**
+     * Continues execution by running an upkeep immediately and then starting
+     * the frame loop. If an onPlay has been defined, it's called before.
      */
     play(): void;
 
     /**
-     * Stops execution of this.upkeep, and cancels the next call. If an onPause
-     * has been defined, it's called after.
+     * Stops execution of the frame loop, and cancels the next frame. If an
+     * onPause has been defined, it's called after.
      */
     pause(): void;
 
     /**
      * Calls upkeep a <num or 1> number of times, immediately.
-     * 
+     *
      * @param [num]   How many times to upkeep (by default, 1).
      */
     step(times?: number): void;
@@ -191,34 +235,100 @@ export interface IGamesRunnr {
 
     /**
      * Sets the interval between between upkeeps.
-     * 
+     *
      * @param interval   The new time interval in milliseconds.
      */
     setInterval(interval: number): void;
 
     /**
      * Sets the speed multiplier for the interval.
-     * 
+     *
      * @param speed   The new speed multiplier. 2 will cause interval to be
      *                twice as fast, and 0.5 will be half as fast.
      */
     setSpeed(speed: number): void;
+
+    /**
+     * Sets the most upkeeps one frame may run to catch up.
+     *
+     * @param maxUpdatesPerFrame   The new limit, at speed 1.
+     */
+    setMaxUpdatesPerFrame(maxUpdatesPerFrame: number): void;
 }
 
-
+/**
+ * Frame deltas this close (in milliseconds) to a whole ratio of the interval
+ * (one, two, three... frames per upkeep or upkeeps per frame) are treated as
+ * exactly that ratio. This keeps display timestamp noise from tipping a
+ * frame between zero and two upkeeps when a display is in step with the game.
+ * The snapped-over difference is tracked, so the total never drifts further
+ * than this from real time.
+ */
+const SNAP_TOLERANCE = 0.3;
 
 /**
- * A class to continuously series of "game" Functions. Each game is run in a 
+ * Float slack, in milliseconds, when deciding whether an upkeep is owed.
+ */
+const EPSILON = 0.001;
+
+/**
+ * An absolute ceiling on upkeeps per frame, so no setting can spin forever.
+ */
+const MAX_UPDATES_CEILING = 1000;
+
+/**
+ * Default upkeepScheduler: requestAnimationFrame, which syncs the loop with
+ * the display. Hosts without it (such as a test runner) fall back to timers.
+ */
+function scheduleFrame(callback: Function, timeout: number): number {
+    if (typeof requestAnimationFrame === "function") {
+        return requestAnimationFrame(<FrameRequestCallback>callback);
+    }
+
+    return <any>setTimeout(callback, timeout);
+}
+
+/**
+ * Default upkeepCanceller, the pair of scheduleFrame.
+ */
+function cancelFrame(handle: number): void {
+    if (typeof cancelAnimationFrame === "function") {
+        cancelAnimationFrame(handle);
+    } else {
+        clearTimeout(<any>handle);
+    }
+}
+
+/**
+ * A class to continuously series of "game" Functions. Each game is run in a
  * set order and the group is run as a whole at a particular interval, with a
- * configurable speed. Playback can be triggered manually, or driven by a timer
- * with pause and play hooks. For automated playback, statistics are 
- * available via an internal FPSAnalyzer.
+ * configurable speed.
+ *
+ * Playback is driven by display frames with a fixed timestep: every frame, the
+ * real time since the last one is added to an accumulator, and one upkeep is
+ * run for each whole interval in it. The game therefore advances by exactly
+ * <interval/speed> milliseconds of display time per upkeep, no matter the
+ * refresh rate (a 120 Hz display runs one upkeep every other frame, a 30 Hz
+ * display two per frame). Physics are counted per upkeep, so they never change
+ * with the display or with speed; speed only shortens or lengthens the step.
+ *
+ * To never fast-forward after a stall, a frame runs at most maxUpdatesPerFrame
+ * upkeeps and drops the rest, and the accumulator restarts when playback
+ * resumes or the page's visibility changes. Rendering runs once per frame
+ * that ran an upkeep. Playback can also be triggered manually, with pause and
+ * play hooks. For automated playback, statistics are available via an
+ * internal FPSAnalyzer.
  */
 export class GamesRunnr implements IGamesRunnr {
     /**
      * Functions to be run, in order, on each upkeep.
      */
     private games: Function[];
+
+    /**
+     * Functions to be run, in order, once per displayed frame.
+     */
+    private renderers: Function[];
 
     /**
      * Optional trigger Function for this.pause.
@@ -236,24 +346,34 @@ export class GamesRunnr implements IGamesRunnr {
     private callbackArguments: any[];
 
     /**
-     * Reference to the next upkeep, such as setTimeout's returned int.
+     * Reference to the next frame, such as requestAnimationFrame's returned int.
      */
     private upkeepNext: number;
 
     /**
-     * Function used to schedule the next upkeep, such as setTimeout.
+     * Function used to schedule the next frame, such as requestAnimationFrame.
      */
     private upkeepScheduler: IUpkeepScheduler;
 
     /**
-     * Function used to cancel the next upkeep, such as clearTimeout
+     * Function used to cancel the next frame, such as cancelAnimationFrame.
      */
     private upkeepCanceller: (handle: number) => void;
 
     /**
-     * this.upkeep bound to this GamesRunnr, for use in upkeepScheduler.
+     * this.frame bound to this GamesRunnr, for use in upkeepScheduler.
      */
-    private upkeepBound: any;
+    private frameBound: any;
+
+    /**
+     * this.onVisibilityChange bound to this GamesRunnr, for the document.
+     */
+    private visibilityBound: any;
+
+    /**
+     * Whether the document's visibility listener is currently attached.
+     */
+    private visibilityListening: boolean;
 
     /**
      * Whether the game is currently paused.
@@ -271,9 +391,49 @@ export class GamesRunnr implements IGamesRunnr {
     private speed: number;
 
     /**
-     * The actual speed, as (1 / speed) * interval.
+     * The actual step, as (1 / speed) * interval.
      */
     private intervalReal: number;
+
+    /**
+     * The most upkeeps one frame may run, at speed 1.
+     */
+    private maxUpdatesPerFrame: number;
+
+    /**
+     * Time, in milliseconds, of the previous frame (undefined before the
+     * first frame of a run, which then only marks a starting point).
+     */
+    private frameTime: number;
+
+    /**
+     * Display time received but not yet spent on upkeeps, in milliseconds.
+     */
+    private accumulator: number;
+
+    /**
+     * The timeline of upkeeps, advanced by one step per upkeep. It is used for
+     * the FPS measurements, so they read the rate of logic updates without
+     * being thrown off by several of them happening in the same frame.
+     */
+    private updateClock: number;
+
+    /**
+     * How much real time has been absorbed by snapping frame deltas.
+     */
+    private snapDrift: number;
+
+    /**
+     * Whether the frame loop is currently running upkeeps, in which case
+     * rendering waits until the end of the frame.
+     */
+    private inFrame: boolean;
+
+    /**
+     * Changes whenever playback stops or restarts, so a frame can tell it has
+     * been interrupted by its own games.
+     */
+    private runId: number;
 
     /**
      * An internal FPSAnalyzr object that measures on each upkeep.
@@ -286,13 +446,14 @@ export class GamesRunnr implements IGamesRunnr {
     private scope: any;
 
     /**
-     * Whether scheduling timeouts should adjust to elapsed upkeep time.
+     * Whether scheduling timeouts should adjust to elapsed upkeep time. No
+     * longer used (the accumulator does this), kept for compatibility.
      */
     private adjustFramerate: boolean;
 
     /**
      * Initializes a new instance of the GamesRunnr class.
-     * 
+     *
      * @param settings   Settings to be used for initialization.
      */
     constructor(settings: IGamesRunnrSettings) {
@@ -308,6 +469,7 @@ export class GamesRunnr implements IGamesRunnr {
         this.games = settings.games;
         this.interval = settings.interval || 1000 / 60;
         this.speed = settings.speed || 1;
+        this.maxUpdatesPerFrame = settings.maxUpdatesPerFrame || 5;
         this.onPause = settings.onPause;
         this.onPlay = settings.onPlay;
         this.callbackArguments = settings.callbackArguments || [this];
@@ -316,19 +478,25 @@ export class GamesRunnr implements IGamesRunnr {
 
         this.scope = settings.scope || this;
         this.paused = true;
+        this.accumulator = 0;
+        this.snapDrift = 0;
+        this.inFrame = false;
+        this.runId = 0;
+        this.visibilityListening = false;
 
-        this.upkeepScheduler = settings.upkeepScheduler || function (handler: any, timeout: number): number {
-            return setTimeout(handler, timeout);
-        };
-        this.upkeepCanceller = settings.upkeepCanceller || function (handle: number): void {
-            clearTimeout(handle);
-        };
+        this.upkeepScheduler = settings.upkeepScheduler || scheduleFrame;
+        this.upkeepCanceller = settings.upkeepCanceller || cancelFrame;
 
-        this.upkeepBound = this.upkeep.bind(this);
+        this.frameBound = this.frame.bind(this);
+        this.visibilityBound = this.onVisibilityChange.bind(this);
 
         for (i = 0; i < this.games.length; i += 1) {
             this.games[i] = this.games[i].bind(this.scope);
         }
+
+        this.renderers = (settings.renderers || []).map((renderer: Function): Function => {
+            return renderer.bind(this.scope);
+        });
 
         this.setIntervalReal();
     }
@@ -337,7 +505,7 @@ export class GamesRunnr implements IGamesRunnr {
     /* Gets
     */
 
-    /** 
+    /**
      * @returns The FPSAnalyzer used in the GamesRunnr.
      */
     getFPSAnalyzer(): FPSAnalyzr.IFPSAnalyzr {
@@ -359,6 +527,13 @@ export class GamesRunnr implements IGamesRunnr {
     }
 
     /**
+     * @returns The Array of render Functions, run once per displayed frame.
+     */
+    getRenderers(): Function[] {
+        return this.renderers;
+    }
+
+    /**
      * @returns The interval between upkeeps.
      */
     getInterval(): number {
@@ -370,6 +545,13 @@ export class GamesRunnr implements IGamesRunnr {
      */
     getSpeed(): number {
         return this.speed;
+    }
+
+    /**
+     * @returns The most upkeeps one frame may run to catch up, at speed 1.
+     */
+    getMaxUpdatesPerFrame(): number {
+        return this.maxUpdatesPerFrame;
     }
 
     /**
@@ -394,14 +576,14 @@ export class GamesRunnr implements IGamesRunnr {
     }
 
     /**
-     * @returns Function used to schedule the next upkeep.
+     * @returns Function used to schedule the next frame.
      */
     getUpkeepScheduler(): IUpkeepScheduler {
         return this.upkeepScheduler;
     }
 
     /**
-     * @returns {Function} Function used to cancel the next upkeep.
+     * @returns {Function} Function used to cancel the next frame.
      */
     getUpkeepCanceller(): (handle: number) => void {
         return this.upkeepCanceller;
@@ -412,33 +594,34 @@ export class GamesRunnr implements IGamesRunnr {
     */
 
     /**
-     * Meaty function, run every <interval*speed> milliseconds, to mark an FPS
-     * measurement and run every game once.
+     * Meaty function, run once per fixed timestep (every <interval/speed>
+     * milliseconds of display time), to run every game once and mark an FPS
+     * measurement. The frame loop calls this as many times as each frame is
+     * owed; calling it by hand (outside a frame) also runs the renderers.
+     *
+     * @param [time]   A timestamp for the FPS measurement (by default, the
+     *                 FPSAnalyzer's clock is read).
      */
-    upkeep(): void {
+    upkeep(time?: number): void {
         if (this.paused) {
             return;
         }
 
-        // Prevents double upkeeping, in case a new upkeepNext was scheduled.
-        this.upkeepCanceller(this.upkeepNext);
+        this.runAllGames();
 
-        if (this.adjustFramerate) {
-            this.upkeepNext = this.upkeepScheduler(this.upkeepBound, this.intervalReal - (this.upkeepTimed() | 0));
-        } else {
-            this.upkeepNext = this.upkeepScheduler(this.upkeepBound, this.intervalReal);
-            this.runAllGames();
+        if (!this.inFrame) {
+            this.render();
         }
 
         if (this.FPSAnalyzer) {
-            this.FPSAnalyzer.measure();
+            this.FPSAnalyzer.measure(time);
         }
     }
 
     /**
      * A utility for this.upkeep that calls the same games.forEach(run), timing
      * the total execution time.
-     * 
+     *
      * @returns The total time spent, in milliseconds.
      */
     upkeepTimed(): number {
@@ -448,12 +631,24 @@ export class GamesRunnr implements IGamesRunnr {
 
         var now: number = this.FPSAnalyzer.getTimestamp();
         this.runAllGames();
+        if (!this.inFrame) {
+            this.render();
+        }
         return this.FPSAnalyzer.getTimestamp() - now;
     }
 
     /**
-     * Continues execution of this.upkeep by calling it. If an onPlay has been
-     * defined, it's called before.
+     * Runs every renderer once.
+     */
+    render(): void {
+        for (var i: number = 0; i < this.renderers.length; i += 1) {
+            this.renderers[i]();
+        }
+    }
+
+    /**
+     * Continues execution by running an upkeep immediately and then starting
+     * the frame loop. If an onPlay has been defined, it's called before.
      */
     play(): void {
         if (!this.paused) {
@@ -465,29 +660,35 @@ export class GamesRunnr implements IGamesRunnr {
             this.onPlay.apply(this, this.callbackArguments);
         }
 
-        this.upkeep();
+        try {
+            this.upkeep();
+        } finally {
+            this.startLoop();
+        }
     }
 
     /**
-     * Stops execution of this.upkeep, and cancels the next call. If an onPause
-     * has been defined, it's called after.
+     * Stops execution of the frame loop, and cancels the next frame. If an
+     * onPause has been defined, it's called after.
      */
     pause(): void {
         if (this.paused) {
             return;
         }
         this.paused = true;
+        this.runId += 1;
 
         if (this.onPause) {
             this.onPause.apply(this, this.callbackArguments);
         }
 
         this.upkeepCanceller(this.upkeepNext);
+        this.setVisibilityListening(false);
     }
 
     /**
      * Calls upkeep a <num or 1> number of times, immediately.
-     * 
+     *
      * @param [num]   How many times to upkeep (by default, 1).
      */
     step(times: number = 1): void {
@@ -511,7 +712,7 @@ export class GamesRunnr implements IGamesRunnr {
 
     /**
      * Sets the interval between between upkeeps.
-     * 
+     *
      * @param interval   The new time interval in milliseconds.
      */
     setInterval(interval: number): void {
@@ -527,7 +728,7 @@ export class GamesRunnr implements IGamesRunnr {
 
     /**
      * Sets the speed multiplier for the interval.
-     * 
+     *
      * @param speed   The new speed multiplier. 2 will cause interval to be
      *                twice as fast, and 0.5 will be half as fast.
      */
@@ -542,6 +743,210 @@ export class GamesRunnr implements IGamesRunnr {
         this.setIntervalReal();
     }
 
+    /**
+     * Sets the most upkeeps one frame may run to catch up.
+     *
+     * @param maxUpdatesPerFrame   The new limit, at speed 1.
+     */
+    setMaxUpdatesPerFrame(maxUpdatesPerFrame: number): void {
+        var limit: number = Number(maxUpdatesPerFrame);
+
+        if (isNaN(limit) || limit < 1) {
+            throw new Error("Invalid maxUpdatesPerFrame given to setMaxUpdatesPerFrame: " + maxUpdatesPerFrame);
+        }
+
+        this.maxUpdatesPerFrame = limit;
+    }
+
+
+    /* Frame loop
+    */
+
+    /**
+     * Starts a run of frames. The first frame only marks a starting point,
+     * so time spent paused is never owed.
+     */
+    private startLoop(): void {
+        if (this.paused) {
+            return;
+        }
+
+        this.runId += 1;
+        this.resetClock();
+        this.setVisibilityListening(true);
+        this.upkeepNext = this.upkeepScheduler(this.frameBound, this.intervalReal);
+    }
+
+    /**
+     * One frame of the loop: spends the display time since the previous frame
+     * on as many fixed-step upkeeps as it covers (at most the catch-up
+     * limit), then renders once if anything ran.
+     *
+     * @param [time]   When the frame started, in milliseconds (the scheduler
+     *                 normally provides it; by default, it is read).
+     */
+    private frame(time?: number): void {
+        if (this.paused) {
+            return;
+        }
+
+        var now: number = typeof time === "number" && isFinite(time) ? time : this.getNow();
+
+        // Scheduling first keeps the loop alive if a game throws
+        this.upkeepNext = this.upkeepScheduler(this.frameBound, this.intervalReal);
+
+        if (typeof this.frameTime === "undefined") {
+            this.restartClock(now);
+            return;
+        }
+
+        var step: number = this.intervalReal,
+            delta: number = Math.max(0, now - this.frameTime),
+            limit: number = this.getUpdateLimit(),
+            runId: number = this.runId,
+            updates: number = 0;
+
+        this.frameTime = now;
+        this.accumulator += this.snapDelta(delta, step);
+
+        this.inFrame = true;
+        try {
+            while (updates < limit && this.accumulator + EPSILON >= step) {
+                this.accumulator -= step;
+                this.updateClock += step;
+                updates += 1;
+
+                this.upkeep(this.updateClock);
+
+                // A game may have paused, or paused and played again
+                if (this.paused || this.runId !== runId) {
+                    break;
+                }
+            }
+        } finally {
+            this.inFrame = false;
+        }
+
+        // Hit the limit with time still owed: it's dropped, not carried over
+        if (updates >= limit && this.accumulator + EPSILON >= step) {
+            this.restartClock(now);
+        }
+
+        if (updates > 0) {
+            this.render();
+        }
+    }
+
+    /**
+     * Makes the next frame a fresh starting point, with no time owed.
+     */
+    private resetClock(): void {
+        this.frameTime = undefined;
+        this.accumulator = 0;
+        this.snapDrift = 0;
+
+        if (this.FPSAnalyzer && this.FPSAnalyzer.resetTimestamp) {
+            this.FPSAnalyzer.resetTimestamp();
+        }
+    }
+
+    /**
+     * Starts the clock at a time, with no time owed.
+     *
+     * @param now   The time of the current frame.
+     */
+    private restartClock(now: number): void {
+        this.frameTime = now;
+        this.updateClock = now;
+        this.accumulator = 0;
+        this.snapDrift = 0;
+    }
+
+    /**
+     * Frame times are only as steady as the display. When a delta is within
+     * SNAP_TOLERANCE of a whole number of frames per upkeep (or upkeeps per
+     * frame), it is made exactly that, so a display that is in step with the
+     * game gets one steady upkeep per frame instead of flipping between none
+     * and two on noise. Whatever was snapped over is tracked and handed back
+     * the moment it grows past the tolerance, so real time is never lost.
+     *
+     * @param delta   Real time since the last frame, in milliseconds.
+     * @param step   The time one upkeep covers, in milliseconds.
+     * @returns The time to add to the accumulator.
+     */
+    private snapDelta(delta: number, step: number): number {
+        if (!(delta > 0) || !(step > 0) || !isFinite(step)) {
+            return delta;
+        }
+
+        var snapped: number = delta >= step
+            ? Math.round(delta / step) * step
+            : step / Math.max(1, Math.round(step / delta));
+
+        if (Math.abs(delta - snapped) > SNAP_TOLERANCE) {
+            return delta;
+        }
+
+        var drift: number = this.snapDrift + delta - snapped;
+        if (Math.abs(drift) > SNAP_TOLERANCE) {
+            var settled: number = delta + this.snapDrift;
+            this.snapDrift = 0;
+            return settled;
+        }
+
+        this.snapDrift = drift;
+        return snapped;
+    }
+
+    /**
+     * @returns The most upkeeps a single frame may run. It grows with speed
+     *          (at 5x, five upkeeps are normal on a 60 Hz display).
+     */
+    private getUpdateLimit(): number {
+        var limit: number = Math.ceil(this.maxUpdatesPerFrame * Math.max(1, this.speed));
+
+        return Math.max(1, Math.min(limit || 1, MAX_UPDATES_CEILING));
+    }
+
+    /**
+     * @returns A current timestamp, for schedulers that don't provide one.
+     */
+    private getNow(): number {
+        if (this.FPSAnalyzer) {
+            return this.FPSAnalyzer.getTimestamp();
+        }
+
+        return typeof performance === "undefined" ? Date.now() : performance.now();
+    }
+
+    /**
+     * Frames stop while the page is hidden, so the time to the first frame
+     * after it comes back must not be owed.
+     */
+    private onVisibilityChange(): void {
+        this.resetClock();
+    }
+
+    /**
+     * Attaches or detaches the document's visibility listener. It only lives
+     * while playing, so paused or abandoned runners don't leak.
+     *
+     * @param listening   Whether the listener should be attached.
+     */
+    private setVisibilityListening(listening: boolean): void {
+        if (this.visibilityListening === listening || typeof document === "undefined") {
+            return;
+        }
+
+        this.visibilityListening = listening;
+
+        if (listening) {
+            document.addEventListener("visibilitychange", this.visibilityBound);
+        } else {
+            document.removeEventListener("visibilitychange", this.visibilityBound);
+        }
+    }
+
 
     /* Utilities
     */
@@ -551,6 +956,9 @@ export class GamesRunnr implements IGamesRunnr {
      */
     private setIntervalReal(): void {
         this.intervalReal = (1 / this.speed) * this.interval;
+
+        // Time owed at the old step must not turn into a burst at the new one
+        this.accumulator = Math.min(this.accumulator, this.intervalReal);
     }
 
     /**

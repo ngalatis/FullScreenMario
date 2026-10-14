@@ -68,7 +68,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     };
 
     /**
-     * Overriden MapScreenr refers to the IMapScreenr defined in MarioGame.d.ts.
+     * Overriden MapScreenr refers to the IMapScreenr defined in types.ts.
      */
     public MapScreener!: IMapScreenr;
 

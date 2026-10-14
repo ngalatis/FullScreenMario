@@ -2124,7 +2124,7 @@ export interface IMarioGameStoredSettings extends GameStartr.IGameStartrStoredSe
  */
 export interface IMarioGame extends GameStartr.IGameStartr {
     /**
-     * Overriden MapScreenr refers to the IMapScreenr defined in IMarioGame.d.ts.
+     * Overriden MapScreenr refers to the IMapScreenr defined in types.ts.
      */
     MapScreener: IMapScreenr;
 

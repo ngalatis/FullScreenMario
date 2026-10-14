@@ -5,7 +5,7 @@ import { MarioGame } from "./game/MarioGame";
 
 // The settings modules are side-effect scripts that fill in MarioGame.settings.*.
 // They must be imported in this exact order (it is the order the original index.html
-// loaded them in): maps.ts is imported before the individual map files.
+// loaded them in): maps.js is imported before the individual map files.
 import "./game/settings/audio";
 import "./game/settings/collisions";
 import "./game/settings/devices";
@@ -227,7 +227,7 @@ function setupRotateOverlay(userWrapper: UserWrappr.UserWrappr): void {
 }
 
 /**
- * Makes the game installable and playable offline (see the pwa plugin in vite.config.ts, which
+ * Makes the game installable and playable offline (see the offlineSupport plugin in vite.config.ts, which
  * generates sw.js). Production builds only, and a failure here must never reach the player.
  */
 function registerServiceWorker(): void {

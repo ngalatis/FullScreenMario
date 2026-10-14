@@ -244,8 +244,8 @@ export interface INumberMakr {
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
      
     Any feedback is very welcome.
-    http://www.math.sci.hiroshima-u.ac.jp/~statePeriod-mat/stateVector/emt.html
-    email: statePeriod-mat @ math.sci.hiroshima-u.ac.jp (remove space)
+    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
+    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
 /**

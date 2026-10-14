@@ -8,6 +8,10 @@
  * thing.FSM.macroFillPreThings(...) keep working unchanged.
  */
 import type {
+    IMarioGame,
+    IMacroCommand,
+    IMacroOutput,
+    IMacroPreThings,
     IArea,
     IMacroBridgeSettings,
     IMacroBulletBillsStartSettings,
@@ -50,11 +54,11 @@ export const macroMethods = {
     macroFillPreThings(
         this: MarioGame,
         reference: IMacroFillPreThingsSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         var defaults: any = FSM.ObjectMaker.getFullPropertiesOf(reference.thing),
             xnum: number = reference.xnum || 1,
             ynum: number = reference.ynum || 1,
@@ -62,7 +66,7 @@ export const macroMethods = {
             yheight: number = reference.yheight || defaults.height,
             x: number = reference.x || 0,
             yref: number = reference.y || 0,
-            outputs: any[] = [],
+            outputs: IMacroCommand[] = [],
             output: any,
             o: number = 0,
             y: number,
@@ -102,11 +106,11 @@ export const macroMethods = {
     macroFillPrePattern(
         this: MarioGame,
         reference: IMacroFillPrePatternSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         if (!FSM.settings.maps.patterns[reference.pattern]) {
             throw new Error("An unknown pattern is referenced: " + reference);
         }
@@ -117,7 +121,7 @@ export const macroMethods = {
             repeats: number = reference.repeat || 1,
             xpos: number = reference.x || 0,
             ypos: number = reference.y || 0,
-            outputs: any[] = [],
+            outputs: IMacroCommand[] = [],
             o: number = 0,
             skips: any = {},
             prething: any,
@@ -177,11 +181,11 @@ export const macroMethods = {
     macroFloor(
         this: MarioGame,
         reference: IMacroFloorSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             floor: any = FSM.proliferate(
@@ -217,11 +221,11 @@ export const macroMethods = {
     macroPipe(
         this: MarioGame,
         reference: IMacroPipeSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         scope: MarioGame
-    ): any {
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             height: number | string = reference.height || 16,
@@ -236,7 +240,7 @@ export const macroMethods = {
                 reference,
                 true
             ),
-            output: any[] = [pipe];
+            output: IMacroCommand[] = [pipe];
 
         pipe.macro = undefined;
 
@@ -273,15 +277,15 @@ export const macroMethods = {
     macroPipeCorner(
         this: MarioGame,
         reference: IMacroPipeCornerSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
-        scope: any
-    ): any {
+        scope: IMarioGame
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             height: number = reference.height || 16,
-            output: any[] = [
+            output: IMacroCommand[] = [
                 {
                     "thing": "PipeHorizontal",
                     "x": x,
@@ -330,15 +334,15 @@ export const macroMethods = {
     macroTree(
         this: MarioGame,
         reference: IMacroTreeSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         scope: MarioGame
-    ): any {
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             width: number = reference.width || 24,
-            output: any[] = [
+            output: IMacroCommand[] = [
                 {
                     "thing": "TreeTop",
                     "x": x,
@@ -375,15 +379,15 @@ export const macroMethods = {
     macroShroom(
         this: MarioGame,
         reference: IMacroShroomSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         scope: MarioGame
-    ): any {
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             width: number = reference.width || 24,
-            output: any[] = [
+            output: IMacroCommand[] = [
                 {
                     "thing": "ShroomTop",
                     "x": x,
@@ -420,11 +424,11 @@ export const macroMethods = {
     macroWater(
         this: MarioGame,
         reference: IMacroWaterSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         return FSM.proliferate(
             {
                 "thing": "Water",
@@ -445,7 +449,7 @@ export const macroMethods = {
      * @param reference   Settings for a Ceiling macro.
      * @returns A Brick ceiling.
      */
-    macroCeiling(this: MarioGame, reference: IMacroCeilingSettings): any {
+    macroCeiling(this: MarioGame, reference: IMacroCeilingSettings): IMacroOutput {
         return {
             "macro": "Fill",
             "thing": "Brick",
@@ -463,11 +467,11 @@ export const macroMethods = {
      * @param reference   Settings for a Bridge macro.
      * @returns A bridge.
      */
-    macroBridge(this: MarioGame, reference: IMacroBridgeSettings): any {
+    macroBridge(this: MarioGame, reference: IMacroBridgeSettings): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             width: number = Math.max(reference.width || 0, 16),
-            output: any[] = [];
+            output: IMacroCommand[] = [];
 
         // A beginning column reduces the width and pushes it forward
         if (reference.begin) {
@@ -514,11 +518,11 @@ export const macroMethods = {
     macroScale(
         this: MarioGame,
         reference: IMacroScaleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             unitsize: number = FSM.unitsize,
@@ -603,12 +607,12 @@ export const macroMethods = {
     macroPlatformGenerator(
         this: MarioGame,
         reference: IMacroPlatformGeneratorSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
-        var output: any[] = [],
+    ): IMacroOutput {
+        var output: IMacroCommand[] = [],
             direction: number = reference.direction || 1,
             levels: number[] = direction > 0 ? [0, 48] : [8, 56],
             width: number = reference.width || 16,
@@ -653,12 +657,12 @@ export const macroMethods = {
     macroWarpWorld(
         this: MarioGame,
         reference: IMacroWarpWorldSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
-        var output: any[] = [],
+    ): IMacroOutput {
+        var output: IMacroCommand[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
             textHeight: number = reference.textHeight ?? 8,
@@ -752,11 +756,11 @@ export const macroMethods = {
     macroCheepsStart(
         this: MarioGame,
         reference: IMacroCheepsStartSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -782,11 +786,11 @@ export const macroMethods = {
     macroCheepsStop(
         this: MarioGame,
         reference: IMacroCheepsStopSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -812,11 +816,11 @@ export const macroMethods = {
     macroBulletBillsStart(
         this: MarioGame,
         reference: IMacroBulletBillsStartSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -842,11 +846,11 @@ export const macroMethods = {
     macroBulletBillsStop(
         this: MarioGame,
         reference: IMacroBulletBillsStopSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -872,11 +876,11 @@ export const macroMethods = {
     macroLakituStop(
         this: MarioGame,
         reference: IMacroLakituStopSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,

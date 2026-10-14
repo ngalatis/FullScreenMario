@@ -11,6 +11,8 @@ import * as MapScreenr from "../../engine/MapScreenr";
 import * as MapsCreatr from "../../engine/MapsCreatr";
 import type {
     IArea,
+    IAreaSection,
+    IMacroCommand,
     IBlooper,
     IBowser,
     IBulletBill,
@@ -644,9 +646,9 @@ export const spawnMethods = {
             area: IArea = <IArea>AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
-            section: any = area.sections![thing.section || 0],
+            section: IAreaSection = area.sections![thing.section || 0],
             left: number = (thing.left + MapScreener.left) / FSM.unitsize,
-            before: any[] = section.before ? section.before.creation : undefined,
+            before: IMacroCommand[] | undefined = section.before ? section.before.creation : undefined,
             command: any,
             i: number;
 
@@ -676,7 +678,7 @@ export const spawnMethods = {
         // Add a prething at the end of all this to trigger the stretch part
         command = {
             "thing": "DetectWindow",
-            "x": left + (before ? section.before.width : 0),
+            "x": left + (before ? section.before!.width : 0),
             "y": 0,
             "activate": FSM.activateSectionStretch,
             "section": thing.section || 0
@@ -711,8 +713,8 @@ export const spawnMethods = {
             area: IArea = <IArea>AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
-            section: any = area.sections![thing.section || 0],
-            stretch: any[] = section.stretch ? section.stretch.creation : undefined,
+            section: IAreaSection = area.sections![thing.section || 0],
+            stretch: IMacroCommand[] | undefined = section.stretch ? section.stretch.creation : undefined,
             left: number = (thing.left + MapScreener.left) / FSM.unitsize,
             width: number = MapScreener.width / FSM.unitsize,
             command: MapsCreatr.IPreThingSettings,
@@ -766,9 +768,9 @@ export const spawnMethods = {
             area: IArea = <IArea>AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             prethings: MapsCreatr.IPreThingsContainers = AreaSpawner.getPreThings(),
-            section: any = area.sections![thing.section || 0],
+            section: IAreaSection = area.sections![thing.section || 0],
             left: number = (thing.left + MapScreener.left) / FSM.unitsize,
-            after: any[] = section.after ? section.after.creation : undefined,
+            after: IMacroCommand[] | undefined = section.after ? section.after.creation : undefined,
             command: any,
             i: number;
 

@@ -121,7 +121,7 @@ export const deathMethods = {
         this: MarioGame,
         thing: IThing,
         title: string,
-        attributes: any = {},
+        attributes: Record<string, unknown> = {},
         attributesCopied?: string[]
     ): IThing {
         var spawn: IThing, i: number;
@@ -403,7 +403,7 @@ export const deathMethods = {
                 FSM.updateSize(thing);
                 FSM.setClass(thing, "character player dead");
                 FSM.animateCharacterPauseVelocity(thing);
-                FSM.arrayToEnd(thing, <any[]>FSM.GroupHolder.getGroup(thing.groupType));
+                FSM.arrayToEnd(thing, <IThing[]>FSM.GroupHolder.getGroup(thing.groupType));
 
                 FSM.MapScreener.notime = true;
                 FSM.MapScreener.nokeys = true;

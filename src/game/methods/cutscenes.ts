@@ -7,6 +7,7 @@
  * thing.FSM.cutsceneFlagpoleStartSlidingDown(...) keep working unchanged.
  */
 import type { ICastleAxe, IDetectCollision, IFirework, IPlayer, ISolid, IText, IThing } from "../types";
+import type { ICutsceneSettings } from "../../engine/ScenePlayr";
 import type { MarioGame } from "../MarioGame";
 
 export const cutsceneMethods = {
@@ -23,7 +24,7 @@ export const cutsceneMethods = {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleStartSlidingDown(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneFlagpoleStartSlidingDown(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         var thing: IPlayer = settings.player,
             other: IDetectCollision = settings.collider,
             height: number = (other.bottom - thing.bottom) | 0,
@@ -95,7 +96,7 @@ export const cutsceneMethods = {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleHitBottom(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneFlagpoleHitBottom(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         var thing: IPlayer = settings.player;
 
         thing.keys.run = 1;
@@ -117,7 +118,7 @@ export const cutsceneMethods = {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleCountdown(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneFlagpoleCountdown(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         FSM.TimeHandler.addEventInterval(
             function (): boolean {
                 FSM.ItemsHolder.decrease("time");
@@ -144,7 +145,7 @@ export const cutsceneMethods = {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleFireworks(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneFlagpoleFireworks(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         var numFireworks: number = FSM.MathDecider.compute("numberOfFireworks", settings.time),
             player: IPlayer = settings.player,
             detector: IDetectCollision = settings.detector,
@@ -171,7 +172,7 @@ export const cutsceneMethods = {
 
         // Add a flag to the center of the castle, behind everything else
         FSM.addThing(flag, doorLeft + FSM.unitsize, doorTop - FSM.unitsize * 24);
-        FSM.arrayToBeginning(flag, <any[]>FSM.GroupHolder.getGroup(flag.groupType));
+        FSM.arrayToBeginning(flag, <IThing[]>FSM.GroupHolder.getGroup(flag.groupType));
 
         // Animate the flag raising
         FSM.TimeHandler.addEventInterval(
@@ -221,7 +222,7 @@ export const cutsceneMethods = {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneBowserVictoryCollideCastleAxe(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneBowserVictoryCollideCastleAxe(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         var player: IPlayer = settings.player,
             axe: ICastleAxe = settings.axe;
 
@@ -253,7 +254,7 @@ export const cutsceneMethods = {
      * @remarks The castle bridge's animateCastleBridgeOpen (called via killNPCs
      *          as the bridge's .killonend attribute) is what triggers this.
      */
-    cutsceneBowserVictoryCastleBridgeOpen(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneBowserVictoryCastleBridgeOpen(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         var bridge: ISolid = settings.routineArguments[0];
 
         FSM.TimeHandler.addEventInterval(
@@ -282,7 +283,7 @@ export const cutsceneMethods = {
      * @remarks This is called by the CastleBridgeOpen routine, once the bridge
      *          has been reduced to no width.
      */
-    cutsceneBowserVictoryBowserFalls(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneBowserVictoryBowserFalls(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         FSM.AudioPlayer.play("Bowser Falls");
 
         // Bowser won't exist if a Player already killed him with a star or fireballs
@@ -299,7 +300,7 @@ export const cutsceneMethods = {
      * @param FSM
      * @remarks This is called by collideCastleNPC.
      */
-    cutsceneBowserVictoryDialog(this: MarioGame, FSM: MarioGame, settings: any): void {
+    cutsceneBowserVictoryDialog(this: MarioGame, FSM: MarioGame, settings: ICutsceneSettings): void {
         var player: IPlayer = settings.player,
             detector: IDetectCollision = settings.detector,
             keys: any[] = settings.keys,

@@ -9,6 +9,9 @@
  */
 import * as MapsCreatr from "../../engine/MapsCreatr";
 import type {
+    IMacroCommand,
+    IMacroOutput,
+    IMacroPreThings,
     IArea,
     IMacroCastleSettings,
     IMacroEndInsideCastleSettings,
@@ -39,12 +42,12 @@ export const castleMacroMethods = {
     macroCastleSmall(
         this: MarioGame,
         reference: IMacroCastleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
-        var output: any[] = [],
+    ): IMacroOutput {
+        var output: IMacroCommand[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
             i: number,
@@ -175,12 +178,12 @@ export const castleMacroMethods = {
     macroCastleLarge(
         this: MarioGame,
         reference: IMacroCastleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
         FSM: MarioGame
-    ): any {
-        var output: any[] = [],
+    ): IMacroOutput {
+        var output: IMacroCommand[] = [],
             x: number = reference.x || 0,
             y: number = reference.y || 0,
             i: number,
@@ -288,11 +291,11 @@ export const castleMacroMethods = {
      * @param reference   Settings for a StartInsideCastle macro.
      * @returns A starting zone for the inside of a castle.
      */
-    macroStartInsideCastle(this: MarioGame, reference: IMacroStartInsideCastleSettings): any {
+    macroStartInsideCastle(this: MarioGame, reference: IMacroStartInsideCastleSettings): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             width: number = (reference.width || 0) - 40,
-            output: any[] = [
+            output: IMacroCommand[] = [
                 {
                     "thing": "Stone",
                     "x": x,
@@ -343,15 +346,15 @@ export const castleMacroMethods = {
     macroEndOutsideCastle(
         this: MarioGame,
         reference: IMacroEndOutsideCastleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             collectionName: string = "EndOutsideCastle-" + [reference.x, reference.y, reference.large].join(","),
-            output: any[];
+            output: IMacroCommand[];
 
         // Output starts off with the general flag & collision detection
         output = [
@@ -433,15 +436,15 @@ export const castleMacroMethods = {
     macroEndInsideCastle(
         this: MarioGame,
         reference: IMacroEndInsideCastleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         var x: number = reference.x || 0,
             y: number = reference.y || 0,
             npc: string = reference.npc || "Toad",
-            output: any[],
+            output: IMacroCommand[],
             texts: any[] | undefined,
             keys: string[] | undefined;
 
@@ -626,11 +629,11 @@ export const castleMacroMethods = {
     macroSection(
         this: MarioGame,
         reference: IMacroSectionSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: MarioGame
-    ): any {
+    ): IMacroOutput {
         return {
             "thing": "DetectSpawn",
             "x": reference.x || 0,
@@ -647,7 +650,7 @@ export const castleMacroMethods = {
      * @param reference   Settings for a SectionPass macro.
      * @returns A section pass detector.
      */
-    macroSectionPass(this: MarioGame, reference: IMacroSectionPassSettings): any {
+    macroSectionPass(this: MarioGame, reference: IMacroSectionPassSettings): IMacroOutput {
         return {
             "thing": "DetectCollision",
             "x": reference.x || 0,
@@ -668,7 +671,7 @@ export const castleMacroMethods = {
      * @param reference   Settings for a SectionFail macro.
      * @returns A section fail detector.
      */
-    macroSectionFail(this: MarioGame, reference: IMacroSectionFailSettings): any {
+    macroSectionFail(this: MarioGame, reference: IMacroSectionFailSettings): IMacroOutput {
         return [
             {
                 "thing": "DetectCollision",
@@ -696,7 +699,7 @@ export const castleMacroMethods = {
      * @param FSM   The calling MarioGame.
      * @returns A section decider detector.
      */
-    macroSectionDecider(this: MarioGame, reference: IMacroSectionDeciderSettings): any {
+    macroSectionDecider(this: MarioGame, reference: IMacroSectionDeciderSettings): IMacroOutput {
         return {
             "thing": "DetectSpawn",
             "x": reference.x || 0,

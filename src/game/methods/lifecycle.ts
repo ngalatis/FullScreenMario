@@ -124,10 +124,10 @@ export const lifecycleMethods = {
             thing.FSM.TimeHandler.addEvent(function (): void {
                 switch (position) {
                     case "beginning":
-                        thing.FSM.arrayToBeginning(thing, <any[]>thing.FSM.GroupHolder.getGroup(thing.groupType));
+                        thing.FSM.arrayToBeginning(thing, <IThing[]>thing.FSM.GroupHolder.getGroup(thing.groupType));
                         break;
                     case "end":
-                        thing.FSM.arrayToEnd(thing, <any[]>thing.FSM.GroupHolder.getGroup(thing.groupType));
+                        thing.FSM.arrayToEnd(thing, <IThing[]>thing.FSM.GroupHolder.getGroup(thing.groupType));
                         break;
                     default:
                         break;

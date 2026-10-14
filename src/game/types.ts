@@ -1,6 +1,38 @@
 import * as GameStartr from "../engine/GameStartr";
 import * as MapScreenr from "../engine/MapScreenr";
 import * as MapsCreatr from "../engine/MapsCreatr";
+import * as ScenePlayr from "../engine/ScenePlayr";
+
+/**
+ * A command that MapsCreatr analyzes: either a PreThing ("thing") or another
+ * macro ("macro"), together with their settings.
+ */
+export interface IMacroCommand {
+    /**
+     * The title of a Thing to place, for a PreThing command.
+     */
+    thing?: string;
+
+    /**
+     * The name of another macro to run, for a macro command.
+     */
+    macro?: string;
+
+    /**
+     * Any other settings are passed on to the Thing or the macro.
+     */
+    [i: string]: any;
+}
+
+/**
+ * The PreThings containers a macro is handed, either sorted or raw.
+ */
+export type IMacroPreThings = MapsCreatr.IPreThingsContainers | MapsCreatr.IPreThingsRawContainer;
+
+/**
+ * What a macro hands back: one command or a list of them.
+ */
+export type IMacroOutput = IMacroCommand | IMacroCommand[];
 
 /**
  * A simple container for Map attributes given by switching to an Area within
@@ -102,6 +134,30 @@ export interface IMap extends MapsCreatr.IMapsCreatrMap {
 /**
  * An Area parsed from a JSON-friendly Map description.
  */
+/**
+ * One part (before, stretch or after) of a stretchable Castle section.
+ */
+export interface IAreaSectionPart {
+    /**
+     * How wide the part is, in game units.
+     */
+    width: number;
+
+    /**
+     * The commands that create the part.
+     */
+    creation: IMacroCommand[];
+}
+
+/**
+ * A stretchable Castle section, as listed in an Area's sections.
+ */
+export interface IAreaSection {
+    before?: IAreaSectionPart;
+    stretch?: IAreaSectionPart;
+    after?: IAreaSectionPart;
+}
+
 export interface IArea extends MapsCreatr.IMapsCreatrArea {
     /**
      * Any additional attributes that should add extra properties to this Area.
@@ -159,7 +215,7 @@ export interface IArea extends MapsCreatr.IMapsCreatrArea {
     /**
      * Components of stretchable Castle sections.
      */
-    sections?: any[];
+    sections?: IAreaSection[];
 
     /**
      * A starting time to use instead of the container Map's.
@@ -4122,7 +4178,12 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param attributesCopied   An optional listing of attributes to copy from
      *                           the original Thing (by default, none).
      */
-    killReplace(thing: IThing, title: string, attributes?: any, attributesCopied?: string[]): IThing;
+    killReplace(
+        thing: IThing,
+        title: string,
+        attributes?: Record<string, unknown>,
+        attributesCopied?: string[]
+    ): IThing;
 
     /**
      * Kill Function for Goombas. If big isn't specified, it replaces the
@@ -4521,7 +4582,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleStartSlidingDown(FSM: IMarioGame, settings: any): void;
+    cutsceneFlagpoleStartSlidingDown(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Routine for when a player hits the bottom of a flagpole. It is
@@ -4531,7 +4592,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleHitBottom(FSM: IMarioGame, settings: any): void;
+    cutsceneFlagpoleHitBottom(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Routine for counting down time and increasing score at the end of
@@ -4540,7 +4601,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleCountdown(FSM: IMarioGame, settings: any): void;
+    cutsceneFlagpoleCountdown(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Animation routine for the fireworks found at the end of EndOutsideCastle.
@@ -4550,7 +4611,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneFlagpoleFireworks(FSM: IMarioGame, settings: any): void;
+    cutsceneFlagpoleFireworks(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Routine for when a player collides with a castle axe. All unimportant NPCs
@@ -4559,7 +4620,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM
      * @param settings   Storage for the cutscene from ScenePlayr.
      */
-    cutsceneBowserVictoryCollideCastleAxe(FSM: IMarioGame, settings: any): void;
+    cutsceneBowserVictoryCollideCastleAxe(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Routine for a castle bridge opening. Its width is reduced repeatedly on an
@@ -4570,7 +4631,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @remarks The castle bridge's animateCastleBridgeOpen (called via killNPCs
      *          as the bridge's .killonend attribute) is what triggers this.
      */
-    cutsceneBowserVictoryCastleBridgeOpen(FSM: IMarioGame, settings: any): void;
+    cutsceneBowserVictoryCastleBridgeOpen(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Routine for Bowser falling after his bridge opens.
@@ -4580,7 +4641,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @remarks This is called by the CastleBridgeOpen routine, once the bridge
      *          has been reduced to no width.
      */
-    cutsceneBowserVictoryBowserFalls(FSM: IMarioGame, settings: any): void;
+    cutsceneBowserVictoryBowserFalls(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Routine for displaying text above a castle NPC. Each "layer" of text
@@ -4590,7 +4651,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM
      * @remarks This is called by collideCastleNPC.
      */
-    cutsceneBowserVictoryDialog(FSM: IMarioGame, settings: any): void;
+    cutsceneBowserVictoryDialog(FSM: IMarioGame, settings: ScenePlayr.ICutsceneSettings): void;
 
     /**
      * Macro to place a single type of Thing multiple times, drawing from a
@@ -4606,11 +4667,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroFillPreThings(
         reference: IMacroFillPreThingsSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to continuously place a listing of Things multiple times, from left
@@ -4626,11 +4687,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroFillPrePattern(
         reference: IMacroFillPrePatternSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a Floor Thing with infinite height. All settings are
@@ -4644,7 +4705,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A single Floor.
      */
-    macroFloor(reference: IMacroFloorSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroFloor(
+        reference: IMacroFloorSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a Pipe, possibly with a pirahna, location hooks, and/or
@@ -4659,7 +4726,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A Pipe, and potentially a Piranha.
      */
-    macroPipe(reference: IMacroPipeSettings, prethings: any[], area: IArea, map: IMap, scope: IMarioGame): any;
+    macroPipe(
+        reference: IMacroPipeSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        scope: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a horizontal Pipe with a vertical one, likely with
@@ -4673,7 +4746,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A horizontal Pipe and a vertical Pipe.
      */
-    macroPipeCorner(reference: IMacroPipeCornerSettings, prethings: any[], area: IArea, map: IMap, scope: any): any;
+    macroPipeCorner(
+        reference: IMacroPipeCornerSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        scope: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a Tree.
@@ -4686,7 +4765,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A Tree and its trunk.
      */
-    macroTree(reference: IMacroTreeSettings, prethings: any[], area: IArea, map: IMap, scope: IMarioGame): any;
+    macroTree(
+        reference: IMacroTreeSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        scope: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a large Shroom (a Tree that looks like a large Mushroom).
@@ -4699,7 +4784,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A Shroom and its trunk.
      */
-    macroShroom(reference: IMacroShroomSettings, prethings: any[], area: IArea, map: IMap, scope: IMarioGame): any;
+    macroShroom(
+        reference: IMacroShroomSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        scope: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place Water of infinite height. All settings are copied to the
@@ -4713,7 +4804,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A Water scenery.
      */
-    macroWater(reference: IMacroWaterSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroWater(
+        reference: IMacroWaterSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a row of Bricks at y = 88.
@@ -4722,7 +4819,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param reference   Settings for a Ceiling macro.
      * @returns A Brick ceiling.
      */
-    macroCeiling(reference: IMacroCeilingSettings): any;
+    macroCeiling(reference: IMacroCeilingSettings): IMacroOutput;
 
     /**
      * Macro to place a bridge, possibly with columns at the start and/or end.
@@ -4731,7 +4828,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param reference   Settings for a Bridge macro.
      * @returns A bridge.
      */
-    macroBridge(reference: IMacroBridgeSettings): any;
+    macroBridge(reference: IMacroBridgeSettings): IMacroOutput;
 
     /**
      * Macro to place a scale, which is two Platforms seemingly suspended
@@ -4745,7 +4842,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A scale group.
      */
-    macroScale(reference: IMacroScaleSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroScale(
+        reference: IMacroScaleSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place Platforms traveling and spawning vertically.
@@ -4760,11 +4863,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroPlatformGenerator(
         reference: IMacroPlatformGeneratorSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a Warp World group of Pipes, Texts, Piranhas, and
@@ -4778,7 +4881,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A Warp World group.
      */
-    macroWarpWorld(reference: IMacroWarpWorldSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroWarpWorld(
+        reference: IMacroWarpWorldSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a DetectCollision that will start the map spawning random
@@ -4794,11 +4903,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroCheepsStart(
         reference: IMacroCheepsStartSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a DetectCollision that will stop the map spawning random
@@ -4814,11 +4923,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroCheepsStop(
         reference: IMacroCheepsStopSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a DetectCollision that will start the map spawning random
@@ -4834,11 +4943,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroBulletBillsStart(
         reference: IMacroBulletBillsStartSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a DetectCollision that will stop the map spawning random
@@ -4854,11 +4963,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroBulletBillsStop(
         reference: IMacroBulletBillsStopSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a DetectCollision that will tell any current Lakitu to
@@ -4874,11 +4983,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroLakituStop(
         reference: IMacroLakituStopSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a small castle, which is really a collection of sceneries.
@@ -4891,7 +5000,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A small castle.
      */
-    macroCastleSmall(reference: IMacroCastleSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroCastleSmall(
+        reference: IMacroCastleSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a large castle, which is really a collection of sceneries
@@ -4907,11 +5022,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroCastleLarge(
         reference: IMacroCastleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place the typical starting Things for the inside of a castle
@@ -4921,7 +5036,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param reference   Settings for a StartInsideCastle macro.
      * @returns A starting zone for the inside of a castle.
      */
-    macroStartInsideCastle(reference: IMacroStartInsideCastleSettings): any;
+    macroStartInsideCastle(reference: IMacroStartInsideCastleSettings): IMacroOutput;
 
     /**
      * Macro to place the typical ending Things for the inside of an outdoor
@@ -4937,11 +5052,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroEndOutsideCastle(
         reference: IMacroEndOutsideCastleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: MapsCreatr.IMapsCreatrArea,
         map: MapsCreatr.IMapsCreatrMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place the typical ending Things for the inside of a castle area.
@@ -4956,11 +5071,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      */
     macroEndInsideCastle(
         reference: IMacroEndInsideCastleSettings,
-        prethings: any[],
+        prethings: IMacroPreThings,
         area: IArea,
         map: IMap,
         FSM: IMarioGame
-    ): any;
+    ): IMacroOutput;
 
     /**
      * Macro to place a DetectSpawn that will call activateSectionBefore to
@@ -4974,7 +5089,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A section.
      */
-    macroSection(reference: IMacroSectionSettings, prethings: any[], area: IArea, map: IMap, FSM: IMarioGame): any;
+    macroSection(
+        reference: IMacroSectionSettings,
+        prethings: IMacroPreThings,
+        area: IArea,
+        map: IMap,
+        FSM: IMarioGame
+    ): IMacroOutput;
 
     /**
      * Macro to place a DetectCollision to mark the current section as passed.
@@ -4983,7 +5104,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param reference   Settings for a SectionPass macro.
      * @returns A section pass detector.
      */
-    macroSectionPass(reference: IMacroSectionPassSettings): any;
+    macroSectionPass(reference: IMacroSectionPassSettings): IMacroOutput;
 
     /**
      * Macro to place a DetectCollision to mark the current section as failed.
@@ -4992,7 +5113,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param reference   Settings for a SectionFail macro.
      * @returns A section fail detector.
      */
-    macroSectionFail(reference: IMacroSectionFailSettings): any;
+    macroSectionFail(reference: IMacroSectionFailSettings): IMacroOutput;
 
     /**
      * Macro to place a DetectSpawn that will spawn a following section based on
@@ -5006,7 +5127,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param FSM   The calling IMarioGame.
      * @returns A section decider detector.
      */
-    macroSectionDecider(reference: IMacroSectionDeciderSettings): any;
+    macroSectionDecider(reference: IMacroSectionDeciderSettings): IMacroOutput;
 
     /**
      * Ensures the current object is a GameStartr by throwing an error if it

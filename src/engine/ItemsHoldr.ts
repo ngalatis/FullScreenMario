@@ -662,7 +662,7 @@ export class ItemValue implements IItemValue {
             if (this.onMinimum) {
                 this.onMinimum.apply(this, this.ItemsHolder.getCallbackArgs());
             }
-        } else if (this.hasOwnProperty("maximum") && Number(this.value) <= Number(this.maximum)) {
+        } else if (this.hasOwnProperty("maximum") && Number(this.value) >= Number(this.maximum)) {
             this.value = this.maximum;
             if (this.onMaximum) {
                 this.onMaximum.apply(this, this.ItemsHolder.getCallbackArgs());

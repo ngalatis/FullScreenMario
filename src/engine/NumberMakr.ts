@@ -409,11 +409,9 @@ export class NumberMakr implements INumberMakr {
         while (k > 0) {
             s = this.stateVector[i - 1] ^ (this.stateVector[i - 1] >>> 30);
             this.stateVector[i] =
-                (this.stateVector[i] ^
-                    (((((s & 0xffff0000) >>> 16) * 1664525) << 16) +
-                        (s & 0x0000ffff) * 1664525 +
-                        keyInitial[j] +
-                        j)) >>>
+                ((this.stateVector[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + (s & 0x0000ffff) * 1664525)) +
+                    keyInitial[j] +
+                    j) >>>
                 0;
 
             i += 1;
@@ -427,6 +425,8 @@ export class NumberMakr implements INumberMakr {
             if (j >= keyLength) {
                 j = 0;
             }
+
+            k -= 1;
         }
 
         for (k = this.stateLength - 1; k; k -= 1) {

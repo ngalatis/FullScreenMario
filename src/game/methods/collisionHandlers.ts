@@ -63,7 +63,7 @@ export const collisionHandlerMethods = {
                 if (thing.undermid.bottomBump) {
                     thing.undermid.bottomBump(thing.undermid, thing);
                 }
-            } else if (thing.under && thing.under && (<any>thing.under).bottomBump) {
+            } else if (thing.under && (<any>thing.under).bottomBump) {
                 (<any>thing.under).bottomBump(thing.under[0], thing);
             }
 

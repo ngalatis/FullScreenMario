@@ -88,7 +88,7 @@ export const deathMethods = {
     killSpawn(this: MarioGame, thing: ICharacter, big?: boolean): IThing | undefined {
         if (big) {
             thing.FSM.killNormal(thing);
-            return;
+            return undefined;
         }
 
         if (!thing.spawnType) {

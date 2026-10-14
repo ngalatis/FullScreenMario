@@ -92,6 +92,8 @@ MarioGame.MarioGame.settings.mods = {
                                 shiftCount = 0;
                                 return true;
                             }
+
+                            return undefined;
                         };
 
                     return function (mod) {
@@ -572,8 +574,7 @@ MarioGame.MarioGame.settings.mods = {
                 "onModEnable": function (mod) {
                     var FSM = MarioGame.MarioGame.prototype.ensureCorrectCaller(this),
                         characters = mod.settings.characters,
-                        charactersFSM = FSM.GroupHolder.getCharacterGroup(),
-                        level;
+                        charactersFSM = FSM.GroupHolder.getCharacterGroup();
 
                     FSM.InputWriter.addEvent("onkeydown", "q", function () {
                         mod.settings.qcount += 1;

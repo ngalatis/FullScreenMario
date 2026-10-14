@@ -956,6 +956,7 @@ export namespace UISchemas {
                     cell = document.createElement("td");
                     cell.className = "select-option maps-grid-option maps-grid-option-range";
                     cell.textContent = i + "-" + j;
+                    // oxlint-disable-next-line no-loop-func -- harmless: every cell has the same parent control element
                     cell.onclick = function (callback: () => any): void {
                         if (scope.getParentControlElement(cell).getAttribute("active") === "on") {
                             callback();

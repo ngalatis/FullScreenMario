@@ -847,7 +847,7 @@ export class InputWritr implements IInputWritr {
         }
 
         if (!this.canTrigger(event, keyCode, sourceEvent)) {
-            return;
+            return undefined;
         }
 
         if (event.constructor === String) {

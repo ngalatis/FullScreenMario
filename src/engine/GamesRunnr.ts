@@ -701,7 +701,11 @@ export class GamesRunnr implements IGamesRunnr {
      * Toggles whether this is paused, and calls the appropriate Function.
      */
     togglePause(): void {
-        this.paused ? this.play() : this.pause();
+        if (this.paused) {
+            this.play();
+        } else {
+            this.pause();
+        }
     }
 
     /* Games manipulations

@@ -63,7 +63,7 @@ MarioGame.MarioGame.settings.maps.library["3-1"] = {
                 // { "thing": "Springboard", "x": 1008, "y": 14.5 },
                 { "macro": "Fill", "thing": "Brick", "x": 1032, "y": 40, "xnum": 3 },
                 { "macro": "Fill", "thing": "Brick", "x": 1032, "y": 64, "xnum": 2 },
-                { "thing": "Brick", "thing": "Brick", "x": 1048, "y": 64, "contents": ["Vine", { "entrance": 4 }] },
+                { "thing": "Brick", "x": 1048, "y": 64, "contents": ["Vine", { "entrance": 4 }] },
                 { "macro": "Floor", "x": 1056, "width": 80 },
                 { "thing": "Stone", "x": 1088, "y": 8 },
                 { "thing": "Stone", "x": 1096, "y": 16, "height": 16 },

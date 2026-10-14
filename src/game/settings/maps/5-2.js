@@ -113,7 +113,7 @@ MarioGame.MarioGame.settings.maps.library["5-2"] = {
                 { "thing": "CheepCheep", "x": 220, "y": 60 },
                 { "macro": "PlatformGenerator", "x": 230, "width": 24 },
                 { "macro": "Floor", "x": 256, "y": 24, "width": 16 },
-                { "thing": "Stone", "x": 256, "height": 88, "width": 16, "height": 24 },
+                { "thing": "Stone", "x": 256, "height": 24, "width": 16 },
                 { "macro": "Floor", "x": 272, "width": 32 },
                 { "thing": "Blooper", "x": 272, "y": 24 },
                 { "thing": "Coral", "x": 304, "y": 64, "height": 32 },

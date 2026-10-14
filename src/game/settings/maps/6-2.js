@@ -154,7 +154,7 @@ MarioGame.MarioGame.settings.maps.library["6-2"] = {
                 { "thing": "Stone", "x": 488, "y": 32, "width": 16, "height": 32 },
                 { "thing": "Stone", "x": 488, "y": 88, "width": 16, "height": 32 },
                 { "thing": "PipeHorizontal", "x": 496, "y": 48, "width": 16, "transport": 2 },
-                { "thing": "Stone", "x": 504, "y": 88, "width": 16, "height": 88, "width": 16 },
+                { "thing": "Stone", "x": 504, "y": 88, "width": 16, "height": 88 },
                 { "thing": "ScrollBlocker", "x": 520 }
             ]
         },

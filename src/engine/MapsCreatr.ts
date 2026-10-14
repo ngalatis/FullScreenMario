@@ -1197,6 +1197,7 @@ export class MapsCreatr {
                         "xDec": this.getArraySorted(children, this.sortPreThingsXDec),
                         "yInc": this.getArraySorted(children, this.sortPreThingsYInc),
                         "yDec": this.getArraySorted(children, this.sortPreThingsYDec),
+                        // oxlint-disable-next-line no-loop-func -- known quirk kept from the original game: `array` is a function-scoped var, so push always adds to the arrays of the last group. Fixing it could change spawn order versus the original.
                         "push": (prething: IPreThing): void => {
                             this.addArraySorted(array.xInc, prething, this.sortPreThingsXInc);
                             this.addArraySorted(array.xDec, prething, this.sortPreThingsXDec);

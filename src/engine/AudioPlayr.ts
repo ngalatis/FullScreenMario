@@ -659,7 +659,7 @@ class Sound implements ISound {
         }
 
         this.loading = true;
-        this.host.load(this.name).then((buffer: AudioBuffer | undefined): void => {
+        void this.host.load(this.name).then((buffer: AudioBuffer | undefined): void => {
             this.loading = false;
             if (buffer) {
                 this.buffer = buffer;
@@ -1135,7 +1135,11 @@ export class AudioPlayr implements IAudioPlayr {
      * @param muted   The new status for muted.
      */
     setMuted(muted: boolean): void {
-        muted ? this.setMutedOn() : this.setMutedOff();
+        if (muted) {
+            this.setMutedOn();
+        } else {
+            this.setMutedOff();
+        }
     }
 
     /**
@@ -1234,7 +1238,7 @@ export class AudioPlayr implements IAudioPlayr {
             if (!this.sounds.hasOwnProperty(i)) {
                 continue;
             }
-            this.sounds[i].play();
+            void this.sounds[i].play();
         }
     }
 
@@ -1252,7 +1256,7 @@ export class AudioPlayr implements IAudioPlayr {
      */
     resumeTheme(): void {
         if (this.theme) {
-            this.theme.play();
+            void this.theme.play();
         }
     }
 
@@ -1549,7 +1553,7 @@ export class AudioPlayr implements IAudioPlayr {
 
         sound.loop = loop;
         sound.volume = 1;
-        sound.play();
+        void sound.play();
 
         return sound;
     }
@@ -1848,7 +1852,7 @@ export class AudioPlayr implements IAudioPlayr {
         queue = themes.concat(others, hurryThemes);
         next = (): void => {
             if (!this.disposed && queue.length) {
-                this.loadBuffer(<string>queue.shift()).then(next);
+                void this.loadBuffer(<string>queue.shift()).then(next);
             }
         };
 
@@ -1891,6 +1895,7 @@ export class AudioPlayr implements IAudioPlayr {
             controller = new AbortController();
             this.controllers.add(controller);
             // A request that never answers must not leave the game waiting.
+            // oxlint-disable-next-line no-loop-func -- harmless: the timer is cleared before the next iteration
             timeout = setTimeout((): void => controller.abort(), 20000);
 
             try {

@@ -35,7 +35,7 @@ MarioGame.MarioGame.settings.maps.library["4-2"] = {
                 { "macro": "Floor", "x": 168, "width": 288 },
                 { "macro": "Fill", "thing": "Brick", "x": 176, "y": 16, "xnum": 5, "ynum": 3 },
                 { "thing": "Brick", "x": 216, "y": 32 },
-                { "macro": "Fill", "thing": "Coin", "x": 217, "y": 7, "xnum": 3, "xwidth": 8, "xwidth": 8 },
+                { "macro": "Fill", "thing": "Coin", "x": 217, "y": 7, "xnum": 3, "xwidth": 8 },
                 { "thing": "Brick", "x": 224, "y": 32, "contents": "Mushroom" },
                 { "macro": "Fill", "thing": "Brick", "x": 240, "y": 8, "xnum": 18, "ynum": 4 },
                 { "macro": "Fill", "thing": "Goomba", "x": 344, "y": 40, "xnum": 3, "xwidth": 12 },

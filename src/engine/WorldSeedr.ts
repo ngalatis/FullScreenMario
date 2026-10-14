@@ -892,7 +892,7 @@ export class WorldSeedr {
             children.push(child);
 
             if (contents.limit && children.length > contents.limit) {
-                return;
+                return undefined;
             }
         }
 
@@ -1093,6 +1093,8 @@ export class WorldSeedr {
                 return choices[i];
             }
         }
+
+        return undefined;
     }
 
     /**

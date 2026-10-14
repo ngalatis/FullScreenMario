@@ -1004,8 +1004,8 @@ export class EightBittr implements IEightBittr {
 
                 // Special cases for HTML elements
                 switch (i) {
-                    // Children and options: just append all of them directly
-                    case "children":
+                    // Children: just append all of them directly (the original code listed
+                    // "children" twice here; the duplicate label never did anything)
                     case "children":
                         if (typeof setting !== "undefined") {
                             for (j = 0; j < setting.length; j += 1) {

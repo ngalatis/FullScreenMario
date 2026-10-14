@@ -2399,8 +2399,7 @@ export class LevelEditr implements ILevelEditr {
     private setDisplayMap(doDisableThings?: boolean): void {
         var value: string = this.display.stringer.textarea.value,
             mapName: string = this.getMapName(),
-            testObject: any,
-            map: MapsCreatr.IMapsCreatrMap;
+            testObject: any;
 
         try {
             testObject = this.parseSmart(value);
@@ -2413,7 +2412,7 @@ export class LevelEditr implements ILevelEditr {
 
         try {
             this.GameStarter.MapsCreator.storeMap(mapName, testObject);
-            map = this.GameStarter.MapsCreator.getMap(mapName);
+            this.GameStarter.MapsCreator.getMap(mapName);
         } catch (error) {
             this.setSectionJSON();
             this.display.stringer.messenger.textContent = (<Error>error).message;

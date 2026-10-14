@@ -705,22 +705,22 @@ export class TimeHandlr implements ITimeHandlr {
     handleEvent(event: TimeEvent): number | undefined {
         // Events return truthy values to indicate a stop.
         if (<number>event.repeat <= 0 || event.callback.apply(this, event.args)) {
-            return;
+            return undefined;
         }
 
         if (typeof event.repeat === "function") {
             // Repeat calculators return truthy values to indicate to keep going
             if (!(<IRepeatCalculator>event.repeat).apply(this, event.args)) {
-                return;
+                return undefined;
             }
         } else {
             if (!event.repeat) {
-                return;
+                return undefined;
             }
 
             event.repeat = <number>event.repeat - 1;
             if (event.repeat <= 0) {
-                return;
+                return undefined;
             }
         }
 

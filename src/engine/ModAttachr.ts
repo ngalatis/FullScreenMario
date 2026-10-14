@@ -405,6 +405,8 @@ export class ModAttachr implements IModAttachr {
         if (mod.events.hasOwnProperty("onModEnable")) {
             return this.fireModEvent("onModEnable", mod.name, arguments);
         }
+
+        return undefined;
     }
 
     /**
@@ -450,6 +452,8 @@ export class ModAttachr implements IModAttachr {
         if (mod.events.hasOwnProperty("onModDisable")) {
             return this.fireModEvent("onModDisable", mod.name, args);
         }
+
+        return undefined;
     }
 
     /**
@@ -499,7 +503,7 @@ export class ModAttachr implements IModAttachr {
         var result: any[] = [],
             i: number;
 
-        for (var i: number = 0; i < names.length; i += 1) {
+        for (i = 0; i < names.length; i += 1) {
             result.push(this.toggleMod(names[i]));
         }
 

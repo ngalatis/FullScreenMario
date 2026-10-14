@@ -31,6 +31,7 @@ import { castleMacroMethods, type CastleMacroMethods } from "./methods/macrosCas
  * modern web. It includes the original 32 levels, a random map generator, a
  * level editor, and over a dozen custom mods.
  */
+// oxlint-disable-next-line typescript/no-unsafe-declaration-merging -- on purpose: the methods in ./methods are declared on this class through interface merging
 export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     // For the sake of reset functions, constants are stored as members of the
     // MarioGame Function itself - this allows prototype setters to use

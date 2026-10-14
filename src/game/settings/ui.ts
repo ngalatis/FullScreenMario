@@ -192,6 +192,7 @@ MarioGame.settings.ui = {
 
                     output.push({
                         "title": mod.name,
+                        // oxlint-disable-next-line no-loop-func -- the OptionsButtons generator never reads source
                         "source": (): boolean | undefined => mod.enabled,
                         "storeLocally": true,
                         "type": "text"

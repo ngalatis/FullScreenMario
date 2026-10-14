@@ -56,15 +56,15 @@ MarioGame.settings.math = {
             equations: MathDecidr.IEquationContainer,
             player: IPlayer
         ): boolean {
-            var skiddingChanged: boolean = false;
+            var skiddingChanged: boolean = false,
+                decel: number = 0;
 
             // If a button is pressed, hold/increase speed
             if (player.keys.run !== 0 && !player.crouching) {
                 var dir: number = player.keys.run,
                     // No sprinting underwater
                     sprinting: number = Number(player.keys.sprint && !player.FSM.MapScreener.underwater) || 0,
-                    adder: number = dir * (0.098 * (Number(sprinting) + 1)),
-                    decel: number = 0;
+                    adder: number = dir * (0.098 * (Number(sprinting) + 1));
 
                 // Reduce the speed, both by subtracting and dividing a little
                 player.xvel += adder || 0;

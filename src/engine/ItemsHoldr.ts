@@ -1112,7 +1112,7 @@ export class ItemsHoldr implements IItemsHoldr {
 
         var value: any = this.items[key].getValue();
 
-        value = value ? false : true;
+        value = !value;
 
         this.items[key].setValue(value);
     }

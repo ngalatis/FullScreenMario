@@ -92,7 +92,9 @@ self.addEventListener("install", (event) => {
             .open(CACHE_NAME)
             // "reload" skips the browser's HTTP cache, so the precache holds exactly this deploy's files
             .then((cache) => cache.addAll(PRECACHE.map((path) => new Request(toUrl(path), { cache: "reload" }))))
-            .then(() => self.skipWaiting()));
+            .then(() => self.skipWaiting())
+            // A failed install must not leave a half-filled cache behind
+            .catch((error) => caches.delete(CACHE_NAME).then(() => { throw error; })));
 });
 
 self.addEventListener("activate", (event) => {
@@ -142,12 +144,13 @@ async function respond(request) {
 /** Audio elements ask for byte ranges and Safari insists on a 206 answer, so slice the cached file. */
 async function toRangeResponse(request, response) {
     const match = /^bytes=(\d*)-(\d*)$/.exec(request.headers.get("range") || "");
-    const blob = await response.blob();
 
+    // Multi-range and "bytes=-" requests cannot be sliced: hand back the untouched full response
     if (!match || (match[1] === "" && match[2] === "")) {
         return response;
     }
 
+    const blob = await response.blob();
     const size = blob.size;
     const start = match[1] === "" ? Math.max(size - Number(match[2]), 0) : Number(match[1]);
     const end = match[1] === "" || match[2] === "" ? size - 1 : Math.min(Number(match[2]), size - 1);

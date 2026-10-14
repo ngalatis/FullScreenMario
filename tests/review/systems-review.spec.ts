@@ -266,21 +266,6 @@ function makeDeploys(): { base: string; v1: string; v2: string; v3: string; v1Bu
 const buildMarker = (page: Page) => page.evaluate(() => document.querySelector('meta[name="build"]')?.getAttribute("content") ?? "v1");
 const cacheNames = (page: Page) => page.evaluate(() => caches.keys().then((names) => names.filter((name) => name.startsWith("mario-")).sort()));
 
-/** Polls a condition inside the page (page.waitForFunction treats a returned Promise as truthy). */
-async function waitInPage(page: Page, label: string, condition: () => Promise<boolean>, timeout = 30_000): Promise<void> {
-    await page.evaluate(async ({ source, timeout, label }) => {
-        const check = new Function("return (" + source + ")")() as () => Promise<boolean>;
-        const deadline = Date.now() + timeout;
-        while (Date.now() < deadline) {
-            if (await check()) {
-                return;
-            }
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-        throw new Error("waitInPage: " + label + " not met in time");
-    }, { source: condition.toString(), timeout, label });
-}
-
 test.describe("service worker deploys", () => {
     test("a new deploy replaces the old cache, a broken deploy leaves the working one in place, and Range requests are honored", async ({ page }) => {
         test.setTimeout(120_000);
@@ -336,12 +321,10 @@ test.describe("service worker deploys", () => {
             // Deploy v2 while the v1 page is open: the new worker installs, takes over and drops the v1 cache
             server.setRoot(deploys.v2);
             await page.evaluate(() => navigator.serviceWorker.getRegistration().then((registration) => registration!.update()));
-            await waitInPage(page, "v2 cache alone", async () => {
-                const names = (await caches.keys()).filter((name) => name.startsWith("mario-"));
-                return names.length === 1 && names[0] === "mario-v2deploy";
-            });
-            await waitInPage(page, "v2 worker in control", async () => !!navigator.serviceWorker.controller && navigator.serviceWorker.controller.state === "activated"
-                && (await fetch("assets/" + (window as any).__v1Bundle)).status === 404);
+            // Node-side polling with short evaluates: a long in-page loop stalls under tracing
+            await expect.poll(() => cacheNames(page), { timeout: 30_000, message: "v2 cache alone" }).toEqual(["mario-v2deploy"]);
+            await expect.poll(() => page.evaluate(async () => !!navigator.serviceWorker.controller && navigator.serviceWorker.controller.state === "activated"
+                && (await fetch("assets/" + (window as any).__v1Bundle)).status === 404), { timeout: 30_000, message: "v2 worker in control" }).toBe(true);
             // The old page keeps working for what it still needs (sounds are fetched lazily)
             expect(await page.evaluate(() => fetch("Sounds/Sounds/mp3/Jump%20Small.mp3").then((response) => response.status))).toBe(200);
             expect(await buildMarker(page)).toBe("v1");
@@ -355,16 +338,15 @@ test.describe("service worker deploys", () => {
             // Deploy v3, whose precache has a file the server does not have: install fails, v2 stays
             server.setRoot(deploys.v3);
             await page.evaluate(() => navigator.serviceWorker.getRegistration().then((registration) => registration!.update().catch(() => undefined)));
-            await waitInPage(page, "v3 install settled", async () => {
+            await expect.poll(() => page.evaluate(async () => {
                 const registration = await navigator.serviceWorker.getRegistration();
                 return !!registration && !registration.installing && !registration.waiting;
-            });
+            }), { timeout: 30_000, message: "v3 install settled" }).toBe(true);
             await page.waitForTimeout(1000);
             const cachesAfterBrokenDeploy = await cacheNames(page);
             console.log("S-sw-broken-deploy", JSON.stringify({ caches: cachesAfterBrokenDeploy }));
-            expect(cachesAfterBrokenDeploy).toContain("mario-v2deploy");
-            // (S: the failed install's half-filled "mario-v3deploy" cache is left behind, since caches.open runs before
-            // addAll fails; it is only removed by the next successful deploy. Logged above, not asserted.)
+            // The failed install removed its half-filled "mario-v3deploy" cache and left the working one alone
+            expect(cachesAfterBrokenDeploy).toEqual(["mario-v2deploy"]);
             await page.reload();
             await page.waitForFunction(() => !!(window as any).FSM && !!(window as any).FSM.player);
             expect(await buildMarker(page)).toBe("v2");
@@ -376,8 +358,6 @@ test.describe("service worker deploys", () => {
     });
 
     test("S: a Range the worker cannot slice (multi-range) still gets the whole file", async ({ page }) => {
-        test.fail(true, "sw.js toRangeResponse drains the cached body (response.blob()) before it decides to return that same Response unchanged");
-
         await bootGame(page);
         await page.evaluate(() => navigator.serviceWorker.ready.then(() => true));
         await page.reload();

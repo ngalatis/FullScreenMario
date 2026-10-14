@@ -383,7 +383,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
         var copy: number[], i: string;
 
         if (this.measurements.constructor === Array) {
-            copy = [].slice.call(<number[]>this.measurements).sort();
+            copy = [].slice.call(<number[]>this.measurements).sort((a: number, b: number): number => a - b);
         } else {
             copy = [];
 
@@ -395,13 +395,13 @@ export class FPSAnalyzr implements IFPSAnalyzr {
                 }
             }
 
-            copy.sort();
+            copy.sort((a: number, b: number): number => a - b);
         }
 
         if (this.numRecorded < this.maxKept) {
             copy.length = this.numRecorded;
         }
 
-        return copy.sort();
+        return copy.sort((a: number, b: number): number => a - b);
     }
 }

@@ -256,6 +256,8 @@ export const mapMethods = {
 
         FSM.animatePlayerPipingStart(FSM.player);
         FSM.AudioPlayer.play("Pipe");
+        // Drop the listener from the previous entrance so they do not pile up
+        FSM.AudioPlayer.removeEventListeners("Pipe", "ended");
         FSM.AudioPlayer.addEventListener(
             "Pipe",
             "ended",

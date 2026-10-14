@@ -1,21 +1,40 @@
-MIT License
+WeFixIt Mario - Proprietary License
 
-Copyright (c) 2017 Nintendo Co., Ltd.
+Copyright (c) 2026 WeFixIt (wefixit.gr). All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This repository and its contents are private and confidential, maintained by
+WeFixIt for its own use. Except as stated under "Third-party components"
+below, no permission is granted to any other person or organization to use,
+copy, modify, merge, publish, distribute, sublicense or sell this software or
+any part of it without prior written permission from WeFixIt.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+WEFIXIT BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+Third-party components
+----------------------
+
+This project is derived from FullScreenMario, an open source HTML5 remake of
+Super Mario Bros. created by Josh Goldberg together with many community
+contributors, and published under the MIT License. The portions of this
+software that come from FullScreenMario remain available under the MIT
+License; its copyright notice and full license text are reproduced in
+THIRD_PARTY_NOTICES.md. The restrictions above apply only to WeFixIt's own
+changes and additions.
+
+Other bundled components (a font and a random number generator) keep their
+own licenses, also listed in THIRD_PARTY_NOTICES.md.
+
+
+Nintendo
+--------
+
+Super Mario Bros., Mario and all related characters, names, graphics, music
+and sound effects are trademarks and copyrighted works of Nintendo Co., Ltd.
+They are not owned by WeFixIt and are not covered by this license. This
+project is not affiliated with, sponsored or endorsed by Nintendo.

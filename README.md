@@ -47,6 +47,12 @@ FSM.ItemsHolder.increase("coins", 10);
 FSM.ModAttacher.enableMod("Low Gravity");
 ```
 
+## Install and offline
+
+The game is a small installable web app. In Chrome, Edge or Android, use the browser's "Install app" option (or "Add to Home screen"); on iPhone use Share, then "Add to Home Screen". It opens fullscreen in landscape with its own icon.
+
+After the first visit the whole game, sounds included, is saved on the device by a service worker (`sw.js`, generated at build time by `vite.config.ts`), so it also plays with no connection. Every deploy gets a new cache name: the next visit loads the saved copy, picks up the new version in the background, and uses it from the visit after that. Nothing needs to be done by hand. The icons in `public/icons/` are drawn from the game's own sprites.
+
 ## Credits and license
 
 This is proprietary software, see `LICENSE`. It is based on FullScreenMario by Josh Goldberg and contributors, which is released under the MIT License. The required notices are in `THIRD_PARTY_NOTICES.md`. Mario, Super Mario Bros. and all related characters, graphics and music belong to Nintendo.

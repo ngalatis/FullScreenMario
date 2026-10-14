@@ -226,6 +226,33 @@ function setupRotateOverlay(userWrapper: UserWrappr.UserWrappr): void {
     sync();
 }
 
+/**
+ * Makes the game installable and playable offline (see the pwa plugin in vite.config.ts, which
+ * generates sw.js). Production builds only, and a failure here must never reach the player.
+ */
+function registerServiceWorker(): void {
+    if (!import.meta.env.PROD || !("serviceWorker" in navigator)) {
+        return;
+    }
+
+    const register = (): void => {
+        try {
+            navigator.serviceWorker.register("./sw.js").catch((): void => undefined);
+        } catch (error) {
+            // Blocked here (private mode, odd embedding contexts): the game just needs the network
+        }
+    };
+
+    // After the page has loaded, so the precache download does not compete with the game's startup
+    if (document.readyState === "complete") {
+        register();
+    } else {
+        window.addEventListener("load", register, { once: true });
+    }
+}
+
+registerServiceWorker();
+
 if (document.readyState === "complete") {
     start();
 } else {

@@ -332,7 +332,7 @@ export class ScenePlayr implements IScenePlayr {
         this.cutsceneArguments.push(cutsceneSettings);
 
         if (this.cutscene.firstRoutine) {
-            this.playRoutine(this.cutscene.firstRoutine, ...args);
+            this.playRoutine(this.cutscene.firstRoutine, ...(args === undefined ? [] : ([] as any[]).concat(args)));
         }
     }
 

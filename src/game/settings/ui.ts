@@ -47,11 +47,6 @@ MarioGame.settings.ui = {
             "width": Infinity,
             "height": Infinity,
             "full": false
-        },
-        "Full!": {
-            "width": Infinity,
-            "height": Infinity,
-            "full": true
         }
     },
     "schemas": [

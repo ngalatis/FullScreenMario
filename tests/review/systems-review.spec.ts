@@ -144,25 +144,33 @@ test.describe("audio lifetime across View Mode changes", () => {
     });
 });
 
-/* Layout: the legacy "Full!" view mode and the desktop canvas scale */
+/* Layout: the View Mode choices and the desktop canvas scale */
 
 test.describe("desktop layout", () => {
-    test("S: the legacy Full! view mode can be left again without an alert", async ({ page }) => {
-        test.fail(true, "UserWrappr.cancelFullScreen is looked up on documentElement with legacy names, so leaving Full! alerts 'Not able to cancel full screen...'");
-
+    test("the View Mode has no legacy Full! size, and switching it never raises a dialog", async ({ page }) => {
         const dialogs: string[] = [];
         page.on("dialog", (dialog) => {
             dialogs.push(dialog.message());
             dialog.dismiss().catch(() => undefined);
         });
+        const errors = collectPageErrors(page);
 
         await bootGame(page);
-        await page.evaluate(() => (window as any).FSM.UserWrapper.setCurrentSize("Full!"));
-        await page.waitForFunction(() => !!(window as any).FSM.player);
-        await page.evaluate(() => (window as any).FSM.UserWrapper.setCurrentSize("Wide"));
-        await page.waitForFunction(() => !!(window as any).FSM.player);
-        console.log("S-full-dialogs", JSON.stringify(dialogs));
+        // (The options menu may be collapsed, so read the markup and drive the select without actionability checks)
+        const viewMode = page.locator("tr", { has: page.locator("td.options-label-ScreenSize") }).locator("select");
+        const choices = await viewMode.locator("option").allTextContents();
+        console.log("S-view-mode-choices", JSON.stringify(choices));
+        expect(choices).not.toContain("Full!");
+        expect(choices).toEqual(expect.arrayContaining(["NES", "Wide", "Large"]));
+
+        await viewMode.selectOption("NES", { force: true });
+        await page.waitForFunction(() => (window as any).FSM.UserWrapper.getCurrentSize().name === "NES" && !!(window as any).FSM.player);
+        await viewMode.selectOption("Wide", { force: true });
+        await page.waitForFunction(() => (window as any).FSM.UserWrapper.getCurrentSize().name === "Wide" && !!(window as any).FSM.player);
+        await page.waitForTimeout(200);
+
         expect(dialogs).toEqual([]);
+        expect(errors.errors).toEqual([]);
     });
 
     test("the canvas is shown at its native pixel size on a desktop window", async ({ page }) => {

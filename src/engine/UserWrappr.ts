@@ -1672,26 +1672,18 @@ export class UserWrappr {
      * A browser-dependent method for request to enter full screen mode.
      */
     private requestFullScreen: () => void = (
-        this.documentElement.requestFullScreen
-        || this.documentElement.webkitRequestFullScreen
-        || this.documentElement.mozRequestFullScreen
-        || (<any>this.documentElement).msRequestFullscreen
-        || function (): void {
-            alert("Not able to request full screen...");
-        }
+        this.documentElement.requestFullscreen
+        || (<any>this.documentElement).webkitRequestFullscreen
+        || function (): void { /* No Fullscreen API: nothing to do. */ }
     ).bind(this.documentElement);
 
     /**
      * A browser-dependent method for request to exit full screen mode.
      */
     private cancelFullScreen: () => void = (
-        this.documentElement.cancelFullScreen
-        || this.documentElement.webkitCancelFullScreen
-        || this.documentElement.mozCancelFullScreen
-        || (<any>this.documentElement).msCancelFullScreen
-        || function (): void {
-            alert("Not able to cancel full screen...");
-        }
+        document.exitFullscreen
+        || (<any>document).webkitExitFullscreen
+        || function (): void { /* No Fullscreen API: nothing to do. */ }
     ).bind(document);
 
     /**

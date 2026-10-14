@@ -1,126 +1,48 @@
 import * as MarioGame from "../MarioGame";
 
+/**
+ * On-screen controls for touch devices: a D-pad on the left, and jump (A) and
+ * run/fireball (B) on the right, with a small Start (pause) button in the middle.
+ *
+ * Their size, position, and translucency live in styles.css, keyed by each
+ * control's name (data-touch-control="..."), so they can use safe-area insets and
+ * container-relative units. This file only says what they are and what they press.
+ *
+ * They are on by default on devices whose primary pointer is coarse (phones and
+ * tablets). Everywhere else they are off until the user turns on the "Touch
+ * Controls" option (see ui.ts), which also remembers an explicit choice.
+ */
 MarioGame.MarioGame.settings.touch = {
-    "enabled": false,
-    "styles": {
-        "Button": {
-            "elementInner": {
-                "style": {
-                    "padding": ".385cm",
-                    "width": "1.4cm",
-                    "height": "1.4cm",
-                    "border": "4px solid rgb(238, 238, 238)",
-                    "borderRadius": "100%",
-                    "background": "rgb(175, 175, 175)",
-                    "textAlign": "center",
-                    "cursor": "pointer"
-                }
-            }
-        },
-        "Joystick": {
-            "elementInner": {
-                "style": {
-                    "width": "3.5cm",
-                    "height": "3.5cm"
-                }
-            },
-            "circle": {
-                "style": {
-                    "top": "21%",
-                    "right": "21%",
-                    "bottom": "21%",
-                    "left": "21%",
-                    "boxShadow": "0 0 1px 4px rgb(238, 238, 238)",
-                    "background": "rgb(175, 175, 175)",
-                    "borderRadius": "100%",
-                    "cursor": "pointer"
-                }
-            },
-            "tick": {
-                "style": {
-                    "width": ".28cm",
-                    "height": "4px",
-                    "background": "rgb(238, 238, 238)"
-                }
-            },
-            "dragLine": {
-                "style": {
-                    "width": ".49cm",
-                    "height": "4px",
-                    "background": "rgb(210, 210, 210)",
-                    "transition": "117ms opacity"
-                }
-            },
-            "dragShadow": {
-                "style": {
-                    "background": "rgba(231, 231, 231, .84)",
-                    "boxShadow": "0 0 7px 3px rgba(175, 175, 175, .7)",
-                    "transition": "117ms all"
-                }
-            }
-        }
-    },
+    "enabled": typeof window !== "undefined"
+        && typeof window.matchMedia === "function"
+        && window.matchMedia("(pointer: coarse)").matches,
+    "styles": {},
     "controls": [
         {
-            "name": "Joystick",
-            "control": "Joystick",
+            "name": "DPad",
+            "control": "DPad",
             "position": {
                 "vertical": "bottom",
                 "horizontal": "left",
-                "offset": {
-                    "left": "0",
-                    "top": "-3.5cm"
-                }
+                "offset": {}
             },
             "directions": [
                 {
-                    "name": "Up",
-                    "degrees": 0,
-                    "neighbors": ["UpLeft", "UpRight"]
-                },
-                {
-                    "name": "UpRight",
-                    "degrees": 45,
-                    "neighbors": ["Up", "Right"],
-                    "pipes": {
-                        "activated": {
-                            "onkeydown": ["right"]
-                        },
-                        "deactivated": {
-                            "onkeyup": ["right"]
-                        }
-                    }
+                    "name": "Up"
                 },
                 {
                     "name": "Right",
-                    "degrees": 90,
-                    "neighbors": ["UpRight", "DownRight"],
                     "pipes": {
                         "activated": {
                             "onkeydown": ["right"]
                         },
                         "deactivated": {
                             "onkeyup": ["right"]
-                        }
-                    }
-                },
-                {
-                    "name": "DownRight",
-                    "degrees": 135,
-                    "neighbors": ["Right", "Down"],
-                    "pipes": {
-                        "activated": {
-                            "onkeydown": ["down", "right"]
-                        },
-                        "deactivated": {
-                            "onkeyup": ["down", "right"]
                         }
                     }
                 },
                 {
                     "name": "Down",
-                    "degrees": 180,
-                    "neighbors": ["DownRight", "DownLeft"],
                     "pipes": {
                         "activated": {
                             "onkeydown": ["down"]
@@ -131,35 +53,7 @@ MarioGame.MarioGame.settings.touch = {
                     }
                 },
                 {
-                    "name": "DownLeft",
-                    "degrees": 225,
-                    "neighbors": ["Down", "left"],
-                    "pipes": {
-                        "activated": {
-                            "onkeydown": ["down", "left"]
-                        },
-                        "deactivated": {
-                            "onkeyup": ["down", "left"]
-                        }
-                    }
-                },
-                {
                     "name": "Left",
-                    "degrees": 270,
-                    "neighbors": ["DownLeft", "UpLeft"],
-                    "pipes": {
-                        "activated": {
-                            "onkeydown": ["left"]
-                        },
-                        "deactivated": {
-                            "onkeyup": ["left"]
-                        }
-                    }
-                },
-                {
-                    "name": "UpLeft",
-                    "degrees": 315,
-                    "neighbors": ["Left", "Up"],
                     "pipes": {
                         "activated": {
                             "onkeydown": ["left"]
@@ -178,10 +72,7 @@ MarioGame.MarioGame.settings.touch = {
             "position": {
                 "vertical": "bottom",
                 "horizontal": "right",
-                "offset": {
-                    "left": "-1.56cm",
-                    "top": "-2.8cm"
-                }
+                "offset": {}
             },
             "pipes": {
                 "activated": {
@@ -199,10 +90,7 @@ MarioGame.MarioGame.settings.touch = {
             "position": {
                 "vertical": "bottom",
                 "horizontal": "right",
-                "offset": {
-                    "left": "-2.8cm",
-                    "top": "-1.56cm"
-                }
+                "offset": {}
             },
             "pipes": {
                 "activated": {
@@ -217,23 +105,10 @@ MarioGame.MarioGame.settings.touch = {
             "name": "Start",
             "control": "Button",
             "label": "Start",
-            "styles": {
-                "elementInner": {
-                    "style": {
-                        "width": "7em",
-                        "height": "auto",
-                        "padding": ".21cm",
-                        "borderRadius": "7px",
-                        "fontSize": "77%"
-                    }
-                }
-            },
             "position": {
                 "vertical": "bottom",
                 "horizontal": "center",
-                "offset": {
-                    "top": "-1.12cm"
-                }
+                "offset": {}
             },
             "pipes": {
                 "activated": {

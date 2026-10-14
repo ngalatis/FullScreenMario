@@ -3,7 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <title>Super Mario Bros.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
     <link href="/src/styles.css" rel="stylesheet" />
 
@@ -11,9 +16,23 @@
 </head>
 
 <body>
-    <section id="game">
-        <!-- FSM.UserWrapper will fill out this section... -->
-    </section>
+    <!-- #stage is the "game container": it is what the fullscreen button sends to fullscreen. -->
+    <div id="stage">
+        <section id="game">
+            <!-- FSM.UserWrapper will fill out this section... -->
+        </section>
+
+        <nav id="toolbar" aria-label="Game tools">
+            <button id="menu-button" type="button" aria-expanded="false" aria-controls="controls">Menu</button>
+            <button id="fullscreen-button" type="button" aria-pressed="false" hidden>Fullscreen</button>
+        </nav>
+
+        <div id="rotate-overlay" role="alert">
+            <div class="rotate-phone" aria-hidden="true"></div>
+            <h2>Rotate your phone</h2>
+            <p>Super Mario Bros. plays best sideways. Turn your phone to landscape to jump in!</p>
+        </div>
+    </div>
 
     <section id="controls">
         <!-- FSM.UserWrapper will fill out this section... -->

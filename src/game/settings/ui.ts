@@ -3,8 +3,17 @@ import type { IMarioGame } from "../types";
 import * as ModAttachr from "../../engine/ModAttachr";
 import * as UserWrappr from "../../engine/UserWrappr";
 
+/**
+ * @returns Whether the primary pointer is coarse, as on a phone or tablet.
+ */
+function hasCoarsePointer(): boolean {
+    return typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
+}
+
 MarioGame.settings.ui = {
     "globalName": "FSM",
+    // Touch devices play at the game's native height and have the canvas scaled to fit the screen.
+    "coarseHeight": 464,
     "styleSheet": {
         ".MarioGame": {
             "color": "white"
@@ -111,7 +120,9 @@ MarioGame.settings.ui = {
                     "title": "Touch Controls",
                     "type": "Boolean",
                     "storeLocally": true,
-                    "source": (FSM: IMarioGame): boolean => false,
+                    // On by default on touch devices, off elsewhere; a choice the player
+                    // has made (stored locally) always wins over this default.
+                    "source": (FSM: IMarioGame): boolean => hasCoarsePointer(),
                     "enable": (FSM: IMarioGame): void => {
                         setTimeout((): void => FSM.TouchPasser.enable());
                     },

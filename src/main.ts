@@ -73,6 +73,157 @@ function start(): void {
     // UserWrappr exposes the game as a global named by settings.ui.globalName ("FSM"),
     // which is what the console cheats documented in the help menu rely on.
     (<any>userWrapper.getGameStarter()).UsageHelper.displayHelpMenu();
+
+    setupPage(userWrapper);
+}
+
+/* Page-level behavior: everything about the page around the game that is not game logic */
+
+/** Runs a listener whenever a media query starts or stops matching. */
+function onMediaChange(query: MediaQueryList, listener: () => void): void {
+    if (typeof query.addEventListener === "function") {
+        query.addEventListener("change", listener);
+    } else {
+        // Safari before 14
+        (<any>query).addListener(listener);
+    }
+}
+
+function setupPage(userWrapper: UserWrappr.UserWrappr): void {
+    blockPageZoom();
+    setupFullscreenButton();
+    setupMenuButton(userWrapper);
+    setupRotateOverlay(userWrapper);
+}
+
+/**
+ * Keeps pinches and double taps from zooming the page. CSS (touch-action) covers most
+ * browsers; iOS Safari still announces pinch gestures, so those are cancelled here.
+ */
+function blockPageZoom(): void {
+    const stage = document.getElementById("stage");
+
+    document.addEventListener("gesturestart", (event: Event): void => event.preventDefault());
+    document.addEventListener("gesturechange", (event: Event): void => event.preventDefault());
+
+    if (stage) {
+        stage.addEventListener(
+            "touchmove",
+            (event: TouchEvent): void => {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            },
+            { passive: false });
+    }
+}
+
+function getFullscreenElement(): Element | null {
+    return document.fullscreenElement || (<any>document).webkitFullscreenElement || null;
+}
+
+/** Asks for a landscape screen, which most phones only grant while in fullscreen. Failure is fine. */
+function lockLandscape(): void {
+    try {
+        const orientation: any = screen.orientation;
+
+        if (orientation && typeof orientation.lock === "function") {
+            Promise.resolve(orientation.lock("landscape")).catch((): void => undefined);
+        }
+    } catch (error) {
+        // Not supported here (desktops, iPhones): nothing to do
+    }
+}
+
+function unlockOrientation(): void {
+    try {
+        if (screen.orientation && typeof screen.orientation.unlock === "function") {
+            screen.orientation.unlock();
+        }
+    } catch (error) {
+        // Not supported here: nothing to do
+    }
+}
+
+/**
+ * Wires the fullscreen button to the game container (#stage: the game plus its touch controls
+ * and toolbar). Browsers without the Fullscreen API on elements, such as Safari on iPhone,
+ * get no button.
+ */
+function setupFullscreenButton(): void {
+    const stage = <any>document.getElementById("stage");
+    const button = <HTMLButtonElement>document.getElementById("fullscreen-button");
+
+    if (!stage || !button) {
+        return;
+    }
+
+    // The methods are looked up when used, not kept, so the page always calls the browser's current ones
+    const getRequest = (): (() => any) | undefined => stage.requestFullscreen || stage.webkitRequestFullscreen;
+    const getExit = (): (() => any) | undefined => document.exitFullscreen || (<any>document).webkitExitFullscreen;
+    const allowed = document.fullscreenEnabled ?? (<any>document).webkitFullscreenEnabled;
+
+    if (!getRequest() || allowed === false) {
+        button.hidden = true;
+        return;
+    }
+
+    const sync = (): void => {
+        const isFullscreen = !!getFullscreenElement();
+
+        stage.classList.toggle("is-fullscreen", isFullscreen);
+        button.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
+        button.setAttribute("aria-pressed", String(isFullscreen));
+
+        if (!isFullscreen) {
+            unlockOrientation();
+        }
+    };
+
+    button.hidden = false;
+    button.addEventListener("click", (): void => {
+        try {
+            if (getFullscreenElement()) {
+                const exit = getExit();
+                Promise.resolve(exit && exit.call(document)).catch((): void => undefined);
+            } else {
+                Promise.resolve(getRequest()!.call(stage)).then(lockLandscape).catch((): void => undefined);
+            }
+        } catch (error) {
+            // Refused (for example, not from a user gesture): the game just stays windowed
+        }
+    });
+
+    document.addEventListener("fullscreenchange", sync);
+    document.addEventListener("webkitfullscreenchange", sync);
+    sync();
+}
+
+/** On touch devices the menus open as a sheet over the game, which is paused meanwhile. */
+function setupMenuButton(userWrapper: UserWrappr.UserWrappr): void {
+    const button = document.getElementById("menu-button");
+
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener("click", (): void => {
+        const open = !document.body.classList.contains("menu-open");
+
+        document.body.classList.toggle("menu-open", open);
+        button.textContent = open ? "Close" : "Menu";
+        button.setAttribute("aria-expanded", String(open));
+        userWrapper.setLayoutPaused("menu", open);
+    });
+}
+
+/** The "Rotate your phone" overlay is pure CSS; this just holds the game paused behind it. */
+function setupRotateOverlay(userWrapper: UserWrappr.UserWrappr): void {
+    const portraitOnTouch = window.matchMedia("(pointer: coarse) and (orientation: portrait)");
+    const sync = (): void => userWrapper.setLayoutPaused("rotate", portraitOnTouch.matches);
+
+    onMediaChange(portraitOnTouch, sync);
+    sync();
 }
 
 if (document.readyState === "complete") {

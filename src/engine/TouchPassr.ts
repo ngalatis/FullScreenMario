@@ -391,15 +391,16 @@ export class Control<T extends IControlSchema> {
             offset: any = position.offset;
 
         this.element = this.createElement("div", {
-            "className": "control",
+            "className": "control touch-control",
             "style": {
                 "position": "absolute",
                 "width": 0,
                 "height": 0,
-                "boxSizing": "border-box",
-                "opacity": ".84"
+                "boxSizing": "border-box"
             }
         });
+        // Appearance (size, position, opacity) is left to the page's stylesheet, keyed by this name
+        this.element.setAttribute("data-touch-control", this.schema.name);
         this.elementInner = this.createElement("div", {
             "className": "control-inner",
             "textContent": this.schema.label || "",
@@ -431,11 +432,11 @@ export class Control<T extends IControlSchema> {
         this.passElementStyles(styles[customType]);
         this.passElementStyles(this.schema.styles);
 
-        if (offset.left) {
+        if (offset && offset.left) {
             this.elementInner.style.marginLeft = this.createPixelMeasurement(offset.left);
         }
 
-        if (offset.top) {
+        if (offset && offset.top) {
             this.elementInner.style.marginTop = this.createPixelMeasurement(offset.top);
         }
 
@@ -485,8 +486,9 @@ export class Control<T extends IControlSchema> {
             amount: number,
             units: string;
 
-        amountRaw = element.style[styleTag] || (attributeBackup && element[attributeBackup]);
-        if (!amountRaw) {
+        // (offsetWidth and offsetHeight are numbers, so the backup must become a string)
+        amountRaw = element.style[styleTag] || (attributeBackup && String(element[attributeBackup]));
+        if (!amountRaw || amountRaw === "0") {
             return "0px";
         }
 
@@ -585,16 +587,75 @@ export class ButtonControl extends Control<IButtonSchema> {
      * @param styles   Container styles for the contained elements.
      */
     protected resetElement(styles: IRootControlStyles): void {
-        var onActivated: any = this.onEvent.bind(this, "activated"),
-            onDeactivated: any = this.onEvent.bind(this, "deactivated");
-
         super.resetElement(styles, "Button");
 
-        this.element.addEventListener("mousedown", onActivated);
-        this.element.addEventListener("touchstart", onActivated);
+        // (Fields are set here, not initialized: this runs inside the base constructor.)
+        this.pressedPointers = {};
 
-        this.element.addEventListener("mouseup", onDeactivated);
-        this.element.addEventListener("touchend", onDeactivated);
+        // Pointer events (mouse, touch and pen in one model) are used, and defaulted, so that
+        // a touch does not also produce the browser's emulated mouse events, which would
+        // activate the button a second time. They also let several fingers hold several buttons.
+        this.element.addEventListener("pointerdown", this.onPointerDown.bind(this));
+        this.element.addEventListener("pointerup", this.onPointerEnd.bind(this));
+        this.element.addEventListener("pointercancel", this.onPointerEnd.bind(this));
+        this.element.addEventListener("lostpointercapture", this.onPointerEnd.bind(this));
+    }
+
+    /**
+     * Ids of the pointers (fingers, mouse, pen) currently holding the button down.
+     */
+    protected pressedPointers: { [id: number]: boolean };
+
+    /**
+     * Handles a pointer going down on the button.
+     */
+    protected onPointerDown(event: PointerEvent): void {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+            return;
+        }
+
+        event.preventDefault();
+
+        try {
+            this.element.setPointerCapture(event.pointerId);
+        } catch (error) {
+            // Capture is a nicety: it makes the release reliable if the finger slides off.
+        }
+
+        if (this.pressedPointers[event.pointerId]) {
+            return;
+        }
+
+        var wasPressed: boolean = this.isPressed();
+        this.pressedPointers[event.pointerId] = true;
+
+        if (!wasPressed) {
+            this.element.classList.add("touch-pressed");
+            this.onEvent("activated", event);
+        }
+    }
+
+    /**
+     * Handles a pointer lifting from (or being taken away from) the button.
+     */
+    protected onPointerEnd(event: PointerEvent): void {
+        if (!this.pressedPointers[event.pointerId]) {
+            return;
+        }
+
+        delete this.pressedPointers[event.pointerId];
+
+        if (!this.isPressed()) {
+            this.element.classList.remove("touch-pressed");
+            this.onEvent("deactivated", event);
+        }
+    }
+
+    /**
+     * @returns Whether any pointer is currently holding the button.
+     */
+    protected isPressed(): boolean {
+        return Object.keys(this.pressedPointers).length > 0;
     }
 
     /**
@@ -606,6 +667,270 @@ export class ButtonControl extends Control<IButtonSchema> {
      */
     protected onEvent(which: string, event: Event): void {
         var events: any = (<IButtonSchema>this.schema).pipes[which],
+            i: string,
+            j: number;
+
+        if (!events) {
+            return;
+        }
+
+        for (i in events) {
+            if (!events.hasOwnProperty(i)) {
+                continue;
+            }
+
+            for (j = 0; j < events[i].length; j += 1) {
+                this.InputWriter.callEvent(i, events[i][j], event);
+            }
+        }
+    }
+}
+
+/**
+ * Control schema for a directional pad. Each direction may have its own pipes.
+ */
+export interface IDPadSchema extends IControlSchema {
+    /**
+     * The arms of the pad, named "Up", "Right", "Down", or "Left". An arm
+     * without pipes is drawn but does nothing.
+     */
+    directions: IDPadDirection[];
+}
+
+/**
+ * Schema for a single arm of a directional pad.
+ */
+export interface IDPadDirection {
+    /**
+     * The unique name of this direction: "Up", "Right", "Down", or "Left".
+     */
+    name: string;
+
+    /**
+     * Pipe descriptions for what should be sent to the InputWritr.
+     */
+    pipes?: IPipes;
+}
+
+/**
+ * Styles schema for a directional pad.
+ */
+export interface IDPadStyles extends IControlStyles { }
+
+/**
+ * Global declaration of styles for all controls, typically passed from a
+ * TouchPassr to its generated controls.
+ */
+export interface IRootControlStyles {
+    /**
+     * Styles that apply to DPad controls.
+     */
+    DPad?: IDPadStyles;
+}
+
+/**
+ * Directional pad. One finger rests on the pad and slides between its arms; the
+ * arm (or, near a diagonal, the two arms) under the finger is held down. Moving
+ * the finger across the pad switches arms without lifting, like a hardware pad.
+ */
+export class DPadControl extends Control<IDPadSchema> {
+    /**
+     * The arm elements, keyed by direction name.
+     */
+    protected arms: { [name: string]: HTMLElement };
+
+    /**
+     * Which directions are currently held, keyed by direction name.
+     */
+    protected held: { [name: string]: boolean };
+
+    /**
+     * The id of the pointer steering the pad, if any.
+     */
+    protected activePointer: number;
+
+    /**
+     * Fraction of the pad's half-size inside which no direction is held.
+     */
+    protected static deadZone: number = 0.2;
+
+    /**
+     * How much longer than the other axis an offset must be to count as a
+     * pure direction instead of a diagonal (tan 60 degrees).
+     */
+    protected static diagonalRatio: number = 1.7;
+
+    /**
+     * Resets the element by creating a visual arm for each direction and
+     * adding pointer listeners to track a finger sliding over them.
+     *
+     * @param styles   Container styles for the contained elements.
+     */
+    protected resetElement(styles: IRootControlStyles): void {
+        super.resetElement(styles, "DPad");
+
+        var layout: { [name: string]: { [side: string]: string } } = {
+                "Up": { "left": "33.333%", "top": "0" },
+                "Right": { "right": "0", "top": "33.333%" },
+                "Down": { "left": "33.333%", "bottom": "0" },
+                "Left": { "left": "0", "top": "33.333%" }
+            },
+            glyphs: { [name: string]: string } = {
+                "Up": "▲",
+                // (U+FE0E asks for the plain text glyph, not the colored emoji, on iOS)
+                "Right": "▶︎",
+                "Down": "▼︎",
+                "Left": "◀︎"
+            },
+            name: string,
+            arm: HTMLElement,
+            side: string;
+
+        // (Fields are set here, not initialized: this runs inside the base constructor.)
+        this.arms = {};
+        this.held = {};
+
+        this.elementInner.classList.add("touch-dpad");
+
+        for (name in layout) {
+            if (!layout.hasOwnProperty(name)) {
+                continue;
+            }
+
+            arm = this.createElement("div", {
+                "className": "touch-dpad-arm touch-dpad-arm-" + name.toLowerCase(),
+                "textContent": glyphs[name],
+                "style": {
+                    "position": "absolute",
+                    "width": "33.333%",
+                    "height": "33.333%",
+                    "boxSizing": "border-box"
+                }
+            });
+            arm.setAttribute("data-direction", name.toLowerCase());
+
+            for (side in layout[name]) {
+                arm.style[side] = layout[name][side];
+            }
+
+            this.arms[name] = arm;
+            this.elementInner.appendChild(arm);
+        }
+
+        this.elementInner.addEventListener("pointerdown", this.onPointerDown.bind(this));
+        this.elementInner.addEventListener("pointermove", this.onPointerMove.bind(this));
+        this.elementInner.addEventListener("pointerup", this.onPointerEnd.bind(this));
+        this.elementInner.addEventListener("pointercancel", this.onPointerEnd.bind(this));
+        this.elementInner.addEventListener("lostpointercapture", this.onPointerEnd.bind(this));
+    }
+
+    /**
+     * Handles a pointer landing on the pad, if the pad is not already steered.
+     */
+    protected onPointerDown(event: PointerEvent): void {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (typeof this.activePointer !== "undefined") {
+            return;
+        }
+
+        this.activePointer = event.pointerId;
+
+        try {
+            this.elementInner.setPointerCapture(event.pointerId);
+        } catch (error) {
+            // Capture is a nicety: it makes the release reliable if the finger slides off.
+        }
+
+        this.updateHeld(event);
+    }
+
+    /**
+     * Handles the steering pointer moving over (or beyond) the pad.
+     */
+    protected onPointerMove(event: PointerEvent): void {
+        if (event.pointerId !== this.activePointer) {
+            return;
+        }
+
+        event.preventDefault();
+        this.updateHeld(event);
+    }
+
+    /**
+     * Handles the steering pointer lifting, releasing every direction.
+     */
+    protected onPointerEnd(event: PointerEvent): void {
+        if (event.pointerId !== this.activePointer) {
+            return;
+        }
+
+        this.activePointer = undefined;
+        this.setHeld({}, event);
+    }
+
+    /**
+     * Works out which directions a pointer position is holding.
+     */
+    protected updateHeld(event: PointerEvent): void {
+        var rect: ClientRect = this.elementInner.getBoundingClientRect(),
+            dx: number = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2),
+            dy: number = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2),
+            zone: number = DPadControl.deadZone,
+            ratio: number = DPadControl.diagonalRatio,
+            absX: number = Math.abs(dx),
+            absY: number = Math.abs(dy),
+            held: { [name: string]: boolean } = {};
+
+        if (absX >= zone && absY <= absX * ratio) {
+            held[dx < 0 ? "Left" : "Right"] = true;
+        }
+
+        if (absY >= zone && absX <= absY * ratio) {
+            held[dy < 0 ? "Up" : "Down"] = true;
+        }
+
+        // Up with a sideways lean is a sideways press: a thumb drifting upward
+        // should not change the direction being held.
+        if (held["Up"] && (held["Left"] || held["Right"])) {
+            delete held["Up"];
+        }
+
+        this.setHeld(held, event);
+    }
+
+    /**
+     * Presses and releases directions to match a new set, firing pipes only
+     * for the directions whose state changed.
+     */
+    protected setHeld(held: { [name: string]: boolean }, event: Event): void {
+        var directions: IDPadDirection[] = (<IDPadSchema>this.schema).directions,
+            direction: IDPadDirection,
+            i: number;
+
+        for (i = 0; i < directions.length; i += 1) {
+            direction = directions[i];
+
+            if (!!held[direction.name] === !!this.held[direction.name]) {
+                continue;
+            }
+
+            this.arms[direction.name].classList.toggle("touch-pressed", !!held[direction.name]);
+            this.firePipes(direction, held[direction.name] ? "activated" : "deactivated", event);
+        }
+
+        this.held = held;
+    }
+
+    /**
+     * Sends one of a direction's pipes to the InputWritr.
+     */
+    protected firePipes(direction: IDPadDirection, which: string, event: Event): void {
+        var events: any = direction.pipes && direction.pipes[which],
             i: string,
             j: number;
 
@@ -1059,6 +1384,7 @@ export class TouchPassr implements ITouchPassr {
      */
     private static controlClasses: IControlClassesContainer = {
         "Button": <any>ButtonControl,
+        "DPad": <any>DPadControl,
         "Joystick": <any>JoystickControl
     };
 
@@ -1253,6 +1579,9 @@ export class TouchPassr implements ITouchPassr {
                 "left": 0
             }
         });
+
+        // Long presses on a control must not open the browser's context menu
+        this.container.addEventListener("contextmenu", (event: Event): void => event.preventDefault());
 
         if (parentContainer) {
             this.setParentContainer(parentContainer);

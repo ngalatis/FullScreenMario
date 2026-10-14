@@ -10,21 +10,12 @@ export interface ErrorCollector {
     errors: string[];
 }
 
-/**
- * Records uncaught page errors. Autoplay rejections from the audio player (whose
- * messages contain "play()" or "pause()") are ignored until audio is reworked.
- */
+/** Records every uncaught page error (including rejected promises). */
 export function collectPageErrors(page: Page): ErrorCollector {
     const collector: ErrorCollector = { errors: [] };
 
     page.on("pageerror", (error) => {
-        const message = String(error && error.message ? error.message : error);
-
-        if (/play\(\)|pause\(\)/.test(message)) {
-            return;
-        }
-
-        collector.errors.push(message);
+        collector.errors.push(String(error && error.message ? error.message : error));
     });
 
     return collector;

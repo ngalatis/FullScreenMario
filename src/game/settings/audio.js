@@ -2,7 +2,7 @@ import * as MarioGame from "../MarioGame";
 
 MarioGame.MarioGame.settings.audio = {
     "directory": "Sounds",
-    "fileTypes": ["mp3", "ogg"],
+    "fileTypes": ["mp3"],
     "library": {
         "Sounds": [
             "Bowser Falls",

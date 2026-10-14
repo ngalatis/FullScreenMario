@@ -379,7 +379,7 @@ export class ObjectMakr implements IObjectMakr {
         // For each name in the current object:
         for (name in base) {
             if (base.hasOwnProperty(name)) {
-                this.functions[name] = <IClassFunction>(new Function());
+                this.functions[name] = <IClassFunction>(<any>function (): void {});
 
                 // This sets the Function as inheriting from the parent
                 this.functions[name].prototype = new parent();

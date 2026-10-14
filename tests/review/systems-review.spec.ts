@@ -19,8 +19,6 @@ const { defaultBrowserType: _browser, ...iPhoneLandscape } = devices["iPhone 13 
 
 test.describe("audio lifetime across View Mode changes", () => {
     test("S: switching the View Mode must not leak AudioContexts and page listeners", async ({ page }) => {
-        test.fail(true, "UserWrappr.resetGameStarter builds a new AudioPlayr (new AudioContext, new window/document listeners) and never closes the old one");
-
         await page.addInitScript(() => {
             const created: AudioContext[] = [];
             const counts: Record<string, number> = {};
@@ -38,12 +36,32 @@ test.describe("audio lifetime across View Mode changes", () => {
             (window as any).AudioContext = Counting;
             (window as any).webkitAudioContext = Counting;
 
+            // The counts are the listeners alive right now: adds minus matching removes (the DOM ignores
+            // a repeated add of the same listener and a remove of one that is not there, so do the same)
+            const live = new Map<string, Set<unknown>>();
+            const captureOf = (options: unknown): boolean => (typeof options === "object" && options !== null ? !!(options as AddEventListenerOptions).capture : !!options);
+
             for (const target of [window, document] as const) {
-                const original = target.addEventListener.bind(target);
+                const originalAdd = target.addEventListener.bind(target);
+                const originalRemove = target.removeEventListener.bind(target);
                 const label = target === window ? "window" : "document";
-                target.addEventListener = function (type: string, ...rest: any[]): void {
-                    counts[label + ":" + type] = (counts[label + ":" + type] || 0) + 1;
-                    (original as any)(type, ...rest);
+                target.addEventListener = function (type: string, listener: unknown, options?: unknown): void {
+                    const key = label + ":" + type;
+                    const set = live.get(key + ":" + captureOf(options)) || new Set<unknown>();
+                    live.set(key + ":" + captureOf(options), set);
+                    if (listener && !set.has(listener)) {
+                        set.add(listener);
+                        counts[key] = (counts[key] || 0) + 1;
+                    }
+                    (originalAdd as any)(type, listener, options);
+                } as any;
+                target.removeEventListener = function (type: string, listener: unknown, options?: unknown): void {
+                    const key = label + ":" + type;
+                    const set = live.get(key + ":" + captureOf(options));
+                    if (set && set.delete(listener)) {
+                        counts[key] = (counts[key] || 0) - 1;
+                    }
+                    (originalRemove as any)(type, listener, options);
                 } as any;
             }
         });

@@ -28,6 +28,7 @@ export interface IEvent {
  * be implemented by the GameStartr project itself.
  */
 export interface IGameStartr {
+    AudioPlayer?: { dispose?(): void };
     DeviceLayer: DeviceLayr.IDeviceLayr;
     GamesRunner: GamesRunnr.IGamesRunnr;
     ItemsHolder: ItemsHoldr.IItemsHoldr;
@@ -1658,6 +1659,11 @@ export class UserWrappr {
     private deviceChecker!: number;
 
     /**
+     * Whether the page visibility listener has been added to the document.
+     */
+    private isWatchingVisibility = false;
+
+    /**
      * The document element that will contain the game.
      */
     private documentElement: HTMLHtmlElement = <HTMLHtmlElement>document.documentElement;
@@ -1926,6 +1932,7 @@ export class UserWrappr {
      * Starts the checkDevices loop to scan for gamepad status changes.
      */
     private startCheckingDevices(): void {
+        clearTimeout(this.deviceChecker);
         this.checkDevices();
     }
 
@@ -2226,6 +2233,12 @@ export class UserWrappr {
      * this.handleVisibilityChange.
      */
     private resetPageVisibilityHandlers(): void {
+        // The handler always reads this.GameStarter, so one listener serves every rebuilt game
+        if (this.isWatchingVisibility) {
+            return;
+        }
+
+        this.isWatchingVisibility = true;
         document.addEventListener("visibilitychange", this.handleVisibilityChange.bind(this));
     }
 
@@ -2287,6 +2300,12 @@ export class UserWrappr {
 
         if (this.GameStarter) {
             this.GameStarter.GamesRunner.pause();
+            clearTimeout(this.deviceChecker);
+
+            // The old audio player owns an AudioContext and page listeners that nothing else will release
+            if (this.GameStarter.AudioPlayer && typeof this.GameStarter.AudioPlayer.dispose === "function") {
+                this.GameStarter.AudioPlayer.dispose();
+            }
         }
 
         this.GameStarter = new this.GameStartrConstructor(customs);

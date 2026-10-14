@@ -315,6 +315,14 @@ export interface IAudioPlayr {
     clearAll(): void;
 
     /**
+     * Shuts the player down for good: stops every sound, cancels downloads in
+     * flight, removes the window and document listeners, drops the decoded
+     * buffers and closes the AudioContext. The player stays safe to call
+     * afterwards, but is silent.
+     */
+    dispose(): void;
+
+    /**
      * Pauses and removes the theme, if there is one.
      */
     clearTheme(): void;
@@ -848,6 +856,11 @@ class Sound implements ISound {
  */
 export class AudioPlayr implements IAudioPlayr {
     /**
+     * The events that count as the visitor's gesture.
+     */
+    private static readonly gestures: string[] = ["keydown", "pointerdown", "touchstart", "pointerup", "touchend"];
+
+    /**
      * Sounds keyed by their name.
      */
     private library!: ISoundsLibrary;
@@ -946,6 +959,23 @@ export class AudioPlayr implements IAudioPlayr {
      * What the sounds see of this player.
      */
     private host: ISoundHost;
+
+    /**
+     * Whether dispose has been called.
+     */
+    private disposed = false;
+
+    /**
+     * Downloads in flight, so dispose can cancel them.
+     */
+    private controllers = new Set<AbortController>();
+
+    /**
+     * Bound handlers, kept so dispose can remove them.
+     */
+    private gestureHandler: () => void = this.onGesture.bind(this);
+    private visibilityHandler: () => void = this.onVisibilityChange.bind(this);
+    private stateHandler: () => void = this.onContextStateChange.bind(this);
 
     /**
      * Initializes a new instance of the AudioPlayr class.
@@ -1237,6 +1267,50 @@ export class AudioPlayr implements IAudioPlayr {
         this.pauseAll();
         this.clearTheme();
         this.sounds = {};
+    }
+
+    /**
+     * Shuts the player down for good: stops every sound, cancels downloads in
+     * flight, removes the window and document listeners, drops the decoded
+     * buffers and closes the AudioContext. The player stays safe to call
+     * afterwards, but is silent.
+     */
+    dispose(): void {
+        var context: AudioContext | undefined = this.context,
+            i: number;
+
+        if (this.disposed) {
+            return;
+        }
+
+        this.disposed = true;
+        this.clearAll();
+
+        this.controllers.forEach((controller: AbortController): void => controller.abort());
+        this.controllers.clear();
+
+        if (typeof window !== "undefined") {
+            for (i = 0; i < AudioPlayr.gestures.length; i += 1) {
+                window.removeEventListener(AudioPlayr.gestures[i], this.gestureHandler, { capture: true });
+            }
+
+            document.removeEventListener("visibilitychange", this.visibilityHandler);
+        }
+
+        this.buffers = {};
+        this.context = this.output = undefined;
+
+        if (context) {
+            try {
+                context.removeEventListener("statechange", this.stateHandler);
+
+                if (context.state !== "closed") {
+                    Promise.resolve(context.close()).catch(this.ignoreError);
+                }
+            } catch (error) {
+                // Already closed, or never usable.
+            }
+        }
     }
 
     /**
@@ -1583,7 +1657,7 @@ export class AudioPlayr implements IAudioPlayr {
                 || !!(navigator.userActivation && navigator.userActivation.hasBeenActive);
             this.output = this.context.createGain();
             this.output.connect(this.context.destination);
-            this.context.addEventListener("statechange", this.onContextStateChange.bind(this));
+            this.context.addEventListener("statechange", this.stateHandler);
         } catch (error) {
             this.context = this.output = undefined;
         }
@@ -1618,6 +1692,10 @@ export class AudioPlayr implements IAudioPlayr {
      * Rejoins every playing sound to the context after it started or stopped.
      */
     private onContextStateChange(): void {
+        if (this.disposed) {
+            return;
+        }
+
         if (this.context && this.context.state === "running") {
             this.unlocked = true;
         }
@@ -1629,19 +1707,18 @@ export class AudioPlayr implements IAudioPlayr {
      * Adds the gesture and page visibility handlers.
      */
     private watchPage(): void {
-        var gestures: string[] = ["keydown", "pointerdown", "touchstart", "pointerup", "touchend"],
-            i: number;
+        var i: number;
 
         if (typeof window === "undefined") {
             return;
         }
 
         // Capture on window, so no game handler can swallow the gesture.
-        for (i = 0; i < gestures.length; i += 1) {
-            window.addEventListener(gestures[i], this.onGesture.bind(this), { capture: true, passive: true });
+        for (i = 0; i < AudioPlayr.gestures.length; i += 1) {
+            window.addEventListener(AudioPlayr.gestures[i], this.gestureHandler, { capture: true, passive: true });
         }
 
-        document.addEventListener("visibilitychange", this.onVisibilityChange.bind(this));
+        document.addEventListener("visibilitychange", this.visibilityHandler);
     }
 
     /**
@@ -1778,7 +1855,7 @@ export class AudioPlayr implements IAudioPlayr {
 
         queue = themes.concat(others, hurryThemes);
         next = (): void => {
-            if (queue.length) {
+            if (!this.disposed && queue.length) {
                 this.loadBuffer(<string>queue.shift()).then(next);
             }
         };
@@ -1794,6 +1871,10 @@ export class AudioPlayr implements IAudioPlayr {
      * @returns A promise for the decoded sound, or undefined if it failed.
      */
     private loadBuffer(name: string): Promise<AudioBuffer | undefined> {
+        if (this.disposed) {
+            return Promise.resolve(undefined);
+        }
+
         if (!this.buffers.hasOwnProperty(name)) {
             this.buffers[name] = this.fetchBuffer(name).catch((): undefined => undefined);
         }
@@ -1809,14 +1890,19 @@ export class AudioPlayr implements IAudioPlayr {
             response: Response,
             i: number;
 
-        if (!this.context || typeof fetch === "undefined") {
+        if (this.disposed || !this.context || typeof fetch === "undefined") {
             return undefined;
         }
 
         for (i = 0; i < this.fileTypes.length; i += 1) {
+            if (this.disposed) {
+                return undefined;
+            }
+
             type = this.fileTypes[i];
             url = this.directory + "/" + this.soundFolders[name] + "/" + type + "/" + name + "." + type;
             controller = new AbortController();
+            this.controllers.add(controller);
             // A request that never answers must not leave the game waiting.
             timeout = setTimeout((): void => controller.abort(), 20000);
 
@@ -1829,6 +1915,7 @@ export class AudioPlayr implements IAudioPlayr {
                 // Try the next file type.
             } finally {
                 clearTimeout(timeout);
+                this.controllers.delete(controller);
             }
         }
 

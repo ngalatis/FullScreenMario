@@ -14,10 +14,39 @@ npm run dev        # start the dev server with hot reload
 npm run build      # production build into dist/
 npm run preview    # serve the production build locally
 npm run typecheck  # TypeScript checks for the game and the tooling
+npm run check      # typecheck, lint and format check (see Lint and format)
 npm test           # Playwright tests (builds the game, then runs them in Chromium)
 ```
 
 `npm run build` writes a fully static site to `dist/`. Upload that folder anywhere. Because Vite's `base` is `./`, it works from any folder or subdomain. The build also copies `THIRD_PARTY_NOTICES.md` to `dist/third-party-notices.txt`, which must be deployed with the game.
+
+## Lint and format
+
+```
+npm run lint          # Oxlint, no warnings allowed
+npm run format        # rewrite all files with Prettier
+npm run format:check  # fail if a file is not formatted
+npm run check         # typecheck + lint + format:check
+```
+
+`npm run check` is what to run before committing. It runs the two TypeScript checks (`npm run typecheck`), then Oxlint with `--deny-warnings`, then `prettier --check .`.
+
+**Why Oxlint and Prettier.** The TypeScript plugin for ESLint (typescript-eslint 8.71) requires `typescript <6.1`, and the TypeScript 7 package has no JavaScript compiler API, so ESLint would need a second TypeScript install next to the one that `npm run typecheck` uses. Oxlint parses TypeScript natively (it is the same Oxc toolchain that Vite 8 uses) and Prettier bundles its own parser, so neither needs one. Both are pinned to exact versions.
+
+**Type-aware rules.** `oxlint-tsgolint` is installed and switched on in `.oxlintrc.json` (`options.typeAware`). It checks the whole project in about a second. Only three type-aware rules are enabled on purpose: `no-floating-promises`, `no-misused-promises` and `await-thenable`.
+
+**Formatting.** `.prettierrc.json` uses 4 spaces, double quotes, semicolons, a print width of 120, no trailing commas and unchanged quoting of object keys (the level files keep their quoted keys). These values were picked by measuring how many existing lines each variant would change. Prettier skips `dist`, `node_modules`, `public` (binary assets), test output, `package-lock.json` and `THIRD_PARTY_NOTICES.md` (legal text that is copied verbatim into the build).
+
+**Rules.** `.oxlintrc.json` turns on the `correctness` and `suspicious` categories, plus `no-loop-func`. These rules are off because they only flag the old engine's idioms and hide no bugs:
+
+- `no-unused-vars` ignores function arguments and caught errors: engine callbacks (event handlers, macros, mod hooks) have fixed signatures that the code documents by naming every argument.
+- `typescript/no-this-alias` and `no-shadow`: the engine uses `var self = this` and reuses names such as `thing` in nested callbacks.
+- `no-underscore-dangle`, `unicorn/prefer-add-event-listener`, `unicorn/no-new-array`, `unicorn/no-instanceof-builtins` and `unicorn/consistent-function-scoping`: style only.
+- `unicorn/no-array-sort` and `unicorn/no-array-reverse`: the target is ES2022, which has no `toSorted`, and the code sorts its own copies on purpose.
+- The type-aware cast rules (`no-unsafe-type-assertion`, `no-unnecessary-type-assertion` and similar) would report every `<IThing>x` and `as any` cast, over 800 findings, and are better handled by the `any` clean-up.
+- A few noisy type-aware defaults are off: `unbound-method`, `no-redundant-type-constituents`, `no-base-to-string`, `restrict-template-expressions`, `no-useless-default-assignment`, `no-for-in-array` and `no-implied-eval` (the parity tests load the original game with `new Function` on purpose).
+
+A finding that is a real quirk of the original game, where fixing it could change gameplay, is left in place with an inline `oxlint-disable-next-line` comment that says why.
 
 ## Project layout
 

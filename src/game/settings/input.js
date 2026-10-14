@@ -10,6 +10,7 @@ MarioGame.MarioGame.settings.input = {
             "down":   [83, 40],     // s,     down
             "sprint": [16, 17],     // shift, ctrl
             "pause":  [80],         // p (pause)
+            "mute":   [77],         // m (mute)
             // Mouse aliases
             "rightclick": [3],
         },

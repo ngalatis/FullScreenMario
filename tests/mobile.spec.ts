@@ -104,7 +104,8 @@ test.describe("iPhone 13, landscape", () => {
             Math.min(viewport.width, viewport.height) * 0.95,
         );
         expect(canvas.bottom - canvas.top).toBeGreaterThan(viewport.height * 0.9);
-        expect(canvas.right - canvas.left).toBeGreaterThan(viewport.width * 0.8);
+        // The touch controls have a gutter on each side of the picture, so it is not as wide as the screen.
+        expect(canvas.right - canvas.left).toBeGreaterThan(viewport.width * 0.55);
     });
 
     test("shows no rotate overlay, and the touch controls are on, translucent and clear of the HUD", async ({

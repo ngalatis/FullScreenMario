@@ -194,8 +194,6 @@ test.describe("iPhone 13 landscape", () => {
     test.use(iPhoneLandscape);
 
     test("S: the D-pad does not cover Mario where a level starts", async ({ page }) => {
-        test.fail(true, "The D-pad is laid out over the bottom-left corner of the picture, where Mario stands at the start of every level");
-
         await bootGame(page);
         await page.waitForTimeout(300);
         const geometry = await page.evaluate(() => {

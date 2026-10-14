@@ -200,6 +200,15 @@ section#game {
 /* Phones and tablets: the game fills the screen, and the menus live behind a button */
 
 @media (pointer: coarse) {
+    :root {
+        /* Room kept free on each side of the picture for the touch controls, so they sit beside it
+           instead of over Mario's start and respawn spot. About a third of the screen height, but
+           never so much that a 16:9 phone drops below the NES width (512 of 464 game pixels). It uses
+           min()/max() of the two sides so it is the same in either orientation (UserWrappr reads it
+           to size the game even when the phone is upright). */
+        --touch-gutter: clamp(110px, min(calc(min(100vw, 100vh) * .36), calc((max(100vw, 100vh) - min(100vw, 100vh) * 1.104) / 2)), 176px);
+    }
+
     html, body {
         position: fixed;
         top: 0;
@@ -460,6 +469,55 @@ section#game {
         background: rgba(0, 0, 0, .5);
         font-size: 9px;
     }
+
+
+
+/* Landscape touch devices keep the picture clear of the controls: the game section gets a gutter on
+   each side (unless the touch controls are switched off), and the controls move into the gutters.
+   The section is empty while a game is being built, which counts as "on", so the game is sized for
+   the room that is left. */
+
+@media (pointer: coarse) and (orientation: landscape) {
+    section#game:not(:has(.touch-passer-container[style*="display: none"])) {
+        padding-right: calc(var(--safe-right) + var(--touch-gutter));
+        padding-left: calc(var(--safe-left) + var(--touch-gutter));
+    }
+
+    section#game .EightBitter,
+    .touch-passer-container {
+        overflow: visible;
+    }
+
+    .touch-passer-container {
+        /* Thumb-sized, but the pair must fit in the gutter next to each other, staggered */
+        --touch-size: min(clamp(54px, 19cqh, 84px), calc(var(--touch-gutter) - 36px));
+    }
+
+    /* D-pad: in the left gutter */
+    .touch-passer-container [data-touch-control="DPad"] > .control-inner {
+        left: calc(16px - var(--touch-gutter));
+        width: min(clamp(92px, 34cqh, 160px), calc(var(--touch-gutter) - 24px));
+        height: min(clamp(92px, 34cqh, 160px), calc(var(--touch-gutter) - 24px));
+    }
+
+    /* B (run, fireballs) and A (jump): in the right gutter, A higher and outermost, so the thumb
+       rests on the corner and reaches both */
+    .touch-passer-container [data-touch-control="A"] > .control-inner,
+    .touch-passer-container [data-touch-control="B"] > .control-inner {
+        width: var(--touch-size);
+        height: var(--touch-size);
+    }
+
+    .touch-passer-container [data-touch-control="A"] > .control-inner {
+        right: calc(12px - var(--touch-gutter));
+        bottom: calc(14px + var(--touch-size) * .97);
+    }
+
+    .touch-passer-container [data-touch-control="B"] > .control-inner {
+        right: calc(-8px - var(--touch-size));
+        bottom: 14px;
+    }
+}
 
 
 

@@ -2022,12 +2022,31 @@ export class UserWrappr {
      */
     private getCoarseWidth(): number {
         var box: { width: number; height: number } = this.getStageBox(),
+            height: number = this.settings.coarseHeight || 464,
             long: number = Math.max(box.width, box.height),
             short: number = Math.min(box.width, box.height),
-            // Between 16:9 and 22:9, which spans every current phone
-            aspect: number = short > 0 ? Math.min(Math.max(long / short, 16 / 9), 22 / 9) : 16 / 9;
+            // Held upright, the page has not reserved its side gutters yet; the landscape layout will
+            gutters: number = box.height > box.width ? 2 * this.getReservedGutter() : 0,
+            // At least the NES width (512 game pixels), at most 22:9, which spans every current phone
+            aspect: number = short > 0 ? Math.min(Math.max((long - gutters) / short, 512 / height), 22 / 9) : 16 / 9;
 
-        return Math.round((this.settings.coarseHeight || 464) * aspect);
+        return Math.round(height * aspect);
+    }
+
+    /**
+     * @returns How wide, in pixels, the page's stylesheet keeps free on each side of the picture
+     *          (its --touch-gutter), or 0 if it keeps none.
+     */
+    private getReservedGutter(): number {
+        var probe: HTMLElement = document.createElement("div"),
+            width: number;
+
+        probe.style.cssText = "position: absolute; visibility: hidden; pointer-events: none; height: 0; width: var(--touch-gutter, 0px);";
+        document.body.appendChild(probe);
+        width = probe.getBoundingClientRect().width;
+        document.body.removeChild(probe);
+
+        return isFinite(width) ? width : 0;
     }
 
     /**

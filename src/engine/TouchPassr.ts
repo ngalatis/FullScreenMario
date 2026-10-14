@@ -48,7 +48,7 @@ export interface IRootControlStyles {
     /**
      * Specific controls, such as "Button", have styles keyed by control name.
      */
-    [i: string]: IControlStyles;
+    [i: string]: IControlStyles | undefined;
 }
 
 /**
@@ -257,13 +257,13 @@ export class Control<T extends IControlSchema> {
      * The outer container element. It should have width and height of 0, so
      * it can be positioned using the schema's .position.
      */
-    protected element: HTMLElement;
+    protected element!: HTMLElement;
 
     /**
      * The inner container element, directly inside the outer container. It 
      * should be positioned absolutely so its center is the outer container.
      */
-    protected elementInner: HTMLElement;
+    protected elementInner!: HTMLElement;
 
     /**
      * Resets the control by setting member variables and calling resetElement.
@@ -361,16 +361,16 @@ export class Control<T extends IControlSchema> {
                     default:
                         // If it's null, don't do anything (like .textContent)
                         if (setting === null) {
-                            recipient[i] = null;
+                            (<any>recipient)[i] = null;
                         } else if (typeof setting === "object") {
                             // If it's an object, recurse on a new version of it
                             if (!recipient.hasOwnProperty(i)) {
-                                recipient[i] = new setting.constructor();
+                                (<any>recipient)[i] = new setting.constructor();
                             }
-                            this.proliferateElement(recipient[i], setting, noOverride);
+                            this.proliferateElement((<any>recipient)[i], setting, noOverride);
                         } else {
                             // Regular primitives are easy to copy otherwise
-                            recipient[i] = setting;
+                            (<any>recipient)[i] = setting;
                         }
                         break;
                 }
@@ -429,7 +429,7 @@ export class Control<T extends IControlSchema> {
         }
 
         this.passElementStyles(styles.global);
-        this.passElementStyles(styles[customType]);
+        this.passElementStyles(customType ? styles[customType] : undefined);
         this.passElementStyles(this.schema.styles);
 
         if (offset && offset.left) {
@@ -487,7 +487,7 @@ export class Control<T extends IControlSchema> {
             units: string;
 
         // (offsetWidth and offsetHeight are numbers, so the backup must become a string)
-        amountRaw = element.style[styleTag] || (attributeBackup && String(element[attributeBackup]));
+        amountRaw = (<any>element.style)[styleTag] || (attributeBackup && String((<any>element)[attributeBackup]));
         if (!amountRaw || amountRaw === "0") {
             return "0px";
         }
@@ -503,7 +503,7 @@ export class Control<T extends IControlSchema> {
      * 
      * @param styles   A container for styles to apply.  
      */
-    protected passElementStyles(styles: IControlStyles): void {
+    protected passElementStyles(styles: IControlStyles | undefined): void {
         if (!styles) {
             return;
         }
@@ -604,7 +604,7 @@ export class ButtonControl extends Control<IButtonSchema> {
     /**
      * Ids of the pointers (fingers, mouse, pen) currently holding the button down.
      */
-    protected pressedPointers: { [id: number]: boolean };
+    protected pressedPointers!: { [id: number]: boolean };
 
     /**
      * Handles a pointer going down on the button.
@@ -666,7 +666,7 @@ export class ButtonControl extends Control<IButtonSchema> {
      * @param event   The triggered event.
      */
     protected onEvent(which: string, event: Event): void {
-        var events: any = (<IButtonSchema>this.schema).pipes[which],
+        var events: any = (<any>(<IButtonSchema>this.schema).pipes)[which],
             i: string,
             j: number;
 
@@ -737,17 +737,17 @@ export class DPadControl extends Control<IDPadSchema> {
     /**
      * The arm elements, keyed by direction name.
      */
-    protected arms: { [name: string]: HTMLElement };
+    protected arms!: { [name: string]: HTMLElement };
 
     /**
      * Which directions are currently held, keyed by direction name.
      */
-    protected held: { [name: string]: boolean };
+    protected held!: { [name: string]: boolean };
 
     /**
      * The id of the pointer steering the pad, if any.
      */
-    protected activePointer: number;
+    protected activePointer: number | undefined;
 
     /**
      * Fraction of the pad's half-size inside which no direction is held.
@@ -810,7 +810,7 @@ export class DPadControl extends Control<IDPadSchema> {
             arm.setAttribute("data-direction", name.toLowerCase());
 
             for (side in layout[name]) {
-                arm.style[side] = layout[name][side];
+                (<any>arm.style)[side] = layout[name][side];
             }
 
             this.arms[name] = arm;
@@ -930,7 +930,7 @@ export class DPadControl extends Control<IDPadSchema> {
      * Sends one of a direction's pipes to the InputWritr.
      */
     protected firePipes(direction: IDPadDirection, which: string, event: Event): void {
-        var events: any = direction.pipes && direction.pipes[which],
+        var events: any = direction.pipes && (<any>direction.pipes)[which],
             i: string,
             j: number;
 
@@ -1027,28 +1027,28 @@ export class JoystickControl extends Control<IJoystickSchema> {
      * The large inner circle that visually surrounds the ticks and other
      * inner elements.
      */
-    protected elementCircle: HTMLDivElement;
+    protected elementCircle!: HTMLDivElement;
 
     /**
      * The normally hidden tick to display a snapped direction.
      */
-    protected elementDragLine: HTMLDivElement;
+    protected elementDragLine!: HTMLDivElement;
 
     /**
      * The normally hidden circle that emulates the outer part of a joystick.
      */
-    protected elementDragShadow: HTMLDivElement;
+    protected elementDragShadow!: HTMLDivElement;
 
     /**
      * Whether dragging is currently enabled, generally by the user starting
      * an interation event with touch or a mouse.
      */
-    protected dragEnabled: boolean;
+    protected dragEnabled!: boolean;
 
     /**
      * The currently snaped direction, if dragEnabled is true.
      */
-    protected currentDirection: IJoystickDirection;
+    protected currentDirection: IJoystickDirection | undefined;
 
     /**
      * Resets the element by creating a tick for each direction, along with
@@ -1083,7 +1083,7 @@ export class JoystickControl extends Control<IJoystickSchema> {
                 "borderRadius": "100%"
             }
         });
-        this.proliferateElement(this.elementCircle, styles.Joystick.circle);
+        this.proliferateElement(this.elementCircle, (<IJoystickStyles>styles.Joystick).circle);
 
         // Each direction creates a "tick" element, like on a clock
         for (i = 0; i < directions.length; i += 1) {
@@ -1108,7 +1108,7 @@ export class JoystickControl extends Control<IJoystickSchema> {
                 }
             });
 
-            this.proliferateElement(element, styles.Joystick.tick);
+            this.proliferateElement(element, (<IJoystickStyles>styles.Joystick).tick);
             this.setRotation(element, degrees);
 
             this.elementCircle.appendChild(element);
@@ -1124,7 +1124,7 @@ export class JoystickControl extends Control<IJoystickSchema> {
                 "left": ".77cm"
             }
         });
-        this.proliferateElement(this.elementDragLine, styles.Joystick.dragLine);
+        this.proliferateElement(this.elementDragLine, (<IJoystickStyles>styles.Joystick).dragLine);
         this.elementCircle.appendChild(this.elementDragLine);
 
         // A shadow-like circle supports the drag effect
@@ -1142,13 +1142,13 @@ export class JoystickControl extends Control<IJoystickSchema> {
                 "borderRadius": "100%"
             }
         });
-        this.proliferateElement(this.elementDragShadow, styles.Joystick.dragShadow);
+        this.proliferateElement(this.elementDragShadow, (<IJoystickStyles>styles.Joystick).dragShadow);
         this.elementCircle.appendChild(this.elementDragShadow);
 
         this.elementInner.appendChild(this.elementCircle);
 
         this.elementInner.addEventListener("click", this.triggerDragger.bind(this));
-        this.elementInner.addEventListener("touchmove", this.triggerDragger.bind(this));
+        this.elementInner.addEventListener("touchmove", <EventListener>this.triggerDragger.bind(this));
         this.elementInner.addEventListener("mousemove", this.triggerDragger.bind(this));
 
         this.elementInner.addEventListener("mouseover", this.positionDraggerEnable.bind(this));
@@ -1365,8 +1365,8 @@ export class JoystickControl extends Control<IJoystickSchema> {
                 continue;
             }
 
-            for (j = 0; j < pipes[i].length; j += 1) {
-                this.InputWriter.callEvent(i, pipes[i][j], event);
+            for (j = 0; j < (<any>pipes)[i].length; j += 1) {
+                this.InputWriter.callEvent(i, (<any>pipes)[i][j], event);
             }
         }
     }
@@ -1411,12 +1411,12 @@ export class TouchPassr implements ITouchPassr {
     /**
      * An HTMLElement all controls are placed within.
      */
-    private container: HTMLElement;
+    private container!: HTMLElement;
 
     /**
      * HTMLElement containing the controls container.
      */
-    private parentContainer: HTMLElement;
+    private parentContainer!: HTMLElement;
 
     /**
      * Initializes a new instance of the TouchPassr class.

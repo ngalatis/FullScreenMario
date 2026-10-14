@@ -315,7 +315,7 @@ export interface IPixelDrawr {
     /**
      * @returns Whether refills should skip redrawing the background each time.
      */
-    getNoRefill(): boolean;
+    getNoRefill(): boolean | undefined;
 
     /**
      * @returns The minimum opacity that will be drawn.
@@ -419,27 +419,27 @@ export class PixelDrawr implements IPixelDrawr {
     /**
      * The canvas element each Thing is to be drawn on.
      */
-    private canvas: HTMLCanvasElement;
+    private canvas!: HTMLCanvasElement;
 
     /**
      * The 2D canvas context associated with the canvas.
      */
-    private context: CanvasRenderingContext2D;
+    private context!: CanvasRenderingContext2D;
 
     /**
      * A separate canvas that keeps the background of the scene.
      */
-    private backgroundCanvas: HTMLCanvasElement;
+    private backgroundCanvas!: HTMLCanvasElement;
 
     /**
      * The 2D canvas context associated with the background canvas.
      */
-    private backgroundContext: CanvasRenderingContext2D;
+    private backgroundContext!: CanvasRenderingContext2D;
 
     /**
      * Arrays of Thing[]s that are to be drawn in each refill.
      */
-    private thingArrays: IThing[][];
+    private thingArrays!: IThing[][];
 
     /**
      * Utility Function to create a canvas.
@@ -464,12 +464,12 @@ export class PixelDrawr implements IPixelDrawr {
     /**
      * Whether refills should skip redrawing the background each time.
      */
-    private noRefill: boolean;
+    private noRefill: boolean | undefined;
 
     /**
      * For refillQuadrant, an Array of String names to refill (bottom-to-top).
      */
-    private groupNames: string[];
+    private groupNames: string[] | undefined;
 
     /**
      * How often the screen redraws (1 for always, 2 for every other call, etc).
@@ -519,12 +519,12 @@ export class PixelDrawr implements IPixelDrawr {
     /**
      * String key under which Things store their horizontal offset.
      */
-    private keyOffsetX: string;
+    private keyOffsetX: string | undefined;
 
     /**
      * String key under which Things store their vertical offset.
      */
-    private keyOffsetY: string;
+    private keyOffsetY: string | undefined;
 
     /**
      * Initializes a new instance of the PixelDrawr class.
@@ -622,7 +622,7 @@ export class PixelDrawr implements IPixelDrawr {
     /**
      * @returns Whether refills should skip redrawing the background each time.
      */
-    getNoRefill(): boolean {
+    getNoRefill(): boolean | undefined {
         return this.noRefill;
     }
 
@@ -686,7 +686,7 @@ export class PixelDrawr implements IPixelDrawr {
      * canvas to it, then recreates backgroundContext.
      */
     resetBackground(): void {
-        this.backgroundCanvas = this.createCanvas(this.MapScreener[this.keyWidth], this.MapScreener[this.keyHeight]);
+        this.backgroundCanvas = this.createCanvas((<any>this.MapScreener)[this.keyWidth], (<any>this.MapScreener)[this.keyHeight]);
         this.backgroundContext = <CanvasRenderingContext2D>this.backgroundCanvas.getContext("2d");
     }
 
@@ -697,7 +697,7 @@ export class PixelDrawr implements IPixelDrawr {
      */
     setBackground(fillStyle: any): void {
         this.backgroundContext.fillStyle = fillStyle;
-        this.backgroundContext.fillRect(0, 0, this.MapScreener[this.keyWidth], this.MapScreener[this.keyHeight]);
+        this.backgroundContext.fillRect(0, 0, (<any>this.MapScreener)[this.keyWidth], (<any>this.MapScreener)[this.keyHeight]);
     }
 
     /**
@@ -783,12 +783,12 @@ export class PixelDrawr implements IPixelDrawr {
         if (
             thing.hidden
             || thing.opacity < this.epsilon
-            || thing[this.keyHeight] < 1
-            || thing[this.keyWidth] < 1
-            || this.getTop(thing) > this.MapScreener[this.keyHeight]
+            || (<any>thing)[this.keyHeight] < 1
+            || (<any>thing)[this.keyWidth] < 1
+            || this.getTop(thing) > (<any>this.MapScreener)[this.keyHeight]
             || this.getRight(thing) < 0
             || this.getBottom(thing) < 0
-            || this.getLeft(thing) > this.MapScreener[this.keyWidth]) {
+            || this.getLeft(thing) > (<any>this.MapScreener)[this.keyWidth]) {
             return;
         }
 
@@ -800,10 +800,10 @@ export class PixelDrawr implements IPixelDrawr {
         // Whether or not the thing has a regular sprite or a SpriteMultiple, 
         // that sprite has already been drawn to the thing's canvas, unless it's
         // above the cutoff, in which case that logic happens now.
-        if (thing.canvas[this.keyWidth] > 0) {
+        if ((<any>thing.canvas)[this.keyWidth] > 0) {
             this.drawThingOnContextSingle(context, thing.canvas, thing, this.getLeft(thing), this.getTop(thing));
         } else {
-            this.drawThingOnContextMultiple(context, thing.canvases, thing, this.getLeft(thing), this.getTop(thing));
+            this.drawThingOnContextMultiple(context, <IThingCanvases>thing.canvases, thing, this.getLeft(thing), this.getTop(thing));
         }
     }
 
@@ -819,14 +819,14 @@ export class PixelDrawr implements IPixelDrawr {
      */
     private refillThingCanvasSingle(thing: IThing): void {
         // Don't draw small Things.
-        if (<any>thing[this.keyWidth] < 1 || <any>thing[this.keyHeight] < 1) {
+        if ((<any>thing)[this.keyWidth] < 1 || (<any>thing)[this.keyHeight] < 1) {
             return;
         }
 
         // Retrieve the imageData from the Thing's canvas & renderingContext
         var canvas: HTMLCanvasElement = thing.canvas,
             context: CanvasRenderingContext2D = thing.context,
-            imageData: ImageData = context.getImageData(0, 0, canvas[this.keyWidth], canvas[this.keyHeight]);
+            imageData: ImageData = context.getImageData(0, 0, (<any>canvas)[this.keyWidth], (<any>canvas)[this.keyHeight]);
 
         // Copy the thing's sprite to that imageData and into the contextz
         this.PixelRender.memcpyU8(<Uint8ClampedArray>thing.sprite, imageData.data);
@@ -841,7 +841,7 @@ export class PixelDrawr implements IPixelDrawr {
      * @param thing   A Thing whose canvas and sprites must be updated.
      */
     private refillThingCanvasMultiple(thing: IThing): void {
-        if (thing[this.keyWidth] < 1 || thing[this.keyHeight] < 1) {
+        if ((<any>thing)[this.keyWidth] < 1 || (<any>thing)[this.keyHeight] < 1) {
             return;
         }
 
@@ -867,7 +867,7 @@ export class PixelDrawr implements IPixelDrawr {
             context = <CanvasRenderingContext2D>canvas.getContext("2d");
 
             // Copy over this sprite's information the same way as refillThingCanvas
-            imageData = context.getImageData(0, 0, canvas[this.keyWidth], canvas[this.keyHeight]);
+            imageData = context.getImageData(0, 0, (<any>canvas)[this.keyWidth], (<any>canvas)[this.keyHeight]);
             this.PixelRender.memcpyU8(spritesRaw.sprites[i], imageData.data);
             context.putImageData(imageData, 0, 0);
 
@@ -880,12 +880,12 @@ export class PixelDrawr implements IPixelDrawr {
         }
 
         // Only pre-render multiple sprites if they're below the cutoff
-        if (thing[this.keyWidth] * thing[this.keyHeight] < this.spriteCacheCutoff) {
-            thing.canvas[this.keyWidth] = thing[this.keyWidth] * this.unitsize;
-            thing.canvas[this.keyHeight] = thing[this.keyHeight] * this.unitsize;
+        if ((<any>thing)[this.keyWidth] * (<any>thing)[this.keyHeight] < this.spriteCacheCutoff) {
+            (<any>thing.canvas)[this.keyWidth] = (<any>thing)[this.keyWidth] * this.unitsize;
+            (<any>thing.canvas)[this.keyHeight] = (<any>thing)[this.keyHeight] * this.unitsize;
             this.drawThingOnContextMultiple(thing.context, thing.canvases, thing, 0, 0);
         } else {
-            thing.canvas[this.keyWidth] = thing.canvas[this.keyHeight] = 0;
+            (<any>thing.canvas)[this.keyWidth] = (<any>thing.canvas)[this.keyHeight] = 0;
         }
     }
 
@@ -907,14 +907,14 @@ export class PixelDrawr implements IPixelDrawr {
         top: number): void {
         // If the sprite should repeat, use the pattern equivalent
         if (thing.repeat) {
-            this.drawPatternOnContext(context, canvas, left, top, thing.unitwidth, thing.unitheight, thing.opacity || 1);
+            this.drawPatternOnContext(context, canvas, left, top, <number>thing.unitwidth, <number>thing.unitheight, thing.opacity || 1);
         } else if (thing.opacity !== 1) {
             // Opacities not equal to one must reset the context afterwards
             context.globalAlpha = thing.opacity;
-            context.drawImage(canvas, left, top, canvas.width * thing.scale, canvas.height * thing.scale);
+            context.drawImage(canvas, left, top, canvas.width * <number>thing.scale, canvas.height * <number>thing.scale);
             context.globalAlpha = 1;
         } else {
-            context.drawImage(canvas, left, top, canvas.width * thing.scale, canvas.height * thing.scale);
+            context.drawImage(canvas, left, top, canvas.width * <number>thing.scale, canvas.height * <number>thing.scale);
         }
     }
 
@@ -938,24 +938,24 @@ export class PixelDrawr implements IPixelDrawr {
         var sprite: PixelRendr.SpriteMultiple = <PixelRendr.SpriteMultiple>thing.sprite,
             topreal: number = top,
             leftreal: number = left,
-            rightreal: number = left + thing.unitwidth,
-            bottomreal: number = top + thing.unitheight,
-            widthreal: number = thing.unitwidth,
-            heightreal: number = thing.unitheight,
-            spritewidthpixels: number = thing.spritewidthpixels,
-            spriteheightpixels: number = thing.spriteheightpixels,
+            rightreal: number = left + <number>thing.unitwidth,
+            bottomreal: number = top + <number>thing.unitheight,
+            widthreal: number = <number>thing.unitwidth,
+            heightreal: number = <number>thing.unitheight,
+            spritewidthpixels: number = <number>thing.spritewidthpixels,
+            spriteheightpixels: number = <number>thing.spriteheightpixels,
             widthdrawn: number = Math.min(widthreal, spritewidthpixels),
             heightdrawn: number = Math.min(heightreal, spriteheightpixels),
             opacity: number = thing.opacity,
             diffhoriz: number,
             diffvert: number,
-            canvasref: IThingSubCanvas;
+            canvasref: IThingSubCanvas | undefined;
 
         switch (canvases.direction) {
             // Vertical sprites may have "top", "bottom", "middle"
             case "vertical":
                 // If there's a bottom, draw that and push up bottomreal
-                if ((canvasref = <IThingSubCanvas>canvases[this.keyBottom])) {
+                if ((canvasref = <IThingSubCanvas>(<any>canvases)[this.keyBottom])) {
                     diffvert = sprite.bottomheight ? sprite.bottomheight * this.unitsize : spriteheightpixels;
                     this.drawPatternOnContext(
                         context,
@@ -969,7 +969,7 @@ export class PixelDrawr implements IPixelDrawr {
                     heightreal -= diffvert;
                 }
                 // If there's a top, draw that and push down topreal
-                if ((canvasref = <IThingSubCanvas>canvases[this.keyTop])) {
+                if ((canvasref = <IThingSubCanvas>(<any>canvases)[this.keyTop])) {
                     diffvert = sprite.topheight ? sprite.topheight * this.unitsize : spriteheightpixels;
                     this.drawPatternOnContext(context, canvasref.canvas, leftreal, topreal, widthreal, heightdrawn, opacity);
                     topreal += diffvert;
@@ -980,14 +980,14 @@ export class PixelDrawr implements IPixelDrawr {
             // Horizontal sprites may have "left", "right", "middle"
             case "horizontal":
                 // If there's a left, draw that and push forward leftreal
-                if ((canvasref = canvases[this.keyLeft])) {
+                if ((canvasref = (<any>canvases)[this.keyLeft])) {
                     diffhoriz = sprite.leftwidth ? sprite.leftwidth * this.unitsize : spritewidthpixels;
                     this.drawPatternOnContext(context, canvasref.canvas, leftreal, topreal, widthdrawn, heightreal, opacity);
                     leftreal += diffhoriz;
                     widthreal -= diffhoriz;
                 }
                 // If there's a right, draw that and push back rightreal
-                if ((canvasref = canvases[this.keyRight])) {
+                if ((canvasref = (<any>canvases)[this.keyRight])) {
                     diffhoriz = sprite.rightwidth ? sprite.rightwidth * this.unitsize : spritewidthpixels;
                     this.drawPatternOnContext(
                         context,
@@ -1010,7 +1010,7 @@ export class PixelDrawr implements IPixelDrawr {
                 diffhoriz = sprite.leftwidth ? sprite.leftwidth * this.unitsize : spritewidthpixels;
                 this.drawPatternOnContext(
                     context,
-                    canvases.topLeft.canvas,
+                    (<IThingSubCanvas>canvases.topLeft).canvas,
                     leftreal,
                     topreal,
                     widthdrawn,
@@ -1018,7 +1018,7 @@ export class PixelDrawr implements IPixelDrawr {
                     opacity);
                 this.drawPatternOnContext(
                     context,
-                    canvases[this.keyLeft].canvas,
+                    (<any>canvases)[this.keyLeft].canvas,
                     leftreal,
                     topreal + diffvert,
                     widthdrawn,
@@ -1026,7 +1026,7 @@ export class PixelDrawr implements IPixelDrawr {
                     opacity);
                 this.drawPatternOnContext(
                     context,
-                    canvases.bottomLeft.canvas,
+                    (<IThingSubCanvas>canvases.bottomLeft).canvas,
                     leftreal,
                     bottomreal - diffvert,
                     widthdrawn,
@@ -1039,7 +1039,7 @@ export class PixelDrawr implements IPixelDrawr {
                 diffhoriz = sprite.rightwidth ? sprite.rightwidth * this.unitsize : spritewidthpixels;
                 this.drawPatternOnContext(
                     context,
-                    canvases[this.keyTop].canvas,
+                    (<any>canvases)[this.keyTop].canvas,
                     leftreal,
                     topreal,
                     widthreal - diffhoriz,
@@ -1047,7 +1047,7 @@ export class PixelDrawr implements IPixelDrawr {
                     opacity);
                 this.drawPatternOnContext(
                     context,
-                    canvases.topRight.canvas,
+                    (<IThingSubCanvas>canvases.topRight).canvas,
                     rightreal - diffhoriz,
                     topreal,
                     widthdrawn,
@@ -1060,7 +1060,7 @@ export class PixelDrawr implements IPixelDrawr {
                 diffvert = sprite.bottomheight ? sprite.bottomheight * this.unitsize : spriteheightpixels;
                 this.drawPatternOnContext(
                     context,
-                    canvases[this.keyRight].canvas,
+                    (<any>canvases)[this.keyRight].canvas,
                     rightreal - diffhoriz,
                     topreal,
                     widthdrawn,
@@ -1068,7 +1068,7 @@ export class PixelDrawr implements IPixelDrawr {
                     opacity);
                 this.drawPatternOnContext(
                     context,
-                    canvases.bottomRight.canvas,
+                    (<IThingSubCanvas>canvases.bottomRight).canvas,
                     rightreal - diffhoriz,
                     bottomreal - diffvert,
                     widthdrawn,
@@ -1076,7 +1076,7 @@ export class PixelDrawr implements IPixelDrawr {
                     opacity);
                 this.drawPatternOnContext(
                     context,
-                    canvases[this.keyBottom].canvas,
+                    (<any>canvases)[this.keyBottom].canvas,
                     leftreal,
                     bottomreal - diffvert,
                     widthreal - diffhoriz,
@@ -1113,9 +1113,9 @@ export class PixelDrawr implements IPixelDrawr {
      */
     private getTop(thing: IThing): number {
         if (this.keyOffsetY) {
-            return thing[this.keyTop] + thing[this.keyOffsetY];
+            return (<any>thing)[this.keyTop] + (<any>thing)[this.keyOffsetY];
         } else {
-            return thing[this.keyTop];
+            return (<any>thing)[this.keyTop];
         }
     }
 
@@ -1125,9 +1125,9 @@ export class PixelDrawr implements IPixelDrawr {
      */
     private getRight(thing: IThing): number {
         if (this.keyOffsetX) {
-            return thing[this.keyRight] + thing[this.keyOffsetX];
+            return (<any>thing)[this.keyRight] + (<any>thing)[this.keyOffsetX];
         } else {
-            return thing[this.keyRight];
+            return (<any>thing)[this.keyRight];
         }
     }
 
@@ -1137,10 +1137,10 @@ export class PixelDrawr implements IPixelDrawr {
      *                  offset if needed.
      */
     private getBottom(thing: IThing): number {
-        if (this.keyOffsetX) {
-            return thing[this.keyBottom] + thing[this.keyOffsetY];
+        if (this.keyOffsetY) {
+            return (<any>thing)[this.keyBottom] + (<any>thing)[this.keyOffsetY];
         } else {
-            return thing[this.keyBottom];
+            return (<any>thing)[this.keyBottom];
         }
     }
 
@@ -1150,9 +1150,9 @@ export class PixelDrawr implements IPixelDrawr {
      */
     private getLeft(thing: IThing): number {
         if (this.keyOffsetX) {
-            return thing[this.keyLeft] + thing[this.keyOffsetX];
+            return (<any>thing)[this.keyLeft] + (<any>thing)[this.keyOffsetX];
         } else {
-            return thing[this.keyLeft];
+            return (<any>thing)[this.keyLeft];
         }
     }
 
@@ -1183,7 +1183,7 @@ export class PixelDrawr implements IPixelDrawr {
         opacity: number): void {
         context.globalAlpha = opacity;
         context.translate(left, top);
-        context.fillStyle = context.createPattern(source, "repeat");
+        context.fillStyle = <CanvasPattern>context.createPattern(source, "repeat");
         context.fillRect(
             0, 0,
             // Math.max(width, left - MapScreener[keyRight]),

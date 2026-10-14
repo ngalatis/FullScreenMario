@@ -184,6 +184,8 @@ export interface IArgumentMap {
  * A mapping of directions to equivalent keys, such as opposites.
  */
 export interface IDirectionsMap {
+    [i: string]: string;
+
     /**
      * The equivalent key for the "top" direction.
      */
@@ -366,7 +368,7 @@ export interface IWorldSeedr {
      * @returns An Object containing a position within the given 
      *          position and some number of children.
      */
-    generate(name: string, command: IPosition | ICommand): IChoice;
+    generate(name: string, command: IPosition | ICommand): IChoice | undefined;
 
     /**
      * Recursively generates a schema. The schema's title and itself are given 
@@ -399,7 +401,7 @@ export interface IRandomBetweenGenerator {
  * @returns One of the choice Objects, chosen at random.
  */
 export interface IOptionChooser<T extends IPercentageOption> {
-    (choices: T[]): T;
+    (choices: T[]): T | undefined;
 }
 
 /**
@@ -453,7 +455,7 @@ export class SpacingCalculator implements ISpacingCalculator {
      * @param randomBetween 
      * @param chooseAmong
      */
-    constructor(randomBetween: IRandomNumberGenerator, chooseAmong: IOptionChooser<IPossibilitySpacingOption>) {
+    constructor(randomBetween: IRandomBetweenGenerator, chooseAmong: IOptionChooser<IPossibilitySpacingOption>) {
         this.randomBetween = randomBetween;
         this.chooseAmong = chooseAmong;
     }
@@ -514,7 +516,7 @@ export class SpacingCalculator implements ISpacingCalculator {
      * @returns A valid distance for the given spacing description.
      */
     calculateFromPossibilities(spacing: IPossibilitySpacingOption[]): number {
-        return this.calculateFromPossibility(this.chooseAmong(spacing).value);
+        return this.calculateFromPossibility((<IPossibilitySpacingOption>this.chooseAmong(spacing)).value);
     }
 }
 
@@ -573,7 +575,7 @@ export class WorldSeedr {
     /**
      * Scratch Array of PreThings to be added to during generation.
      */
-    private generatedCommands: ICommand[];
+    private generatedCommands!: ICommand[];
 
     /**
      * Utility to generate spacing distances based on possibility schemas.
@@ -668,7 +670,7 @@ export class WorldSeedr {
      * @returns An Object containing a position within the given 
      *          position and some number of children.
      */
-    generate(name: string, command: IPosition | ICommand): IChoice {
+    generate(name: string, command: IPosition | ICommand): IChoice | undefined {
         var schema: IPossibility = this.possibilities[name];
 
         if (!schema) {
@@ -693,7 +695,7 @@ export class WorldSeedr {
      *          position and some number of children. 
      */
     generateFull(schema: ICommand): void {
-        var generated: IChoice = this.generate(schema.title, schema),
+        var generated: IChoice | undefined = this.generate(schema.title, schema),
             child: IChoice,
             i: number;
 
@@ -734,26 +736,26 @@ export class WorldSeedr {
      * @returns An Object containing a position within the given 
      *          position and some number of children.
      */
-    private generateChildren(schema: IPossibility, position: IPosition, direction?: string): IChoice {
+    private generateChildren(schema: IPossibility, position: IPosition, direction?: string): IChoice | undefined {
         var contents: IPossibilityContents = schema.contents,
             spacing: Spacing = contents.spacing || 0,
             objectMerged: IPosition = this.objectMerge(schema, position),
-            children: IChoice[];
+            children: IChoice[] | undefined;
 
         direction = contents.direction || direction;
 
         switch (contents.mode) {
             case "Random":
-                children = this.generateRandom(contents, objectMerged, direction, spacing);
+                children = this.generateRandom(contents, objectMerged, <string>direction, spacing);
                 break;
             case "Certain":
-                children = this.generateCertain(contents, objectMerged, direction, spacing);
+                children = this.generateCertain(contents, objectMerged, <string>direction, spacing);
                 break;
             case "Repeat":
-                children = this.generateRepeat(contents, objectMerged, direction, spacing);
+                children = this.generateRepeat(contents, objectMerged, <string>direction, spacing);
                 break;
             case "Multiple":
-                children = this.generateMultiple(contents, objectMerged, direction, spacing);
+                children = this.generateMultiple(contents, objectMerged, <string>direction, spacing);
                 break;
             default:
                 throw new Error("Unknown contents mode: " + contents.mode);
@@ -867,9 +869,9 @@ export class WorldSeedr {
      * @returns An Object containing a position within the given position
      *          and some number of children.
      */
-    private generateRandom(contents: IPossibilityContents, position: IPosition, direction: string, spacing: Spacing): IChoice[] {
+    private generateRandom(contents: IPossibilityContents, position: IPosition, direction: string, spacing: Spacing): IChoice[] | undefined {
         var children: IChoice[] = [],
-            child: IChoice;
+            child: IChoice | undefined;
 
         // Continuously add random choices to the output children as long as 
         // there's room in the position's bounding box
@@ -935,8 +937,8 @@ export class WorldSeedr {
      *          with the basic schema (.title) info added as well as any optional 
      *          .arguments.
      */
-    private generateChild(contents: IPossibilityContents, position: IPosition, direction: string): IChoice {
-        var choice: IPossibilityChild = this.chooseAmongPosition(contents.children, position);
+    private generateChild(contents: IPossibilityContents, position: IPosition, direction: string): IChoice | undefined {
+        var choice: IPossibilityChild | undefined = this.chooseAmongPosition(contents.children, position);
 
         if (!choice) {
             return undefined;
@@ -969,18 +971,18 @@ export class WorldSeedr {
                 "arguments": choice.arguments instanceof Array
                     ? (<IArgumentPossibility>(this.chooseAmong(choice.arguments))).values
                     : choice.arguments,
-                "width": undefined,
-                "height": undefined,
-                "top": undefined,
-                "right": undefined,
-                "bottom": undefined,
-                "left": undefined
+                "width": undefined!,
+                "height": undefined!,
+                "top": undefined!,
+                "right": undefined!,
+                "bottom": undefined!,
+                "left": undefined!
             };
 
         this.ensureSizingOnChoice(output, choice, schema);
         this.ensureDirectionBoundsOnChoice(output, position);
 
-        output[direction] = output[directionOpposites[direction]] + output[directionSizing[direction]];
+        (<any>output)[direction] = (<any>output)[directionOpposites[direction]] + (<any>output)[directionSizing[direction]];
 
         switch (schema.contents.snap) {
             case "top":
@@ -1035,7 +1037,7 @@ export class WorldSeedr {
      * @todo Investigate whether this is necessary (#7).
      */
     private parseChoiceFinal(choice: IPossibilityChild, position: IPosition, direction: string): IChoice {
-        var schema: IPossibility = this.possibilities[choice.source],
+        var schema: IPossibility = this.possibilities[<string>choice.source],
             output: IChoice = {
                 "type": "Known",
                 "title": choice.title,
@@ -1061,7 +1063,7 @@ export class WorldSeedr {
      * @param choice   An Array of objects with .percent.
      * @returns One of the choice Objects, chosen at random.
      */
-    private chooseAmong<T extends IPercentageOption>(choices: T[]): T {
+    private chooseAmong<T extends IPercentageOption>(choices: T[]): T | undefined {
         if (!choices.length) {
             return undefined;
         }
@@ -1093,7 +1095,7 @@ export class WorldSeedr {
      *          among fitting ones but 75 is randomly chosen, something should
      *          still be returned.
      */
-    private chooseAmongPosition(choices: IPossibilityChild[], position: IPosition): IPossibilityChild {
+    private chooseAmongPosition(choices: IPossibilityChild[], position: IPosition): IPossibilityChild | undefined {
         var width: number = position.right - position.left,
             height: number = position.top - position.bottom,
             scope: WorldSeedr = this;
@@ -1222,7 +1224,7 @@ export class WorldSeedr {
      * @param children   An Array of Objects with .top, .right, .bottom, and .left.
      * @returns An Object with .top, .right, .bottom, and .left.
      */
-    private wrapChoicePositionExtremes(children: IChoice[]): IChoice {
+    private wrapChoicePositionExtremes(children: IChoice[] | undefined): IChoice | undefined {
         var position: IChoice,
             child: IChoice,
             i: number;
@@ -1233,13 +1235,13 @@ export class WorldSeedr {
 
         child = children[0];
         position = {
-            "title": undefined,
+            "title": undefined!,
             "top": child.top,
             "right": child.right,
             "bottom": child.bottom,
             "left": child.left,
-            "width": undefined,
-            "height": undefined,
+            "width": undefined!,
+            "height": undefined!,
             "children": children
         };
 
@@ -1286,9 +1288,9 @@ export class WorldSeedr {
 
             name = sizingNames[i];
 
-            output[name] = (choice.sizing && typeof choice.sizing[name] !== "undefined")
-                ? choice.sizing[name]
-                : schema[name];
+            (<any>output)[name] = (choice.sizing && typeof (<any>choice.sizing)[name] !== "undefined")
+                ? (<any>choice.sizing)[name]
+                : (<any>schema)[name];
         }
     }
 
@@ -1306,7 +1308,7 @@ export class WorldSeedr {
 
         for (i in directionNames) {
             if (directionNames.hasOwnProperty(i)) {
-                output[directionNames[i]] = position[directionNames[i]];
+                (<any>output)[directionNames[i]] = (<any>position)[directionNames[i]];
             }
         }
     }

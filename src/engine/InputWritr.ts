@@ -325,7 +325,7 @@ export interface IInputWritr {
      * @returns A Function that, when called on an event, runs this.callEvent
      *          on the appropriate trigger event.
      */
-    makePipe(trigger: string, codeLabel: string, preventDefaults?: boolean): Function;
+    makePipe(trigger: string, codeLabel: string | null, preventDefaults?: boolean): Function;
 }
 
 
@@ -365,7 +365,7 @@ export class InputWritr implements IInputWritr {
     /**
      * A starting time used for calculating playback delays in playHistory.
      */
-    private startingTime: number;
+    private startingTime!: number;
 
     /**
      * An Object to be passed to event calls, commonly with key information
@@ -886,7 +886,7 @@ export class InputWritr implements IInputWritr {
      * @returns A Function that, when called on an event, runs this.callEvent
      *          on the appropriate trigger event.
      */
-    makePipe(trigger: string, codeLabel: string, preventDefaults?: boolean): Function {
+    makePipe(trigger: string, codeLabel: string | null, preventDefaults?: boolean): Function {
         var functions: any = this.triggers[trigger];
 
         if (!functions) {
@@ -894,7 +894,7 @@ export class InputWritr implements IInputWritr {
         }
 
         return (event: Event) => {
-            var alias: number | string = event[codeLabel];
+            var alias: number | string = (<any>event)[<string>codeLabel];
 
             // Typical usage means alias will be an event from a key/mouse input
             if (preventDefaults && event.preventDefault instanceof Function) {

@@ -46,7 +46,7 @@ export interface IStringFilr {
     /**
      * @returns The optional normal class String.
      */
-    getNormal(): string;
+    getNormal(): string | undefined;
 
     /**
      * @returns The complete cache of previously completed lookups.
@@ -99,12 +99,12 @@ export class StringFilr implements IStringFilr {
     /**
      * Optional default index to check when no suitable option is found.
      */
-    private normal: string;
+    private normal: string | undefined;
 
     /**
      * Whether to crash when a sub-object in reset has no normal child.
      */
-    private requireNormalKey: boolean;
+    private requireNormalKey: boolean | undefined;
 
     /**
      * Initializes a new instance of the StringFilr class.
@@ -144,7 +144,7 @@ export class StringFilr implements IStringFilr {
     /**
      * @returns The optional normal class String.
      */
-    getNormal(): string {
+    getNormal(): string | undefined {
         return this.normal;
     }
 
@@ -266,11 +266,9 @@ export class StringFilr implements IStringFilr {
             output.push(path);
         }
 
-        if (typeof current[i] === "object") {
-            for (i in current) {
-                if (current.hasOwnProperty(i)) {
-                    this.findLackingNormal(current[i], path + " " + i, output);
-                }
+        for (i in current) {
+            if (current.hasOwnProperty(i) && typeof current[i] === "object" && current[i] !== null) {
+                this.findLackingNormal(current[i], path + " " + i, output);
             }
         }
 

@@ -279,7 +279,7 @@ export class ThingHittr implements IThingHittr {
      * @param thing   The Thing to have hits checked.
      */
     checkHitsForThing(thing: QuadsKeepr.IThing): void {
-        this.generatedHitsChecks[thing[this.keyTypeName]](thing);
+        this.generatedHitsChecks[(<any>thing)[this.keyTypeName]](thing);
     }
 
     /**
@@ -325,7 +325,7 @@ export class ThingHittr implements IThingHittr {
                 return;
             }
 
-            var groupNames: string[] = this.groupHitLists[thing[this.keyGroupName]],
+            var groupNames: string[] = this.groupHitLists[(<any>thing)[this.keyGroupName]],
                 groupName: string,
                 others: QuadsKeepr.IThing[],
                 other: QuadsKeepr.IThing,
@@ -334,10 +334,10 @@ export class ThingHittr implements IThingHittr {
                 k: number;
 
             // For each quadrant thing is in, look at each of its groups that thing can check
-            for (i = 0; i < thing[this.keyNumQuads]; i += 1) {
+            for (i = 0; i < (<any>thing)[this.keyNumQuads]; i += 1) {
                 for (j = 0; j < groupNames.length; j += 1) {
                     groupName = groupNames[j];
-                    others = thing[this.keyQuadrants][i].things[groupName];
+                    others = (<any>thing)[this.keyQuadrants][i].things[groupName];
 
                     // For each other Thing in this group that should be checked...
                     for (k = 0; k < others.length; k += 1) {
@@ -349,7 +349,7 @@ export class ThingHittr implements IThingHittr {
                         }
 
                         // Do nothing if other can't collide in the first place
-                        if (!this.generatedGlobalChecks[other[this.keyTypeName]](other)) {
+                        if (!this.generatedGlobalChecks[(<any>other)[this.keyTypeName]](other)) {
                             continue;
                         }
 
@@ -377,8 +377,8 @@ export class ThingHittr implements IThingHittr {
         thing: QuadsKeepr.IThing,
         other: QuadsKeepr.IThing,
         generators: IThingFunctionGeneratorContainerGroup<IThingFunction>): any {
-        var typeThing: string = thing[this.keyTypeName],
-            typeOther: string = other[this.keyTypeName],
+        var typeThing: string = (<any>thing)[this.keyTypeName],
+            typeOther: string = (<any>other)[this.keyTypeName],
             container: IThingFunctionContainer<IThingFunction> = group[typeThing],
             check: IThingFunction;
 
@@ -388,7 +388,7 @@ export class ThingHittr implements IThingHittr {
 
         check = container[typeOther];
         if (!check) {
-            check = container[typeOther] = generators[thing[this.keyGroupName]][other[this.keyGroupName]]();
+            check = container[typeOther] = generators[(<any>thing)[this.keyGroupName]][(<any>other)[this.keyGroupName]]();
         }
 
         return (<Function>check)(thing, other);

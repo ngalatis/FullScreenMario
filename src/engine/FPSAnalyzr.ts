@@ -76,7 +76,7 @@ export interface IFPSAnalyzr {
     /**
      * @returns The most recent performance.now timestamp.
      */
-    getTimeCurrent(): number;
+    getTimeCurrent(): number | undefined;
 
     /**
      * @returns The current position in measurements.
@@ -161,7 +161,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
     /**
      * The most recent timestamp from getTimestamp.
      */
-    private timeCurrent: number;
+    private timeCurrent: number | undefined;
 
     /**
      * Initializes a new instance of the FPSAnalyzr class.
@@ -259,7 +259,7 @@ export class FPSAnalyzr implements IFPSAnalyzr {
     /**
      * @returns The most recent performance.now timestamp.
      */
-    getTimeCurrent(): number {
+    getTimeCurrent(): number | undefined {
         return this.timeCurrent;
     }
 

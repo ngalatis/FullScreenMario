@@ -17,7 +17,7 @@ export interface IChangeLinrTransforms {
  *          will be passed in by the calling ChangeLinr.
  */
 export interface IChangeLinrTransform {
-    (data: any, key?: string, attributes?: any, scope?: IChangeLinr): any;
+    (data: any, key: string, attributes?: any, scope?: IChangeLinr): any;
 }
 
 /**
@@ -267,21 +267,21 @@ export class ChangeLinr implements IChangeLinr {
         }
 
         // If this keyed input was already processed, get that
-        if (this.doUseCache && this.cache.hasOwnProperty(key)) {
+        if (this.doUseCache && key !== undefined && this.cache.hasOwnProperty(key)) {
             return this.cache[key];
         }
 
         // Apply (and optionally cache) each transform in order
         for (i = 0; i < this.pipeline.length; i += 1) {
-            data = this.transforms[this.pipeline[i]](data, key, attributes, this);
+            data = this.transforms[this.pipeline[i]](data, <string>key, attributes, this);
 
             if (this.doMakeCache) {
-                this.cacheFull[this.pipeline[i]][key] = data;
+                this.cacheFull[this.pipeline[i]][<string>key] = data;
             }
         }
 
         if (this.doMakeCache) {
-            this.cache[key] = data;
+            this.cache[<string>key] = data;
         }
 
         return data;

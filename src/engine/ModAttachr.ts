@@ -111,7 +111,7 @@ export interface IModAttachr {
     /**
      * @returns The ItemsHoldr if storeLocally is true (by default, undefined).
      */
-    getItemsHolder(): ItemsHoldr.IItemsHoldr;
+    getItemsHolder(): ItemsHoldr.IItemsHoldr | undefined;
 
     /**
      * @returns The default scope used to apply mods from, if not this ModAttachr.
@@ -231,7 +231,7 @@ export class ModAttachr implements IModAttachr {
     /**
      * A ItemsHoldr object that may be used to store mod status.
      */
-    private ItemsHolder: ItemsHoldr.IItemsHoldr;
+    private ItemsHolder: ItemsHoldr.IItemsHoldr | undefined;
 
     /**
      * A default scope to apply mod events from, if not this ModAttachr.
@@ -302,7 +302,7 @@ export class ModAttachr implements IModAttachr {
     /**
      * @returns The ItemsHoldr if storeLocally is true (by default, undefined).
      */
-    getItemsHolder(): ItemsHoldr.IItemsHoldr {
+    getItemsHolder(): ItemsHoldr.IItemsHoldr | undefined {
         return this.ItemsHolder;
     }
 

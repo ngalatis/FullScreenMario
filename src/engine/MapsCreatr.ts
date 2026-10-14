@@ -436,7 +436,7 @@ export interface IMapsCreatr {
     /**
      * @returns Whether Locations must have an entrance Function.
      */
-    getRequireEntrance(): boolean;
+    getRequireEntrance(): boolean | undefined;
 
     /**
      * @returns The Object storing raw maps, keyed by name.
@@ -593,7 +593,7 @@ export class PreThing implements IPreThing {
     /**
      * An optional modifier instruction for group placement, from reference.
      */
-    public position: string;
+    public position?: string;
 
     /**
      * @param {Thing} thing   The Thing, freshly created by ObjectMaker.make.
@@ -677,7 +677,7 @@ export class MapsCreatr {
     /**
      * Whether an entrance is required on all Locations.
      */
-    private requireEntrance: boolean;
+    private requireEntrance: boolean | undefined;
 
     /**
      * An optional scope to pass to macros as an argument after maps, instead
@@ -772,7 +772,7 @@ export class MapsCreatr {
     /**
      * @returns Whether Locations must have an entrance Function.
      */
-    getRequireEntrance(): boolean {
+    getRequireEntrance(): boolean | undefined {
         return this.requireEntrance;
     }
 
@@ -988,30 +988,30 @@ export class MapsCreatr {
         prething = new PreThing(this.ObjectMaker.make(title, reference), reference, this.ObjectMaker);
         thing = prething.thing;
 
-        if (!prething.thing[this.keyGroupType]) {
+        if (!(<any>prething.thing)[this.keyGroupType]) {
             throw new Error("A Thing of type '" + title + "' does not contain a " + this.keyGroupType + ".");
         }
 
-        if (this.groupTypes.indexOf(prething.thing[this.keyGroupType]) === -1) {
+        if (this.groupTypes.indexOf((<any>prething.thing)[this.keyGroupType]) === -1) {
             throw new Error("A Thing of type '" + title + "' contains an unknown " + this.keyGroupType + ".");
         }
 
-        prethings[prething.thing[this.keyGroupType]].push(prething);
+        prethings[(<any>prething.thing)[this.keyGroupType]].push(prething);
         if (!thing.noBoundaryStretch && (<IMapsCreatrArea>area).boundaries) {
             this.stretchAreaBoundaries(prething, <IMapsCreatrArea>area);
         }
 
         // If a Thing is an entrance, then the entrance's location must know the Thing.
-        if (thing[this.keyEntrance] !== undefined && typeof thing[this.keyEntrance] !== "object") {
-            if (typeof map.locations[thing[this.keyEntrance]] !== "undefined") {
-                if (typeof map.locations[thing[this.keyEntrance]].xloc === "undefined") {
-                    map.locations[thing[this.keyEntrance]].xloc = prething.left;
+        if ((<any>thing)[this.keyEntrance] !== undefined && typeof (<any>thing)[this.keyEntrance] !== "object") {
+            if (typeof map.locations[(<any>thing)[this.keyEntrance]] !== "undefined") {
+                if (typeof map.locations[(<any>thing)[this.keyEntrance]].xloc === "undefined") {
+                    map.locations[(<any>thing)[this.keyEntrance]].xloc = prething.left;
                 }
-                if (typeof map.locations[thing[this.keyEntrance]].yloc === "undefined") {
-                    map.locations[thing[this.keyEntrance]].yloc = prething.top;
+                if (typeof map.locations[(<any>thing)[this.keyEntrance]].yloc === "undefined") {
+                    map.locations[(<any>thing)[this.keyEntrance]].yloc = prething.top;
                 }
 
-                map.locations[thing[this.keyEntrance]].entrance = prething.thing;
+                map.locations[(<any>thing)[this.keyEntrance]].entrance = prething.thing;
             }
         }
 
@@ -1090,7 +1090,7 @@ export class MapsCreatr {
                 location.area = locationsRaw[i].area || 0;
 
                 if (this.requireEntrance) {
-                    if (!this.entrances.hasOwnProperty(location.entryRaw)) {
+                    if (!this.entrances.hasOwnProperty(<string>location.entryRaw)) {
                         throw new Error("Location " + i + " has unknown entry string: " + location.entryRaw);
                     }
                 }

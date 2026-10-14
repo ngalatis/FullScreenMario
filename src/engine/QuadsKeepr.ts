@@ -409,22 +409,22 @@ export class QuadsKeepr implements IQuadsKeepr {
     /**
      * The top boundary for all quadrants.
      */
-    top: number;
+    top!: number;
 
     /**
      * The right boundary for all quadrants.
      */
-    right: number;
+    right!: number;
 
     /**
      * The bottom boundary for all quadrants.
      */
-    bottom: number;
+    bottom!: number;
 
     /**
      * The left boundary for all quadrants.
      */
-    left: number;
+    left!: number;
 
     /**
      * The ObjectMakr factory used to create Quadrant objects.
@@ -444,12 +444,12 @@ export class QuadsKeepr implements IQuadsKeepr {
     /**
      * Horizontal scrolling offset during gameplay.
      */
-    private offsetX: number;
+    private offsetX!: number;
 
     /**
      * Vertical scrolling offset during gameplay.
      */
-    private offsetY: number;
+    private offsetY!: number;
 
     /**
      * Starting coordinates for columns.
@@ -464,12 +464,12 @@ export class QuadsKeepr implements IQuadsKeepr {
     /**
      * A QuadrantRow[] that holds each QuadrantRow in order.
      */
-    private quadrantRows: IQuadrantRow[];
+    private quadrantRows!: IQuadrantRow[];
 
     /**
      * A QuadrantCol[] that holds each QuadrantCol in order.
      */
-    private quadrantCols: IQuadrantCol[];
+    private quadrantCols!: IQuadrantCol[];
 
     /**
      * How wide Quadrants should be.
@@ -534,12 +534,12 @@ export class QuadsKeepr implements IQuadsKeepr {
     /**
      * String key under which external Things store their top coordinate.
      */
-    private keyOffsetX: string;
+    private keyOffsetX: string | undefined;
 
     /**
      * String key under which external Things store their top coordinate.
      */
-    private keyOffsetY: string;
+    private keyOffsetY: string | undefined;
 
     /**
      * The groups Things may be placed into within Quadrants.
@@ -549,12 +549,12 @@ export class QuadsKeepr implements IQuadsKeepr {
     /**
      * Callback for when Quadrants are added, called on the area and direction.
      */
-    private onAdd: IQuadrantChangeCallback;
+    private onAdd: IQuadrantChangeCallback | undefined;
 
     /**
      * Callback for when Quadrants are removed, called on the area and direction.
      */
-    private onRemove: IQuadrantChangeCallback;
+    private onRemove: IQuadrantChangeCallback | undefined;
 
     /**
      * @param {IQuadsKeeprSettings} settings
@@ -593,8 +593,8 @@ export class QuadsKeepr implements IQuadsKeepr {
         this.onAdd = settings.onAdd;
         this.onRemove = settings.onRemove;
 
-        this.startLeft = settings.startLeft | 0;
-        this.startTop = settings.startTop | 0;
+        this.startLeft = <number>settings.startLeft | 0;
+        this.startTop = <number>settings.startTop | 0;
 
         this.keyTop = settings.keyTop || "top";
         this.keyLeft = settings.keyLeft || "left";
@@ -986,7 +986,7 @@ export class QuadsKeepr implements IQuadsKeepr {
      * @param thing   A Thing whose Quadrants are to be determined.
      */
     determineThingQuadrants(thing: IThing): void {
-        var group: string = thing[this.keyGroupName],
+        var group: string = (<any>thing)[this.keyGroupName],
             rowStart: number = this.findQuadrantRowStart(thing),
             colStart: number = this.findQuadrantColStart(thing),
             rowEnd: number = this.findQuadrantRowEnd(thing),
@@ -996,12 +996,12 @@ export class QuadsKeepr implements IQuadsKeepr {
 
         // Mark each of the Thing's Quadrants as changed
         // This is done first because the old Quadrants are changed
-        if (thing[this.keyChanged]) {
+        if ((<any>thing)[this.keyChanged]) {
             this.markThingQuadrantsChanged(thing);
         }
 
         // The Thing no longer has any Quadrants: rebuild them!
-        thing[this.keyNumQuads] = 0;
+        (<any>thing)[this.keyNumQuads] = 0;
 
         for (row = rowStart; row <= rowEnd; row += 1) {
             for (col = colStart; col <= colEnd; col += 1) {
@@ -1010,7 +1010,7 @@ export class QuadsKeepr implements IQuadsKeepr {
         }
 
         // The thing is no longer considered changed, since quadrants know it
-        thing[this.keyChanged] = false;
+        (<any>thing)[this.keyChanged] = false;
     }
 
     /**
@@ -1024,16 +1024,16 @@ export class QuadsKeepr implements IQuadsKeepr {
      */
     setThingInQuadrant(thing: IThing, quadrant: IQuadrant, group: string): void {
         // Mark the Quadrant in the Thing
-        thing[this.keyQuadrants][thing[this.keyNumQuads]] = quadrant;
-        thing[this.keyNumQuads] += 1;
+        (<any>thing)[this.keyQuadrants][(<any>thing)[this.keyNumQuads]] = quadrant;
+        (<any>thing)[this.keyNumQuads] += 1;
 
         // Mark the Thing in the Quadrant
         quadrant.things[group][quadrant.numthings[group]] = thing;
         quadrant.numthings[group] += 1;
 
         // If necessary, mark the Quadrant as changed
-        if (thing[this.keyChanged]) {
-            quadrant[this.keyChanged] = true;
+        if ((<any>thing)[this.keyChanged]) {
+            (<any>quadrant)[this.keyChanged] = true;
         }
     }
 
@@ -1087,7 +1087,7 @@ export class QuadsKeepr implements IQuadsKeepr {
         quadrant.right += dx;
         quadrant.bottom += dy;
         quadrant.left += dx;
-        quadrant[this.keyChanged] = true;
+        (<any>quadrant)[this.keyChanged] = true;
     }
 
 
@@ -1105,7 +1105,7 @@ export class QuadsKeepr implements IQuadsKeepr {
         var quadrant: IQuadrant = this.ObjectMaker.make("Quadrant"),
             i: number;
 
-        quadrant[this.keyChanged] = true;
+        (<any>quadrant)[this.keyChanged] = true;
         quadrant.things = {};
         quadrant.numthings = {};
 
@@ -1179,9 +1179,9 @@ export class QuadsKeepr implements IQuadsKeepr {
      */
     private getTop(thing: IThing): number {
         if (this.keyOffsetY) {
-            return thing[this.keyTop] - Math.abs(thing[this.keyOffsetY]);
+            return (<any>thing)[this.keyTop] - Math.abs((<any>thing)[this.keyOffsetY]);
         } else {
-            return thing[this.keyTop];
+            return (<any>thing)[this.keyTop];
         }
     }
 
@@ -1192,9 +1192,9 @@ export class QuadsKeepr implements IQuadsKeepr {
      */
     private getRight(thing: IThing): number {
         if (this.keyOffsetX) {
-            return thing[this.keyRight] + Math.abs(thing[this.keyOffsetX]);
+            return (<any>thing)[this.keyRight] + Math.abs((<any>thing)[this.keyOffsetX]);
         } else {
-            return thing[this.keyRight];
+            return (<any>thing)[this.keyRight];
         }
     }
 
@@ -1204,10 +1204,10 @@ export class QuadsKeepr implements IQuadsKeepr {
      *          offset if needed.
      */
     private getBottom(thing: IThing): number {
-        if (this.keyOffsetX) {
-            return thing[this.keyBottom] + Math.abs(thing[this.keyOffsetY]);
+        if (this.keyOffsetY) {
+            return (<any>thing)[this.keyBottom] + Math.abs((<any>thing)[this.keyOffsetY]);
         } else {
-            return thing[this.keyBottom];
+            return (<any>thing)[this.keyBottom];
         }
     }
 
@@ -1218,9 +1218,9 @@ export class QuadsKeepr implements IQuadsKeepr {
      */
     private getLeft(thing: IThing): number {
         if (this.keyOffsetX) {
-            return thing[this.keyLeft] - Math.abs(thing[this.keyOffsetX]);
+            return (<any>thing)[this.keyLeft] - Math.abs((<any>thing)[this.keyOffsetX]);
         } else {
-            return thing[this.keyLeft];
+            return (<any>thing)[this.keyLeft];
         }
     }
 
@@ -1228,8 +1228,8 @@ export class QuadsKeepr implements IQuadsKeepr {
      * Marks all Quadrants a Thing is contained within as changed.
      */
     private markThingQuadrantsChanged(thing: IThing): void {
-        for (var i: number = 0; i < thing[this.keyNumQuads]; i += 1) {
-            thing[this.keyQuadrants][i][this.keyChanged] = true;
+        for (var i: number = 0; i < (<any>thing)[this.keyNumQuads]; i += 1) {
+            (<any>thing)[this.keyQuadrants][i][this.keyChanged] = true;
         }
     }
 

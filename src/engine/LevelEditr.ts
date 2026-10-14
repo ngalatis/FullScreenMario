@@ -161,7 +161,7 @@ export interface ILevelEditrSettings {
     thingGroups: string[];
     things: { [i: string]: IThing };
     macros: { [i: string]: MapsCreatr.IMapsCreatrMacro };
-    beautifier: (text: string) => string;
+    beautifier?: (text: string) => string;
     mapNameDefault?: string;
     mapTimeDefault?: number;
     mapSettingDefault?: string;
@@ -184,6 +184,71 @@ export interface ILevelEditr {
     loadCurrentJSON(): void;
     beautify(text: string): string;
     handleUploadCompletion(event: IDataProgressEvent): void;
+}
+
+
+/**
+ * Pretty-prints a JSON string for the level editor's text area, using four
+ * spaces of indentation. Arrays and objects that hold only primitive values and
+ * fit on one short line (such as a single Thing description) stay on that line
+ * so exported levels remain readable. The output is still plain JSON, so it can
+ * be parsed again as-is.
+ * 
+ * @param text   JSON text, such as the editor's current map.
+ * @returns The same data, formatted. Text that is not valid JSON (a half-edited
+ *          map, for example) is returned unchanged.
+ */
+export function beautifyJSON(text: string): string {
+    let value: any;
+
+    try {
+        value = JSON.parse(text);
+    } catch (error) {
+        return text;
+    }
+
+    return beautifyJSONValue(value, "");
+}
+
+/**
+ * Formats a parsed JSON value for beautifyJSON, one nesting level at a time.
+ * 
+ * @param value   The value to format.
+ * @param indent   Whitespace for the line this value starts on.
+ */
+function beautifyJSONValue(value: any, indent: string): string {
+    if (typeof value !== "object" || value === null) {
+        return JSON.stringify(value);
+    }
+
+    const isArray: boolean = Array.isArray(value);
+    const keys: string[] = isArray ? [] : Object.keys(value);
+    const open: string = isArray ? "[" : "{";
+    const close: string = isArray ? "]" : "}";
+    const count: number = isArray ? value.length : keys.length;
+
+    if (count === 0) {
+        return open + close;
+    }
+
+    const children: any[] = isArray ? value : keys.map((key: string): any => value[key]);
+    const labels: string[] = isArray ? [] : keys.map((key: string): string => JSON.stringify(key) + ": ");
+
+    if (children.every((child: any): boolean => typeof child !== "object" || child === null)) {
+        const inline: string = open + children
+            .map((child: any, i: number): string => (labels[i] || "") + JSON.stringify(child))
+            .join(", ") + close;
+
+        if (indent.length + inline.length <= 80) {
+            return inline;
+        }
+    }
+
+    const innerIndent: string = indent + "    ";
+
+    return open + "\n" + children
+        .map((child: any, i: number): string => innerIndent + (labels[i] || "") + beautifyJSONValue(child, innerIndent))
+        .join(",\n") + "\n" + indent + close;
 }
 
 
@@ -257,12 +322,12 @@ export class LevelEditr implements ILevelEditr {
     /**
      * The starting Object used as a default template for new maps
      */
-    private mapDefault: IMapsCreatrMapRaw;
+    private mapDefault: IMapsCreatrMapRaw | undefined;
 
     /**
      * An Object containing the display's HTML elements
      */
-    private display: IDisplayContainer;
+    private display!: IDisplayContainer;
 
     /**
      * The current mode of editing as a string, such as "Build" or "Play"
@@ -280,7 +345,7 @@ export class LevelEditr implements ILevelEditr {
     private blocksize: number;
 
     /**
-     * A Function to beautify text given to the map displayer, such as js_beautify
+     * A Function to beautify text given to the map displayer; defaults to beautifyJSON
      */
     private beautifier: (text: string) => string;
 
@@ -292,7 +357,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      * The type string of the currently selected thing, such as "Koopa"
      */
-    private currentTitle: string;
+    private currentTitle!: string;
 
     /**
      * The current arguments for currentPreThings, such as { "smart": true }
@@ -302,7 +367,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      * Whether the pageStyle styles have been added to the page
      */
-    private pageStylesAdded: boolean;
+    private pageStylesAdded!: boolean;
 
     /**
      * A key to use in dropdowns to should indicate an undefined value
@@ -333,9 +398,6 @@ export class LevelEditr implements ILevelEditr {
         if (typeof settings.macros === "undefined") {
             throw new Error("No macros given to LevelEditr.");
         }
-        if (typeof settings.beautifier === "undefined") {
-            throw new Error("No beautifier given to LevelEditr.");
-        }
 
         this.enabled = false;
 
@@ -344,7 +406,7 @@ export class LevelEditr implements ILevelEditr {
         this.thingGroups = settings.thingGroups;
         this.things = <any>settings.things;
         this.macros = settings.macros;
-        this.beautifier = settings.beautifier;
+        this.beautifier = settings.beautifier || beautifyJSON;
         this.mapNameDefault = settings.mapNameDefault || "New Map";
         this.mapTimeDefault = settings.mapTimeDefault || Infinity;
         this.mapSettingDefault = settings.mapSettingDefault || "";
@@ -426,7 +488,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      * 
      */
-    getMapDefault(): IMapsCreatrMapRaw {
+    getMapDefault(): IMapsCreatrMapRaw | undefined {
         return this.mapDefault;
     }
 
@@ -544,7 +606,7 @@ export class LevelEditr implements ILevelEditr {
         }
 
         this.GameStarter.container.removeChild(this.display.container);
-        this.display = undefined;
+        this.display = undefined!;
 
         this.GameStarter.setMap(this.oldInformation.map);
         this.GameStarter.ItemsHolder.setItem(
@@ -687,9 +749,9 @@ export class LevelEditr implements ILevelEditr {
             {
                 "xloc": 0,
                 "yloc": 0,
-                "top": -description.offsetTop || 0,
-                "right": (description.offsetLeft) + thing.width * this.GameStarter.unitsize,
-                "bottom": (-description.offsetTop || 0) + thing.height * this.GameStarter.unitsize,
+                "top": -(<number>description.offsetTop) || 0,
+                "right": (<number>description.offsetLeft) + thing.width * this.GameStarter.unitsize,
+                "bottom": (-(<number>description.offsetTop) || 0) + thing.height * this.GameStarter.unitsize,
                 "left": description.offsetLeft || 0,
                 "title": this.currentTitle,
                 "reference": reference,
@@ -716,7 +778,7 @@ export class LevelEditr implements ILevelEditr {
             this.disableThing(currentThing.thing);
         }
 
-        this.onMouseMoveEditing(event);
+        this.onMouseMoveEditing(<MouseEvent>event);
         this.GameStarter.TimeHandler.cancelAllEvents();
     }
 
@@ -829,9 +891,9 @@ export class LevelEditr implements ILevelEditr {
         this.canClick = false;
 
         setTimeout(
-            (function (): void {
+            (): void => {
                 this.canClick = true;
-            }).bind(this),
+            },
             70);
     }
 
@@ -924,7 +986,7 @@ export class LevelEditr implements ILevelEditr {
         this.cancelEvent(event);
         this.killCurrentPreThings();
 
-        this.setVisualOptions(target.getAttribute("name"), undefined, target.options);
+        this.setVisualOptions(<string>target.getAttribute("name"), undefined, target.options);
         this.generateCurrentArgs();
         this.setCurrentThing(title, x, y);
     }
@@ -932,12 +994,12 @@ export class LevelEditr implements ILevelEditr {
     /**
      * 
      */
-    private onMacroIconClick(title: string, description: string, options: any, event?: MouseEvent): void {
+    private onMacroIconClick(title: string, description: string | undefined, options: any, event?: MouseEvent): void {
         if (description) {
             this.setVisualOptions(title, description, options);
         }
 
-        var map: IMapsCreatrMapRaw = this.getMapObject();
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject();
 
         if (!map) {
             return;
@@ -1033,7 +1095,7 @@ export class LevelEditr implements ILevelEditr {
      */
     private setMapName(): void {
         var name: string = this.getMapName(),
-            map: IMapsCreatrMapRaw = this.getMapObject();
+            map: IMapsCreatrMapRaw | undefined = this.getMapObject();
 
         if (map && map.name !== name) {
             map.name = name;
@@ -1051,7 +1113,7 @@ export class LevelEditr implements ILevelEditr {
      *                            section (false).
      */
     private setMapTime(fromGui: boolean): void {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             time: number;
 
         if (!map) {
@@ -1079,7 +1141,7 @@ export class LevelEditr implements ILevelEditr {
      *                            section (false).
      */
     private setMapSetting(fromGui: boolean, event?: MouseEvent): void {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             area: IMapsCreatrAreaRaw,
             setting: string | string[];
 
@@ -1099,7 +1161,7 @@ export class LevelEditr implements ILevelEditr {
             }
             area.setting = <string>setting;
         } else {
-            setting = area.setting.split(" ");
+            setting = (<string>area.setting).split(" ");
             this.display.sections.MapSettings.Setting.Primary.value = setting[0];
             this.display.sections.MapSettings.Setting.Secondary.value = setting[1];
             this.display.sections.MapSettings.Setting.Tertiary.value = setting[2];
@@ -1114,7 +1176,7 @@ export class LevelEditr implements ILevelEditr {
      * 
      */
     private setLocationArea(): void {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             location: MapsCreatr.IMapsCreatrLocationRaw;
 
         if (!map) {
@@ -1136,7 +1198,7 @@ export class LevelEditr implements ILevelEditr {
      *                            section (false).
      */
     private setMapEntry(fromGui: boolean): void {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             location: MapsCreatr.IMapsCreatrLocationRaw,
             entry: string;
 
@@ -1150,6 +1212,7 @@ export class LevelEditr implements ILevelEditr {
             entry = this.display.sections.MapSettings.Entry.value;
             (<any>location).entry = entry;
         } else {
+            entry = (<any>location).entry;
             this.display.sections.MapSettings.Entry.value = entry;
         }
 
@@ -1161,7 +1224,7 @@ export class LevelEditr implements ILevelEditr {
      * 
      */
     private setCurrentLocation(): void {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             location: MapsCreatr.IMapsCreatrLocationRaw;
 
         if (!map) {
@@ -1182,7 +1245,7 @@ export class LevelEditr implements ILevelEditr {
      */
     private addLocationToMap(): void {
         var name: string = this.display.sections.MapSettings.Location.options.length.toString(),
-            map: IMapsCreatrMapRaw = this.getMapObject();
+            map: IMapsCreatrMapRaw | undefined = this.getMapObject();
 
         if (!map) {
             return;
@@ -1203,7 +1266,7 @@ export class LevelEditr implements ILevelEditr {
      */
     private addAreaToMap(): void {
         var name: string = this.display.sections.MapSettings.Area.options.length.toString(),
-            map: IMapsCreatrMapRaw = this.getMapObject();
+            map: IMapsCreatrMapRaw | undefined = this.getMapObject();
 
         if (!map) {
             return;
@@ -1224,7 +1287,7 @@ export class LevelEditr implements ILevelEditr {
      * 
      */
     private resetAllVisualOptionSelects(className: string, options: any[]): void {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             elements: HTMLCollectionOf<any> = this.display.container.getElementsByClassName(className),
             attributes: any = {
                 "children": options.map(function (option: string): HTMLOptionElement {
@@ -1250,8 +1313,8 @@ export class LevelEditr implements ILevelEditr {
         }
     }
 
-    private getMapObject(): IMapsCreatrMapRaw {
-        var map: IMapsCreatrMapRaw;
+    private getMapObject(): IMapsCreatrMapRaw | undefined {
+        var map: IMapsCreatrMapRaw | undefined;
 
         try {
             map = <IMapsCreatrMapRaw>this.parseSmart(this.display.stringer.textarea.value);
@@ -1259,7 +1322,7 @@ export class LevelEditr implements ILevelEditr {
             (<HTMLInputElement>this.display.namer).value = map.name || this.mapNameDefault;
         } catch (error) {
             this.setSectionJSON();
-            (<HTMLDivElement>this.display.stringer.messenger).textContent = error.message;
+            (<HTMLDivElement>this.display.stringer.messenger).textContent = (<Error>error).message;
         }
 
         return map;
@@ -1267,7 +1330,7 @@ export class LevelEditr implements ILevelEditr {
 
     private getMapObjectAndTry(event?: Event): void {
         var mapName: string = this.getMapName() + "::Temporary",
-            mapRaw: IMapsCreatrMapRaw = this.getMapObject();
+            mapRaw: IMapsCreatrMapRaw | undefined = this.getMapObject();
 
         if (!mapRaw) {
             return;
@@ -1278,7 +1341,7 @@ export class LevelEditr implements ILevelEditr {
             this.GameStarter.MapsCreator.getMap(mapName);
             this.setDisplayMap(true);
         } catch (error) {
-            this.display.stringer.messenger.textContent = error.message;
+            this.display.stringer.messenger.textContent = (<Error>error).message;
         }
 
         if (event) {
@@ -1296,8 +1359,8 @@ export class LevelEditr implements ILevelEditr {
     /**
      * 
      */
-    private getCurrentAreaObject(map: IMapsCreatrMapRaw = this.getMapObject()): IMapsCreatrAreaRaw {
-        var area: string | number = map.locations[this.getCurrentLocation()].area;
+    private getCurrentAreaObject(map: IMapsCreatrMapRaw = <IMapsCreatrMapRaw>this.getMapObject()): IMapsCreatrAreaRaw {
+        var area: string | number | undefined = map.locations[this.getCurrentLocation()].area;
         return map.areas[area ? area.toString() : "0"];
     }
 
@@ -1319,7 +1382,7 @@ export class LevelEditr implements ILevelEditr {
      * 
      */
     private addMapCreationThing(x: number, y: number): boolean {
-        var mapObject: IMapsCreatrMapRaw = this.getMapObject(),
+        var mapObject: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             thingRaw: IPreThing = this.GameStarter.proliferate(
                 {
                     "thing": this.currentTitle,
@@ -1340,7 +1403,7 @@ export class LevelEditr implements ILevelEditr {
     }
 
     private addMapCreationMacro(x: number, y: number): boolean {
-        var mapObject: IMapsCreatrMapRaw = this.getMapObject(),
+        var mapObject: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             macroRaw: any = this.GameStarter.proliferate(
                 {
                     "macro": this.currentTitle,
@@ -1688,7 +1751,7 @@ export class LevelEditr implements ILevelEditr {
                         }),
                         this.display.sections.MapSettings.Area = this.createSelect(["0"], {
                             "className": "VisualOptionArea",
-                            "onchange": this.setLocationArea.bind(this, true)
+                            "onchange": this.setLocationArea.bind(this)
                         })
                     ]
                 }),
@@ -1811,7 +1874,7 @@ export class LevelEditr implements ILevelEditr {
             "children": (function (): HTMLElement[] {
                 var selectedIndex: number = 0,
                     containers: HTMLElement[] = Object.keys(scope.prethings).map(function (key: string): HTMLDivElement {
-                        var prethings: IPreThingDimensionDescriptor[] = <any>scope.prethings[key],
+                        var prethings: { [i: string]: IPreThing } = <any>scope.prethings[key],
                             children: HTMLDivElement[] = Object.keys(prethings).map(
                                 function (title: string): HTMLDivElement {
                                     var prething: IPreThing = prethings[title],
@@ -1820,7 +1883,7 @@ export class LevelEditr implements ILevelEditr {
                                             argumentGetter(prething)),
                                         container: HTMLDivElement = <HTMLDivElement>scope.GameStarter.createElement("div", {
                                             "className": "EditorListOption",
-                                            "options": scope.prethings[key][title].options,
+                                            "options": (<any>scope.prethings[key])[title].options,
                                             "children": [thing.canvas],
                                             "onclick": clicker.bind(scope, title)
                                         }),
@@ -2002,7 +2065,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      * 
      */
-    private setVisualOptions(name: string, description: string, options: any): void {
+    private setVisualOptions(name: string, description: string | undefined, options: any): void {
         var visual: HTMLDivElement = this.display.sections.ClickToPlace.VisualOptions,
             // Without clicker, tslint complains createVisualOption isn't being used...
             clicker: any = this.createVisualOption.bind(this),
@@ -2141,7 +2204,7 @@ export class LevelEditr implements ILevelEditr {
                             "onkeyup": scope.setCurrentArgs.bind(scope),
                             "onchange": scope.setCurrentArgs.bind(scope)
                         }),
-                    recommendation: HTMLElement = modReal > 1
+                    recommendation: HTMLElement | false = modReal > 1
                         && scope.GameStarter.createElement("div", {
                             "className": "VisualOptionRecommendation",
                             "textContent": "x" + option.mod
@@ -2153,7 +2216,7 @@ export class LevelEditr implements ILevelEditr {
                 input.setAttribute("typeReal", "Number");
 
                 if (option.Infinite) {
-                    var valueOld: string = undefined,
+                    var valueOld: string | undefined = undefined,
                         infinite: HTMLSelectElement = scope.createSelect(
                             [
                                 "Number", "Infinite"
@@ -2169,8 +2232,8 @@ export class LevelEditr implements ILevelEditr {
                                             recommendation.style.display = "";
                                         }
 
-                                        input.value = valueOld;
-                                        input.onchange(event);
+                                        input.value = <string>valueOld;
+                                        input.onchange!(event);
                                     } else {
                                         input.type = "Text";
                                         input.disabled = true;
@@ -2181,14 +2244,14 @@ export class LevelEditr implements ILevelEditr {
 
                                         valueOld = input.value;
                                         input.value = "Infinity";
-                                        input.onchange(event);
+                                        input.onchange!(event);
                                     }
                                 }
                             });
 
                     if (option.value === Infinity) {
                         infinite.value = "Infinite";
-                        infinite.onchange(undefined);
+                        infinite.onchange!(<any>undefined);
                     }
 
                     children.push(infinite);
@@ -2239,7 +2302,7 @@ export class LevelEditr implements ILevelEditr {
      * 
      */
     private createVisualOptionLocation(option: any): HTMLDivElement | HTMLSelectElement {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             locations: string[],
             select: HTMLSelectElement;
 
@@ -2268,7 +2331,7 @@ export class LevelEditr implements ILevelEditr {
      * 
      */
     private createVisualOptionArea(option: any): HTMLDivElement | HTMLSelectElement {
-        var map: IMapsCreatrMapRaw = this.getMapObject(),
+        var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             areas: string[],
             select: HTMLSelectElement;
 
@@ -2331,7 +2394,7 @@ export class LevelEditr implements ILevelEditr {
             this.setTextareaValue(this.display.stringer.textarea.value);
         } catch (error) {
             this.setSectionJSON();
-            this.display.stringer.messenger.textContent = error.message;
+            this.display.stringer.messenger.textContent = (<Error>error).message;
             return;
         }
 
@@ -2340,7 +2403,7 @@ export class LevelEditr implements ILevelEditr {
             map = this.GameStarter.MapsCreator.getMap(mapName);
         } catch (error) {
             this.setSectionJSON();
-            this.display.stringer.messenger.textContent = error.message;
+            this.display.stringer.messenger.textContent = (<Error>error).message;
             return;
         }
 
@@ -2452,8 +2515,8 @@ export class LevelEditr implements ILevelEditr {
      *
      */
     private addThingAndDisableEvents(thing: IThing, x?: number, y?: number): void {
-        var left: number = this.roundTo(x, this.GameStarter.scale),
-            top: number = this.roundTo(y, this.GameStarter.scale);
+        var left: number = this.roundTo(<number>x, this.GameStarter.scale),
+            top: number = this.roundTo(<number>y, this.GameStarter.scale);
 
         this.GameStarter.addThing(thing, left, top);
         this.disableThing(thing);
@@ -2543,8 +2606,8 @@ export class LevelEditr implements ILevelEditr {
      */
     private getPrethingSizeArguments(descriptor: IPreThingDescriptor): any {
         var output: any = {},
-            width: number = this.getPrethingSizeArgument(descriptor.width),
-            height: number = this.getPrethingSizeArgument(descriptor.height);
+            width: number | undefined = this.getPrethingSizeArgument(descriptor.width),
+            height: number | undefined = this.getPrethingSizeArgument(descriptor.height);
 
         if (width) {
             output.width = width;
@@ -2560,7 +2623,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private getPrethingSizeArgument(descriptor: IPreThingDimensionDescriptor): number {
+    private getPrethingSizeArgument(descriptor?: IPreThingDimensionDescriptor): number | undefined {
         if (!descriptor) {
             return undefined;
         }
@@ -2656,7 +2719,7 @@ export class LevelEditr implements ILevelEditr {
         if (event && event.dataTransfer) {
             file = event.dataTransfer.files[0];
         } else {
-            file = this.display.inputDummy.files[0];
+            file = (<FileList>this.display.inputDummy.files)[0];
             reader = new FileReader();
         }
 
@@ -2665,7 +2728,7 @@ export class LevelEditr implements ILevelEditr {
         }
 
         reader = new FileReader();
-        reader.onloadend = this.handleUploadCompletion.bind(this);
+        reader.onloadend = <(event: ProgressEvent<FileReader>) => any>this.handleUploadCompletion.bind(this);
         reader.readAsText(file);
     }
 

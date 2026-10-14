@@ -89,16 +89,47 @@ test.describe("screen sizes", () => {
 });
 
 test.describe("level editor", () => {
-    test("is wired to a working code beautifier", async ({ page }) => {
+    test("formats exported levels as readable text that can be imported again", async ({ page }) => {
         const { errors } = collectPageErrors(page);
 
         await bootGame(page);
-        const beautified: string = await page.evaluate(() =>
-            (window as any).FSM.LevelEditor.getBeautifier()('{"a":1,"b":[1,2]}'),
-        );
 
-        expect(beautified).toContain("\n");
-        expect(beautified).toContain('"a"');
+        const exported: string = await page.evaluate(() => {
+            const editor = (window as any).FSM.LevelEditor;
+            editor.enable();
+            return (document.querySelector(".EditorJSONInput") as HTMLTextAreaElement).value;
+        });
+
+        // Readable: indented over several lines, and plain JSON.
+        expect(exported.split("\n").length).toBeGreaterThan(5);
+        expect(exported).toContain('\n    "');
+        const level = JSON.parse(exported);
+        expect(Object.keys(level).length).toBeGreaterThan(0);
+
+        // Compact text from a hand-written or pasted level is formatted the same way,
+        // and text that is not valid JSON yet is left alone for the user to finish.
+        const formatted: string = await page.evaluate(
+            (json) => (window as any).FSM.LevelEditor.beautify(json),
+            JSON.stringify(level),
+        );
+        expect(formatted).toBe(exported);
+        expect(JSON.parse(formatted)).toEqual(level);
+        expect(
+            await page.evaluate(() => (window as any).FSM.LevelEditor.beautify('{"a": 1,')),
+        ).toBe('{"a": 1,');
+
+        // Importing compact text puts the readable form back in the editor without errors.
+        const reimported = await page.evaluate((json) => {
+            const editor = (window as any).FSM.LevelEditor;
+            editor.setCurrentJSON(json);
+            return {
+                text: (document.querySelector(".EditorJSONInput") as HTMLTextAreaElement).value,
+                message: (document.querySelector(".EditorJSONInfo") as HTMLElement).textContent,
+            };
+        }, JSON.stringify(level));
+
+        expect(reimported.message).toBe("");
+        expect(reimported.text).toBe(exported);
         expect(errors).toEqual([]);
     });
 });

@@ -18,7 +18,7 @@ export interface IGroupHoldrGroups<T> {
  * Types for stored object groups, as Array or Object.
  */
 export interface IGroupHoldrTypesListing {
-    [i: string]: (...args: any[]) => void;
+    [i: string]: new (...args: any[]) => any;
 }
 
 /**
@@ -283,7 +283,7 @@ export class GroupHoldr {
     /**
      * Stored object groups, keyed by name.
      */
-    private groups: IGroupHoldrGroups<any>;
+    private groups!: IGroupHoldrGroups<any>;
 
     /**
      * Mapping of "add", "delete", "get", and "set" keys to a listing of the
@@ -294,12 +294,12 @@ export class GroupHoldr {
     /**
      * Names of the stored object groups.
      */
-    private groupNames: string[];
+    private groupNames!: string[];
 
     /**
      * Types for each stored object group, as Array or Object.
      */
-    private groupTypes: IGroupHoldrTypesListing;
+    private groupTypes!: IGroupHoldrTypesListing;
 
     /**
      * The names of each group's type, as "Array" or "Object".
@@ -409,7 +409,7 @@ export class GroupHoldr {
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
      */
-    applyAll(scope: any, func: (...args: any[]) => any, args: any[] = undefined): void {
+    applyAll(scope: any, func: (...args: any[]) => any, args?: any[]): void {
         var i: number;
 
         if (!args) {
@@ -439,7 +439,7 @@ export class GroupHoldr {
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
      */
-    applyOnAll(scope: any, func: (...args: any[]) => any, args: any[] = undefined): void {
+    applyOnAll(scope: any, func: (...args: any[]) => any, args?: any[]): void {
         var group: any,
             i: number,
             j: any;
@@ -604,14 +604,14 @@ export class GroupHoldr {
      * Removes any pre-existing "set", "get", etc. functions.
      */
     private clearFunctions(): void {
-        this.groupNames.forEach(function (name: string): void {
+        this.groupNames.forEach((name: string): void => {
             // Delete member variable functions
-            delete this["set" + name + "Group"];
-            delete this["get" + name + "Group"];
-            delete this["set" + name];
-            delete this["get" + name];
-            delete this["add" + name];
-            delete this["delete" + name];
+            delete (<any>this)["set" + name + "Group"];
+            delete (<any>this)["get" + name + "Group"];
+            delete (<any>this)["set" + name];
+            delete (<any>this)["get" + name];
+            delete (<any>this)["add" + name];
+            delete (<any>this)["delete" + name];
 
             // Delete functions under .functions by making each type a new {}
             this.functions.setGroup = {};
@@ -728,8 +728,8 @@ export class GroupHoldr {
          *               a String if the group is an Object.
          * @param value   The value contained within the group.
          */
-        this.functions.get[<string>name] = this["get" + name] = function (key: string | number): void {
-            return this.groups[name][<string>key];
+        this.functions.get[<string>name] = (<any>this)["get" + name] = function (this: GroupHoldr, key: string | number): void {
+            return (<any>this.groups[name])[<string>key];
         };
     }
 
@@ -749,7 +749,7 @@ export class GroupHoldr {
              *              added.
              * @param value   The value to be added to the group.
              */
-            this.functions.add[name] = this["add" + name] = function (value: any, key: string): void {
+            this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrObjectAddFunction>function (value: any, key: string): void {
                 group[key] = value;
             };
         } else {
@@ -758,7 +758,7 @@ export class GroupHoldr {
              * 
              * @param value   The value to be added to the group.
              */
-            this.functions.add[name] = this["add" + name] = function (value: any, key?: number): void {
+            this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrArrayAddFunction>function (value: any, key?: number): void {
                 if (key !== undefined) {
                     group[key] = value;
                 } else {
@@ -783,7 +783,7 @@ export class GroupHoldr {
              * @param key   The String key to reference the value to be
              *              deleted.
              */
-            this.functions.delete[name] = this["delete" + name] = function (key: string): void {
+            this.functions.delete[name] = (<any>this)["delete" + name] = function (key: string): void {
                 delete group[key];
             };
         } else {
@@ -792,7 +792,7 @@ export class GroupHoldr {
              * 
              * @param value The value to be deleted.
              */
-            this.functions.delete[name] = this["delete" + name] = function (value: any, index: number = group.indexOf(value)): void {
+            this.functions.delete[name] = (<any>this)["delete" + name] = function (value: any, index: number = group.indexOf(value)): void {
                 if (index !== -1) {
                     group.splice(index, 1);
                 }

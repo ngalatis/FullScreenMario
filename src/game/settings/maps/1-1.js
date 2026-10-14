@@ -1,5 +1,9 @@
 import * as MarioGame from "../../MarioGame";
 
+// Phones and tablets show the on-screen controls on the title card instead of keyboard keys.
+// The pixel font has no J or dash, hence "LEAP" and "ARROWS".
+const onTouchDevice = typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
+
 MarioGame.MarioGame.settings.maps.library["1-1"] = {
     "name": "1-1",
     "locations": [
@@ -18,7 +22,11 @@ MarioGame.MarioGame.settings.maps.library["1-1"] = {
                 { "thing": "DecorativeDot", "x": 21.5, "y": 46.5 },
                 { "thing": "DecorativeDot", "x": 21.5, "y": 86.5 },
                 {
-                    "thing": "CustomText", "x": 20, "y": 36, "texts": [
+                    "thing": "CustomText", "x": 20, "y": 36, "texts": onTouchDevice ? [
+                      { "text": "MOVE: ARROWS", "offset": 22 },
+                      { "text": "LEAP: A  FIRE/SPRINT: B" },
+                      { "text": "PAUSE: START", "offset": 22 }
+                    ] : [
                       { "text": "MOVE: ARROWS/WASD", "offset": 12 },
                       { "text": "FIRE/SPRINT: SHIFT/CTRL" },
                       { "text": "PAUSE: P/RIGHTCLICK", "offset": 8 }

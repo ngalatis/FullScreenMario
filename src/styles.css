@@ -373,6 +373,12 @@ section#game .EightBitter {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* While a game controller is being played (see settings/devices.ts) the on-screen controls get out of the
+   way, until the screen is touched again. They are hidden, not removed, so the picture keeps its size. */
+body.gamepad-in-use .touch-passer-container {
+    visibility: hidden;
+}
+
 .touch-passer-container .touch-control {
     opacity: 0.6;
     transition: opacity 80ms;

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { devices, expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
 import { bootGame, collectPageErrors } from "./helpers";
@@ -670,5 +670,41 @@ test.describe("without a controller", () => {
         await page.keyboard.down("ArrowRight");
         await page.waitForFunction((x) => (window as any).FSM.player.left > x + 20, before.left);
         await page.keyboard.up("ArrowRight");
+    });
+});
+
+test.describe("on a touch screen", () => {
+    // Playwright forbids changing the browser type from inside a project, so only keep the emulation.
+    const { defaultBrowserType: _ignored, ...iPhoneLandscape } = devices["iPhone 13 landscape"];
+    test.use(iPhoneLandscape);
+
+    test("the on-screen controls hide while a pad is played, and come back with a touch", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const pads = await startGame(page);
+        await page.waitForTimeout(300);
+
+        const controls = page.locator(".touch-passer-container");
+        await expect(controls).toBeVisible();
+
+        // Merely having a pad plugged in changes nothing
+        await pads.connect();
+        await waitForUpdates(page, 20);
+        await expect(controls).toBeVisible();
+
+        await pads.press(BUTTON.dpadRight);
+        await expect(controls).toBeHidden();
+        await pads.release(BUTTON.dpadRight);
+        await waitForUpdates(page, 20);
+        await expect(controls).toBeHidden();
+
+        await page.touchscreen.tap(332, 150);
+        await expect(controls).toBeVisible();
+
+        // And the next press of the pad hides them again
+        await pads.press(BUTTON.bottom);
+        await expect(controls).toBeHidden();
+        await pads.release(BUTTON.bottom);
+
+        expect(errors).toEqual([]);
     });
 });

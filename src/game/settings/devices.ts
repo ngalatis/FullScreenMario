@@ -54,6 +54,13 @@ const stick: IStickSettings = {
     down: "down"
 };
 
+/**
+ * Set on the page from the first press on a controller until the screen is next
+ * touched. styles.css hides the on-screen touch controls meanwhile, so a phone or
+ * tablet with a controller paired is not left with half a screen of buttons.
+ */
+const inUseClass = "gamepad-in-use";
+
 const devices: Omit<IDeviceLayrSettings, "InputWriter"> = {
     buttons,
     stick,
@@ -62,7 +69,19 @@ const devices: Omit<IDeviceLayrSettings, "InputWriter"> = {
     aliases: {
         on: "onkeydown",
         off: "onkeyup"
-    }
+    },
+    onInput: (): void => document.body.classList.add(inUseClass)
 };
+
+// This file runs once, however often the game is rebuilt, so one listener is all it takes
+document.addEventListener(
+    "pointerdown",
+    (event: PointerEvent): void => {
+        if (event.pointerType !== "mouse") {
+            document.body.classList.remove(inUseClass);
+        }
+    },
+    true
+);
 
 MarioGame.settings.devices = devices;

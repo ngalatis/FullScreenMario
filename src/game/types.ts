@@ -2521,6 +2521,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
     deviceMotion(FSM: IMarioGame, event: DeviceMotionEvent): void;
 
     /**
+     * @returns Whether the page's layout (the "rotate your phone" overlay, an open
+     *          menu sheet) holds the game paused, in which case the pause key, Start
+     *          and the right click leave the pause alone.
+     */
+    isLayoutPaused(): boolean;
+
+    /**
      * Checks whether inputs can be fired, which is equivalent to the status of
      * the MapScreener's nokeys variable (an inverse value).
      *

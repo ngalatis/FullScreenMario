@@ -168,6 +168,14 @@ export const inputMethods = {
      * @param event   The original user-caused Event.
      */
     keyDownPause(this: MarioGame, FSM: MarioGame, event?: Event): void {
+        // A game held paused by the layout (the rotate overlay, an open menu sheet) is not unpaused behind it
+        if (FSM.isLayoutPaused()) {
+            if (event && event.preventDefault !== undefined) {
+                event.preventDefault();
+            }
+            return;
+        }
+
         if (FSM.GamesRunner.getPaused()) {
             FSM.GamesRunner.play();
         } else {
@@ -326,7 +334,10 @@ export const inputMethods = {
      * @param event   The original user-caused Event.
      */
     mouseDownRight(this: MarioGame, FSM: MarioGame, event?: Event): void {
-        FSM.GamesRunner.togglePause();
+        // A game held paused by the layout (the rotate overlay, an open menu sheet) is not unpaused behind it
+        if (!FSM.isLayoutPaused()) {
+            FSM.GamesRunner.togglePause();
+        }
         FSM.ModAttacher.fireEvent("onMouseDownRight");
 
         if (event && event.preventDefault !== undefined) {
@@ -386,6 +397,15 @@ export const inputMethods = {
                 deviceMotionStatus.motionRight = false;
             }
         }
+    },
+
+    /**
+     * @returns Whether the page's layout (the "rotate your phone" overlay, an open
+     *          menu sheet) holds the game paused, in which case the pause key, Start
+     *          and the right click leave the pause alone.
+     */
+    isLayoutPaused(this: MarioGame): boolean {
+        return !!this.UserWrapper && this.UserWrapper.getLayoutPaused();
     },
 
     /**

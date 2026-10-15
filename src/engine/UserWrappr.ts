@@ -295,6 +295,13 @@ export interface IUserWrappr {
     setLayoutPaused(reason: string, paused: boolean): void;
 
     /**
+     * @returns Whether a layout reason (such as the "rotate your phone" overlay
+     *          or an open menu) holds the game paused, so the player cannot
+     *          unpause it from behind that layout.
+     */
+    getLayoutPaused(): boolean;
+
+    /**
      * Shows the player a short message over the game, such as a download that
      * failed. It goes away by itself, does not block anything, and is read out
      * by screen readers.
@@ -2318,6 +2325,15 @@ export class UserWrappr {
         }
 
         this.applyLayoutPause();
+    }
+
+    /**
+     * @returns Whether a layout reason (such as the "rotate your phone" overlay
+     *          or an open menu) holds the game paused, so the player cannot
+     *          unpause it from behind that layout.
+     */
+    getLayoutPaused(): boolean {
+        return Object.keys(this.layoutPauseReasons).length > 0;
     }
 
     /**

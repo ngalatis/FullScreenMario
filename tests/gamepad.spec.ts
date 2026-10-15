@@ -569,6 +569,35 @@ test.describe("pausing and muting", () => {
 
         expect(errors).toEqual([]);
     });
+
+    test("Start and the pause key cannot unpause a game held paused by the layout", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const pads = await startGame(page);
+        await pads.connect();
+
+        // Such as the menu sheet open on a phone
+        await page.evaluate(() => (window as any).FSM.UserWrapper.setLayoutPaused("menu", true));
+        expect(await isPaused(page)).toBe(true);
+
+        await pads.press(BUTTON.start);
+        await waitForUpdates(page, 20);
+        expect(await isPaused(page)).toBe(true);
+        await pads.release(BUTTON.start);
+        await waitForUpdates(page, 10);
+
+        await page.keyboard.press("p");
+        await waitForUpdates(page, 10);
+        expect(await isPaused(page)).toBe(true);
+
+        // Once the layout lets go, the game goes on and Start pauses it again
+        await page.evaluate(() => (window as any).FSM.UserWrapper.setLayoutPaused("menu", false));
+        expect(await isPaused(page)).toBe(false);
+        await pads.press(BUTTON.start);
+        await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === true);
+        await pads.release(BUTTON.start);
+
+        expect(errors).toEqual([]);
+    });
 });
 
 test.describe("plugging in and out", () => {
@@ -643,6 +672,8 @@ test.describe("rebuilding the game", () => {
         await pads.press(BUTTON.start);
         await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === true);
         await pads.release(BUTTON.start);
+        // The watcher has to see Start let go of before a second press can count
+        await waitForUpdates(page, 10);
         await pads.press(BUTTON.start);
         await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === false);
 

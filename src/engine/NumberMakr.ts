@@ -32,6 +32,26 @@ export interface INumberMakrSettings {
 }
 
 /**
+ * A copy of a NumberMakr's internal state, from getState.
+ */
+export interface INumberMakrState {
+    /**
+     * The seed the state was last reset from.
+     */
+    seed: number | number[];
+
+    /**
+     * The state vector.
+     */
+    vector: number[];
+
+    /**
+     * The place in the state vector.
+     */
+    index: number;
+}
+
+/**
  * A typed MersenneTwister, which is a state-based random number generator.
  * Options exist for changing or randomizing state and producing random
  * booleans, integers, and real numbers.
@@ -82,6 +102,18 @@ export interface INumberMakr {
      * @remarks   There was a slight change for C++, 2004/2/26.
      */
     resetFromArray(keyInitial: number[], keyLength?: number): void;
+
+    /**
+     * @returns A copy of the internal state, which setState can go back to.
+     */
+    getState(): INumberMakrState;
+
+    /**
+     * Goes back to a state from getState, so the same numbers come out again.
+     *
+     * @param state   A state from getState.
+     */
+    setState(state: INumberMakrState): void;
 
     /**
      * @returns A random Number in [0,0xffffffff].
@@ -447,6 +479,28 @@ export class NumberMakr implements INumberMakr {
 
         this.stateVector[0] = 0x80000000;
         this.seed = keyInitial;
+    }
+
+    /**
+     * @returns A copy of the internal state, which setState can go back to.
+     */
+    getState(): INumberMakrState {
+        return {
+            seed: this.seed,
+            vector: this.stateVector.slice(),
+            index: this.stateIndex
+        };
+    }
+
+    /**
+     * Goes back to a state from getState, so the same numbers come out again.
+     *
+     * @param state   A state from getState.
+     */
+    setState(state: INumberMakrState): void {
+        this.seed = state.seed;
+        this.stateVector = state.vector.slice();
+        this.stateIndex = state.index;
     }
 
     /* Random number generation

@@ -23,6 +23,53 @@ function thirdPartyNotices(): Plugin {
 }
 
 /**
+ * The lazy chunks (see codeSplitting below): the level editor and the map generator.
+ */
+const lazyChunks: string[] = ["level-editor", "map-generator"];
+
+/**
+ * Names the files of each lazy chunk in the page, as <meta name="lazy-chunk:NAME" content="FILE FILE...">:
+ * the chunk and the chunks it imports that the page has not loaded already. A browser remembers a module
+ * that failed to download for as long as the page is open, and fails every later import of it straight
+ * away. So GameStartr first fetches the files (see fetchLazyChunk), and only imports the chunk once that
+ * worked: a chunk the network could not deliver is then still downloaded next time.
+ */
+function lazyChunkNames(): Plugin {
+    return {
+        name: "lazy-chunk-names",
+        apply: "build",
+        transformIndexHtml: {
+            order: "post",
+            handler(html, context) {
+                const bundle = context.bundle ?? {};
+                const isEntry = (file: string): boolean => {
+                    const output = bundle[file];
+                    return !!output && output.type === "chunk" && output.isEntry;
+                };
+
+                return Object.values(bundle).flatMap((output) =>
+                    output.type === "chunk" && lazyChunks.includes(output.name)
+                        ? [
+                              {
+                                  tag: "meta",
+                                  attrs: {
+                                      name: `lazy-chunk:${output.name}`,
+                                      content: [
+                                          output.fileName,
+                                          ...output.imports.filter((file) => !isEntry(file))
+                                      ].join(" ")
+                                  },
+                                  injectTo: "head" as const
+                              }
+                          ]
+                        : []
+                );
+            }
+        }
+    };
+}
+
+/**
  * The service worker that makes the game installable and playable offline. It is generated after the
  * build, when dist/ holds every final file, so it can precache all of them: the page, the hashed
  * bundles, fonts, sounds, icons and the manifest.
@@ -178,7 +225,7 @@ async function toRangeResponse(request, response) {
 export default defineConfig({
     // Relative asset URLs so dist/ works from any folder or subdomain.
     base: "./",
-    plugins: [thirdPartyNotices(), offlineSupport()],
+    plugins: [thirdPartyNotices(), lazyChunkNames(), offlineSupport()],
     build: {
         target: "es2022",
         // The game is one bundle (the original loaded ~70 scripts), except for the rarely used level
@@ -192,11 +239,11 @@ export default defineConfig({
                     includeDependenciesRecursively: false,
                     groups: [
                         {
-                            name: "level-editor",
+                            name: lazyChunks[0],
                             test: /[\\/]src[\\/](engine[\\/]LevelEditr|game[\\/]settings[\\/]editor)\./
                         },
                         {
-                            name: "map-generator",
+                            name: lazyChunks[1],
                             test: /[\\/]src[\\/](engine[\\/]WorldSeedr|game[\\/]settings[\\/](generator|maps[\\/]Random))\./
                         }
                     ]

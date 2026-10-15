@@ -2229,6 +2229,12 @@ export interface IMarioGame extends GameStartr.IGameStartr {
     continueOffer?: string;
 
     /**
+     * How many times setMap has been called, so work that finishes later (such
+     * as the level editor arriving) can tell whether a map was picked meanwhile.
+     */
+    mapsSet: number;
+
+    /**
      * The game's player, which (when defined) will always be a Player Thing.
      */
     player: IPlayer;
@@ -2513,6 +2519,13 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param event   The original user-caused Event.
      */
     deviceMotion(FSM: IMarioGame, event: DeviceMotionEvent): void;
+
+    /**
+     * @returns Whether the page's layout (the "rotate your phone" overlay, an open
+     *          menu sheet) holds the game paused, in which case the pause key, Start
+     *          and the right click leave the pause alone.
+     */
+    isLayoutPaused(): boolean;
 
     /**
      * Checks whether inputs can be fired, which is equivalent to the status of

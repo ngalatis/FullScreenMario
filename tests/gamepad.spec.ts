@@ -569,6 +569,35 @@ test.describe("pausing and muting", () => {
 
         expect(errors).toEqual([]);
     });
+
+    test("Start and the pause key cannot unpause a game held paused by the layout", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const pads = await startGame(page);
+        await pads.connect();
+
+        // Such as the menu sheet open on a phone
+        await page.evaluate(() => (window as any).FSM.UserWrapper.setLayoutPaused("menu", true));
+        expect(await isPaused(page)).toBe(true);
+
+        await pads.press(BUTTON.start);
+        await waitForUpdates(page, 20);
+        expect(await isPaused(page)).toBe(true);
+        await pads.release(BUTTON.start);
+        await waitForUpdates(page, 10);
+
+        await page.keyboard.press("p");
+        await waitForUpdates(page, 10);
+        expect(await isPaused(page)).toBe(true);
+
+        // Once the layout lets go, the game goes on and Start pauses it again
+        await page.evaluate(() => (window as any).FSM.UserWrapper.setLayoutPaused("menu", false));
+        expect(await isPaused(page)).toBe(false);
+        await pads.press(BUTTON.start);
+        await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === true);
+        await pads.release(BUTTON.start);
+
+        expect(errors).toEqual([]);
+    });
 });
 
 test.describe("plugging in and out", () => {
@@ -643,6 +672,8 @@ test.describe("rebuilding the game", () => {
         await pads.press(BUTTON.start);
         await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === true);
         await pads.release(BUTTON.start);
+        // The watcher has to see Start let go of before a second press can count
+        await waitForUpdates(page, 10);
         await pads.press(BUTTON.start);
         await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === false);
 
@@ -718,32 +749,90 @@ test.describe("on a touch screen", () => {
     const { defaultBrowserType: _ignored, ...iPhoneLandscape } = devices["iPhone 13 landscape"];
     test.use(iPhoneLandscape);
 
+    // While a pad is played the controls are made see-through rather than hidden, so they still take a tap
+    const expectShown = async (page: Page) => {
+        const controls = page.locator(".touch-passer-container");
+        await expect(controls).toBeVisible();
+        await expect(controls).toHaveCSS("opacity", "1");
+    };
+    const expectSeeThrough = (page: Page) => expect(page.locator(".touch-passer-container")).toHaveCSS("opacity", "0");
+
     test("the on-screen controls hide while a pad is played, and come back with a touch", async ({ page }) => {
         const { errors } = collectPageErrors(page);
         const pads = await startGame(page);
         await page.waitForTimeout(300);
 
-        const controls = page.locator(".touch-passer-container");
-        await expect(controls).toBeVisible();
+        await expectShown(page);
 
         // Merely having a pad plugged in changes nothing
         await pads.connect();
         await waitForUpdates(page, 20);
-        await expect(controls).toBeVisible();
+        await expectShown(page);
 
         await pads.press(BUTTON.dpadRight);
-        await expect(controls).toBeHidden();
+        await expectSeeThrough(page);
         await pads.release(BUTTON.dpadRight);
         await waitForUpdates(page, 20);
-        await expect(controls).toBeHidden();
+        await expectSeeThrough(page);
 
         await page.touchscreen.tap(332, 150);
-        await expect(controls).toBeVisible();
+        await expectShown(page);
 
         // And the next press of the pad hides them again
         await pads.press(BUTTON.bottom);
-        await expect(controls).toBeHidden();
+        await expectSeeThrough(page);
         await pads.release(BUTTON.bottom);
+
+        expect(errors).toEqual([]);
+    });
+
+    test("a tap on a control while they are hidden already presses it, and brings them back", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const pads = await startGame(page);
+        await page.waitForTimeout(300);
+
+        await pads.connect();
+        await pads.press(BUTTON.dpadRight);
+        await expectSeeThrough(page);
+        await pads.release(BUTTON.dpadRight);
+        await page.waitForFunction(() => !(window as any).FSM.player.keys.rightDown);
+        await recordInputs(page);
+
+        const jump = (await page.locator('[data-touch-control="A"] > .control-inner').boundingBox())!;
+        await page.touchscreen.tap(jump.x + jump.width / 2, jump.y + jump.height / 2);
+
+        await expectShown(page);
+        expect(await recordedInputs(page)).toContain("onkeydown:up");
+        expect(errors).toEqual([]);
+    });
+
+    test("unplugging the last pad, or rebuilding the game, brings the controls back", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const pads = await startGame(page);
+        await page.waitForTimeout(300);
+
+        await pads.connect(0);
+        await pads.connect(1);
+        await pads.press(BUTTON.bottom, 0);
+        await expectSeeThrough(page);
+        await pads.release(BUTTON.bottom, 0);
+
+        // One pad is still there to play with
+        await pads.disconnect(0);
+        await waitForUpdates(page, 20);
+        await expectSeeThrough(page);
+
+        await pads.disconnect(1);
+        await expectShown(page);
+
+        // A View Mode change builds a new game, which shows them until a pad is pressed again
+        await pads.connect(0);
+        await pads.press(BUTTON.bottom, 0);
+        await expectSeeThrough(page);
+        await pads.release(BUTTON.bottom, 0);
+        await page.evaluate(() => (window as any).FSM.UserWrapper.setCurrentSize("NES"));
+        await page.waitForFunction(() => !!(window as any).FSM.player);
+        await expectShown(page);
 
         expect(errors).toEqual([]);
     });

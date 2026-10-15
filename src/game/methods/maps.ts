@@ -41,8 +41,10 @@ export const mapMethods = {
             name = FSM.AreaSpawner.getMapName();
         }
 
-        // Setting a map cancels a Random map still waiting for the map generator
+        // Setting a map cancels a Random map still waiting for the map generator,
+        // and a level editor still on its way (see UserWrappr's LevelEditorGenerator)
         pendingRandomMaps.delete(FSM);
+        FSM.mapsSet += 1;
 
         if (name === "Random" && !FSM.WorldSeeder) {
             FSM.setRandomMapWhenLoaded(location);
@@ -87,12 +89,29 @@ export const mapMethods = {
 
         pendingRandomMaps.set(FSM, request);
 
-        void FSM.loadWorldSeeder().then((): void => {
-            if (pendingRandomMaps.get(FSM) === request) {
-                FSM.NumberMaker.setState(state);
-                FSM.setMap("Random", location);
+        void FSM.loadWorldSeeder().then(
+            (): void => {
+                // A game replaced meanwhile (see dispose) stays stopped
+                if (pendingRandomMaps.get(FSM) === request && !FSM.disposed) {
+                    FSM.NumberMaker.setState(state);
+                    FSM.setMap("Random", location);
+                }
+            },
+            (): void => {
+                // Not downloaded (offline, or a flaky network): the game goes on, and the next try fetches again
+                if (pendingRandomMaps.get(FSM) !== request) {
+                    return;
+                }
+
+                pendingRandomMaps.delete(FSM);
+
+                if (!FSM.disposed) {
+                    FSM.UserWrapper.showNotice(
+                        "Could not download the map generator. Check the connection and try again."
+                    );
+                }
             }
-        });
+        );
     },
 
     /**

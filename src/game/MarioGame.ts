@@ -123,6 +123,12 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     public scoreWraps: number;
 
     /**
+     * How many times setMap has been called, so work that finishes later (such
+     * as the level editor arriving) can tell whether a map was picked meanwhile.
+     */
+    public mapsSet: number;
+
+    /**
      * The game's player, which (when defined) will always be a Player Thing.
      * It is assigned by addPlayer, once a map has started.
      */
@@ -157,6 +163,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
 
         this.titleScreen = false;
         this.scoreWraps = 0;
+        this.mapsSet = 0;
 
         this.deviceMotionStatus = {
             motionLeft: false,

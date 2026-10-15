@@ -335,10 +335,11 @@ export class FPSAnalyzr implements IFPSAnalyzr {
             fpsKeptReal: number = copy.length,
             fpsKeptHalf: number = Math.floor(fpsKeptReal / 2);
 
-        if (copy.length % 2 === 0) {
-            return copy[fpsKeptHalf];
+        // An even count has two middle values, and its median is halfway between them
+        if (fpsKeptReal % 2 === 0) {
+            return (copy[fpsKeptHalf - 1] + copy[fpsKeptHalf]) / 2;
         } else {
-            return (copy[fpsKeptHalf - 2] + copy[fpsKeptHalf]) / 2;
+            return copy[fpsKeptHalf];
         }
     }
 

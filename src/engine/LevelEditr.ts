@@ -582,7 +582,8 @@ export class LevelEditr implements ILevelEditr {
         this.enabled = true;
 
         this.oldInformation = {
-            "map": this.GameStarter.AreaSpawner.getMapName()
+            "map": this.GameStarter.AreaSpawner.getMapName(),
+            "lives": this.GameStarter.ItemsHolder.getItem("lives")
         };
 
         this.clearAllThings();
@@ -608,20 +609,26 @@ export class LevelEditr implements ILevelEditr {
      *
      */
     disable(): void {
+        var lives: number;
+
         if (!this.display || !this.enabled) {
             return;
         }
 
+        // Off first, so that nothing below can leave the editor half enabled
+        this.enabled = false;
+
         this.GameStarter.container.removeChild(this.display.container);
         this.display = undefined!;
 
-        this.GameStarter.setMap(this.oldInformation.map);
-        this.GameStarter.ItemsHolder.setItem(
-            "lives",
-            (<any>this.GameStarter.settings.statistics.values).lives.valueDefault
-        );
+        // The lives the player had before the editor made them infinite
+        lives = this.oldInformation.lives;
+        if (typeof lives !== "number" || !isFinite(lives)) {
+            lives = this.GameStarter.settings.items?.values?.lives?.valueDefault;
+        }
 
-        this.enabled = false;
+        this.GameStarter.setMap(this.oldInformation.map);
+        this.GameStarter.ItemsHolder.setItem("lives", lives);
     }
 
     /**

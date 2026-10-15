@@ -161,6 +161,13 @@ export interface IDeviceLayrSettings {
      * hide the touch controls.
      */
     onInput?: () => void;
+
+    /**
+     * A callback for when the gamepads stop being played: the last usable one
+     * is gone, or this DeviceLayr is disposed (a rebuilt game makes its own).
+     * Such as to show the touch controls again.
+     */
+    onIdle?: () => void;
 }
 
 /**
@@ -311,6 +318,11 @@ export class DeviceLayr implements IDeviceLayr {
     private onInput: (() => void) | undefined;
 
     /**
+     * Called when the last usable gamepad is gone, and on dispose.
+     */
+    private onIdle: (() => void) | undefined;
+
+    /**
      * Tells whether the game is paused, once watch has been called.
      */
     private isPaused: (() => boolean) | undefined;
@@ -383,6 +395,7 @@ export class DeviceLayr implements IDeviceLayr {
             "off": "off"
         };
         this.onInput = settings.onInput;
+        this.onIdle = settings.onIdle;
 
         this.buttons = Object.keys(settings.buttons || {}).map((index: string): [number, string] => [
             Number(index),
@@ -522,6 +535,10 @@ export class DeviceLayr implements IDeviceLayr {
      * released.
      */
     dispose(): void {
+        if (this.disposed) {
+            return;
+        }
+
         this.disposed = true;
 
         if (typeof window !== "undefined") {
@@ -532,6 +549,10 @@ export class DeviceLayr implements IDeviceLayr {
                 window.cancelAnimationFrame(this.frame);
                 this.frame = undefined;
             }
+        }
+
+        if (this.onIdle) {
+            this.onIdle();
         }
     }
 
@@ -745,10 +766,14 @@ export class DeviceLayr implements IDeviceLayr {
      * @param hasGamepads   Whether the latest look found a usable gamepad.
      */
     private setHasGamepads(hasGamepads: boolean): void {
+        const hadGamepads: boolean = this.hasGamepads;
+
         this.hasGamepads = hasGamepads;
 
         if (hasGamepads) {
             this.scheduleFrame();
+        } else if (hadGamepads && this.onIdle) {
+            this.onIdle();
         }
     }
 

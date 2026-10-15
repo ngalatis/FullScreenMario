@@ -411,3 +411,27 @@ test.describe("real clock", () => {
         expect(errors).toEqual([]);
     });
 });
+
+test.describe("FPS statistics", () => {
+    test("the median is the middle measurement, or halfway between the two middle ones", async ({ page }) => {
+        await bootGame(page);
+
+        const medians = await page.evaluate(() => {
+            const FPSAnalyzr = (window as any).FSM.GamesRunner.getFPSAnalyzer().constructor;
+            const medianOf = (values: number[]): number => {
+                const analyzer = new FPSAnalyzr({ maxKept: 10 });
+                values.forEach((value) => analyzer.addFPS(value));
+                return analyzer.getMedian();
+            };
+
+            return {
+                one: medianOf([42]),
+                odd: medianOf([50, 10, 30]),
+                even: medianOf([40, 10, 30, 20]),
+                two: medianOf([60, 58])
+            };
+        });
+
+        expect(medians).toEqual({ one: 42, odd: 30, even: 25, two: 59 });
+    });
+});

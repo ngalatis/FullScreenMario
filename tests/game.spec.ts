@@ -137,14 +137,17 @@ test.describe("level editor", () => {
 test.describe("rarely used parts load on first use", () => {
     const lazyChunk = /assets\/(level-editor|map-generator)-[^/]*\.js$/;
 
-    /** Lists the lazy chunks the page has downloaded so far. */
+    /**
+     * Lists the lazy chunks the page has downloaded so far, each once: a chunk is fetched to check that it
+     * arrives and then imported, normally from the cache (see fetchLazyChunk in GameStartr).
+     */
     function trackLazyChunks(page: Page): string[] {
         const fetched: string[] = [];
 
         page.on("request", (request) => {
             const match = lazyChunk.exec(new URL(request.url()).pathname);
 
-            if (match) {
+            if (match && !fetched.includes(match[1])) {
                 fetched.push(match[1]);
             }
         });

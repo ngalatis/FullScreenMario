@@ -1192,6 +1192,19 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     loadLevelEditorSettings(): Promise<unknown>;
 
     /**
+     * Downloads the file of a lazy chunk, so that it is only imported once it is
+     * known to arrive. A browser remembers a module that failed to download for as
+     * long as the page is open, and fails every later import of it straight away,
+     * so a chunk the network could not deliver once (offline before the service
+     * worker cached it, a flaky connection) would otherwise stay out of reach.
+     *
+     * @param name   The chunk's name in the build, such as "map-generator".
+     * @returns A promise that resolves once the file is in, or straight away if the
+     *          page does not name the file (the dev server has no chunks).
+     */
+    fetchLazyChunk(name: string): Promise<void>;
+
+    /**
      * Creates this.WorldSeeder the first time it is called. The map generator's code
      * and settings are separate chunks, fetched then, so the game boots without them.
      *
@@ -1381,6 +1394,19 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      * Generic Function to start the game. Nothing actually happens here.
      */
     gameStart(): void;
+
+    /**
+     * Whether dispose has been called: the game was replaced and stays stopped.
+     */
+    disposed: boolean;
+
+    /**
+     * Stops the game for good, once another game has replaced it: the loop is
+     * paused, timed events are cancelled, and the controllers and the audio let
+     * go of what they hold. Work still on its way for this game (a level editor
+     * or map generator being fetched) checks disposed and does nothing.
+     */
+    dispose(): void;
 
     /**
      * Generically kills a Thing by setting its alive to false, hidden to true,
@@ -1825,6 +1851,11 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * The level editor being created by loadLevelEditor.
      */
     private levelEditorLoading?: Promise<LevelEditr.ILevelEditr>;
+
+    /**
+     * Whether dispose has been called: the game was replaced and stays stopped.
+     */
+    public disposed: boolean = false;
 
     /**
      * A typed MersenneTwister, which is a state-based random number generator.
@@ -2389,20 +2420,19 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         var loading: Promise<LevelEditr.ILevelEditr> | undefined = this.levelEditorLoading;
 
         if (!loading) {
-            loading = this.levelEditorLoading = Promise.all([
-                import("./LevelEditr"),
-                this.loadLevelEditorSettings()
-            ]).then(
-                ([LevelEditrModule]): LevelEditr.ILevelEditr =>
-                    (this.LevelEditor = new LevelEditrModule.LevelEditr(
-                        this.proliferate(
-                            {
-                                "GameStarter": this
-                            },
-                            this.settings.editor
-                        )
-                    ))
-            );
+            loading = this.levelEditorLoading = this.fetchLazyChunk("level-editor")
+                .then(() => Promise.all([import("./LevelEditr"), this.loadLevelEditorSettings()]))
+                .then(
+                    ([LevelEditrModule]): LevelEditr.ILevelEditr =>
+                        (this.LevelEditor = new LevelEditrModule.LevelEditr(
+                            this.proliferate(
+                                {
+                                    "GameStarter": this
+                                },
+                                this.settings.editor
+                            )
+                        ))
+                );
             // A failed download (offline before the service worker has cached it) is tried again next time
             void loading.catch((): void => {
                 if (this.levelEditorLoading === loading) {
@@ -2423,6 +2453,42 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
+     * Downloads the file of a lazy chunk, so that it is only imported once it is
+     * known to arrive. A browser remembers a module that failed to download for as
+     * long as the page is open, and fails every later import of it straight away,
+     * so a chunk the network could not deliver once (offline before the service
+     * worker cached it, a flaky connection) would otherwise stay out of reach.
+     * The build names each chunk's file in the page (see lazyChunkNames in
+     * vite.config.ts), and the import that follows finds the file in the cache.
+     *
+     * @param name   The chunk's name in the build, such as "map-generator".
+     * @returns A promise that resolves once the file is in, or straight away if the
+     *          page does not name the file (the dev server has no chunks).
+     */
+    fetchLazyChunk(name: string): Promise<void> {
+        var meta: Element | null =
+                typeof document === "undefined" ? null : document.querySelector('meta[name="lazy-chunk:' + name + '"]'),
+            files: string[] = ((meta && meta.getAttribute("content")) || "").split(" ").filter(Boolean);
+
+        if (!files.length || typeof fetch !== "function") {
+            return Promise.resolve();
+        }
+
+        return Promise.all(
+            files.map((file: string): Promise<void> =>
+                fetch(new URL(file, document.baseURI).href).then((response: Response): Promise<void> => {
+                    if (!response.ok) {
+                        throw new Error("Could not download " + file + " (" + response.status + ").");
+                    }
+
+                    // Read to the end, so a download cut short counts as a failure too
+                    return response.arrayBuffer().then((): void => undefined);
+                })
+            )
+        ).then((): void => undefined);
+    }
+
+    /**
      * Creates this.WorldSeeder the first time it is called. The map generator's code
      * and settings are separate chunks, fetched then, so the game boots without them.
      *
@@ -2432,21 +2498,20 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
         var loading: Promise<WorldSeedr.IWorldSeedr> | undefined = this.worldSeederLoading;
 
         if (!loading) {
-            loading = this.worldSeederLoading = Promise.all([
-                import("./WorldSeedr"),
-                this.loadWorldSeederSettings()
-            ]).then(
-                ([WorldSeedrModule]): WorldSeedr.IWorldSeedr =>
-                    (this.WorldSeeder = new WorldSeedrModule.WorldSeedr(
-                        this.proliferate(
-                            {
-                                "random": this.NumberMaker.random.bind(this.NumberMaker),
-                                "onPlacement": this.mapPlaceRandomCommands.bind(this, this)
-                            },
-                            this.settings.generator
-                        )
-                    ))
-            );
+            loading = this.worldSeederLoading = this.fetchLazyChunk("map-generator")
+                .then(() => Promise.all([import("./WorldSeedr"), this.loadWorldSeederSettings()]))
+                .then(
+                    ([WorldSeedrModule]): WorldSeedr.IWorldSeedr =>
+                        (this.WorldSeeder = new WorldSeedrModule.WorldSeedr(
+                            this.proliferate(
+                                {
+                                    "random": this.NumberMaker.random.bind(this.NumberMaker),
+                                    "onPlacement": this.mapPlaceRandomCommands.bind(this, this)
+                                },
+                                this.settings.generator
+                            )
+                        ))
+                );
             // A failed download (offline before the service worker has cached it) is tried again next time
             void loading.catch((): void => {
                 if (this.worldSeederLoading === loading) {
@@ -2903,6 +2968,27 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      */
     gameStart(): void {
         this.ModAttacher.fireEvent("onGameStart");
+    }
+
+    /**
+     * Stops the game for good, once another game has replaced it: the loop is
+     * paused, timed events are cancelled, and the controllers and the audio let
+     * go of what they hold. Work still on its way for this game (a level editor
+     * or map generator being fetched) checks disposed and does nothing.
+     */
+    dispose(): void {
+        if (this.disposed) {
+            return;
+        }
+
+        this.disposed = true;
+
+        this.GamesRunner.pause();
+        this.TimeHandler.cancelAllEvents();
+        this.DeviceLayer.dispose();
+
+        // The audio player owns an AudioContext and page listeners that nothing else will release
+        this.AudioPlayer.dispose();
     }
 
     /* Physics & similar

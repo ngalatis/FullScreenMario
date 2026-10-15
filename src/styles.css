@@ -129,6 +129,34 @@ section#game .EightBitter {
     }
 }
 
+/* Notices (see UserWrappr.showNotice), such as a download that failed: a short message over the top of the
+   game that goes away by itself and never takes a tap or a click */
+
+.game-notice {
+    position: absolute;
+    top: calc(var(--safe-top) + 10px);
+    left: 50%;
+    z-index: 80;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    padding: 9px 12px;
+    border: 3px solid #555;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fafafa;
+    font-family: "Press Start", monospace;
+    font-size: 9px;
+    line-height: 1.7;
+    text-align: center;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.game-notice:empty {
+    display: none;
+}
+
 /* Rotate overlay (shown only in portrait on touch devices) */
 
 #rotate-overlay {

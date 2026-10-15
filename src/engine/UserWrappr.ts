@@ -29,7 +29,6 @@ export interface IEvent {
  * be implemented by the GameStartr project itself.
  */
 export interface IGameStartr {
-    AudioPlayer?: { dispose?(): void };
     DeviceLayer: DeviceLayr.IDeviceLayr;
     GamesRunner: GamesRunnr.IGamesRunnr;
     ItemsHolder: ItemsHoldr.IItemsHoldr;
@@ -39,7 +38,10 @@ export interface IGameStartr {
     canvas: HTMLCanvasElement;
     container: HTMLElement;
     player?: unknown;
+    disposed?: boolean;
+    mapsSet?: number;
     addPageStyles(styles: unknown): void;
+    dispose(): void;
     gameStart(): void;
     loadLevelEditor(): Promise<LevelEditr.ILevelEditr>;
     createElement(tag: string, ...args: unknown[]): HTMLElement;
@@ -291,6 +293,15 @@ export interface IUserWrappr {
      * @param paused   Whether the reason applies.
      */
     setLayoutPaused(reason: string, paused: boolean): void;
+
+    /**
+     * Shows the player a short message over the game, such as a download that
+     * failed. It goes away by itself, does not block anything, and is read out
+     * by screen readers.
+     *
+     * @param message   What to tell the player.
+     */
+    showNotice(message: string): void;
 }
 
 /**
@@ -603,6 +614,24 @@ export namespace UISchemas {
      */
     export class LevelEditorGenerator extends OptionsGenerator implements IOptionsGenerator {
         /**
+         * What the player is told when the level editor could not be downloaded.
+         */
+        static readonly downloadFailedNotice: string =
+            "Could not download the level editor. Check the connection and try again.";
+
+        /**
+         * Tells the player the level editor could not be downloaded (offline before
+         * the service worker cached it, or a flaky network). The next click tries again.
+         *
+         * @param GameStarter   The game the level editor was for.
+         */
+        static reportDownloadFailure(GameStarter: IGameStartr): void {
+            if (!GameStarter.disposed) {
+                GameStarter.UserWrapper.showNotice(LevelEditorGenerator.downloadFailedNotice);
+            }
+        }
+
+        /**
          * Generates a control for a level editor based on the provided schema.
          *
          * @param schema   The overall description of the editor control.
@@ -622,8 +651,17 @@ export namespace UISchemas {
             starter.className = "select-option select-option-large options-button-option";
             starter.innerHTML = "Start the <br /> Level Editor!";
             starter.onclick = function (): void {
-                void scope.GameStarter.loadLevelEditor().then((editor: LevelEditr.ILevelEditr): void =>
-                    editor.enable()
+                var GameStarter: IGameStartr = scope.GameStarter,
+                    mapsSet: number | undefined = GameStarter.mapsSet;
+
+                void GameStarter.loadLevelEditor().then(
+                    (editor: LevelEditr.ILevelEditr): void => {
+                        // A game replaced meanwhile stays stopped, and a map picked meanwhile is not taken over
+                        if (!GameStarter.disposed && GameStarter.mapsSet === mapsSet) {
+                            editor.enable();
+                        }
+                    },
+                    (): void => LevelEditorGenerator.reportDownloadFailure(GameStarter)
                 );
             };
 
@@ -841,10 +879,20 @@ export namespace UISchemas {
         ): void {
             // The editor may still have to be fetched, and an event loses its currentTarget once
             // it has been dispatched, so the reader (which keeps the file's text) goes instead
-            var reader: LevelEditr.IDataEventTarget = event.currentTarget;
+            var reader: LevelEditr.IDataEventTarget = event.currentTarget,
+                GameStarter: IGameStartr = this.GameStarter,
+                mapsSet: number | undefined = GameStarter.mapsSet;
 
-            void this.GameStarter.loadLevelEditor().then((editor: LevelEditr.ILevelEditr): void =>
-                editor.handleUploadCompletion(<LevelEditr.IDataProgressEvent>(<unknown>{ currentTarget: reader }))
+            void GameStarter.loadLevelEditor().then(
+                (editor: LevelEditr.ILevelEditr): void => {
+                    // A game replaced meanwhile stays stopped, and a map picked meanwhile is not taken over
+                    if (!GameStarter.disposed && GameStarter.mapsSet === mapsSet) {
+                        editor.handleUploadCompletion(<LevelEditr.IDataProgressEvent>(
+                            (<unknown>{ currentTarget: reader })
+                        ));
+                    }
+                },
+                (): void => LevelEditorGenerator.reportDownloadFailure(GameStarter)
             );
             uploader.innerText = <string>uploader.getAttribute("textOld");
         }
@@ -1729,6 +1777,21 @@ export class UserWrappr {
     private isObservingLayout: boolean = false;
 
     /**
+     * The element showNotice writes to, made the first time it is needed.
+     */
+    private notice?: HTMLElement;
+
+    /**
+     * The timeout that fills or clears the notice next, if any.
+     */
+    private noticeTimeout?: number;
+
+    /**
+     * How long a notice stays up, in milliseconds.
+     */
+    private static readonly noticeDuration: number = 6000;
+
+    /**
      * Handle of the animation frame a size change is waiting on, if any.
      */
     private fitFrame: number | undefined;
@@ -2258,6 +2321,44 @@ export class UserWrappr {
     }
 
     /**
+     * Shows the player a short message over the game, such as a download that
+     * failed. It goes away by itself, does not block anything, and is read out
+     * by screen readers.
+     *
+     * @param message   What to tell the player.
+     */
+    showNotice(message: string): void {
+        var section: Element | null = document.querySelector(this.gameElementSelector),
+            holder: HTMLElement = (section && section.parentElement) || document.body,
+            notice: HTMLElement | undefined = this.notice;
+
+        if (!notice) {
+            notice = this.notice = document.createElement("div");
+            notice.className = "game-notice";
+            notice.setAttribute("role", "status");
+            notice.setAttribute("aria-live", "polite");
+        }
+
+        // Next to the game section, which is emptied whenever the game is rebuilt
+        if (notice.parentElement !== holder) {
+            holder.appendChild(notice);
+        }
+
+        window.clearTimeout(this.noticeTimeout);
+        notice.textContent = "";
+
+        // Filled a moment after it is in the page and empty, so screen readers announce it every time
+        this.noticeTimeout = window.setTimeout((): void => {
+            (<HTMLElement>notice).textContent = message;
+
+            this.noticeTimeout = window.setTimeout((): void => {
+                (<HTMLElement>notice).textContent = "";
+                this.noticeTimeout = undefined;
+            }, UserWrappr.noticeDuration);
+        }, 50);
+    }
+
+    /**
      * Pauses or resumes the game to match layoutPauseReasons. A game that has
      * not finished starting up (it has no player yet) is checked again shortly,
      * because pausing it that early would stop it from ever finishing.
@@ -2358,14 +2459,9 @@ export class UserWrappr {
     private loadGameStarter(customs: IGameStartrCustoms): void {
         var section: HTMLElement = <HTMLElement>document.querySelector(this.gameElementSelector);
 
+        // The old game stays stopped for good, even if work it started (a chunk download) finishes later
         if (this.GameStarter) {
-            this.GameStarter.GamesRunner.pause();
-            this.GameStarter.DeviceLayer.dispose();
-
-            // The old audio player owns an AudioContext and page listeners that nothing else will release
-            if (this.GameStarter.AudioPlayer && typeof this.GameStarter.AudioPlayer.dispose === "function") {
-                this.GameStarter.AudioPlayer.dispose();
-            }
+            this.GameStarter.dispose();
         }
 
         this.GameStarter = new this.GameStartrConstructor(customs);

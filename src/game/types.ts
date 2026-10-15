@@ -2229,6 +2229,12 @@ export interface IMarioGame extends GameStartr.IGameStartr {
     continueOffer?: string;
 
     /**
+     * How many times setMap has been called, so work that finishes later (such
+     * as the level editor arriving) can tell whether a map was picked meanwhile.
+     */
+    mapsSet: number;
+
+    /**
      * The game's player, which (when defined) will always be a Player Thing.
      */
     player: IPlayer;

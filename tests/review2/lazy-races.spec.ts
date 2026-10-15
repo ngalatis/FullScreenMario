@@ -87,8 +87,9 @@ test.describe("a chunk that cannot be downloaded", () => {
         await clickMapGenerator(page);
         await page.waitForTimeout(1500);
         expect(await page.evaluate(() => (window as any).FSM.AreaSpawner.getMapName())).toBe("1-1");
-        // A failed download is not an uncaught error
+        // A failed download is not an uncaught error, and the player is told about it
         expect(errors).toEqual([]);
+        await expect(page.getByRole("status")).toContainText("Could not download the map generator");
 
         await page.unroute(generatorChunk);
         await clickMapGenerator(page);
@@ -108,12 +109,44 @@ test.describe("a chunk that cannot be downloaded", () => {
         await page.waitForTimeout(1500);
         expect(await page.evaluate(() => !!(window as any).FSM.LevelEditor)).toBe(false);
         expect(errors).toEqual([]);
+        await expect(page.getByRole("status")).toContainText("Could not download the level editor");
 
         await page.unroute(editorChunk);
         await clickStartEditor(page);
         await page.waitForFunction(
             () => !!(window as any).FSM.LevelEditor && (window as any).FSM.LevelEditor.getEnabled()
         );
+        expect(errors).toEqual([]);
+    });
+});
+
+test.describe("a map picked while the level editor is still downloading", () => {
+    test("the map is played, and the editor does not take over once it arrives", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const release = await holdChunk(page, editorChunk);
+
+        await bootGame(page);
+        await clickStartEditor(page);
+
+        await page.locator("#control-Maps").dispatchEvent("mouseover");
+        await expect(page.locator("#control-Maps")).toHaveAttribute("active", "on");
+        await page.locator("#control-Maps .maps-grid-option-range", { hasText: "1-2" }).dispatchEvent("click");
+        await page.waitForFunction(() => (window as any).FSM.AreaSpawner.getMapName() === "1-2");
+
+        release();
+        await page.waitForFunction(() => !!(window as any).FSM.LevelEditor);
+        await page.waitForTimeout(300);
+
+        expect(
+            await page.evaluate(() => ({
+                map: (window as any).FSM.AreaSpawner.getMapName() as string,
+                editorEnabled: (window as any).FSM.LevelEditor.getEnabled() as boolean
+            }))
+        ).toEqual({ map: "1-2", editorEnabled: false });
+
+        // Asked for again, the editor opens
+        await clickStartEditor(page);
+        await page.waitForFunction(() => (window as any).FSM.LevelEditor.getEnabled());
         expect(errors).toEqual([]);
     });
 });

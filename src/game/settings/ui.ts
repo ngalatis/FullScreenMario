@@ -231,14 +231,23 @@ MarioGame.settings.ui = {
                 "rangeX": [1, 4],
                 "rangeY": [1, 8],
                 "callback": (FSM: IMarioGame, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
-                    var json: string = JSON.stringify(FSM.MapsCreator.getMapRaw(button.textContent));
+                    var json: string = JSON.stringify(FSM.MapsCreator.getMapRaw(button.textContent)),
+                        mapsSet: number = FSM.mapsSet;
 
                     // The level editor is fetched the first time it is used
-                    void FSM.loadLevelEditor().then((editor: LevelEditr.ILevelEditr): void => {
-                        editor.enable();
-                        editor.setCurrentJSON(json);
-                        editor.startBuilding();
-                    });
+                    void FSM.loadLevelEditor().then(
+                        (editor: LevelEditr.ILevelEditr): void => {
+                            // A game replaced meanwhile stays stopped, and a map picked meanwhile is not taken over
+                            if (FSM.disposed || FSM.mapsSet !== mapsSet) {
+                                return;
+                            }
+
+                            editor.enable();
+                            editor.setCurrentJSON(json);
+                            editor.startBuilding();
+                        },
+                        (): void => UserWrappr.UISchemas.LevelEditorGenerator.reportDownloadFailure(FSM)
+                    );
                 }
             }
         },

@@ -72,6 +72,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         ".": "Period",
         "!": "ExclamationMark",
         ":": "Colon",
+        "-": "Dash",
         "/": "Slash",
         "©": "Copyright"
     };

@@ -266,11 +266,6 @@ export interface IUserWrappr {
     getCancelFullScreen(): () => void;
 
     /**
-     * @returns The identifier for the device input checking interval.
-     */
-    getDeviceChecker(): number;
-
-    /**
      * Sets the size of the GameStartr by resetting the game with the size
      * information as part of its customs object. Full screen status is
      * changed accordingly.
@@ -1021,6 +1016,11 @@ export namespace UISchemas {
         actions?: IOptionsTableAction[];
 
         /**
+         * A line of plain text to show under the table, such as a hint.
+         */
+        note?: string;
+
+        /**
          * Descriptions of the options to be displayed in the table.
          */
         options: IOptionsTableOption[];
@@ -1254,6 +1254,14 @@ export namespace UISchemas {
             }
 
             output.appendChild(table);
+
+            if (schema.note) {
+                const note: HTMLParagraphElement = document.createElement("p");
+
+                note.className = "options-note";
+                note.textContent = schema.note;
+                output.appendChild(note);
+            }
 
             if (schema.actions) {
                 for (i = 0; i < schema.actions.length; i += 1) {
@@ -1736,11 +1744,6 @@ export class UserWrappr {
     private generators!: { [i: string]: IOptionsGenerator };
 
     /**
-     * Identifier for the interval Function checking for device input.
-     */
-    private deviceChecker!: number;
-
-    /**
      * Whether the page visibility listener has been added to the document.
      */
     private isWatchingVisibility = false;
@@ -1844,7 +1847,8 @@ export class UserWrappr {
 
         this.GameStarter.gameStart();
 
-        this.startCheckingDevices();
+        // The game's updates read the gamepads, which a paused game cannot do for itself
+        this.GameStarter.DeviceLayer.watch((): boolean => this.GameStarter.GamesRunner.getPaused());
         this.applyLayoutPause();
     }
 
@@ -1956,13 +1960,6 @@ export class UserWrappr {
         return this.cancelFullScreen;
     }
 
-    /**
-     * @returns The identifier for the device input checking interval.
-     */
-    getDeviceChecker(): number {
-        return this.deviceChecker;
-    }
-
     /* Externally allowed sets
      */
 
@@ -1998,33 +1995,6 @@ export class UserWrappr {
             (<Node>this.GameStarter.container.parentNode).removeChild(this.GameStarter.container);
             this.resetGameStarter(this.settings, this.customs);
         }
-    }
-
-    /* Devices
-     */
-
-    /**
-     * Starts the checkDevices loop to scan for gamepad status changes.
-     */
-    private startCheckingDevices(): void {
-        clearTimeout(this.deviceChecker);
-        this.checkDevices();
-    }
-
-    /**
-     * Calls the DeviceLayer to check for gamepad triggers, after scheduling
-     * another checkDevices call via setTimeout.
-     */
-    private checkDevices(): void {
-        this.deviceChecker = setTimeout(
-            this.checkDevices.bind(this),
-            this.GameStarter.GamesRunner.getPaused()
-                ? 117
-                : this.GameStarter.GamesRunner.getInterval() / this.GameStarter.GamesRunner.getSpeed()
-        );
-
-        this.GameStarter.DeviceLayer.checkNavigatorGamepads();
-        this.GameStarter.DeviceLayer.activateAllGamepadTriggers();
     }
 
     /* Settings parsing
@@ -2390,7 +2360,7 @@ export class UserWrappr {
 
         if (this.GameStarter) {
             this.GameStarter.GamesRunner.pause();
-            clearTimeout(this.deviceChecker);
+            this.GameStarter.DeviceLayer.dispose();
 
             // The old audio player owns an AudioContext and page listeners that nothing else will release
             if (this.GameStarter.AudioPlayer && typeof this.GameStarter.AudioPlayer.dispose === "function") {

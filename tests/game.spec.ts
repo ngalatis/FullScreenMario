@@ -132,6 +132,40 @@ test.describe("level editor", () => {
         expect(reimported.text).toBe(exported);
         expect(errors).toEqual([]);
     });
+
+    test("disabling the editor turns it off and gives the default lives back", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+
+        await bootGame(page);
+        await page.evaluate(() => (window as any).FSM.loadLevelEditor());
+
+        const state = await page.evaluate(() => {
+            const fsm = (window as any).FSM;
+            const editor = fsm.LevelEditor;
+            editor.enable();
+            const livesInEditor = fsm.ItemsHolder.getItem("lives") as number;
+            let error = "";
+            try {
+                editor.disable();
+            } catch (e) {
+                error = String(e);
+            }
+            return {
+                error,
+                livesInEditor,
+                enabled: editor.getEnabled() as boolean,
+                lives: fsm.ItemsHolder.getItem("lives") as number,
+                livesDefault: fsm.settings.items.values.lives.valueDefault as number
+            };
+        });
+
+        expect(state.error).toBe("");
+        expect(state.livesInEditor).toBe(Infinity);
+        expect(state.enabled).toBe(false);
+        expect(state.livesDefault).toBe(3);
+        expect(state.lives).toBe(state.livesDefault);
+        expect(errors).toEqual([]);
+    });
 });
 
 test.describe("rarely used parts load on first use", () => {

@@ -1483,6 +1483,11 @@ export class LevelEditr implements ILevelEditr {
     }
 
     private resetDisplayThinCheck(): void {
+        // The editor may have been disabled before this deferred check ran
+        if (!this.display) {
+            return;
+        }
+
         var width: number = this.display.gui.clientWidth;
 
         if (width <= 385) {

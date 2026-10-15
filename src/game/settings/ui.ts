@@ -1,5 +1,6 @@
 import { MarioGame } from "../MarioGame";
 import type { IMarioGame } from "../types";
+import type * as LevelEditr from "../../engine/LevelEditr";
 import * as ModAttachr from "../../engine/ModAttachr";
 import * as UserWrappr from "../../engine/UserWrappr";
 
@@ -229,9 +230,14 @@ MarioGame.settings.ui = {
                 "rangeX": [1, 4],
                 "rangeY": [1, 8],
                 "callback": (FSM: IMarioGame, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
-                    FSM.LevelEditor.enable();
-                    FSM.LevelEditor.setCurrentJSON(JSON.stringify(FSM.MapsCreator.getMapRaw(button.textContent)));
-                    FSM.LevelEditor.startBuilding();
+                    var json: string = JSON.stringify(FSM.MapsCreator.getMapRaw(button.textContent));
+
+                    // The level editor is fetched the first time it is used
+                    void FSM.loadLevelEditor().then((editor: LevelEditr.ILevelEditr): void => {
+                        editor.enable();
+                        editor.setCurrentJSON(json);
+                        editor.startBuilding();
+                    });
                 }
             }
         },
@@ -277,7 +283,7 @@ MarioGame.settings.ui = {
                                 randomizer.value = getNewSeed();
                             }
 
-                            FSM.LevelEditor.disable();
+                            FSM.LevelEditor?.disable();
                             FSM.NumberMaker.resetFromSeed(Number(randomizer.value));
                             FSM.setMap("Random");
 
@@ -302,7 +308,7 @@ MarioGame.settings.ui = {
                 })()
             ],
             "callback": (FSM: IMarioGame, schema: UserWrappr.UISchemas.ISchema, button: HTMLElement): void => {
-                FSM.LevelEditor.disable();
+                FSM.LevelEditor?.disable();
                 FSM.setMap(button.getAttribute("value") || button.textContent);
             }
         }

@@ -80,10 +80,17 @@ test.describe("audio lifetime across View Mode changes", () => {
             }));
         const before = await snapshot();
 
-        // Let the first game finish its background preload, so its decoded buffers are what gets retained
-        await page.waitForFunction(() => Object.keys((window as any).FSM.AudioPlayer.buffers).length >= 40, undefined, {
-            timeout: 45_000
-        });
+        // Let the first game finish its background preload (the sounds in settings.audio.preload, plus the
+        // level theme), so its decoded buffers are what gets retained
+        await page.waitForFunction(
+            () => {
+                const fsm = (window as any).FSM;
+                const decoded = fsm.AudioPlayer.getDecodedAudio();
+                return fsm.settings.audio.preload.every((name: string) => name in decoded) && "Overworld" in decoded;
+            },
+            undefined,
+            { timeout: 45_000 }
+        );
         await page.evaluate(() => {
             (window as any).__oldPlayers = [];
         });
@@ -128,8 +135,9 @@ test.describe("audio lifetime across View Mode changes", () => {
         await bootGame(page);
         await page.waitForFunction(
             () => {
-                const buffers = (window as any).FSM.AudioPlayer.buffers;
-                return Object.keys(buffers).length >= 40;
+                const fsm = (window as any).FSM;
+                const decoded = fsm.AudioPlayer.getDecodedAudio();
+                return fsm.settings.audio.preload.every((name: string) => name in decoded) && "Overworld" in decoded;
             },
             undefined,
             { timeout: 45_000 }
@@ -162,7 +170,11 @@ test.describe("audio lifetime across View Mode changes", () => {
             };
         });
         console.log("S-audio-footprint", JSON.stringify(footprint));
-        expect(footprint.count).toBeGreaterThanOrEqual(40);
+        // Only the preloaded sounds and the level theme are decoded now (the rest is decoded when played)
+        expect(footprint.count).toBe(
+            (await page.evaluate(() => (window as any).FSM.settings.audio.preload.length)) + 1
+        );
+        expect(footprint.megabytes).toBeLessThan(26);
     });
 });
 

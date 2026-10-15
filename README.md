@@ -76,6 +76,8 @@ FSM.ItemsHolder.increase("coins", 10);
 FSM.ModAttacher.enableMod("Low Gravity");
 ```
 
+The level editor and the random map generator are not part of the main bundle: each is a separate chunk, downloaded the first time it is used (and precached for offline play like everything else). So `FSM.setMap("Random")` starts the map a moment later the first time, and `FSM.LevelEditor` and `FSM.WorldSeeder` stay undefined until then. To use them from the console right away, load them first: `await FSM.loadLevelEditor()` or `await FSM.loadWorldSeeder()`.
+
 ## Saved progress
 
 The game remembers two things on the device, in `localStorage` under the prefix `WeFixItMario`:
@@ -86,6 +88,10 @@ The game remembers two things on the device, in `localStorage` under the prefix 
 When the game starts, or starts again after a game over, and the saved level is not 1-1, the title card also reads `CONTINUE 4-2: PRESS DOWN` (`TAP DOWN` on touch devices). Pressing down starts that level as a fresh game with 3 lives and no score. The offer ends as soon as the player moves or jumps, or leaves 1-1, but the saved level is kept, so it is offered again next time. Everywhere else, down works as before.
 
 To start over, press `Reset Progress` in the Options menu, or run `FSM.resetProgress();` in the console. Values that are missing, invalid or unreadable are ignored, and the game plays normally when `localStorage` is blocked or full (progress then lasts until the page is closed).
+
+## Sound memory
+
+Sounds play through the Web Audio API, which keeps them decoded as raw samples: about 0.34 MB per second of stereo, 86 MB for the whole library. To stay well clear of the limits of phone browsers (iOS closes heavy tabs), only the sounds that must start instantly are decoded at boot and kept: the sound effects, the hurry and death jingles and the Star theme, about 10 MB (`preload` in `src/game/settings/audio.js`). The level themes and the long jingles are decoded when played and then kept only while they fit in a budget of about 14 MB (`cacheSeconds`), least recently played first out. Their downloaded files are kept, so decoding one again needs no network. At most about 24 MB is decoded at any time. A new level's theme can start a fraction of a second late on a slow phone while it is decoded.
 
 ## Install and offline
 

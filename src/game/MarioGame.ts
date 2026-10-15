@@ -293,6 +293,26 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         FSM.container.appendChild(FSM.ItemsHolder.getContainer());
     }
 
+    /* Rarely used parts, fetched the first time they are needed
+     */
+
+    /**
+     * Fetches the level editor's settings (settings.editor).
+     */
+    loadLevelEditorSettings(): Promise<unknown> {
+        return import("./settings/editor");
+    }
+
+    /**
+     * Fetches the map generator's settings (settings.generator) and the Random map
+     * that uses them, and stores the map with the others.
+     */
+    loadWorldSeederSettings(): Promise<unknown> {
+        return Promise.all([import("./settings/generator"), import("./settings/maps/Random")]).then((): void => {
+            this.MapsCreator.storeMap("Random", this.settings.maps.library.Random);
+        });
+    }
+
     /**
      * Slight addition to the GameStartr thingProcess Function. The Thing's hit
      * check type is cached immediately.

@@ -7,7 +7,9 @@ import * as GamesRunnr from "./GamesRunnr";
 import * as GroupHoldr from "./GroupHoldr";
 import * as InputWritr from "./InputWritr";
 import * as ItemsHoldr from "./ItemsHoldr";
-import * as LevelEditr from "./LevelEditr";
+// The level editor and the map generator are loaded on first use (see loadLevelEditor and
+// loadWorldSeeder), so only their types are imported here.
+import type * as LevelEditr from "./LevelEditr";
 import * as MapScreenr from "./MapScreenr";
 import * as MapsCreatr from "./MapsCreatr";
 import * as MathDecidr from "./MathDecidr";
@@ -23,7 +25,7 @@ import * as TimeHandlr from "./TimeHandlr";
 import * as TouchPassr from "./TouchPassr";
 import * as UsageHelpr from "./UsageHelpr";
 import * as UserWrappr from "./UserWrappr";
-import * as WorldSeedr from "./WorldSeedr";
+import type * as WorldSeedr from "./WorldSeedr";
 
 /**
  * Extra CSS styles that may be added to a page.
@@ -122,11 +124,13 @@ export interface IGameStartrStoredSettings {
 
     /**
      * Settings regarding the level editor, particularly for an ILevelEditr.
+     * Only there once loadLevelEditorSettings has fetched it.
      */
     editor: ILevelEditrCustoms;
 
     /**
      * Settings regarding map generation, particularly for an IWorldSeedr.
+     * Only there once loadWorldSeederSettings has fetched it.
      */
     generator: IWorldSeedrCustoms;
 
@@ -884,9 +888,9 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     ItemsHolder: ItemsHoldr.IItemsHoldr;
 
     /**
-     * The level editor manager.
+     * The level editor manager, created by loadLevelEditor the first time it is needed.
      */
-    LevelEditor: LevelEditr.ILevelEditr;
+    LevelEditor?: LevelEditr.ILevelEditr;
 
     /**
      * A typed MersenneTwister, which is a state-based random number generator.
@@ -988,9 +992,10 @@ export interface IGameStartr extends EightBittr.IEightBittr {
 
     /**
      * A randomization utility to automate random, recursive generation of
-     * possibilities based on position and probability schemas.
+     * possibilities based on position and probability schemas. Created by
+     * loadWorldSeeder the first time it is needed.
      */
-    WorldSeeder: WorldSeedr.IWorldSeedr;
+    WorldSeeder?: WorldSeedr.IWorldSeedr;
 
     /**
      * Resets the GameStartr by calling the parent EightBittr.prototype.reset.
@@ -1157,7 +1162,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     resetTouchPasser(GameStarter: IGameStartr, settings: IGameStartrSettings): void;
 
     /**
-     * Sets this.LevelEditor.
+     * Forgets this.LevelEditor: loadLevelEditor creates a new one when it is needed.
      *
      * @param GameStarter
      * @param customs   Any optional custom settings.
@@ -1165,12 +1170,40 @@ export interface IGameStartr extends EightBittr.IEightBittr {
     resetLevelEditor(GameStarter: IGameStartr, settings: IGameStartrSettings): void;
 
     /**
-     * Sets this.WorldSeeder.
+     * Forgets this.WorldSeeder: loadWorldSeeder creates a new one when it is needed.
      *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
     resetWorldSeeder(GameStarter: IGameStartr, settings: IGameStartrSettings): void;
+
+    /**
+     * Creates this.LevelEditor the first time it is called. The level editor's code and
+     * settings are separate chunks, fetched then, so the game boots without them.
+     *
+     * @returns A promise for the level editor.
+     */
+    loadLevelEditor(): Promise<LevelEditr.ILevelEditr>;
+
+    /**
+     * Fetches what the level editor needs from the game (settings.editor). Games
+     * override this; by default there is nothing to fetch.
+     */
+    loadLevelEditorSettings(): Promise<unknown>;
+
+    /**
+     * Creates this.WorldSeeder the first time it is called. The map generator's code
+     * and settings are separate chunks, fetched then, so the game boots without them.
+     *
+     * @returns A promise for the map generator.
+     */
+    loadWorldSeeder(): Promise<WorldSeedr.IWorldSeedr>;
+
+    /**
+     * Fetches what the map generator needs from the game (settings.generator). Games
+     * override this; by default there is nothing to fetch.
+     */
+    loadWorldSeederSettings(): Promise<unknown>;
 
     /**
      * Sets this.ScenePlayer.
@@ -1784,9 +1817,14 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     public ItemsHolder!: ItemsHoldr.IItemsHoldr;
 
     /**
-     * The level editor manager.
+     * The level editor manager, created by loadLevelEditor the first time it is needed.
      */
-    public LevelEditor!: LevelEditr.ILevelEditr;
+    public LevelEditor?: LevelEditr.ILevelEditr;
+
+    /**
+     * The level editor being created by loadLevelEditor.
+     */
+    private levelEditorLoading?: Promise<LevelEditr.ILevelEditr>;
 
     /**
      * A typed MersenneTwister, which is a state-based random number generator.
@@ -1888,9 +1926,15 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
 
     /**
      * A randomization utility to automate random, recursive generation of
-     * possibilities based on position and probability schemas.
+     * possibilities based on position and probability schemas. Created by
+     * loadWorldSeeder the first time it is needed.
      */
-    public WorldSeeder!: WorldSeedr.IWorldSeedr;
+    public WorldSeeder?: WorldSeedr.IWorldSeedr;
+
+    /**
+     * The map generator being created by loadWorldSeeder.
+     */
+    private worldSeederLoading?: Promise<WorldSeedr.IWorldSeedr>;
 
     /**
      * Settings for individual modules are stored as sub-Objects here.
@@ -2314,38 +2358,112 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
     }
 
     /**
-     * Sets this.LevelEditor.
+     * Forgets this.LevelEditor: loadLevelEditor creates a new one when it is needed.
      *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
     resetLevelEditor(GameStarter: GameStartr, settings: IGameStartrSettings): void {
-        GameStarter.LevelEditor = new LevelEditr.LevelEditr(
-            GameStarter.proliferate(
-                {
-                    "GameStarter": GameStarter
-                },
-                GameStarter.settings.editor
-            )
-        );
+        GameStarter.LevelEditor = undefined;
+        GameStarter.levelEditorLoading = undefined;
     }
 
     /**
-     * Sets this.WorldSeeder.
+     * Forgets this.WorldSeeder: loadWorldSeeder creates a new one when it is needed.
      *
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
     resetWorldSeeder(GameStarter: GameStartr, settings: IGameStartrSettings): void {
-        GameStarter.WorldSeeder = new WorldSeedr.WorldSeedr(
-            GameStarter.proliferate(
-                {
-                    "random": GameStarter.NumberMaker.random.bind(GameStarter.NumberMaker),
-                    "onPlacement": GameStarter.mapPlaceRandomCommands.bind(GameStarter, GameStarter)
-                },
-                GameStarter.settings.generator
-            )
-        );
+        GameStarter.WorldSeeder = undefined;
+        GameStarter.worldSeederLoading = undefined;
+    }
+
+    /**
+     * Creates this.LevelEditor the first time it is called. The level editor's code and
+     * settings are separate chunks, fetched then, so the game boots without them.
+     *
+     * @returns A promise for the level editor.
+     */
+    loadLevelEditor(): Promise<LevelEditr.ILevelEditr> {
+        var loading: Promise<LevelEditr.ILevelEditr> | undefined = this.levelEditorLoading;
+
+        if (!loading) {
+            loading = this.levelEditorLoading = Promise.all([
+                import("./LevelEditr"),
+                this.loadLevelEditorSettings()
+            ]).then(
+                ([LevelEditrModule]): LevelEditr.ILevelEditr =>
+                    (this.LevelEditor = new LevelEditrModule.LevelEditr(
+                        this.proliferate(
+                            {
+                                "GameStarter": this
+                            },
+                            this.settings.editor
+                        )
+                    ))
+            );
+            // A failed download (offline before the service worker has cached it) is tried again next time
+            void loading.catch((): void => {
+                if (this.levelEditorLoading === loading) {
+                    this.levelEditorLoading = undefined;
+                }
+            });
+        }
+
+        return loading;
+    }
+
+    /**
+     * Fetches what the level editor needs from the game (settings.editor). Games
+     * override this; by default there is nothing to fetch.
+     */
+    loadLevelEditorSettings(): Promise<unknown> {
+        return Promise.resolve();
+    }
+
+    /**
+     * Creates this.WorldSeeder the first time it is called. The map generator's code
+     * and settings are separate chunks, fetched then, so the game boots without them.
+     *
+     * @returns A promise for the map generator.
+     */
+    loadWorldSeeder(): Promise<WorldSeedr.IWorldSeedr> {
+        var loading: Promise<WorldSeedr.IWorldSeedr> | undefined = this.worldSeederLoading;
+
+        if (!loading) {
+            loading = this.worldSeederLoading = Promise.all([
+                import("./WorldSeedr"),
+                this.loadWorldSeederSettings()
+            ]).then(
+                ([WorldSeedrModule]): WorldSeedr.IWorldSeedr =>
+                    (this.WorldSeeder = new WorldSeedrModule.WorldSeedr(
+                        this.proliferate(
+                            {
+                                "random": this.NumberMaker.random.bind(this.NumberMaker),
+                                "onPlacement": this.mapPlaceRandomCommands.bind(this, this)
+                            },
+                            this.settings.generator
+                        )
+                    ))
+            );
+            // A failed download (offline before the service worker has cached it) is tried again next time
+            void loading.catch((): void => {
+                if (this.worldSeederLoading === loading) {
+                    this.worldSeederLoading = undefined;
+                }
+            });
+        }
+
+        return loading;
+    }
+
+    /**
+     * Fetches what the map generator needs from the game (settings.generator). Games
+     * override this; by default there is nothing to fetch.
+     */
+    loadWorldSeederSettings(): Promise<unknown> {
+        return Promise.resolve();
     }
 
     /**

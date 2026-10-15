@@ -181,7 +181,27 @@ export default defineConfig({
     plugins: [thirdPartyNotices(), offlineSupport()],
     build: {
         target: "es2022",
-        // The whole game is one bundle (the original loaded ~70 scripts).
-        chunkSizeWarningLimit: 1000
+        // The game is one bundle (the original loaded ~70 scripts), except for the rarely used level
+        // editor and map generator: each is a chunk of its own, fetched the first time it is needed
+        // (see loadLevelEditor and loadWorldSeeder in GameStartr). The service worker precaches them.
+        chunkSizeWarningLimit: 1000,
+        rolldownOptions: {
+            output: {
+                codeSplitting: {
+                    // Only the modules named here: their imports (the game itself) stay in the main bundle
+                    includeDependenciesRecursively: false,
+                    groups: [
+                        {
+                            name: "level-editor",
+                            test: /[\\/]src[\\/](engine[\\/]LevelEditr|game[\\/]settings[\\/]editor)\./
+                        },
+                        {
+                            name: "map-generator",
+                            test: /[\\/]src[\\/](engine[\\/]WorldSeedr|game[\\/]settings[\\/](generator|maps[\\/]Random))\./
+                        }
+                    ]
+                }
+            }
+        }
     }
 });

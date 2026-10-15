@@ -9,6 +9,7 @@
 import * as AreaSpawnr from "../../engine/AreaSpawnr";
 import * as MapScreenr from "../../engine/MapScreenr";
 import * as MapsCreatr from "../../engine/MapsCreatr";
+import type { IWorldSeedr } from "../../engine/WorldSeedr";
 import type {
     IArea,
     IAreaSection,
@@ -427,10 +428,16 @@ export const spawnMethods = {
      */
     spawnRandomSpawner(this: MarioGame, thing: IRandomSpawner): void {
         var FSM: IMarioGame = thing.FSM,
+            WorldSeeder: IWorldSeedr | undefined = FSM.WorldSeeder,
             left: number = (thing.left + FSM.MapScreener.left) / FSM.unitsize;
 
-        FSM.WorldSeeder.clearGeneratedCommands();
-        FSM.WorldSeeder.generateFull({
+        // RandomSpawners come from the Random map, which is only stored once the generator is loaded
+        if (!WorldSeeder) {
+            throw new Error("RandomSpawner spawned before the map generator was loaded.");
+        }
+
+        WorldSeeder.clearGeneratedCommands();
+        WorldSeeder.generateFull({
             "title": thing.randomization,
             "top": thing.randomTop,
             "right": left + thing.randomWidth,
@@ -439,7 +446,7 @@ export const spawnMethods = {
             "width": thing.randomWidth,
             "height": thing.randomTop - thing.randomBottom
         });
-        FSM.WorldSeeder.runGeneratedCommands();
+        WorldSeeder.runGeneratedCommands();
 
         FSM.AreaSpawner.spawnArea(
             "xInc",

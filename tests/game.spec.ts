@@ -1,4 +1,4 @@
-import { devices, expect, test } from "@playwright/test";
+import { devices, expect, test, type Page } from "@playwright/test";
 
 import { bootGame, collectPageErrors, mapNames } from "./helpers";
 
@@ -93,6 +93,8 @@ test.describe("level editor", () => {
         const { errors } = collectPageErrors(page);
 
         await bootGame(page);
+        // The level editor is a separate chunk, fetched the first time it is needed.
+        await page.evaluate(() => (window as any).FSM.loadLevelEditor());
 
         const exported: string = await page.evaluate(() => {
             const editor = (window as any).FSM.LevelEditor;
@@ -128,6 +130,155 @@ test.describe("level editor", () => {
 
         expect(reimported.message).toBe("");
         expect(reimported.text).toBe(exported);
+        expect(errors).toEqual([]);
+    });
+});
+
+test.describe("rarely used parts load on first use", () => {
+    const lazyChunk = /assets\/(level-editor|map-generator)-[^/]*\.js$/;
+
+    /** Lists the lazy chunks the page has downloaded so far. */
+    function trackLazyChunks(page: Page): string[] {
+        const fetched: string[] = [];
+
+        page.on("request", (request) => {
+            const match = lazyChunk.exec(new URL(request.url()).pathname);
+
+            if (match) {
+                fetched.push(match[1]);
+            }
+        });
+
+        return fetched;
+    }
+
+    /** The solid Things on screen, by title and position in the map: what a random map is made of. */
+    const solids = (page: Page) =>
+        page.evaluate(() => {
+            const fsm = (window as any).FSM;
+            return fsm.GroupHolder.getGroup("Solid")
+                .map((thing: any) => thing.title + "@" + Math.round(thing.left + fsm.MapScreener.left))
+                .sort() as string[];
+        });
+
+    test("the game boots without the level editor and the map generator", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const fetched = trackLazyChunks(page);
+
+        await bootGame(page);
+        await page.waitForTimeout(1000);
+
+        expect(fetched).toEqual([]);
+        expect(
+            await page.evaluate(() => {
+                const fsm = (window as any).FSM;
+                return {
+                    editor: !!fsm.LevelEditor,
+                    generator: !!fsm.WorldSeeder,
+                    randomMap: "Random" in fsm.settings.maps.library
+                };
+            })
+        ).toEqual({ editor: false, generator: false, randomMap: false });
+        expect(errors).toEqual([]);
+    });
+
+    test("the Editor menu fetches the level editor, starts it and edits a built-in map", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const fetched = trackLazyChunks(page);
+
+        await bootGame(page);
+        await page
+            .locator("#control-Editor .select-options-level-editor > .select-option")
+            .first()
+            .dispatchEvent("click");
+        await page.waitForFunction(
+            () => !!(window as any).FSM.LevelEditor && (window as any).FSM.LevelEditor.getEnabled()
+        );
+        expect(fetched).toEqual(["level-editor"]);
+
+        // Editing a built-in map (on a fresh page) fetches the editor and loads the map into it
+        await page.reload();
+        await page.waitForFunction(() => !!(window as any).FSM && !!(window as any).FSM.player);
+        fetched.length = 0;
+        // The map buttons only answer while their menu is open (hovered)
+        await page.locator("#control-Editor").dispatchEvent("mouseover");
+        await expect(page.locator("#control-Editor")).toHaveAttribute("active", "on");
+        await page
+            .locator("#control-Editor .select-options-editor-maps-holder .maps-grid-option-range", { hasText: "1-2" })
+            .dispatchEvent("click");
+        await page.waitForFunction(
+            () => !!(window as any).FSM.LevelEditor && (window as any).FSM.LevelEditor.getEnabled()
+        );
+        const edited = await page.evaluate(() => {
+            const fsm = (window as any).FSM;
+            // (The editor flags the areas it builds with "editor": true)
+            const withoutFlags = (json: string): unknown =>
+                JSON.parse(json, (key: string, value: unknown) => (key === "editor" ? undefined : value));
+            return {
+                text: withoutFlags((document.querySelector(".EditorJSONInput") as HTMLTextAreaElement).value),
+                map: withoutFlags(JSON.stringify(fsm.MapsCreator.getMapRaw("1-2")))
+            };
+        });
+        expect(edited.text).toEqual(edited.map);
+        expect(fetched).toEqual(["level-editor"]);
+        expect(errors).toEqual([]);
+    });
+
+    test("the Map Generator fetches the generator and builds the same map from the same seed", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const fetched = trackLazyChunks(page);
+
+        await bootGame(page);
+        const seed = page.locator("#control-Maps .randomInput");
+        await seed.evaluate((input: HTMLInputElement) => {
+            input.value = "777";
+            input.setAttribute("custom", "true");
+        });
+        await page
+            .locator("#control-Maps .maps-grid-option-extra", { hasText: "Map Generator!" })
+            .dispatchEvent("click");
+        await page.waitForFunction(
+            () => (window as any).FSM.AreaSpawner.getMapName() === "Random" && !!(window as any).FSM.player
+        );
+        expect(fetched).toEqual(["map-generator"]);
+        const fromMenu = await solids(page);
+        expect(fromMenu.length).toBeGreaterThan(5);
+
+        // Now that the generator is in, the console cheat sets the map right away, from the same seed
+        await page.evaluate(() => {
+            const fsm = (window as any).FSM;
+            fsm.NumberMaker.resetFromSeed(777);
+            fsm.setMap("Random");
+        });
+        expect(await solids(page)).toEqual(fromMenu);
+        expect(fetched).toEqual(["map-generator"]);
+        expect(errors).toEqual([]);
+    });
+
+    test("setMap('Random') from the console waits for the generator, unless another map is set meanwhile", async ({
+        page
+    }) => {
+        const { errors } = collectPageErrors(page);
+
+        await bootGame(page);
+        // Seeded first, as in the help menu's cheat: the seed still decides the map after the download
+        await page.evaluate(() => {
+            const fsm = (window as any).FSM;
+            fsm.NumberMaker.resetFromSeed(4321);
+            fsm.setMap("Random", "Underworld");
+            fsm.setMap("1-2");
+        });
+        await page.waitForFunction(() => !!(window as any).FSM.WorldSeeder);
+        await page.waitForTimeout(300);
+        expect(await page.evaluate(() => (window as any).FSM.AreaSpawner.getMapName())).toBe("1-2");
+
+        await page.evaluate(() => (window as any).FSM.setMap("Random", "Underworld"));
+        expect(
+            await page.evaluate(() => [
+                (window as any).FSM.AreaSpawner.getMapName(),
+                (window as any).FSM.AreaSpawner.getAreaName()
+            ])
+        ).toEqual(["Random", "Underworld"]);
         expect(errors).toEqual([]);
     });
 });

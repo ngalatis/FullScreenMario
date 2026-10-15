@@ -6,11 +6,12 @@ import { MarioGame } from "./game/MarioGame";
 // The settings modules are side-effect scripts that fill in MarioGame.settings.*.
 // They must be imported in this exact order (it is the order the original index.html
 // loaded them in): maps.js is imported before the individual map files.
+// The level editor's settings (editor.js) and the map generator's (generator.js, with the
+// Random map in maps/Random.js) are not here: they are separate chunks, fetched the first
+// time they are needed (see loadLevelEditorSettings and loadWorldSeederSettings in MarioGame).
 import "./game/settings/audio";
 import "./game/settings/collisions";
 import "./game/settings/devices";
-import "./game/settings/editor";
-import "./game/settings/generator";
 import "./game/settings/groups";
 import "./game/settings/events";
 import "./game/settings/help";
@@ -49,7 +50,6 @@ import "./game/settings/maps/8-1";
 import "./game/settings/maps/8-2";
 import "./game/settings/maps/8-3";
 import "./game/settings/maps/8-4";
-import "./game/settings/maps/Random";
 import "./game/settings/math";
 import "./game/settings/mods";
 import "./game/settings/objects";

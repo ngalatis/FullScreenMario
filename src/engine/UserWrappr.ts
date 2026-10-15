@@ -2,7 +2,8 @@ import * as DeviceLayr from "./DeviceLayr";
 import * as GamesRunnr from "./GamesRunnr";
 import * as InputWritr from "./InputWritr";
 import * as ItemsHoldr from "./ItemsHoldr";
-import * as LevelEditr from "./LevelEditr";
+// The level editor is loaded on first use (see IGameStartr.loadLevelEditor): only its types are imported here
+import type * as LevelEditr from "./LevelEditr";
 
 /* tslint:disable:interface-name */
 
@@ -33,13 +34,14 @@ export interface IGameStartr {
     GamesRunner: GamesRunnr.IGamesRunnr;
     ItemsHolder: ItemsHoldr.IItemsHoldr;
     InputWriter: InputWritr.IInputWritr;
-    LevelEditor: LevelEditr.ILevelEditr;
+    LevelEditor?: LevelEditr.ILevelEditr;
     UserWrapper: IUserWrappr;
     canvas: HTMLCanvasElement;
     container: HTMLElement;
     player?: unknown;
     addPageStyles(styles: unknown): void;
     gameStart(): void;
+    loadLevelEditor(): Promise<LevelEditr.ILevelEditr>;
     createElement(tag: string, ...args: unknown[]): HTMLElement;
     proliferate(recipient: unknown, donor: unknown, noOverride?: boolean): any;
 }
@@ -625,7 +627,9 @@ export namespace UISchemas {
             starter.className = "select-option select-option-large options-button-option";
             starter.innerHTML = "Start the <br /> Level Editor!";
             starter.onclick = function (): void {
-                scope.GameStarter.LevelEditor.enable();
+                void scope.GameStarter.loadLevelEditor().then((editor: LevelEditr.ILevelEditr): void =>
+                    editor.enable()
+                );
             };
 
             betweenOne.className = betweenTwo.className = "select-option-title";
@@ -840,7 +844,13 @@ export namespace UISchemas {
             uploader: HTMLDivElement,
             event: LevelEditr.IDataProgressEvent
         ): void {
-            this.GameStarter.LevelEditor.handleUploadCompletion(event);
+            // The editor may still have to be fetched, and an event loses its currentTarget once
+            // it has been dispatched, so the reader (which keeps the file's text) goes instead
+            var reader: LevelEditr.IDataEventTarget = event.currentTarget;
+
+            void this.GameStarter.loadLevelEditor().then((editor: LevelEditr.ILevelEditr): void =>
+                editor.handleUploadCompletion(<LevelEditr.IDataProgressEvent>(<unknown>{ currentTarget: reader }))
+            );
             uploader.innerText = <string>uploader.getAttribute("textOld");
         }
     }

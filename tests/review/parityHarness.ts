@@ -73,6 +73,12 @@ export async function runScenario(page: Page, scenario: Scenario): Promise<Scena
     await page.setViewportSize({ width: 1200, height: 800 });
     await bootGame(page);
 
+    // The Random map and its generator are fetched on first use; get them before the synchronous
+    // run below (this only loads code: no game state and no random numbers are touched)
+    if (scenario.map === "Random") {
+        await page.evaluate(() => (window as any).FSM.loadWorldSeeder());
+    }
+
     return page.evaluate((scenario: Scenario): ScenarioResult => {
         const FSM: any = (window as any).FSM;
         const GR: any = FSM.GamesRunner;

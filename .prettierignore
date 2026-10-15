@@ -1,0 +1,16 @@
+# Build output and generated files
+dist
+node_modules
+test-results
+playwright-report
+blob-report
+package-lock.json
+
+# Binary assets, fonts, sounds, icons and the web manifest
+public
+
+# Agent worktrees
+.claude
+
+# Legal text that is copied verbatim into the build (third-party-notices.txt)
+THIRD_PARTY_NOTICES.md

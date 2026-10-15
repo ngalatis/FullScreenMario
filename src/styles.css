@@ -1,0 +1,808 @@
+/* General elements */
+
+:root {
+    /* Notches and rounded corners on phones; 0 everywhere else */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+}
+
+html {
+    background: black;
+    -webkit-text-size-adjust: 100%;
+    /* No double-tap zoom anywhere; the game area also blocks pinch zoom and panning (below) */
+    touch-action: manipulation;
+}
+
+body {
+    background: black;
+    color: #fafafa;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+section {
+    clear: both;
+}
+
+/* Crisp pixels: scale the canvas by nearest neighbor, never by smoothing */
+
+canvas {
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+/* Game section */
+
+#stage {
+    position: relative;
+    background: black;
+}
+
+section#game {
+    min-height: 464px;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+section#game .EightBitter {
+    margin: auto;
+}
+
+/* Toolbar (fullscreen and, on phones, menu buttons) */
+
+#toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 8px;
+}
+
+#toolbar button {
+    min-height: 35px;
+    padding: 9px 12px;
+    border: 3px solid #555;
+    border-radius: 7px;
+    background: #1b1b1b;
+    color: #fafafa;
+    font-family: "Press Start", monospace;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#toolbar button:hover,
+#toolbar button:focus-visible {
+    border-color: #99ffcc;
+    outline: none;
+}
+
+/* The menu button is only for phones, where the menus cannot be hovered */
+#toolbar #menu-button {
+    display: none;
+}
+
+@media (pointer: fine) {
+    /* Fullscreen on desktop: the game fills the screen and the toolbar tucks into a corner */
+    #stage.is-fullscreen {
+        display: flex;
+        flex-direction: column;
+        background: black;
+    }
+
+    #stage.is-fullscreen section#game {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #stage.is-fullscreen #toolbar {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        padding: 0;
+        opacity: 0.5;
+    }
+
+    #stage.is-fullscreen #toolbar:hover,
+    #stage.is-fullscreen #toolbar:focus-within {
+        opacity: 1;
+    }
+}
+
+/* Notices (see UserWrappr.showNotice), such as a download that failed: a short message over the top of the
+   game that goes away by itself and never takes a tap or a click */
+
+.game-notice {
+    position: absolute;
+    top: calc(var(--safe-top) + 10px);
+    left: 50%;
+    z-index: 80;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    padding: 9px 12px;
+    border: 3px solid #555;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fafafa;
+    font-family: "Press Start", monospace;
+    font-size: 9px;
+    line-height: 1.7;
+    text-align: center;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.game-notice:empty {
+    display: none;
+}
+
+/* Rotate overlay (shown only in portrait on touch devices) */
+
+#rotate-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    padding: calc(var(--safe-top) + 24px) calc(var(--safe-right) + 24px) calc(var(--safe-bottom) + 24px)
+        calc(var(--safe-left) + 24px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: #fafafa;
+    font-family: "Press Start", monospace;
+    text-align: center;
+}
+
+#rotate-overlay h2 {
+    margin: 28px 0 12px;
+    font-size: 20px;
+    line-height: 1.3;
+    font-weight: normal;
+}
+
+#rotate-overlay p {
+    max-width: 22em;
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.8;
+    color: #cfcfcf;
+}
+
+#rotate-overlay .rotate-phone {
+    width: 54px;
+    height: 96px;
+    box-sizing: border-box;
+    border: 5px solid #ffcc33;
+    border-radius: 12px;
+    animation: rotate-hint 2.6s ease-in-out infinite;
+}
+
+@keyframes rotate-hint {
+    0%,
+    15% {
+        transform: rotate(0deg);
+    }
+    45%,
+    75% {
+        transform: rotate(-90deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #rotate-overlay .rotate-phone {
+        animation: none;
+        transform: rotate(-90deg);
+    }
+}
+
+@media (pointer: coarse) and (orientation: portrait) {
+    #rotate-overlay {
+        display: flex;
+    }
+}
+
+/* Phones and tablets: the game fills the screen, and the menus live behind a button */
+
+@media (pointer: coarse) {
+    :root {
+        /* Room kept free on each side of the picture for the touch controls, so they sit beside it
+           instead of over Mario's start and respawn spot. About a third of the screen height, but
+           never so much that a 16:9 phone drops below the NES width (512 of 464 game pixels). It uses
+           min()/max() of the two sides so it is the same in either orientation (UserWrappr reads it
+           to size the game even when the phone is upright). */
+        --touch-gutter: clamp(
+            110px,
+            min(calc(min(100vw, 100vh) * 0.36), calc((max(100vw, 100vh) - min(100vw, 100vh) * 1.104) / 2)),
+            176px
+        );
+    }
+
+    html,
+    body {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    #stage {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    section#game {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        min-height: 0;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Keep the picture out from under the notch and the home indicator */
+        padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+    }
+
+    /* Menu and fullscreen buttons flank the touch Start button along the bottom edge */
+    #toolbar {
+        position: absolute;
+        right: 0;
+        bottom: calc(var(--safe-bottom) + 10px);
+        left: 0;
+        z-index: 50;
+        display: grid;
+        grid-template-columns: 1fr 100px 1fr;
+        padding: 0 calc(var(--safe-right) + 10px) 0 calc(var(--safe-left) + 10px);
+        pointer-events: none;
+    }
+
+    #toolbar button {
+        pointer-events: auto;
+        padding: 8px 9px;
+        font-size: 9px;
+        border-color: rgba(255, 255, 255, 0.6);
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0.75;
+    }
+
+    #toolbar #menu-button {
+        display: block;
+        grid-column: 1;
+        justify-self: end;
+    }
+
+    #toolbar #fullscreen-button {
+        grid-column: 3;
+        justify-self: start;
+    }
+
+    /* The menus become a scrolling sheet, fully expanded, instead of hover-to-open strips */
+    #controls {
+        display: none;
+    }
+
+    /* The stage floats above the sheet only so its toolbar stays reachable */
+    body.menu-open #stage {
+        z-index: 60;
+        background: transparent;
+        pointer-events: none;
+    }
+
+    body.menu-open #rotate-overlay {
+        pointer-events: auto;
+    }
+
+    body.menu-open section#game {
+        visibility: hidden;
+    }
+
+    body.menu-open #controls {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 40;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        padding: calc(var(--safe-top) + 12px) calc(var(--safe-right) + 12px) calc(var(--safe-bottom) + 70px)
+            calc(var(--safe-left) + 12px);
+        background: rgba(0, 0, 0, 0.96);
+    }
+
+    body.menu-open #controls .control,
+    body.menu-open #controls .control:hover {
+        display: block;
+        position: static;
+        width: auto;
+        min-width: 0;
+        height: auto;
+        margin: 0 0 12px;
+        overflow: visible;
+        border-color: #99ffcc;
+        background: #009966;
+    }
+
+    body.menu-open #controls.length-4 .control,
+    body.menu-open #controls.length-5 .control {
+        min-width: 0;
+    }
+
+    body.menu-open #controls .control h4 {
+        position: static;
+        padding: 12px 0 0;
+    }
+
+    body.menu-open #controls .control-inner {
+        margin-top: 0;
+        opacity: 1;
+    }
+
+    body.menu-open #controls .select-options {
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+/* Touch controls (see TouchPassr and settings/touch.js).
+   Sizes use container-relative units (cqh) so they follow the game's height, with pixel
+   fallbacks first for browsers that do not know them. */
+
+.touch-passer-container {
+    pointer-events: none;
+    touch-action: none;
+    container-type: size;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* While a game controller is being played (see settings/devices.ts) the on-screen controls get out of the
+   way, until the screen is touched again. They are only see-through, not removed or hidden, so the picture
+   keeps its size and the touch that brings them back already works as a press of the control under it. */
+body.gamepad-in-use .touch-passer-container {
+    opacity: 0;
+}
+
+.touch-passer-container .touch-control {
+    opacity: 0.6;
+    transition: opacity 80ms;
+}
+
+.touch-passer-container .touch-control.touch-pressed {
+    opacity: 0.95;
+}
+
+.touch-passer-container .control-inner {
+    pointer-events: auto;
+    touch-action: none;
+    box-sizing: border-box;
+    font-family: "Press Start", monospace;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* D-pad: bottom left */
+.touch-passer-container [data-touch-control="DPad"] > .control-inner {
+    left: 16px;
+    bottom: 12px;
+    width: 116px;
+    height: 116px;
+    width: clamp(92px, 34cqh, 160px);
+    height: clamp(92px, 34cqh, 160px);
+}
+
+.touch-passer-container .touch-dpad::before {
+    content: "";
+    position: absolute;
+    top: 33.333%;
+    left: 33.333%;
+    width: 33.333%;
+    height: 33.333%;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.touch-passer-container .touch-dpad-arm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.28);
+    font-size: 14px;
+    font-size: clamp(12px, 5cqh, 22px);
+    line-height: 1;
+}
+
+.touch-passer-container .touch-dpad-arm.touch-pressed {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.touch-passer-container .touch-dpad-arm-up {
+    border-radius: 10px 10px 0 0;
+    opacity: 0.55;
+}
+.touch-passer-container .touch-dpad-arm-right {
+    border-radius: 0 10px 10px 0;
+}
+.touch-passer-container .touch-dpad-arm-down {
+    border-radius: 0 0 10px 10px;
+}
+.touch-passer-container .touch-dpad-arm-left {
+    border-radius: 10px 0 0 10px;
+}
+
+/* A (jump) and B (run, fireballs): bottom right */
+.touch-passer-container [data-touch-control="A"] > .control-inner,
+.touch-passer-container [data-touch-control="B"] > .control-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    width: clamp(54px, 21cqh, 96px);
+    height: clamp(54px, 21cqh, 96px);
+    border: 3px solid rgba(255, 255, 255, 0.75);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    font-size: 18px;
+    font-size: clamp(14px, 7cqh, 28px);
+}
+
+.touch-passer-container [data-touch-control="A"] > .control-inner {
+    right: 16px;
+    bottom: 34px;
+}
+
+.touch-passer-container [data-touch-control="B"] > .control-inner {
+    right: 100px;
+    right: calc(30px + clamp(54px, 21cqh, 96px));
+    bottom: 12px;
+}
+
+.touch-passer-container .touch-control.touch-pressed > .control-inner {
+    background: rgba(255, 255, 255, 0.55);
+}
+
+/* Start (pause): bottom center, between the toolbar's buttons */
+.touch-passer-container [data-touch-control="Start"] > .control-inner {
+    bottom: 10px;
+    left: 0 !important;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 35px;
+    border: 3px solid rgba(255, 255, 255, 0.75);
+    border-radius: 7px;
+    /* Dark like the toolbar buttons beside it, so the label reads on any background */
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 9px;
+}
+
+/* Landscape touch devices keep the picture clear of the controls: the game section gets a gutter on
+   each side (unless the touch controls are switched off), and the controls move into the gutters.
+   The section is empty while a game is being built, which counts as "on", so the game is sized for
+   the room that is left. */
+
+@media (pointer: coarse) and (orientation: landscape) {
+    section#game:not(:has(.touch-passer-container[style*="display: none"])) {
+        padding-right: calc(var(--safe-right) + var(--touch-gutter));
+        padding-left: calc(var(--safe-left) + var(--touch-gutter));
+    }
+
+    section#game .EightBitter,
+    .touch-passer-container {
+        overflow: visible;
+    }
+
+    .touch-passer-container {
+        /* Thumb-sized, but the pair must fit in the gutter next to each other, staggered */
+        --touch-size: min(clamp(54px, 19cqh, 84px), calc(var(--touch-gutter) - 36px));
+    }
+
+    /* D-pad: in the left gutter */
+    .touch-passer-container [data-touch-control="DPad"] > .control-inner {
+        left: calc(16px - var(--touch-gutter));
+        width: min(clamp(92px, 34cqh, 160px), calc(var(--touch-gutter) - 24px));
+        height: min(clamp(92px, 34cqh, 160px), calc(var(--touch-gutter) - 24px));
+    }
+
+    /* B (run, fireballs) and A (jump): in the right gutter, A higher and outermost, so the thumb
+       rests on the corner and reaches both */
+    .touch-passer-container [data-touch-control="A"] > .control-inner,
+    .touch-passer-container [data-touch-control="B"] > .control-inner {
+        width: var(--touch-size);
+        height: var(--touch-size);
+    }
+
+    .touch-passer-container [data-touch-control="A"] > .control-inner {
+        right: calc(12px - var(--touch-gutter));
+        bottom: calc(14px + var(--touch-size) * 0.97);
+    }
+
+    .touch-passer-container [data-touch-control="B"] > .control-inner {
+        right: calc(-8px - var(--touch-size));
+        bottom: 14px;
+    }
+}
+
+/* Control section */
+
+#controls {
+    text-align: center;
+}
+
+#controls .control {
+    position: relative;
+    display: inline-block;
+    margin-top: 0;
+    height: 35px;
+    width: 256px;
+    border: 3px solid black;
+    border-radius: 7px;
+    box-shadow: 0 3px 7px black inset;
+    background: black;
+    font-family: "Press Start";
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    -moz-transition: 70ms all;
+    -o-transition: 70ms all;
+    -webkit-transition: 70ms all;
+    transition: 70ms all;
+}
+
+#controls.length-4 .control {
+    min-width: 25%;
+}
+
+#controls.length-5 .control {
+    min-width: 20%;
+}
+
+#controls .control:hover {
+    margin-top: -322px;
+    height: 350px; /* 322px + 28px */
+    border-color: #99ffcc;
+    background: #009966;
+    z-index: 70;
+}
+
+#controls .control h4 {
+    position: absolute;
+    right: 0;
+    bottom: 7px;
+    left: 0;
+    margin: 0;
+}
+
+#controls .control-inner {
+    margin-top: 28px;
+    padding: 7px 3px;
+    opacity: 0;
+    -moz-transition: 35ms opacity;
+    -o-transition: 35ms opacity;
+    -webkit-transition: 35ms opacity;
+    transition: 35ms opacity;
+}
+
+#controls .control:hover .control-inner {
+    display: block;
+    margin-top: 0;
+    opacity: 1;
+}
+
+#controls .select-options {
+    position: relative;
+    max-height: 308px; /* 322 - 14*/
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#controls .select-option-title {
+    padding: 7px;
+}
+
+#controls .select-option {
+    margin: 1px 3px;
+    display: inline-block;
+    background: #ffcc33;
+    border: 3px outset;
+    cursor: pointer;
+    color: black;
+    font-size: 14px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#controls .select-option.option-enabled {
+    background: #ffcc33;
+}
+
+#controls .select-option.option-disabled {
+    background: #ccaa33;
+}
+
+#controls .select-option.select-option-inset {
+    border: 3px inset;
+}
+
+#controls .select-option.select-option-large {
+    padding: 14px 0;
+    font-size: 15px;
+    line-height: 140%;
+}
+
+#controls .disabled {
+    opacity: 0.49 !important;
+    cursor: default !important;
+    -ms-user-select: none !important;
+    -moz-user-select: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Controls - option buttons */
+
+#controls .options-button-option {
+    position: relative;
+    display: block;
+    left: 0;
+    right: 0;
+    padding: 4px 0;
+    /* width: 70px; */
+}
+
+#controls input[type="number"] {
+    display: inline;
+    margin-left: -3px;
+    padding-left: 17px;
+    /* font-size: 1em; */
+    font-family: "Press Start";
+}
+
+#controls select {
+    /* font-size: 1em; */
+    font-family: "Press Start";
+}
+
+/* Controls - options */
+
+#controls #control-Options .select-options td {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+/* Controls - option keys */
+
+#controls .options-label-Keys {
+    padding-left: 14px;
+}
+
+#controls .options-cell-Keys {
+    padding: 7px 0;
+}
+
+#controls .options-key-option {
+    display: block;
+}
+
+#controls .options-key-option:not(:last-of-type):after {
+    content: ", ";
+}
+
+/* Controls - a hint under a table */
+
+#controls .options-note {
+    margin: 7px 14px;
+    font-size: 9px;
+    line-height: 1.7;
+}
+
+/* The Controls menu is the one with a hint, so its hover panel is taller than the others (the phone sheet
+   above is fully expanded anyway, and its rules are more specific than these). */
+#controls [id="control-Controls"]:hover {
+    margin-top: -402px;
+    height: 430px;
+}
+
+#controls [id="control-Controls"] .select-options {
+    max-height: 388px;
+}
+
+/* Controls - tables */
+
+#controls table {
+    width: 100%;
+    border-spacing: 1px;
+    padding: 0 2px;
+}
+
+#controls table input {
+    max-width: 70px;
+}
+
+#controls .maps-grid-option {
+    display: table-cell;
+    padding: 3px;
+}
+
+#controls .maps-grid-option-extra {
+    display: block;
+    margin: 7px 2px 3px 1px;
+    padding: 14px 3px;
+}
+
+#controls .maps-grid-input {
+    margin: 0 2px 0 1px;
+    width: 98%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: "Press Start";
+    text-align: center;
+}
+
+/* Controls - uploader */
+
+#controls .select-upload {
+    cursor: pointer;
+    overflow: hidden;
+}
+
+#controls .select-upload-input {
+    display: none;
+}
+
+/* Controls - built-in maps */
+
+#controls .select-options-editor-maps-holder {
+    width: 100%;
+}

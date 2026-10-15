@@ -1,0 +1,9 @@
+{
+    // Build tooling and tests run in Node, so they get Node's types. The game
+    // sources in src/ do not (Node's setTimeout types clash with the browser's).
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": ["node"]
+    },
+    "include": ["tests", "vite.config.ts", "playwright.config.ts"]
+}

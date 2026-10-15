@@ -1,36 +1,32 @@
 {
-    "name": "FullScreenMario",
-    "description": "An HTML5 remake of the original Super Mario Brothers - expanded for modern browsing.",
-    "version": "0.10.3",
-    "author": {
-        "name": "Josh Goldberg",
-        "email": "josh@fullscreenmario.com"
+    "name": "wefixit-mario",
+    "private": true,
+    "type": "module",
+    "description": "Super Mario Bros. easter egg for wefixit.gr (private)",
+    "version": "1.0.0",
+    "author": "WeFixIt",
+    "license": "UNLICENSED",
+    "engines": {
+        "node": ">=22"
     },
-    "repository": {
-        "type": "git",
-        "url": "ssh://git@github.com:FullScreenShenanigans/FullScreenMario.git"
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.easter-egg.json",
+        "test": "playwright test",
+        "lint": "oxlint --deny-warnings",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "check": "npm run typecheck && npm run lint && npm run format:check"
     },
-    "bugs": {
-        "url": "https://github.com/FullScreenShenanigans/FullScreenMario/issues"
-    },
-    "license": "MIT",
     "devDependencies": {
-        "chai": "~2.X",
-        "grunt": "~0.4.X",
-        "grunt-cli": "~0.1.X",
-        "grunt-contrib-clean": "~0.6.X",
-        "grunt-contrib-copy": "~0.8.X",
-        "grunt-contrib-cssmin": "~0.13.X",
-        "grunt-contrib-htmlmin": "~0.4.X",
-        "grunt-contrib-uglify": "~0.8.X",
-        "grunt-mocha-phantomjs": "~2.X",
-        "grunt-processhtml": "~0.3.X",
-        "grunt-preprocess": "~5.X",
-        "grunt-tslint": "~2.4.X",
-        "grunt-typescript": "~0.8.X",
-        "grunt-zip": "~0.17.X",
-        "mocha": "~2.X",
-        "tslint": "~2.4.X",
-        "typescript": "~1.7.X"
+        "@playwright/test": "1.56.1",
+        "@types/node": "22.20.5",
+        "oxlint": "1.88.0",
+        "oxlint-tsgolint": "7.0.2004",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+        "vite": "8.3.1"
     }
 }

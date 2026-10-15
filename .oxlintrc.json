@@ -1,0 +1,57 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["typescript", "unicorn", "oxc"],
+    "categories": {
+        "correctness": "error",
+        "suspicious": "error"
+    },
+    "options": {
+        "typeAware": true
+    },
+    "env": {
+        "browser": true,
+        "es2022": true
+    },
+    "ignorePatterns": ["dist", "node_modules", "public", "test-results", "playwright-report", ".claude"],
+    "rules": {
+        // Unused function arguments are kept on purpose: engine callbacks (event handlers, macros,
+        // mod hooks, schema generators) have fixed signatures that the code documents by naming
+        // every argument. Unused variables, imports and catch bindings are still reported.
+        "no-unused-vars": ["error", { "args": "none", "caughtErrors": "none", "ignoreRestSiblings": true }],
+
+        // Legacy engine idioms that flag en masse and hide no bugs. See the README for the reasons.
+        "typescript/no-this-alias": "off",
+        "no-underscore-dangle": "off",
+        "unicorn/prefer-add-event-listener": "off",
+        "unicorn/no-array-sort": "off",
+        "unicorn/no-array-reverse": "off",
+        "unicorn/no-new-array": "off",
+        "unicorn/no-instanceof-builtins": "off",
+        "unicorn/consistent-function-scoping": "off",
+        "no-shadow": "off",
+
+        // Closures that capture a loop variable. The few findings are documented where they occur.
+        "no-loop-func": "error",
+
+        // Type-aware style rules that arrive with the suspicious category. The cast rules would
+        // report every legacy `<IThing>x` and `as any` cast (800+ findings) and they hide no bugs.
+        "typescript/no-unsafe-type-assertion": "off",
+        "typescript/no-unnecessary-type-assertion": "off",
+        "typescript/no-unnecessary-type-conversion": "off",
+        "typescript/no-unnecessary-boolean-literal-compare": "off",
+        "typescript/no-unnecessary-type-parameters": "off",
+
+        // Type-aware rules: only the promise rules are enabled. The other type-aware rules that
+        // ship in the default set are noisy on this code base (see the README).
+        "typescript/no-floating-promises": "error",
+        "typescript/no-misused-promises": "error",
+        "typescript/await-thenable": "error",
+        "typescript/unbound-method": "off",
+        "typescript/no-redundant-type-constituents": "off",
+        "typescript/no-base-to-string": "off",
+        "typescript/restrict-template-expressions": "off",
+        "typescript/no-useless-default-assignment": "off",
+        "typescript/no-for-in-array": "off",
+        "typescript/no-implied-eval": "off"
+    }
+}

@@ -1,0 +1,15 @@
+{
+    // The footer easter egg for wefixit.gr: plain browser JavaScript, type-checked through JSDoc.
+    // It is not part of the game build, so it gets its own config without Vite or Node types.
+    "compilerOptions": {
+        "target": "ES2020",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "allowJs": true,
+        "checkJs": true,
+        "strict": true,
+        "noEmit": true,
+        "skipLibCheck": true,
+        "types": []
+    },
+    "include": ["easter-egg/*.js"]
+}

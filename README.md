@@ -76,6 +76,17 @@ FSM.ItemsHolder.increase("coins", 10);
 FSM.ModAttacher.enableMod("Low Gravity");
 ```
 
+## Saved progress
+
+The game remembers two things on the device, in `localStorage` under the prefix `WeFixItMario`:
+
+- `WeFixItMariotopScore`: the best score ever reached (shown on the 1-1 title card as `TOP- 012345`, and saved the moment the score passes it).
+- `WeFixItMariolastLevel`: the last level from 1-1 to 8-4 that was started (the random map is not saved).
+
+When the game starts, or starts again after a game over, and the saved level is not 1-1, the title card also reads `CONTINUE 4-2: PRESS DOWN` (`TAP DOWN` on touch devices). Pressing down starts that level as a fresh game with 3 lives and no score. The offer ends as soon as the player moves or jumps, or leaves 1-1. Everywhere else, down works as before.
+
+To start over, press `Reset Progress` in the Options menu, or run `FSM.resetProgress();` in the console. Values that are missing, invalid or unreadable are ignored, and the game plays normally when `localStorage` is blocked or full (progress then lasts until the page is closed).
+
 ## Install and offline
 
 The game is a small installable web app. In Chrome, Edge or Android, use the browser's "Install app" option (or "Add to Home screen"); on iPhone use Share, then "Add to Home Screen". It opens fullscreen in landscape with its own icon.

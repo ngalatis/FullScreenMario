@@ -56,6 +56,8 @@ MarioGame.MarioGame.settings.maps.library["1-1"] = {
                     "size": "Colored",
                     "texts": [{ "text": "©1985 NINTENDO" }]
                 },
+                // The top score, and the offer to continue at the last level played: made each time the area is spawned
+                { "macro": "TitleProgress", "x": 44, "y": 13, "continueX": 26, "continueY": 6 },
                 { "thing": "Block", "x": 128, "y": 32 },
                 { "thing": "Brick", "x": 160, "y": 32 },
                 { "thing": "Block", "x": 168, "y": 32, "contents": "Mushroom" },

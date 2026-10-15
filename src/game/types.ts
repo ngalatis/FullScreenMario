@@ -1956,6 +1956,21 @@ export interface IMacroWarpWorldSettings extends IMacroSettings {
 }
 
 /**
+ * Settings for a TitleProgress macro.
+ */
+export interface IMacroTitleProgressSettings extends IMacroSettings {
+    /**
+     * The x-location of the continue line (by default, the same as x).
+     */
+    continueX?: number;
+
+    /**
+     * The y-location of the continue line (by default, 8 below y).
+     */
+    continueY?: number;
+}
+
+/**
  * Settings for a CheepsStart macro.
  */
 export interface IMacroCheepsStartSettings extends IMacroSettings {
@@ -2209,6 +2224,11 @@ export interface IMarioGame extends GameStartr.IGameStartr {
     customTextMappings: ITextMappings;
 
     /**
+     * The level offered on the title card for continuing at, while the offer is open.
+     */
+    continueOffer?: string;
+
+    /**
      * The game's player, which (when defined) will always be a Player Thing.
      */
     player: IPlayer;
@@ -2287,6 +2307,12 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * while, the game restarts again via gameStart.
      */
     gameOver(): void;
+
+    /**
+     * Forgets the top score and the last level, and withdraws a continue offer
+     * that is open.
+     */
+    resetProgress(): void;
 
     /**
      * Slight addition to the GameStartr thingProcess Function. The Thing's hit

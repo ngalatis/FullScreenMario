@@ -27,6 +27,8 @@ export const inputMethods = {
 
         var player: IPlayer = FSM.player;
 
+        FSM.endContinueOffer();
+
         player.keys.run = -1;
         player.keys.leftDown = true; // independent of changes to keys.run
         player.FSM.ModAttacher.fireEvent("onKeyDownLeft");
@@ -45,6 +47,8 @@ export const inputMethods = {
         }
 
         var player: IPlayer = FSM.player;
+
+        FSM.endContinueOffer();
 
         player.keys.run = 1;
         player.keys.rightDown = true; // independent of changes to keys.run
@@ -68,6 +72,8 @@ export const inputMethods = {
         }
 
         var player: IPlayer = FSM.player;
+
+        FSM.endContinueOffer();
 
         player.keys.up = true;
 
@@ -97,14 +103,24 @@ export const inputMethods = {
     },
 
     /**
-     * Reacts to the down key being pressed. A player's keys.crouch is marked
-     * and the mod event is fired.
+     * Reacts to the down key being pressed. While the title card offers to
+     * continue at a saved level, that is what down does. Otherwise a player's
+     * keys.crouch is marked and the mod event is fired.
      *
      * @param FSM
      * @param event   The original user-caused Event.
      */
     keyDownDown(this: MarioGame, FSM: MarioGame, event?: Event): void {
         if (FSM.GamesRunner.getPaused()) {
+            return;
+        }
+
+        if (FSM.continueOffer !== undefined) {
+            FSM.continueGame(FSM.continueOffer);
+
+            if (event && event.preventDefault !== undefined) {
+                event.preventDefault();
+            }
             return;
         }
 

@@ -71,7 +71,8 @@ MarioGame.MarioGame.settings.maps = {
         "Section": MarioGame.MarioGame.prototype.macroSection,
         "SectionPass": MarioGame.MarioGame.prototype.macroSectionPass,
         "SectionFail": MarioGame.MarioGame.prototype.macroSectionFail,
-        "SectionDecider": MarioGame.MarioGame.prototype.macroSectionDecider
+        "SectionDecider": MarioGame.MarioGame.prototype.macroSectionDecider,
+        "TitleProgress": MarioGame.MarioGame.prototype.macroTitleProgress
     },
     "entrances": {
         "Normal": MarioGame.MarioGame.prototype.mapEntranceNormal,

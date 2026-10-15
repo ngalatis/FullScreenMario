@@ -25,6 +25,7 @@ import { mapMethods, type MapMethods } from "./methods/maps";
 import { cutsceneMethods, type CutsceneMethods } from "./methods/cutscenes";
 import { macroMethods, type MacroMethods } from "./methods/macros";
 import { castleMacroMethods, type CastleMacroMethods } from "./methods/macrosCastle";
+import { progressMethods, type ProgressMethods } from "./methods/progress";
 
 /**
  * A free HTML5 remake of Nintendo's original Super Mario Bros, expanded for the
@@ -72,6 +73,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         ".": "Period",
         "!": "ExclamationMark",
         ":": "Colon",
+        "-": "Dash",
         "/": "Slash",
         "©": "Copyright"
     };
@@ -106,6 +108,21 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
     public customTextMappings!: ITextMappings;
 
     /**
+     * The level offered on the title card for continuing at, while the offer is open.
+     */
+    public continueOffer?: string;
+
+    /**
+     * Whether the map being set is the title card at the start of a game (see gameStart).
+     */
+    public titleScreen: boolean;
+
+    /**
+     * How many times the score has gone past its modularity and started again from 0.
+     */
+    public scoreWraps: number;
+
+    /**
      * The game's player, which (when defined) will always be a Player Thing.
      * It is assigned by addPlayer, once a map has started.
      */
@@ -137,6 +154,9 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
         );
 
         this.settings = MarioGame.settings;
+
+        this.titleScreen = false;
+        this.scoreWraps = 0;
 
         this.deviceMotionStatus = {
             motionLeft: false,
@@ -381,7 +401,8 @@ type GroupMethods = LifecycleMethods &
     MapMethods &
     CutsceneMethods &
     MacroMethods &
-    CastleMacroMethods;
+    CastleMacroMethods &
+    ProgressMethods;
 
 /**
  * Group methods that override a method of the same name on GameStartr. An
@@ -432,7 +453,8 @@ installMethods(
     mapMethods,
     cutsceneMethods,
     macroMethods,
-    castleMacroMethods
+    castleMacroMethods,
+    progressMethods
 );
 
 // The GameStartr constructor resets all modules from `this.settings` before this

@@ -27,12 +27,20 @@ export const lifecycleMethods = {
 
     /**
      * Completely restarts the game. Lives are reset to 3, the map goes back
-     * to default, and the onGameStart mod trigger is fired.
+     * to default (the title card, which may offer to continue at the last level
+     * played), and the onGameStart mod trigger is fired.
      */
     gameStart(this: MarioGame): void {
         var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this);
 
-        FSM.setMap(FSM.settings.maps.mapDefault, FSM.settings.maps.locationDefault);
+        // The map set here is the title card: it offers to continue at the saved level,
+        // and is not counted as a level started (that happens when the player moves)
+        FSM.titleScreen = true;
+        try {
+            FSM.setMap(FSM.settings.maps.mapDefault, FSM.settings.maps.locationDefault);
+        } finally {
+            FSM.titleScreen = false;
+        }
         FSM.ItemsHolder.setItem("lives", (<any>FSM.settings.items.values).lives.valueDefault);
 
         FSM.ModAttacher.fireEvent("onGameStart");
@@ -56,6 +64,7 @@ export const lifecycleMethods = {
             textWidth: number,
             i: number;
 
+        FSM.continueOffer = undefined;
         FSM.killNPCs();
 
         FSM.AudioPlayer.clearAll();

@@ -54,8 +54,22 @@ MarioGame.MarioGame.settings.items = {
             "hasElement": true,
             "modularity": 100000,
             "onModular": function (EightBitter) {
+                EightBitter.scoreWrapped();
                 EightBitter.gainLife();
+            },
+            // The best score is saved the moment the score passes it
+            "onChange": function (EightBitter) {
+                EightBitter.updateTopScore();
             }
+        },
+        // The best score reached on this device and the last standard level started
+        "topScore": {
+            "valueDefault": 0,
+            "storeLocally": true
+        },
+        "lastLevel": {
+            "valueDefault": "",
+            "storeLocally": true
         },
         "time": {
             "valueDefault": 0,

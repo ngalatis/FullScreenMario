@@ -165,7 +165,8 @@ MarioGame.MarioGame.settings.objects = {
                 "TextCharacters": {
                     "TextPeriod": {},
                     "TextExclamationMark": {},
-                    "TextColon": {}
+                    "TextColon": {},
+                    "TextDash": {}
                 },
                 "TextColored": {
                     "TextColoredD": {},
@@ -923,6 +924,7 @@ MarioGame.MarioGame.settings.objects = {
         "ScoreText": {
             "groupType": "Text"
         },
+        "Text1": [3, 3.5],
         "TextCharacters": [2.5, 4],
         "TextCharagersHuge": [1, 1],
         "Text100": [6, 4],

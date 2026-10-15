@@ -1,7 +1,7 @@
 import * as MarioGame from "../../MarioGame";
 
 // Phones and tablets show the on-screen controls on the title card instead of keyboard keys.
-// The pixel font has no J or dash, hence "LEAP" and "ARROWS".
+// The pixel font has no J, hence "LEAP".
 const onTouchDevice = typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
 
 MarioGame.MarioGame.settings.maps.library["1-1"] = {
@@ -56,6 +56,8 @@ MarioGame.MarioGame.settings.maps.library["1-1"] = {
                     "size": "Colored",
                     "texts": [{ "text": "©1985 NINTENDO" }]
                 },
+                // The top score, and the offer to continue at the last level played: made each time the area is spawned
+                { "macro": "TitleProgress", "x": 44, "y": 13, "continueX": 26, "continueY": 6 },
                 { "thing": "Block", "x": 128, "y": 32 },
                 { "thing": "Brick", "x": 160, "y": 32 },
                 { "thing": "Block", "x": 168, "y": 32, "contents": "Mushroom" },

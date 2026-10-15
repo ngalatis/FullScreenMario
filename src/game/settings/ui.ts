@@ -144,6 +144,14 @@ MarioGame.settings.ui = {
                     "action": (FSM: IMarioGame): void => {
                         FSM.takeScreenshot("Super Mario Bros " + new Date().getTime());
                     }
+                },
+                {
+                    "title": "Reset Progress",
+                    "action": (FSM: IMarioGame): void => {
+                        if (window.confirm("Forget your top score and the level to continue at?")) {
+                            FSM.resetProgress();
+                        }
+                    }
                 }
             ]
         },

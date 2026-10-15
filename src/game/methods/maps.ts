@@ -46,6 +46,10 @@ export const mapMethods = {
         FSM.ItemsHolder.setItem("world", name);
         FSM.InputWriter.restartHistory();
 
+        if (!FSM.titleScreen) {
+            FSM.rememberLevel(<string>name);
+        }
+
         FSM.ModAttacher.fireEvent("onSetMap", map);
 
         FSM.setLocation(location || map.locationDefault || FSM.settings.maps.locationDefault);
@@ -66,6 +70,9 @@ export const mapMethods = {
     setLocation(this: MarioGame, name: string | number = 0): void {
         var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
             location: ILocation;
+
+        // Any continue offer belongs to the area being left (a title card makes a new one)
+        FSM.continueOffer = undefined;
 
         (<IMapScreenr>FSM.MapScreener).nokeys = false;
         (<IMapScreenr>FSM.MapScreener).notime = false;

@@ -150,6 +150,7 @@ MarioGame.settings.ui = {
         {
             "title": "Controls",
             "generator": "OptionsTable",
+            "note": "Controller: D-pad or left stick moves. A or B jumps. X, Y or a trigger runs. Start pauses. Select mutes.",
             "options": ((controls: string[]): UserWrappr.UISchemas.IOptionsButtonSchema[] => {
                 return controls.map((title: string): UserWrappr.UISchemas.IOptionsButtonSchema => {
                     return {

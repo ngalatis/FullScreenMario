@@ -61,6 +61,22 @@ A finding that is a real quirk of the original game, where fixing it could chang
 - `public/`: static files copied as is into `dist/` (sounds, fonts, favicon, robots.txt).
 - `tests/`: Playwright tests, including a branding check on the page and the build output.
 
+## Controllers
+
+Game controllers work through the browser's Gamepad API (which needs HTTPS or `localhost`). Plug one in or pair it, then press any button once: browsers keep a controller hidden from a page until then. Any controller can play, several can play at once, and they can be plugged in and out at any time. A controller the browser does not recognise is read as a standard one.
+
+| Control                                               | Does                                  |
+| ----------------------------------------------------- | ------------------------------------- |
+| D-pad, left stick                                     | Move (down crouches and enters pipes) |
+| Bottom and right face buttons (A, B), D-pad up        | Jump, swim and climb                  |
+| Left and top face buttons (X, Y), shoulders, triggers | Run and throw fireballs               |
+| Start                                                 | Pause and unpause                     |
+| Select                                                | Mute                                  |
+
+The stick has a dead zone, so a stick that drifts does not walk by itself. Stick up is deliberately not a control, because a stick is pushed up by accident whenever it swings through a diagonal while running, and that would make Mario jump. Stick down only counts when the stick points nearly straight down, so running down and to the right never crouches.
+
+`src/engine/DeviceLayr.ts` reads the controllers once per game update (from `src/game/settings/runner.js`) and sends the same key events as the keyboard, once per press and once per release. While the game is paused it reads them once per animation frame instead, so Start can unpause. With no controller connected it makes one cheap check every few updates. Letting go of everything happens by itself when a controller is unplugged. The mapping lives in `src/game/settings/devices.ts`. On a touch screen the on-screen buttons hide on the first press of a controller and come back when the screen is touched. `tests/gamepad.spec.ts` plays the game with fake controllers.
+
 ## Console cheats
 
 The game is exposed as the global `FSM`. Open the browser console and run `FSM.UsageHelper.displayHelpOptions();` for the full list. Common ones:

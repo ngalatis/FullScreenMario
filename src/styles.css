@@ -709,6 +709,25 @@ body.gamepad-in-use .touch-passer-container {
     content: ", ";
 }
 
+/* Controls - a hint under a table */
+
+#controls .options-note {
+    margin: 7px 14px;
+    font-size: 8px;
+    line-height: 1.7;
+}
+
+/* The Controls menu is the one with a hint, so its hover panel is taller than the others (the phone sheet
+   above is fully expanded anyway, and its rules are more specific than these). */
+#controls [id="control-Controls"]:hover {
+    margin-top: -402px;
+    height: 430px;
+}
+
+#controls [id="control-Controls"] .select-options {
+    max-height: 388px;
+}
+
 /* Controls - tables */
 
 #controls table {

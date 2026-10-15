@@ -673,6 +673,17 @@ test.describe("without a controller", () => {
     });
 });
 
+test.describe("the menu", () => {
+    test("tells the player how a controller plays", async ({ page }) => {
+        await bootGame(page);
+
+        const note = page.locator("#control-Controls .options-note");
+        await expect(note).toContainText("D-pad or left stick moves");
+        await expect(note).toContainText("Start pauses");
+        await expect(note).toContainText("Select mutes");
+    });
+});
+
 test.describe("on a touch screen", () => {
     // Playwright forbids changing the browser type from inside a project, so only keep the emulation.
     const { defaultBrowserType: _ignored, ...iPhoneLandscape } = devices["iPhone 13 landscape"];

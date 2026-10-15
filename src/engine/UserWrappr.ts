@@ -1006,6 +1006,11 @@ export namespace UISchemas {
         actions?: IOptionsTableAction[];
 
         /**
+         * A line of plain text to show under the table, such as a hint.
+         */
+        note?: string;
+
+        /**
          * Descriptions of the options to be displayed in the table.
          */
         options: IOptionsTableOption[];
@@ -1239,6 +1244,14 @@ export namespace UISchemas {
             }
 
             output.appendChild(table);
+
+            if (schema.note) {
+                const note: HTMLParagraphElement = document.createElement("p");
+
+                note.className = "options-note";
+                note.textContent = schema.note;
+                output.appendChild(note);
+            }
 
             if (schema.actions) {
                 for (i = 0; i < schema.actions.length; i += 1) {

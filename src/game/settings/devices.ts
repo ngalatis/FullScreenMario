@@ -56,8 +56,9 @@ const stick: IStickSettings = {
 
 /**
  * Set on the page from the first press on a controller until the screen is next
- * touched. styles.css hides the on-screen touch controls meanwhile, so a phone or
- * tablet with a controller paired is not left with half a screen of buttons.
+ * touched, the last controller is unplugged, or the game is rebuilt. styles.css
+ * hides the on-screen touch controls meanwhile, so a phone or tablet with a
+ * controller paired is not left with half a screen of buttons.
  */
 const inUseClass = "gamepad-in-use";
 
@@ -70,7 +71,8 @@ const devices: Omit<IDeviceLayrSettings, "InputWriter"> = {
         on: "onkeydown",
         off: "onkeyup"
     },
-    onInput: (): void => document.body.classList.add(inUseClass)
+    onInput: (): void => document.body.classList.add(inUseClass),
+    onIdle: (): void => document.body.classList.remove(inUseClass)
 };
 
 // This file runs once, however often the game is rebuilt, so one listener is all it takes

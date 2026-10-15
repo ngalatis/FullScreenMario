@@ -402,9 +402,10 @@ section#game .EightBitter {
 }
 
 /* While a game controller is being played (see settings/devices.ts) the on-screen controls get out of the
-   way, until the screen is touched again. They are hidden, not removed, so the picture keeps its size. */
+   way, until the screen is touched again. They are only see-through, not removed or hidden, so the picture
+   keeps its size and the touch that brings them back already works as a press of the control under it. */
 body.gamepad-in-use .touch-passer-container {
-    visibility: hidden;
+    opacity: 0;
 }
 
 .touch-passer-container .touch-control {

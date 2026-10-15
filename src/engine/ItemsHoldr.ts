@@ -80,6 +80,12 @@ export interface IItemValueSettings {
     onModular?: Function;
 
     /**
+     * A callback to call after the value has been set or changed and the
+     * minimum, maximum, modularity and trigger checks have been applied.
+     */
+    onChange?: Function;
+
+    /**
      * A Function to transform the value when it's being set.
      */
     transformGet?: Function;
@@ -165,6 +171,12 @@ export interface IItemValue {
      * A callback to call when the value reaches modularity.
      */
     onModular?: Function;
+
+    /**
+     * A callback to call after the value has been set or changed and the
+     * minimum, maximum, modularity and trigger checks have been applied.
+     */
+    onChange?: Function;
 
     /**
      * A Function to transform the value when it's being set.
@@ -562,6 +574,12 @@ export class ItemValue implements IItemValue {
     onModular?: Function;
 
     /**
+     * A callback to call after the value has been set or changed and the
+     * minimum, maximum, modularity and trigger checks have been applied.
+     */
+    onChange?: Function;
+
+    /**
      * A Function to transform the value when it's being set.
      */
     transformGet?: Function;
@@ -615,7 +633,7 @@ export class ItemValue implements IItemValue {
 
         if (this.storeLocally) {
             // If there exists an old version of this property, get it
-            if (ItemsHolder.getLocalStorage().hasOwnProperty(ItemsHolder.getPrefix() + key)) {
+            if (this.hasStoredValue()) {
                 this.value = this.retrieveLocalStorage();
                 this.update();
             } else {
@@ -686,10 +704,16 @@ export class ItemValue implements IItemValue {
         if (this.storeLocally) {
             this.updateLocalStorage();
         }
+
+        if (this.onChange) {
+            this.onChange.apply(this, this.ItemsHolder.getCallbackArgs());
+        }
     }
 
     /**
      * Stores a ItemValue's value in localStorage under the prefix plus its key.
+     * Storage that is full, blocked or otherwise throwing is ignored: the value
+     * is still kept in memory for as long as the page is open.
      *
      * @param {Boolean} [overrideAutoSave]   Whether the policy on saving should
      *                                       be ignored (so saving happens
@@ -697,7 +721,14 @@ export class ItemValue implements IItemValue {
      */
     updateLocalStorage(overrideAutoSave?: boolean): void {
         if (overrideAutoSave || this.ItemsHolder.getAutoSave()) {
-            this.ItemsHolder.getLocalStorage()[this.ItemsHolder.getPrefix() + this.key] = JSON.stringify(this.value);
+            try {
+                this.ItemsHolder.getLocalStorage().setItem(
+                    this.ItemsHolder.getPrefix() + this.key,
+                    JSON.stringify(this.value)
+                );
+            } catch {
+                // Safari private mode, a full quota or blocked site data
+            }
         }
     }
 
@@ -744,23 +775,41 @@ export class ItemValue implements IItemValue {
     }
 
     /**
-     * Retrieves a ItemValue's value from localStorage, making sure not to try to
-     * JSON.parse an undefined or null value.
-     *
-     * @returns {Mixed}
+     * Whether localStorage holds a value for this ItemValue. Storage that
+     * throws counts as holding nothing.
      */
-    private retrieveLocalStorage(): void {
-        var value: any = localStorage.getItem(this.ItemsHolder.getPrefix() + this.key);
-
-        if (value === "undefined") {
-            return undefined;
+    private hasStoredValue(): boolean {
+        try {
+            return this.ItemsHolder.getLocalStorage().getItem(this.ItemsHolder.getPrefix() + this.key) !== null;
+        } catch {
+            return false;
         }
+    }
 
-        if (value.constructor !== String) {
-            return value;
+    /**
+     * Retrieves a ItemValue's value from localStorage, making sure not to try to
+     * JSON.parse an undefined or null value. Text that is not valid JSON (for
+     * example, written by an older version) or storage that throws gives the
+     * default value instead of an error.
+     *
+     * @returns The stored value, or the default value if it can't be read.
+     */
+    private retrieveLocalStorage(): unknown {
+        try {
+            var value: unknown = this.ItemsHolder.getLocalStorage().getItem(this.ItemsHolder.getPrefix() + this.key);
+
+            if (value === "undefined") {
+                return undefined;
+            }
+
+            if (typeof value !== "string") {
+                return value === null ? this.valueDefault : value;
+            }
+
+            return JSON.parse(value);
+        } catch {
+            return this.valueDefault;
         }
-
-        return JSON.parse(<string>value);
     }
 }
 
@@ -838,13 +887,7 @@ export class ItemsHoldr implements IItemsHoldr {
 
         this.allowNewItems = settings.allowNewItems === undefined ? true : settings.allowNewItems;
 
-        if (settings.localStorage) {
-            this.localStorage = settings.localStorage;
-        } else if (typeof localStorage === "undefined") {
-            this.localStorage = this.createPlaceholderStorage();
-        } else {
-            this.localStorage = localStorage;
-        }
+        this.localStorage = settings.localStorage || this.findLocalStorage() || this.createPlaceholderStorage();
 
         this.defaults = settings.defaults || {};
         this.displayChanges = settings.displayChanges || {};
@@ -1345,49 +1388,43 @@ export class ItemsHoldr implements IItemsHoldr {
     }
 
     /**
-     * Creates an Object that can be used to create a new LocalStorage
-     * replacement, if the JavaScript environment doesn't have one.
+     * Finds the browser's localStorage. Reaching it can throw (blocked site
+     * data, some privacy modes), which counts as not having one.
      *
-     * @returns {Object}
+     * @returns The global localStorage, if it can be reached.
+     */
+    private findLocalStorage(): Storage | undefined {
+        try {
+            return typeof localStorage === "undefined" ? undefined : localStorage;
+        } catch {
+            return undefined;
+        }
+    }
+
+    /**
+     * Creates an Object that can be used as a LocalStorage replacement, if the
+     * JavaScript environment doesn't have one. It only lives as long as the page.
+     *
+     * @returns An in-memory Storage.
      */
     private createPlaceholderStorage(): Storage {
-        var i: string,
-            output: any = {
-                "keys": [],
-                "getItem": function (key: string): unknown {
-                    return this.localStorage[key];
-                },
-                "setItem": function (key: string, value: string): void {
-                    this.localStorage[key] = value;
-                },
-                "clear": function (): void {
-                    for (i in this) {
-                        if (this.hasOwnProperty(i)) {
-                            delete this[i];
-                        }
-                    }
-                },
-                "removeItem": function (key: string): void {
-                    delete this[key];
-                },
-                "key": function (index: number): string {
-                    return this.keys[index];
-                }
-            };
+        const data: Map<string, string> = new Map();
 
-        Object.defineProperties(output, {
-            "length": {
-                "get": function (): number {
-                    return output.keys.length;
-                }
+        return <Storage>(<unknown>{
+            "getItem": (key: string): string | null => (data.has(key) ? <string>data.get(key) : null),
+            "setItem": (key: string, value: unknown): void => {
+                data.set(key, String(value));
             },
-            "remainingSpace": {
-                "get": function (): number {
-                    return 9001; // Is there a way to calculate this?
-                }
+            "removeItem": (key: string): void => {
+                data.delete(key);
+            },
+            "clear": (): void => {
+                data.clear();
+            },
+            "key": (index: number): string | null => Array.from(data.keys())[index] ?? null,
+            get length(): number {
+                return data.size;
             }
         });
-
-        return output;
     }
 }

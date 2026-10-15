@@ -18,7 +18,7 @@ export interface IGroupHoldrGroups<T> {
  * Types for stored object groups, as Array or Object.
  */
 export interface IGroupHoldrTypesListing {
-    [i: string]: new (...args: any[]) => any;
+    [i: string]: new (...args: unknown[]) => any;
 }
 
 /**
@@ -49,7 +49,7 @@ export interface IGroupHoldrGetGroupFunction<T> extends IGroupHoldrFunction {
  * @param [value]   The value to store in the group.
  */
 export interface IGroupHoldrSetFunction extends IGroupHoldrFunction {
-    (key: string | number, value?: any): void;
+    (key: string | number, value?: unknown): void;
 }
 
 /**
@@ -69,7 +69,7 @@ export interface IGroupHoldrGetFunction extends IGroupHoldrFunction {
  * @remarks If the group is an Array, not providing a key will use Array::push.
  */
 export interface IGroupHoldrAddFunction extends IGroupHoldrFunction {
-    (value: any, key?: string | number): void;
+    (value: unknown, key?: string | number): void;
 }
 
 /**
@@ -79,7 +79,7 @@ export interface IGroupHoldrAddFunction extends IGroupHoldrFunction {
  * @param [key]   The index to store the value under.
  */
 export interface IGroupHoldrArrayAddFunction extends IGroupHoldrAddFunction {
-    (value: any, key?: number): void;
+    (value: unknown, key?: number): void;
 }
 
 /**
@@ -89,7 +89,7 @@ export interface IGroupHoldrArrayAddFunction extends IGroupHoldrAddFunction {
  * @param key   The key to store the value under.
  */
 export interface IGroupHoldrObjectAddFunction extends IGroupHoldrAddFunction {
-    (value: any, key: string): void;
+    (value: unknown, key: string): void;
 }
 
 /**
@@ -109,7 +109,7 @@ export interface IGroupHoldrDeleteFunction extends IGroupHoldrFunction {
  * @param [index]   The index of the value, to bypass Array::indexOf.
  */
 export interface IGroupHoldrArrayDeleteFunction extends IGroupHoldrDeleteFunction {
-    (value?: any, index?: number): void;
+    (value?: unknown, index?: number): void;
 }
 
 /**
@@ -204,7 +204,7 @@ export interface IGroupHoldr {
      * @param name   The name of the group to retrieve.
      * @returns The group stored under the given name.
      */
-    getGroup(name: string): { [i: string]: any } | any[];
+    getGroup(name: string): { [i: string]: unknown } | any[];
 
     /**
      * @returns Names of the stored object groups.
@@ -223,7 +223,7 @@ export interface IGroupHoldr {
      *                   (required if the new group is an Object).
      */
     switchMemberGroup(
-        value: any,
+        value: unknown,
         groupNameOld: string,
         groupNameNew: string,
         keyOld?: string | number,
@@ -240,7 +240,7 @@ export interface IGroupHoldr {
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
      */
-    applyAll(scope: any, func: (...args: any[]) => any, args?: any[]): void;
+    applyAll(scope: unknown, func: (...args: unknown[]) => any, args?: unknown[]): void;
 
     /**
      * Calls a function for each member of each group. Extra arguments may be
@@ -251,7 +251,7 @@ export interface IGroupHoldr {
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
      */
-    applyOnAll(scope: any, func: (...args: any[]) => any, args?: any[]): void;
+    applyOnAll(scope: unknown, func: (...args: unknown[]) => any, args?: unknown[]): void;
 
     /**
      * Calls a Function for each group, with that group as the first argument.
@@ -262,7 +262,7 @@ export interface IGroupHoldr {
      *                defaults to this).
      * @param func   A Function to apply to each group.
      */
-    callAll(scope: any, func: (...args: any[]) => any, ...args: any[]): void;
+    callAll(scope: unknown, func: (...args: any[]) => any, ...args: unknown[]): void;
 
     /**
      * Calls a function for each member of each group. Extra arguments may be
@@ -272,7 +272,7 @@ export interface IGroupHoldr {
      *                defaults to this).
      * @param func   A Function to apply to each group member.
      */
-    callOnAll(scope: any, func: (...args: any[]) => any, ...args: any[]): void;
+    callOnAll(scope: unknown, func: (...args: unknown[]) => any, ...args: unknown[]): void;
 
     /**
      * Clears each Array by setting its length to 0.
@@ -361,7 +361,7 @@ export class GroupHoldr {
      * @param name   The name of the group to retrieve.
      * @returns The group stored under the given name.
      */
-    getGroup(name: string): { [i: string]: any } | any[] {
+    getGroup(name: string): { [i: string]: unknown } | any[] {
         return this.groups[name];
     }
 
@@ -387,7 +387,7 @@ export class GroupHoldr {
      *                   (required if the new group is an Object).
      */
     switchMemberGroup(
-        value: any,
+        value: unknown,
         groupNameOld: string,
         groupNameNew: string,
         keyOld?: string | number,
@@ -414,7 +414,7 @@ export class GroupHoldr {
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
      */
-    applyAll(scope: any, func: (...args: any[]) => any, args?: any[]): void {
+    applyAll(scope: unknown, func: (...args: unknown[]) => any, args?: unknown[]): void {
         var i: number;
 
         if (!args) {
@@ -444,7 +444,7 @@ export class GroupHoldr {
      * @param func   A Function to apply to each group.
      * @param [args]   Optionally, arguments to pass in after each group.
      */
-    applyOnAll(scope: any, func: (...args: any[]) => any, args?: any[]): void {
+    applyOnAll(scope: unknown, func: (...args: unknown[]) => any, args?: unknown[]): void {
         var group: any, i: number, j: any;
 
         if (!args) {
@@ -485,8 +485,8 @@ export class GroupHoldr {
      *                defaults to this).
      * @param func   A Function to apply to each group.
      */
-    callAll(scope: any, func: (...args: any[]) => any): void {
-        var args: any[] = Array.prototype.slice.call(arguments, 1),
+    callAll(scope: unknown, func: (...args: unknown[]) => any): void {
+        var args: unknown[] = Array.prototype.slice.call(arguments, 1),
             i: number;
 
         if (!scope) {
@@ -507,8 +507,8 @@ export class GroupHoldr {
      *                defaults to this).
      * @param func   A Function to apply to each group member.
      */
-    callOnAll(scope: any, func: (...args: any[]) => any): void {
-        var args: any[] = Array.prototype.slice.call(arguments, 1),
+    callOnAll(scope: unknown, func: (...args: unknown[]) => any): void {
+        var args: unknown[] = Array.prototype.slice.call(arguments, 1),
             group: any,
             i: number,
             j: any;
@@ -540,7 +540,7 @@ export class GroupHoldr {
      * Clears each Array by setting its length to 0.
      */
     clearArrays(): void {
-        var group: any, i: number;
+        var group: unknown, i: number;
 
         for (i = this.groupNames.length - 1; i >= 0; i -= 1) {
             group = this.groups[this.groupNames[i]];
@@ -567,7 +567,7 @@ export class GroupHoldr {
     private setGroupNames(names: string[], types: string | any): void {
         var scope: GroupHoldr = this,
             typeFunc: any,
-            typeName: any;
+            typeName: unknown;
 
         // If there already were group names, clear them
         if (this.groupNames) {
@@ -710,7 +710,7 @@ export class GroupHoldr {
          */
         this.functions.set[name] = (<any>this)["set" + name] = function (
             key: string | number,
-            value: any = undefined
+            value: unknown = undefined
         ): void {
             this.groups[name][<string>key] = value;
         };
@@ -755,7 +755,7 @@ export class GroupHoldr {
              * @param value   The value to be added to the group.
              */
             this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrObjectAddFunction>(
-                function (value: any, key: string): void {
+                function (value: unknown, key: string): void {
                     group[key] = value;
                 }
             );
@@ -766,7 +766,7 @@ export class GroupHoldr {
              * @param value   The value to be added to the group.
              */
             this.functions.add[name] = (<any>this)["add" + name] = <IGroupHoldrArrayAddFunction>(
-                function (value: any, key?: number): void {
+                function (value: unknown, key?: number): void {
                     if (key !== undefined) {
                         group[key] = value;
                     } else {
@@ -802,7 +802,7 @@ export class GroupHoldr {
              * @param value The value to be deleted.
              */
             this.functions.delete[name] = (<any>this)["delete" + name] = function (
-                value: any,
+                value: unknown,
                 index: number = group.indexOf(value)
             ): void {
                 if (index !== -1) {

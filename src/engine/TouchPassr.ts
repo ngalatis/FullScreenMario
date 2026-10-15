@@ -302,7 +302,7 @@ export class Control<T extends IControlSchema> {
      *                   or style.
      * @returns A newly created HTMLElement of the specified type.
      */
-    public createElement(tag: string, ...args: any[]): HTMLElement {
+    public createElement(tag: string, ...args: unknown[]): HTMLElement {
         var element: any = document.createElement(tag || "div"),
             i: number;
 

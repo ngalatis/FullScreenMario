@@ -23,25 +23,25 @@ export interface IGameStartr {
     container: HTMLDivElement;
     scale: number;
     unitsize: number;
-    addPageStyles(styles: any): void;
+    addPageStyles(styles: unknown): void;
     addThing(thing: IThing, x?: number, y?: number): IThing;
-    createElement(tag: "a", ...args: any[]): HTMLLinkElement;
-    createElement(tag: "div", ...args: any[]): HTMLDivElement;
-    createElement(tag: "h1", ...args: any[]): HTMLHeadingElement;
-    createElement(tag: "h2", ...args: any[]): HTMLHeadingElement;
-    createElement(tag: "h3", ...args: any[]): HTMLHeadingElement;
-    createElement(tag: "h4", ...args: any[]): HTMLHeadingElement;
-    createElement(tag: "input", ...args: any[]): HTMLInputElement;
-    createElement(tag: "select", ...args: any[]): HTMLSelectElement;
-    createElement(tag: string, ...args: any[]): HTMLElement;
+    createElement(tag: "a", ...args: unknown[]): HTMLLinkElement;
+    createElement(tag: "div", ...args: unknown[]): HTMLDivElement;
+    createElement(tag: "h1", ...args: unknown[]): HTMLHeadingElement;
+    createElement(tag: "h2", ...args: unknown[]): HTMLHeadingElement;
+    createElement(tag: "h3", ...args: unknown[]): HTMLHeadingElement;
+    createElement(tag: "h4", ...args: unknown[]): HTMLHeadingElement;
+    createElement(tag: "input", ...args: unknown[]): HTMLInputElement;
+    createElement(tag: "select", ...args: unknown[]): HTMLSelectElement;
+    createElement(tag: string, ...args: unknown[]): HTMLElement;
     killNormal(thing: IThing): void;
-    proliferateElement(recipient: HTMLElement, donor: any, noOverride?: boolean): void;
+    proliferateElement(recipient: HTMLElement, donor: unknown, noOverride?: boolean): void;
     setLeft(thing: IThing, left: number): void;
     setMap(name: string, location?: string): void;
     setRight(thing: IThing, right: number): void;
     setTop(thing: IThing, top: number): void;
     shiftHoriz(thing: IThing, dx: number, notChanged?: boolean): void;
-    proliferate(recipient: any, donor: any, noOverride?: boolean): any;
+    proliferate(recipient: unknown, donor: unknown, noOverride?: boolean): any;
     scrollWindow(x: number): void;
 }
 
@@ -75,7 +75,7 @@ export interface IPreThingDescriptor {
 export interface IPreThingDimensionDescriptor {
     type?: string;
     value?: any;
-    Infinite?: any;
+    Infinite?: unknown;
     mod?: number;
     real?: number;
 }
@@ -104,7 +104,7 @@ export interface IDataEventTarget extends EventTarget {
 }
 
 export interface IThingIcon extends HTMLDivElement {
-    options: any[];
+    options: unknown[];
 }
 
 export interface IDisplayContainer {
@@ -198,7 +198,7 @@ export interface ILevelEditr {
  *          map, for example) is returned unchanged.
  */
 export function beautifyJSON(text: string): string {
-    let value: any;
+    let value: unknown;
 
     try {
         value = JSON.parse(text);
@@ -230,13 +230,13 @@ function beautifyJSONValue(value: any, indent: string): string {
         return open + close;
     }
 
-    const children: any[] = isArray ? value : keys.map((key: string): any => value[key]);
+    const children: unknown[] = isArray ? value : keys.map((key: string): unknown => value[key]);
     const labels: string[] = isArray ? [] : keys.map((key: string): string => JSON.stringify(key) + ": ");
 
-    if (children.every((child: any): boolean => typeof child !== "object" || child === null)) {
+    if (children.every((child: unknown): boolean => typeof child !== "object" || child === null)) {
         const inline: string =
             open +
-            children.map((child: any, i: number): string => (labels[i] || "") + JSON.stringify(child)).join(", ") +
+            children.map((child: unknown, i: number): string => (labels[i] || "") + JSON.stringify(child)).join(", ") +
             close;
 
         if (indent.length + inline.length <= 80) {
@@ -251,7 +251,7 @@ function beautifyJSONValue(value: any, indent: string): string {
         "\n" +
         children
             .map(
-                (child: any, i: number): string =>
+                (child: unknown, i: number): string =>
                     innerIndent + (labels[i] || "") + beautifyJSONValue(child, innerIndent)
             )
             .join(",\n") +
@@ -370,7 +370,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      * The current arguments for currentPreThings, such as { "smart": true }
      */
-    private currentArgs: any;
+    private currentArgs: unknown;
 
     /**
      * Whether the pageStyle styles have been added to the page
@@ -446,7 +446,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    getOldInformation(): any {
+    getOldInformation(): unknown {
         return this.oldInformation;
     }
 
@@ -544,7 +544,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    getCurrentArgs(): any {
+    getCurrentArgs(): unknown {
         return this.currentArgs;
     }
 
@@ -742,7 +742,7 @@ export class LevelEditr implements ILevelEditr {
      *
      */
     private setCurrentThing(title: string, x: number = 0, y: number = 0): void {
-        var args: any = this.generateCurrentArgs(),
+        var args: unknown = this.generateCurrentArgs(),
             description: IPreThingDescriptor = this.things[title],
             reference: MapsCreatr.IPreThingSettings = this.GameStarter.proliferate(
                 {
@@ -959,7 +959,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private onClickEditingGenericAdd(x: number, y: number, title: string, args: any): void {
+    private onClickEditingGenericAdd(x: number, y: number, title: string, args: unknown): void {
         var thing: IThing = this.GameStarter.ObjectMaker.make(
                 title,
                 this.GameStarter.proliferate(
@@ -1004,7 +1004,12 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private onMacroIconClick(title: string, description: string | undefined, options: any, event?: MouseEvent): void {
+    private onMacroIconClick(
+        title: string,
+        description: string | undefined,
+        options: unknown,
+        event?: MouseEvent
+    ): void {
         if (description) {
             this.setVisualOptions(title, description, options);
         }
@@ -1051,7 +1056,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private generateCurrentArgs(): any {
+    private generateCurrentArgs(): unknown {
         var args: any = {},
             container: HTMLDivElement = this.display.sections.ClickToPlace.VisualOptions,
             children: HTMLCollectionOf<any> = container.getElementsByClassName("VisualOptionsList"),
@@ -1299,7 +1304,7 @@ export class LevelEditr implements ILevelEditr {
     private resetAllVisualOptionSelects(className: string, options: any[]): void {
         var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             elements: HTMLCollectionOf<any> = this.display.container.getElementsByClassName(className),
-            attributes: any = {
+            attributes: unknown = {
                 "children": options.map(function (option: string): HTMLOptionElement {
                     return new Option(option, option);
                 })
@@ -1415,7 +1420,7 @@ export class LevelEditr implements ILevelEditr {
 
     private addMapCreationMacro(x: number, y: number): boolean {
         var mapObject: IMapsCreatrMapRaw | undefined = this.getMapObject(),
-            macroRaw: any = this.GameStarter.proliferate(
+            macroRaw: unknown = this.GameStarter.proliferate(
                 {
                     "macro": this.currentTitle,
                     "x": this.getNormalizedX(x) + this.GameStarter.MapScreener.left / this.GameStarter.unitsize,
@@ -2314,7 +2319,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private createVisualOptionLocation(option: any): HTMLDivElement | HTMLSelectElement {
+    private createVisualOptionLocation(option: unknown): HTMLDivElement | HTMLSelectElement {
         var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             locations: string[],
             select: HTMLSelectElement;
@@ -2343,7 +2348,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private createVisualOptionArea(option: any): HTMLDivElement | HTMLSelectElement {
+    private createVisualOptionArea(option: unknown): HTMLDivElement | HTMLSelectElement {
         var map: IMapsCreatrMapRaw | undefined = this.getMapObject(),
             areas: string[],
             select: HTMLSelectElement;
@@ -2372,7 +2377,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private createVisualOptionEverything(option: any): HTMLSelectElement {
+    private createVisualOptionEverything(option: unknown): HTMLSelectElement {
         var select: HTMLSelectElement = this.createSelect(Object.keys(this.things), {
             "className": "VisualOptionValue VisualOptionEverything",
             "data-type": "String",
@@ -2450,7 +2455,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private stringifySmart(object: any = {}): string {
+    private stringifySmart(object: unknown = {}): string {
         return JSON.stringify(object, this.jsonReplacerSmart);
     }
 
@@ -2460,7 +2465,7 @@ export class LevelEditr implements ILevelEditr {
      * @remarks Settings .editor=true informs the area that the player
      *          should respawn upon death without resetting gameplay.
      */
-    private parseSmart(text: string): any {
+    private parseSmart(text: string): unknown {
         var map: any = JSON.parse(text, this.jsonReplacerSmart),
             areas: any = map.areas,
             i: any;
@@ -2477,7 +2482,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private jsonReplacerSmart(key: string, value: any): any {
+    private jsonReplacerSmart(key: string, value: unknown): unknown {
         if (value !== value) {
             return "NaN";
         } else if (value === Infinity) {
@@ -2574,7 +2579,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private getNormalizedThingArguments(args: any): any {
+    private getNormalizedThingArguments(args: unknown): unknown {
         var argsNormal: any = this.GameStarter.proliferate({}, args);
 
         if (argsNormal.height === Infinity) {
@@ -2614,7 +2619,7 @@ export class LevelEditr implements ILevelEditr {
     /**
      *
      */
-    private getPrethingSizeArguments(descriptor: IPreThingDescriptor): any {
+    private getPrethingSizeArguments(descriptor: IPreThingDescriptor): unknown {
         var output: any = {},
             width: number | undefined = this.getPrethingSizeArgument(descriptor.width),
             height: number | undefined = this.getPrethingSizeArgument(descriptor.height);
@@ -2788,7 +2793,7 @@ export class LevelEditr implements ILevelEditr {
     /*
      *
      */
-    private createPageStyles(): any {
+    private createPageStyles(): unknown {
         return {
             ".LevelEditor": {
                 "position": "absolute",

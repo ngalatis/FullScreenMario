@@ -283,7 +283,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
      * @param defaults   The default settings for the Thing's class.
      * @remarks This is generally called as the onMake call in an ObjectMakr.
      */
-    thingProcess(thing: IThing, title: string, settings: any, defaults: any): void {
+    thingProcess(thing: IThing, title: string, settings: unknown, defaults: unknown): void {
         // Infinite height refers to objects that reach exactly to the bottom
         if (<any>thing.height === "Infinity" || thing.height === Infinity) {
             thing.height = thing.FSM.getAbsoluteHeight(thing.y) / thing.FSM.unitsize;
@@ -350,7 +350,7 @@ export class MarioGame extends GameStartr.GameStartr implements IMarioGame {
      *
      * @param {Mixed} current  
      */
-    ensureCorrectCaller(current: any): MarioGame {
+    ensureCorrectCaller(current: unknown): MarioGame {
         if (!(current instanceof MarioGame)) {
             throw new Error(
                 "A function requires the scope ('this') to be the " +

@@ -362,7 +362,7 @@ export interface IPixelDrawr {
      *
      * @param fillStyle   The new fillStyle for the background context.
      */
-    setBackground(fillStyle: any): void;
+    setBackground(fillStyle: unknown): void;
 
     /**
      * Draws the background canvas onto the main canvas' context.

@@ -163,7 +163,7 @@ export interface IArea extends MapsCreatr.IMapsCreatrArea {
      * Any additional attributes that should add extra properties to this Area.
      */
     attributes?: {
-        [i: string]: any;
+        [i: string]: unknown;
     };
 
     /**
@@ -443,7 +443,7 @@ export interface ICustomText extends IThing {
     /**
      * Any additional attributes to give to children.
      */
-    textAttributes?: any;
+    textAttributes?: unknown;
 
     /**
      * Raw descriptions of text to display as children Text Things.
@@ -494,7 +494,7 @@ export interface ISolid extends IThing {
      * @param other   The Solid being run into by thing.
      * @param transport   Other's transport property, if it exists.
      */
-    actionLeft?: (thing: ICharacter, other: ISolid, transport?: any) => void;
+    actionLeft?: (thing: ICharacter, other: ISolid, transport?: unknown) => void;
 
     /**
      * A callback for when a Player actively attemps to crouch on top of this.
@@ -503,7 +503,7 @@ export interface ISolid extends IThing {
      * @param other   The Solid being crouched on by thing.
      * @param transport   Other's transport property, if it exists.
      */
-    actionTop?: (thing: ICharacter, other: ISolid, transport?: any) => void;
+    actionTop?: (thing: ICharacter, other: ISolid, transport?: unknown) => void;
 
     /**
      * A Character holding onto this, such as with a Vine or Flagpole.
@@ -1071,7 +1071,7 @@ export interface ICharacter extends IThing {
     /**
      * Any additional settings to give to a spawned Thing.
      */
-    spawnSettings?: any;
+    spawnSettings?: unknown;
 
     /**
      * How fast this moves.
@@ -1688,7 +1688,7 @@ export interface IMacroSettings {
      */
     y?: number;
 
-    [i: string]: any;
+    [i: string]: unknown;
 }
 
 /**
@@ -1777,13 +1777,13 @@ export interface IMacroPipeSettings extends IMacroSettings {
      * What location the Pipe should transport to (by default,
      * none).
      */
-    transport?: any;
+    transport?: unknown;
 
     /**
      * What location the Pipe should act as an entrance to (by
      * default, none).
      */
-    entrance?: any;
+    entrance?: unknown;
 }
 
 /**
@@ -1799,7 +1799,7 @@ export interface IMacroPipeCornerSettings extends IMacroSettings {
      * What location the Pipe should transport to (by default,
      * none).
      */
-    transport?: any;
+    transport?: unknown;
 
     /**
      * Whether there should be a ScrollEnabler placed on top of
@@ -2012,7 +2012,7 @@ export interface IMacroCastleSettings extends IMacroSettings {
     /**
      * What map or location to shift to after ending theatrics.
      */
-    transport: any;
+    transport: unknown;
 
     /**
      * How many CastleWalls should be placed to the right of the castle
@@ -2038,7 +2038,7 @@ export interface IMacroEndOutsideCastleSettings extends IMacroSettings {
     /**
      * Where to transport to after ending theatrics.
      */
-    transport: any;
+    transport: unknown;
 
     /**
      * Whether this should place a large castle instead of a small
@@ -2066,7 +2066,7 @@ export interface IMacroEndInsideCastleSettings extends IMacroSettings {
     /**
      * Where to transport to after ending theatrics.
      */
-    transport: any;
+    transport: unknown;
 
     /**
      * Which NPC to use, as "Toach" or "Peach" (by default, "Toad").
@@ -2298,7 +2298,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param defaults   The default settings for the Thing's class.
      * @remarks This is generally called as the onMake call in an ObjectMakr.
      */
-    thingProcess(thing: IThing, title: string, settings: any, defaults: any): void;
+    thingProcess(thing: IThing, title: string, settings: unknown, defaults: unknown): void;
 
     /**
      * Generates a key for a Thing based off the current area and the Thing's
@@ -3018,7 +3018,7 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      * @param collection   The collection Object shared by all members.
      * @param thing   A member of the collection being spawned.
      */
-    spawnCollectionComponent(collection: any, thing: IThing): void;
+    spawnCollectionComponent(collection: unknown, thing: IThing): void;
 
     /**
      * Spawning callback for RandomSpawner Things, which generate a set of
@@ -5137,5 +5137,5 @@ export interface IMarioGame extends GameStartr.IGameStartr {
      *
      * @param {Mixed} current
      */
-    ensureCorrectCaller(current: any): IMarioGame;
+    ensureCorrectCaller(current: unknown): IMarioGame;
 }

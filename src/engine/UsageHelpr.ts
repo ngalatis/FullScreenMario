@@ -108,7 +108,7 @@ export interface IUsageHelprSettings {
     /**
      * A utility Function to log messages, commonly console.log.
      */
-    logger?: (...args: any[]) => any;
+    logger?: (...args: unknown[]) => any;
 }
 
 /**
@@ -182,7 +182,7 @@ export class UsageHelpr {
     /**
      * A utility Function to log messages, commonly console.log.
      */
-    private logger: (...args: any[]) => any;
+    private logger: (...args: unknown[]) => any;
 
     /**
      * Initializes a new instance of the UsageHelpr class.

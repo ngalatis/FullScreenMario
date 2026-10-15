@@ -24,14 +24,14 @@ export interface IClassFunctions {
  * Root abstract definition for class Functions.
  */
 export interface IClassFunction {
-    new (): any;
+    new (): unknown;
 }
 
 /**
  * Member callback for when an output onMake is a Function.
  */
 export interface IOnMakeFunction {
-    (output: any, name: string, settings: any, defaults: any): any;
+    (output: unknown, name: string, settings: unknown, defaults: unknown): unknown;
 }
 
 /**
@@ -56,7 +56,7 @@ export interface IObjectMakrSettings {
     /**
      * How propperties can be mapped from an Array to indices.
      */
-    indexMap?: any[];
+    indexMap?: unknown[];
 
     /**
      * Optionally, a String index for each generated Object's Function to
@@ -75,22 +75,22 @@ export interface IObjectMakr {
     /**
      * @returns The complete inheritance mapping.
      */
-    getInheritance(): any;
+    getInheritance(): unknown;
 
     /**
      * @returns The complete properties mapping.
      */
-    getProperties(): any;
+    getProperties(): unknown;
 
     /**
      * @returns The properties for a particular class.
      */
-    getPropertiesOf(title: string): any;
+    getPropertiesOf(title: string): unknown;
 
     /**
      * @returns Full properties, if doPropertiesFull is true.
      */
-    getFullProperties(): any;
+    getFullProperties(): unknown;
 
     /**
      * @returns Full properties for a particular class, if
@@ -118,7 +118,7 @@ export interface IObjectMakr {
     /**
      * @returns The optional mapping of indices.
      */
-    getIndexMap(): any[] | undefined;
+    getIndexMap(): unknown[] | undefined;
 
     /**
      * Creates a new instance of the specified type and returns it.
@@ -128,7 +128,7 @@ export interface IObjectMakr {
      * @param [settings]   Additional attributes to add to the new instance.
      * @returns A newly created instance of the specified type.
      */
-    make(name: string, settings?: any): any;
+    make(name: string, settings?: unknown): any;
 }
 
 /**
@@ -167,7 +167,7 @@ export class ObjectMakr implements IObjectMakr {
     /**
      * How properties can be mapped from an Array to indices.
      */
-    private indexMap: any[] | undefined;
+    private indexMap: unknown[] | undefined;
 
     /**
      * Optionally, a String index for each generated Object's Function to
@@ -213,28 +213,28 @@ export class ObjectMakr implements IObjectMakr {
     /**
      * @returns The complete inheritance mapping.
      */
-    getInheritance(): any {
+    getInheritance(): unknown {
         return this.inheritance;
     }
 
     /**
      * @returns The complete properties mapping.
      */
-    getProperties(): any {
+    getProperties(): unknown {
         return this.properties;
     }
 
     /**
      * @returns The properties for a particular class.
      */
-    getPropertiesOf(title: string): any {
+    getPropertiesOf(title: string): unknown {
         return this.properties[title];
     }
 
     /**
      * @returns Full properties, if doPropertiesFull is true.
      */
-    getFullProperties(): any {
+    getFullProperties(): unknown {
         return this.propertiesFull;
     }
 
@@ -242,7 +242,7 @@ export class ObjectMakr implements IObjectMakr {
      * @returns Full properties for a particular class, if
      *          doPropertiesFull is true.
      */
-    getFullPropertiesOf(title: string): any {
+    getFullPropertiesOf(title: string): unknown {
         return this.doPropertiesFull ? this.propertiesFull[title] : undefined;
     }
 
@@ -272,7 +272,7 @@ export class ObjectMakr implements IObjectMakr {
     /**
      * @returns The optional mapping of indices.
      */
-    getIndexMap(): any[] | undefined {
+    getIndexMap(): unknown[] | undefined {
         return this.indexMap;
     }
 
@@ -287,7 +287,7 @@ export class ObjectMakr implements IObjectMakr {
      * @param [settings]   Additional attributes to add to the new instance.
      * @returns A newly created instance of the specified type.
      */
-    make(name: string, settings?: any): any {
+    make(name: string, settings?: unknown): unknown {
         var output: any;
 
         // Make sure the type actually exists in Functions
@@ -346,7 +346,7 @@ export class ObjectMakr implements IObjectMakr {
      *     this.processPropertyArray([7, 14]);
      *     // { "width": 7, "height": 14 }
      */
-    private processPropertyArray(properties: any[]): any {
+    private processPropertyArray(properties: unknown[]): unknown {
         var output: any = {},
             i: number;
 

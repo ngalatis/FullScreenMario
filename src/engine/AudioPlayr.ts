@@ -158,7 +158,7 @@ export interface IAudioPlayrSettings {
      * (defaults to "Theme").
      *
      */
-    getThemeDefault?: string | { (...args: any[]): string };
+    getThemeDefault?: string | { (...args: unknown[]): string };
 
     /**
      * A Number or Function to get the "local" volume for playLocal calls.
@@ -166,7 +166,7 @@ export interface IAudioPlayrSettings {
      * (defaults to 1).
      *
      */
-    getVolumeLocal?: number | { (...args: any[]): number };
+    getVolumeLocal?: number | { (...args: unknown[]): number };
 }
 
 /**
@@ -177,7 +177,7 @@ export interface IAudioPlayr {
     /**
      * @returns The listing of sounds, keyed by name.
      */
-    getLibrary(): any;
+    getLibrary(): unknown;
 
     /**
      * @returns The allowed filetypes for audio files.
@@ -187,7 +187,7 @@ export interface IAudioPlayr {
     /**
      * @returns The currently playing sounds, keyed by name.
      */
-    getSounds(): any;
+    getSounds(): unknown;
 
     /**
      * @returns The current playing theme's sound.
@@ -260,24 +260,24 @@ export interface IAudioPlayr {
     /**
      * @returns The Function or Number used as the volume setter for local sounds.
      */
-    getGetVolumeLocal(): any;
+    getGetVolumeLocal(): unknown;
 
     /**
      * @param getVolumeLocal   A new Function or Number to use as the volume setter
      *                         for local sounds.
      */
-    setGetVolumeLocal(getVolumeLocalNew: any): void;
+    setGetVolumeLocal(getVolumeLocalNew: unknown): void;
 
     /**
      * @returns The Function or String used to get the default theme for playTheme.
      */
-    getGetThemeDefault(): any;
+    getGetThemeDefault(): unknown;
 
     /**
      * @param getThemeDefaultNew A new Function or String to use as the source for
      *                           theme names in default playTheme calls.
      */
-    setGetThemeDefault(getThemeDefaultNew: any): void;
+    setGetThemeDefault(getThemeDefaultNew: unknown): void;
 
     /**
      * Plays the sound of the given name.
@@ -335,7 +335,7 @@ export interface IAudioPlayr {
      * @param location   An argument for getVolumeLocal, if that's a Function.
      * @returns The sound, now playing.
      */
-    playLocal(name: string, location?: any): ISound;
+    playLocal(name: string, location?: unknown): ISound;
 
     /**
      * Pauses any previously playing theme and starts playback of a new theme.
@@ -371,7 +371,7 @@ export interface IAudioPlayr {
      * @param event   The name of the event, such as "ended".
      * @param callback   The Function to be called by the event.
      */
-    addEventListener(name: string, event: string, callback: any): void;
+    addEventListener(name: string, event: string, callback: unknown): void;
 
     /**
      * Clears all events added by this.addEventListener to a sound under a given
@@ -390,7 +390,7 @@ export interface IAudioPlayr {
      * @param event   The name of the event, such as "ended".
      * @param callback   The Function to be called by the event.
      */
-    addEventImmediate(name: string, event: string, callback: any): void;
+    addEventImmediate(name: string, event: string, callback: unknown): void;
 }
 
 /**
@@ -428,7 +428,7 @@ interface ISoundHost {
  * Throws an error from a listener without breaking the code that dispatched it,
  * like the browser does for EventTarget listeners.
  */
-function reportAsync(error: any): void {
+function reportAsync(error: unknown): void {
     queueMicrotask((): void => {
         throw error;
     });
@@ -929,7 +929,7 @@ export class AudioPlayr implements IAudioPlayr {
     /**
      * Listeners added by addEventListener, so they can be removed again.
      */
-    private addedEvents: { [name: string]: { [event: string]: any[] } };
+    private addedEvents: { [name: string]: { [event: string]: unknown[] } };
 
     /**
      * The shared context, if the browser has Web Audio.
@@ -1048,7 +1048,7 @@ export class AudioPlayr implements IAudioPlayr {
     /**
      * @returns The listing of sounds, keyed by name.
      */
-    getLibrary(): any {
+    getLibrary(): unknown {
         return this.library;
     }
 
@@ -1062,7 +1062,7 @@ export class AudioPlayr implements IAudioPlayr {
     /**
      * @returns The currently playing sounds, keyed by name.
      */
-    getSounds(): any {
+    getSounds(): unknown {
         return this.sounds;
     }
 
@@ -1173,7 +1173,7 @@ export class AudioPlayr implements IAudioPlayr {
     /**
      * @returns The Function or Number used as the volume setter for local sounds.
      */
-    getGetVolumeLocal(): any {
+    getGetVolumeLocal(): unknown {
         return this.getVolumeLocal;
     }
 
@@ -1181,14 +1181,14 @@ export class AudioPlayr implements IAudioPlayr {
      * @param getVolumeLocal   A new Function or Number to use as the volume setter
      *                         for local sounds.
      */
-    setGetVolumeLocal(getVolumeLocalNew: any): void {
+    setGetVolumeLocal(getVolumeLocalNew: unknown): void {
         this.getVolumeLocal = getVolumeLocalNew;
     }
 
     /**
      * @returns The Function or String used to get the default theme for playTheme.
      */
-    getGetThemeDefault(): any {
+    getGetThemeDefault(): unknown {
         return this.getThemeDefault;
     }
 
@@ -1196,7 +1196,7 @@ export class AudioPlayr implements IAudioPlayr {
      * @param getThemeDefaultNew A new Function or String to use as the source for
      *                           theme names in default playTheme calls.
      */
-    setGetThemeDefault(getThemeDefaultNew: any): void {
+    setGetThemeDefault(getThemeDefaultNew: unknown): void {
         this.getThemeDefault = getThemeDefaultNew;
     }
 
@@ -1335,7 +1335,7 @@ export class AudioPlayr implements IAudioPlayr {
      * @param location   An argument for getVolumeLocal, if that's a Function.
      * @returns The sound, now playing.
      */
-    playLocal(name: string, location?: any): ISound {
+    playLocal(name: string, location?: unknown): ISound {
         var sound: ISound = this.play(name),
             volumeReal: number;
 
@@ -1458,7 +1458,7 @@ export class AudioPlayr implements IAudioPlayr {
      */
     addEventListener(name: string, event: string, callback: any): void {
         var sound: ISound = this.library[name],
-            events: { [event: string]: any[] };
+            events: { [event: string]: unknown[] };
 
         if (!sound) {
             throw new Error("Unknown name given to addEventListener: '" + name + "'.");
@@ -1607,7 +1607,7 @@ export class AudioPlayr implements IAudioPlayr {
     private restore(key: string): void {
         var holder: any = this.ItemsHolder,
             storage: any = typeof holder.getLocalStorage === "function" ? holder.getLocalStorage() : undefined,
-            saved: any;
+            saved: unknown;
 
         if (!storage) {
             return;

@@ -66,7 +66,7 @@ export interface IEightBittrSettings {
     /**
      * Where the constants should be copied from, if not the IEightBittr itself.
      */
-    constantsSource?: any;
+    constantsSource?: unknown;
 }
 
 /**
@@ -138,7 +138,7 @@ export interface IEightBittr {
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
      */
-    reset(EightBitter: IEightBittr, resets: string[], customs?: any): void;
+    reset(EightBitter: IEightBittr, resets: string[], customs?: unknown): void;
 
     /**
      * Resets the EightBittr in a timed manner by calling all the named reset
@@ -149,7 +149,7 @@ export interface IEightBittr {
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
      */
-    resetTimed(EightBitter: IEightBittr, resets: string[], customs?: any): void;
+    resetTimed(EightBitter: IEightBittr, resets: string[], customs?: unknown): void;
 
     /**
      * Creates and returns a new HTML <canvas> element with no image smoothing.
@@ -347,7 +347,7 @@ export interface IEightBittr {
      *
      * @param current   The scope that should be an EightBittr.
      */
-    ensureCorrectCaller(current: any): IEightBittr;
+    ensureCorrectCaller(current: unknown): IEightBittr;
 
     /**
      * "Proliferates" all properties of a donor onto a recipient by copying each
@@ -359,7 +359,7 @@ export interface IEightBittr {
      *                     be skipped (defaults to false).
      * @returns recipient
      */
-    proliferate(recipient: any, donor: any, noOverride?: boolean): any;
+    proliferate(recipient: unknown, donor: unknown, noOverride?: boolean): any;
 
     /**
      * Identical to proliferate, but instead of checking whether the recipient
@@ -371,7 +371,7 @@ export interface IEightBittr {
      *                     be skipped (defaults to false).
      * @returns recipient
      */
-    proliferateHard(recipient: any, donor: any, noOverride?: boolean): any;
+    proliferateHard(recipient: unknown, donor: unknown, noOverride?: boolean): unknown;
 
     /**
      * Identical to proliferate, but tailored for HTML elements because many
@@ -384,7 +384,7 @@ export interface IEightBittr {
      *                     be skipped (defaults to false).
      * @returns recipient
      */
-    proliferateElement(recipient: HTMLElement, donor: any, noOverride?: boolean): HTMLElement;
+    proliferateElement(recipient: HTMLElement, donor: unknown, noOverride?: boolean): HTMLElement;
 
     /**
      * Creates and returns an HTMLElement of the specified type. Any additional
@@ -395,7 +395,7 @@ export interface IEightBittr {
      * @param settings   Additional settings to proliferated onto the Element.
      * @returns {HTMLElement}
      */
-    createElement(tag?: string, ...args: any[]): HTMLElement;
+    createElement(tag?: string, ...args: unknown[]): HTMLElement;
 
     /**
      * Follows a path inside an Object recursively, based on a given path.
@@ -406,7 +406,7 @@ export interface IEightBittr {
      * @returns The discovered property within object, or undefined if the
      *          full path doesn't exist.
      */
-    followPathHard(object: any, path: string[], index?: number): any;
+    followPathHard(object: unknown, path: string[], index?: number): unknown;
 
     /**
      * Switches an object from one Array to another using splice and push.
@@ -415,7 +415,7 @@ export interface IEightBittr {
      * @param arrayOld   The Array to take the object out of.
      * @param arrayNew   The Array to move the object into.
      */
-    arraySwitch(object: any, arrayOld: any[], arrayNew: any[]): void;
+    arraySwitch(object: unknown, arrayOld: unknown[], arrayNew: unknown[]): void;
 
     /**
      * Sets a Thing's position within an Array to the front by splicing and then
@@ -424,7 +424,7 @@ export interface IEightBittr {
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
-    arrayToBeginning(object: any, array: any[]): void;
+    arrayToBeginning(object: unknown, array: unknown[]): void;
 
     /**
      * Sets a Thing's position within an Array to the front by splicing and then
@@ -433,7 +433,7 @@ export interface IEightBittr {
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
-    arrayToEnd(object: any, array: any[]): void;
+    arrayToEnd(object: unknown, array: unknown[]): void;
 
     /**
      * Sets a Thing's position within an Array to a specific index by splicing
@@ -443,7 +443,7 @@ export interface IEightBittr {
      * @param array   An Array currently containing the object.
      * @param index   Where the object should be moved to in the Array.
      */
-    arrayToIndex(object: any, array: any[], index: number): void;
+    arrayToIndex(object: unknown, array: unknown[], index: number): void;
 }
 
 /**
@@ -466,7 +466,7 @@ export class EightBittr implements IEightBittr {
      * Any custom settings passed in during construction to be passed to
      * reset Functions.
      */
-    protected customs: any;
+    protected customs: unknown;
 
     /**
      * A listing of the names of all member variables of this EightBittr
@@ -507,7 +507,7 @@ export class EightBittr implements IEightBittr {
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
      */
-    reset(EightBitter: EightBittr, resets: string[], customs?: any): void {
+    reset(EightBitter: EightBittr, resets: string[], customs?: unknown): void {
         var reset: string, i: number;
 
         EightBitter.customs = customs;
@@ -532,7 +532,7 @@ export class EightBittr implements IEightBittr {
      * @param resets   The ordered Array of reset Functions to be called.
      * @param customs   Additional arguments to pass to all reset Functions.
      */
-    resetTimed(EightBitter: EightBittr, resets: string[], customs?: any): void {
+    resetTimed(EightBitter: EightBittr, resets: string[], customs?: unknown): void {
         var timeStartTotal: number = performance.now(),
             timeEndTotal: number,
             timeStart: number,
@@ -888,7 +888,7 @@ export class EightBittr implements IEightBittr {
      *
      * @param current   The scope that should be an EightBittr.
      */
-    ensureCorrectCaller(current: any): EightBittr {
+    ensureCorrectCaller(current: unknown): EightBittr {
         if (!(current instanceof EightBittr)) {
             throw new Error(
                 "A function requires the caller ('this') to be the " +
@@ -951,7 +951,7 @@ export class EightBittr implements IEightBittr {
      *                     be skipped (defaults to false).
      * @returns recipient
      */
-    proliferateHard(recipient: any, donor: any, noOverride?: boolean): any {
+    proliferateHard(recipient: any, donor: any, noOverride?: boolean): unknown {
         var setting: any, i: string;
 
         // For each attribute of the donor:
@@ -1051,7 +1051,7 @@ export class EightBittr implements IEightBittr {
      * @param settings   Additional settings to proliferated onto the Element.
      * @returns {HTMLElement}
      */
-    createElement(tag?: string, ...args: any[]): HTMLElement {
+    createElement(tag?: string, ...args: unknown[]): HTMLElement {
         var EightBitter: EightBittr = EightBittr.prototype.ensureCorrectCaller(this),
             element: HTMLElement = document.createElement(tag || "div"),
             i: number;
@@ -1073,7 +1073,7 @@ export class EightBittr implements IEightBittr {
      * @returns The discovered property within object, or undefined if the
      *          full path doesn't exist.
      */
-    followPathHard(object: any, path: string[], index: number = 0): any {
+    followPathHard(object: any, path: string[], index: number = 0): unknown {
         for (var i: number = index; i < path.length; i += 1) {
             if (typeof object[path[i]] === "undefined") {
                 return undefined;
@@ -1092,7 +1092,7 @@ export class EightBittr implements IEightBittr {
      * @param arrayOld   The Array to take the object out of.
      * @param arrayNew   The Array to move the object into.
      */
-    arraySwitch(object: any, arrayOld: any[], arrayNew: any[]): void {
+    arraySwitch(object: unknown, arrayOld: unknown[], arrayNew: unknown[]): void {
         arrayOld.splice(arrayOld.indexOf(object), 1);
         arrayNew.push(object);
     }
@@ -1104,7 +1104,7 @@ export class EightBittr implements IEightBittr {
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
-    arrayToBeginning(object: any, array: any[]): void {
+    arrayToBeginning(object: unknown, array: unknown[]): void {
         array.splice(array.indexOf(object), 1);
         array.unshift(object);
     }
@@ -1116,7 +1116,7 @@ export class EightBittr implements IEightBittr {
      * @param object   The object to move within the Array.
      * @param array   An Array currently containing the object.
      */
-    arrayToEnd(object: IThing, array: any[]): void {
+    arrayToEnd(object: IThing, array: unknown[]): void {
         array.splice(array.indexOf(object), 1);
         array.push(object);
     }
@@ -1129,7 +1129,7 @@ export class EightBittr implements IEightBittr {
      * @param array   An Array currently containing the object.
      * @param index   Where the object should be moved to in the Array.
      */
-    arrayToIndex(object: IThing, array: any[], index: number): void {
+    arrayToIndex(object: IThing, array: unknown[], index: number): void {
         array.splice(array.indexOf(object), 1);
         array.splice(index, 0, object);
     }

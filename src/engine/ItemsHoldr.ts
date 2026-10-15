@@ -21,12 +21,12 @@ export interface IItemValueSettings {
     /**
      * An initial value to store.
      */
-    value?: any;
+    value?: unknown;
 
     /**
      * A default initial value to store, if value isn't provided.
      */
-    valueDefault?: any;
+    valueDefault?: unknown;
 
     /**
      * Whether the value should be stored in the IItemHoldr's localStorage.
@@ -108,7 +108,7 @@ export interface IItemValue {
     /**
      * A default initial value to store, if value isn't provided.
      */
-    valueDefault: any;
+    valueDefault: unknown;
 
     /**
      * Whether the value should be stored in the ItemHoldr's localStorage.
@@ -179,7 +179,7 @@ export interface IItemValue {
     /**
      * @returns The value being stored, with a transformGet applied if one exists.
      */
-    getValue(): any;
+    getValue(): unknown;
 
     /**
      * Sets the value being stored, with a is a transformSet applied if one exists.
@@ -187,7 +187,7 @@ export interface IItemValue {
      *
      * @param value   The desired value to now store.
      */
-    setValue(value: any): void;
+    setValue(value: unknown): void;
 
     /**
      * General update Function to be run whenever the internal value is changed.
@@ -227,7 +227,7 @@ export interface IItemsHoldrSettings {
     /**
      * Arguments to pass to triggered callback Functions.
      */
-    callbackArgs?: any[];
+    callbackArgs?: unknown[];
 
     /**
      * A localStorage object to use instead of the global localStorage.
@@ -308,7 +308,7 @@ export interface IItemsHoldr {
     /**
      * @returns Arguments to be passed to triggered event callbacks.
      */
-    getCallbackArgs(): any[];
+    getCallbackArgs(): unknown[];
 
     /**
      * @returns String keys for each of the stored IItemValues.
@@ -325,7 +325,7 @@ export interface IItemsHoldr {
      * @param key   The key for a known value.
      * @returns The settings for that particular key.
      */
-    getObject(key: string): any;
+    getObject(key: string): unknown;
 
     /**
      * @param key   The key for a potentially known value.
@@ -336,7 +336,7 @@ export interface IItemsHoldr {
     /**
      * @returns A mapping of key names to the actual values of all objects being stored.
      */
-    exportItems(): any;
+    exportItems(): unknown;
 
     /**
      * Adds a new key & value pair to by linking to a newly created ItemValue.
@@ -345,7 +345,7 @@ export interface IItemsHoldr {
      * @param settings   The settings for the new ItemValue.
      * @returns The newly created ItemValue.
      */
-    addItem(key: string, settings: any): IItemValue;
+    addItem(key: string, settings: unknown): IItemValue;
 
     /**
      * Clears a value from the listing, and removes its element from the
@@ -368,7 +368,7 @@ export interface IItemsHoldr {
      * @param key   The key of the ItemValue.
      * @param value   The new value for the ItemValue.
      */
-    setItem(key: string, value: any): void;
+    setItem(key: string, value: unknown): void;
 
     /**
      * Increases the value for the ItemValue under the given key, via addition for
@@ -457,7 +457,7 @@ export interface IItemsHoldr {
      *               new HTMLElement.
      * @returns A newly created HTMLElement of the given tag.
      */
-    createElement(tag?: string, ...args: any[]): HTMLElement;
+    createElement(tag?: string, ...args: unknown[]): HTMLElement;
 
     /**
      * Proliferates all members of the donor to the recipient recursively, as
@@ -469,7 +469,7 @@ export interface IItemsHoldr {
      *                     default, false).
      * @returns The recipient, which should have the donor proliferated onto it.
      */
-    proliferate(recipient: any, donor: any, noOverride?: boolean): any;
+    proliferate(recipient: unknown, donor: unknown, noOverride?: boolean): unknown;
 
     /**
      * Identical to proliferate, but tailored for HTML elements because many
@@ -482,7 +482,7 @@ export interface IItemsHoldr {
      *                     default, false).
      * @returns The recipient, which should have the donor proliferated onto it.
      */
-    proliferateElement(recipient: any, donor: any, noOverride?: boolean): any;
+    proliferateElement(recipient: unknown, donor: unknown, noOverride?: boolean): unknown;
 }
 
 /**
@@ -503,7 +503,7 @@ export class ItemValue implements IItemValue {
     /**
      * A default initial value to store, if value isn't provided.
      */
-    valueDefault: any;
+    valueDefault: unknown;
 
     /**
      * Whether the value should be stored in the ItemHoldr's localStorage.
@@ -585,7 +585,7 @@ export class ItemValue implements IItemValue {
      * @param key   The key to reference this new ItemValue by.
      * @param settings   Any optional custom settings.
      */
-    constructor(ItemsHolder: ItemsHoldr, key: string, settings: any = {}) {
+    constructor(ItemsHolder: ItemsHoldr, key: string, settings: unknown = {}) {
         this.ItemsHolder = ItemsHolder;
 
         ItemsHolder.proliferate(this, ItemsHolder.getDefaults());
@@ -628,7 +628,7 @@ export class ItemValue implements IItemValue {
     /**
      * @returns The value being stored, with a transformGet applied if one exists.
      */
-    getValue(): any {
+    getValue(): unknown {
         if (this.transformGet) {
             return this.transformGet(this.value);
         }
@@ -642,7 +642,7 @@ export class ItemValue implements IItemValue {
      *
      * @param value   The desired value to now store.
      */
-    setValue(value: any): void {
+    setValue(value: unknown): void {
         if (this.transformSet) {
             this.value = this.transformSet(value);
         } else {
@@ -822,7 +822,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * Arguments to be passed to triggered callback Functions.
      */
-    private callbackArgs: any[];
+    private callbackArgs: unknown[];
 
     /**
      * Initializes a new instance of the ItemsHoldr class.
@@ -944,7 +944,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * @returns Arguments to be passed to triggered event callbacks.
      */
-    getCallbackArgs(): any[] {
+    getCallbackArgs(): unknown[] {
         return this.callbackArgs;
     }
 
@@ -962,7 +962,7 @@ export class ItemsHoldr implements IItemsHoldr {
      * @param key   The key for a known value.
      * @returns The known value of a key, assuming that key exists.
      */
-    getItem(key: string): any {
+    getItem(key: string): unknown {
         this.checkExistence(key);
 
         return this.items[key].getValue();
@@ -972,7 +972,7 @@ export class ItemsHoldr implements IItemsHoldr {
      * @param key   The key for a known value.
      * @returns The settings for that particular key.
      */
-    getObject(key: string): any {
+    getObject(key: string): unknown {
         return this.items[key];
     }
 
@@ -987,7 +987,7 @@ export class ItemsHoldr implements IItemsHoldr {
     /**
      * @returns A mapping of key names to the actual values of all objects being stored.
      */
-    exportItems(): any {
+    exportItems(): unknown {
         var output: any = {},
             i: string;
 
@@ -1010,7 +1010,7 @@ export class ItemsHoldr implements IItemsHoldr {
      * @param settings   The settings for the new ItemValue.
      * @returns The newly created ItemValue.
      */
-    addItem(key: string, settings: any = {}): ItemValue {
+    addItem(key: string, settings: unknown = {}): ItemValue {
         this.items[key] = new ItemValue(this, key, settings);
         this.itemKeys.push(key);
         return this.items[key];
@@ -1062,7 +1062,7 @@ export class ItemsHoldr implements IItemsHoldr {
      * @param key   The key of the ItemValue.
      * @param value   The new value for the ItemValue.
      */
-    setItem(key: string, value: any): void {
+    setItem(key: string, value: unknown): void {
         this.checkExistence(key);
 
         this.items[key].setValue(value);
@@ -1110,7 +1110,7 @@ export class ItemsHoldr implements IItemsHoldr {
     toggle(key: string): void {
         this.checkExistence(key);
 
-        var value: any = this.items[key].getValue();
+        var value: unknown = this.items[key].getValue();
 
         value = !value;
 
@@ -1235,7 +1235,7 @@ export class ItemsHoldr implements IItemsHoldr {
      *               new HTMLElement.
      * @returns A newly created HTMLElement of the given tag.
      */
-    createElement(tag: string = "div", ...args: any[]): HTMLElement {
+    createElement(tag: string = "div", ...args: unknown[]): HTMLElement {
         var element: HTMLElement = document.createElement(tag),
             i: number;
 
@@ -1257,7 +1257,7 @@ export class ItemsHoldr implements IItemsHoldr {
      *                     default, false).
      * @returns The recipient, which should have the donor proliferated onto it.
      */
-    proliferate(recipient: any, donor: any, noOverride?: boolean): any {
+    proliferate(recipient: any, donor: any, noOverride?: boolean): unknown {
         var setting: any, i: string;
 
         // For each attribute of the donor:
@@ -1354,7 +1354,7 @@ export class ItemsHoldr implements IItemsHoldr {
         var i: string,
             output: any = {
                 "keys": [],
-                "getItem": function (key: string): any {
+                "getItem": function (key: string): unknown {
                     return this.localStorage[key];
                 },
                 "setItem": function (key: string, value: string): void {

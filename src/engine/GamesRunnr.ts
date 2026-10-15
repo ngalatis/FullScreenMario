@@ -4,7 +4,7 @@ import * as FPSAnalyzr from "./FPSAnalyzr";
  * A callback for when the game changes playing state (pause or play).
  */
 export interface ITriggerCallback {
-    (...args: any[]): void;
+    (...args: unknown[]): void;
 }
 
 /**
@@ -88,7 +88,7 @@ export interface IGamesRunnrSettings {
     /**
      * Arguments to be passed to onPause and onPlay (by default, [this]).
      */
-    callbackArguments?: any[];
+    callbackArguments?: unknown[];
 
     /**
      * A Function to replace requestAnimationFrame as the upkeepScheduler.
@@ -103,7 +103,7 @@ export interface IGamesRunnrSettings {
     /**
      * A scope for games to be run on (defaults to the calling GamesRunnr).
      */
-    scope?: any;
+    scope?: unknown;
 
     /**
      * An FPSAnalyzr to provide statistics on automated playback. If not
@@ -138,12 +138,12 @@ export interface IGamesRunnr {
     /**
      * @returns The Array of game Functions.
      */
-    getGames(): any[];
+    getGames(): unknown[];
 
     /**
      * @returns The Array of render Functions, run once per displayed frame.
      */
-    getRenderers(): any[];
+    getRenderers(): unknown[];
 
     /**
      * @returns The interval between upkeeps.
@@ -163,17 +163,17 @@ export interface IGamesRunnr {
     /**
      * @returns The optional trigger to be called on pause.
      */
-    getOnPause(): any;
+    getOnPause(): unknown;
 
     /**
      * @returns The optional trigger to be called on play.
      */
-    getOnPlay(): any;
+    getOnPlay(): unknown;
 
     /**
      * @returns Arguments to be given to the optional trigger Functions.
      */
-    getCallbackArguments(): any[];
+    getCallbackArguments(): unknown[];
 
     /**
      * @returns Function used to schedule the next frame.
@@ -343,7 +343,7 @@ export class GamesRunnr implements IGamesRunnr {
     /**
      * Arguments to be passed to the optional trigger Functions.
      */
-    private callbackArguments: any[];
+    private callbackArguments: unknown[];
 
     /**
      * Reference to the next frame, such as requestAnimationFrame's returned int.
@@ -443,7 +443,7 @@ export class GamesRunnr implements IGamesRunnr {
     /**
      * An object to set as the scope for games, if not this GamesRunnr.
      */
-    private scope: any;
+    private scope: unknown;
 
     /**
      * Whether scheduling timeouts should adjust to elapsed upkeep time. No
@@ -556,21 +556,21 @@ export class GamesRunnr implements IGamesRunnr {
     /**
      * @returns The optional trigger to be called on pause.
      */
-    getOnPause(): any {
+    getOnPause(): unknown {
         return this.onPause;
     }
 
     /**
      * @returns The optional trigger to be called on play.
      */
-    getOnPlay(): any {
+    getOnPlay(): unknown {
         return this.onPlay;
     }
 
     /**
      * @returns Arguments to be given to the optional trigger Functions.
      */
-    getCallbackArguments(): any[] {
+    getCallbackArguments(): unknown[] {
         return this.callbackArguments;
     }
 

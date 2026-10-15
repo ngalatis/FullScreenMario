@@ -33,7 +33,7 @@ export interface IMapsCreatrAreaRaw {
     /**
      * Commands to place PreThings in the area.
      */
-    creation: any[];
+    creation: unknown[];
 }
 
 /**
@@ -91,7 +91,7 @@ export interface IMapsCreatrArea {
     /**
      * A list of PreThing and macro commands to build this area from scratch.
      */
-    creation: any[];
+    creation: unknown[];
 
     /**
      * Groups that may be requested by creation commands to store generated
@@ -181,7 +181,7 @@ export interface IPreThingSettings {
     /**
      * PreThings may pass any settings onto their created Things.
      */
-    [i: string]: any;
+    [i: string]: unknown;
 }
 
 /**
@@ -317,7 +317,7 @@ export interface IThing {
  * @param location   The Location within an Area being entered.
  */
 export interface IMapsCreatrEntrance {
-    (scope: any, location: IMapsCreatrLocation): void;
+    (scope: unknown, location: IMapsCreatrLocation): void;
 }
 
 /**
@@ -332,11 +332,11 @@ export interface IMapsCreatrEntrance {
  */
 export interface IMapsCreatrMacro {
     (
-        reference: any,
+        reference: unknown,
         prethings: IPreThingsContainers,
         area: IMapsCreatrArea | IMapsCreatrAreaRaw,
         map: IMapsCreatrMap | IMapsCreatrAreaRaw,
-        scope: any
+        scope: unknown
     ): IPreThing | IPreThing[] | any;
 }
 
@@ -376,7 +376,7 @@ export interface IMapsCreatrSettings {
      * A scope to give as a last parameter to macro Functions (by default, the
      * calling MapsCreatr).
      */
-    scope?: any;
+    scope?: unknown;
 
     /**
      * Optional entrance Functions that may be used as the openings for
@@ -431,7 +431,7 @@ export interface IMapsCreatr {
     /**
      * @returns The scope to give as a last parameter to macros.
      */
-    getScope(): any;
+    getScope(): unknown;
 
     /**
      * @returns Whether Locations must have an entrance Function.
@@ -504,11 +504,11 @@ export interface IMapsCreatr {
      * @returns The results of analyzePreMacro or analyzePreThing.
      */
     analyzePreSwitch(
-        reference: any,
+        reference: unknown,
         prethings: IPreThingsContainers | IPreThingsRawContainer,
         area: IMapsCreatrArea | IMapsCreatrAreaRaw,
         map: IMapsCreatrMap | IMapsCreatrMapRaw
-    ): any;
+    ): unknown;
 
     /**
      * PreThing case: Macro instruction. This calls the macro on the same input,
@@ -521,11 +521,11 @@ export interface IMapsCreatr {
      * @param {Map} map   The Map containing the Area.
      */
     analyzePreMacro(
-        reference: any,
+        reference: unknown,
         prethings: IPreThingsContainers | IPreThingsRawContainer,
         area: IMapsCreatrArea | IMapsCreatrAreaRaw,
         map: IMapsCreatrMap | IMapsCreatrMapRaw
-    ): any[] | any;
+    ): unknown[] | any;
 
     /**
      * Macro case: PreThing instruction. This creates a PreThing from the
@@ -538,11 +538,11 @@ export interface IMapsCreatr {
      * @param map   The Map containing the Area.
      */
     analyzePreThing(
-        reference: any,
+        reference: unknown,
         prethings: IPreThingsContainers | IPreThingsRawContainer,
         area: IMapsCreatrArea | IMapsCreatrAreaRaw,
         map: IMapsCreatrMap | IMapsCreatrMapRaw
-    ): any;
+    ): unknown;
 }
 
 /**
@@ -683,7 +683,7 @@ export class MapsCreatr {
      * An optional scope to pass to macros as an argument after maps, instead
      * of this MapsCreatr.
      */
-    private scope: any;
+    private scope: unknown;
 
     /**
      * Initializes a new instance of the MapsCreatr class.
@@ -764,7 +764,7 @@ export class MapsCreatr {
     /**
      * @returns The scope to give as a last parameter to macros.
      */
-    getScope(): any {
+    getScope(): unknown {
         return this.scope;
     }
 
@@ -910,7 +910,7 @@ export class MapsCreatr {
         prethings: IPreThingsContainers | IPreThingsRawContainer,
         area: IMapsCreatrArea | IMapsCreatrAreaRaw,
         map: IMapsCreatrMap | IMapsCreatrMapRaw
-    ): any {
+    ): unknown {
         // Case: macro (unless it's undefined)
         if (reference.macro) {
             return this.analyzePreMacro(reference, prethings, area, map);
@@ -935,9 +935,9 @@ export class MapsCreatr {
         prethings: IPreThingsContainers | IPreThingsRawContainer,
         area: IMapsCreatrArea | IMapsCreatrAreaRaw,
         map: IMapsCreatrMap | IMapsCreatrMapRaw
-    ): any[] | any {
+    ): unknown[] | any {
         var macro: any = this.macros[reference.macro],
-            outputs: any[] | any,
+            outputs: unknown[] | any,
             i: number;
 
         if (!macro) {
@@ -977,7 +977,7 @@ export class MapsCreatr {
         prethings: IPreThingsContainers | IPreThingsRawContainer,
         area: IMapsCreatrArea | IMapsCreatrAreaRaw,
         map: IMapsCreatrMap | IMapsCreatrMapRaw
-    ): any {
+    ): unknown {
         var title: string = reference.thing,
             thing: IThing,
             prething: PreThing;
@@ -1242,8 +1242,8 @@ export class MapsCreatr {
      * @param sorter   A standard sorter Function.
      * @returns A copy of the original Array, sorted.
      */
-    private getArraySorted(array: any[], sorter?: (a: any, b: any) => number): any[] {
-        var copy: any[] = array.slice();
+    private getArraySorted(array: unknown[], sorter?: (a: any, b: any) => number): any[] {
+        var copy: unknown[] = array.slice();
         copy.sort(sorter);
         return copy;
     }
@@ -1255,7 +1255,7 @@ export class MapsCreatr {
      * @param element   An element to insert into the Array.
      * @param sorter   A standard sorter Function.
      */
-    private addArraySorted(array: any, element: any, sorter: (a: any, b: any) => number): void {
+    private addArraySorted(array: any, element: unknown, sorter: (a: any, b: any) => number): void {
         var lower: number = 0,
             upper: number = array.length,
             index: number;

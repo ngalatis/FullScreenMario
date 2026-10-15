@@ -67,7 +67,7 @@ export const macroMethods = {
             x: number = reference.x || 0,
             yref: number = reference.y || 0,
             outputs: IMacroCommand[] = [],
-            output: any,
+            output: unknown,
             o: number = 0,
             y: number,
             i: number,

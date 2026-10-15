@@ -855,7 +855,7 @@ export const collisionHandlerMethods = {
      * @param other   A DetectCollision being touched by thing.
      */
     collideCastleNPC(this: MarioGame, thing: IPlayer, other: IDetectCollision): void {
-        var keys: any[] = other.collection.npc.collectionKeys;
+        var keys: unknown[] = other.collection.npc.collectionKeys;
 
         thing.FSM.ScenePlayer.addCutsceneSetting("keys", keys);
         thing.FSM.ScenePlayer.addCutsceneSetting("player", thing);

@@ -18,7 +18,7 @@ export interface IModAttachrMod {
     /**
      * The scope to call event Functions from, if necessary.
      */
-    scope?: any;
+    scope?: unknown;
 
     /**
      * Whether the mod is currently enabled (by default, false).
@@ -33,7 +33,7 @@ export interface IModAttachrMod {
  * @returns The result of the mod (normally ignored).
  */
 export interface IModEvent {
-    (...args: any[]): any;
+    (...args: unknown[]): unknown;
 }
 
 /**
@@ -79,7 +79,7 @@ export interface IModAttachrSettings {
     /**
      * A default scope to apply mod events from, if not the IModAttachr.
      */
-    scopeDefault?: any;
+    scopeDefault?: unknown;
 }
 
 /**
@@ -116,7 +116,7 @@ export interface IModAttachr {
     /**
      * @returns The default scope used to apply mods from, if not this ModAttachr.
      */
-    getScopeDefault(): any;
+    getScopeDefault(): unknown;
 
     /* Alterations
      */
@@ -128,7 +128,7 @@ export interface IModAttachr {
      * @param mod   A summary Object for a mod, containing at the very
      *              least a name and listing of events.
      */
-    addMod(mod: IModAttachrMod): any;
+    addMod(mod: IModAttachrMod): unknown;
 
     /**
      * Adds multiple mods via this.addMod.
@@ -136,7 +136,7 @@ export interface IModAttachr {
      * @param mods   The mods to add.
      * @returns The return values of the mods' onModEnable events, in order.
      */
-    addMods(...mods: IModAttachrMod[]): any[];
+    addMods(...mods: IModAttachrMod[]): unknown[];
 
     /**
      * Enables a mod of the given name, if it exists. The onModEnable event is
@@ -146,7 +146,7 @@ export interface IModAttachr {
      * @param args   Any additional arguments to pass. This will have `mod`
      *               and `name` unshifted in front, in that order.
      */
-    enableMod(name: string, ...args: any[]): any;
+    enableMod(name: string, ...args: unknown[]): unknown;
 
     /**
      * Enables any number of mods.
@@ -154,7 +154,7 @@ export interface IModAttachr {
      * @param names   Names of the mods to enable.
      * @returns The return values of the mods' onModEnable events, in order.
      */
-    enableMods(...names: string[]): any[];
+    enableMods(...names: string[]): unknown[];
 
     /**
      * Disables a mod of the given name, if it exists. The onModDisable event is
@@ -163,14 +163,14 @@ export interface IModAttachr {
      * @param name   The name of the mod to disable.
      * @returns The return value of the mod's onModDisable event.
      */
-    disableMod(name: string): any;
+    disableMod(name: string): unknown;
 
     /**
      * Disables any number of mods.
      *
      * @param names   Names of the mods to disable.
      */
-    disableMods(...names: string[]): any[];
+    disableMods(...names: string[]): unknown[];
 
     /**
      * Toggles a mod via enableMod/disableMod of the given name, if it exists.
@@ -178,7 +178,7 @@ export interface IModAttachr {
      * @param name   The name of the mod to toggle.
      * @returns The result of the mod's onModEnable or onModDisable event.
      */
-    toggleMod(name: string): any;
+    toggleMod(name: string): unknown;
 
     /**
      * Toggles any number of mods.
@@ -186,7 +186,7 @@ export interface IModAttachr {
      * @param names   Names of the mods to toggle.
      * @returns The result of the mods' onModEnable or onModDisable events, in order.
      */
-    toggleMods(...names: string[]): any[];
+    toggleMods(...names: string[]): unknown[];
 
     /**
      * Fires an event, which calls all mods listed for that event.
@@ -195,7 +195,7 @@ export interface IModAttachr {
      * @param args   Any additional arguments to pass. This will have `mod`
      *               and `event` unshifted in front, in that order.
      */
-    fireEvent(event: string, ...args: any[]): void;
+    fireEvent(event: string, ...args: unknown[]): void;
 
     /**
      * Fires an event specifically for one mod, rather than all mods containing
@@ -207,7 +207,7 @@ export interface IModAttachr {
      *               and `event` unshifted in front, in that order.
      * @returns The result of the fired mod event.
      */
-    fireModEvent(event: string, modName: string, ...args: any[]): any;
+    fireModEvent(event: string, modName: string, ...args: unknown[]): unknown;
 }
 
 /**
@@ -233,7 +233,7 @@ export class ModAttachr implements IModAttachr {
     /**
      * A default scope to apply mod events from, if not this ModAttachr.
      */
-    private scopeDefault: any;
+    private scopeDefault: unknown;
 
     /**
      * Initializes a new instance of the ModAttachr class.
@@ -305,7 +305,7 @@ export class ModAttachr implements IModAttachr {
     /**
      * @returns The default scope used to apply mods from, if not this ModAttachr.
      */
-    getScopeDefault(): any {
+    getScopeDefault(): unknown {
         return this.scopeDefault;
     }
 
@@ -366,8 +366,8 @@ export class ModAttachr implements IModAttachr {
      * @param mods   The mods to add.
      * @returns The return values of the mods' onModEnable events, in order.
      */
-    addMods(...mods: IModAttachrMod[]): any[] {
-        var results: any[] = [],
+    addMods(...mods: IModAttachrMod[]): unknown[] {
+        var results: unknown[] = [],
             i: number;
 
         for (i = 0; i < mods.length; i += 1) {
@@ -386,7 +386,7 @@ export class ModAttachr implements IModAttachr {
      *               and `name` unshifted in front, in that order.
      * @returns   The return value of the mod's onModEnable event.
      */
-    enableMod(name: string, ...args: any[]): any {
+    enableMod(name: string, ...args: unknown[]): any {
         var mod: IModAttachrMod = this.mods[name];
 
         if (!mod) {
@@ -415,8 +415,8 @@ export class ModAttachr implements IModAttachr {
      * @param names   Names of the mods to enable.
      * @returns The return values of the mods' onModEnable events, in order.
      */
-    enableMods(...names: string[]): any[] {
-        var results: any[] = [],
+    enableMods(...names: string[]): unknown[] {
+        var results: unknown[] = [],
             i: number;
 
         for (i = 0; i < names.length; i += 1) {
@@ -433,9 +433,9 @@ export class ModAttachr implements IModAttachr {
      * @param name   The name of the mod to disable.
      * @returns The return value of the mod's onModDisable event.
      */
-    disableMod(name: string): any {
+    disableMod(name: string): unknown {
         var mod: IModAttachrMod = this.mods[name],
-            args: any[];
+            args: unknown[];
 
         if (!this.mods[name]) {
             throw new Error("No mod of name: '" + name + "'");
@@ -462,8 +462,8 @@ export class ModAttachr implements IModAttachr {
      * @param names   Names of the mods to disable.
      * @returns The return values of the mods' onModEnable events, in order.
      */
-    disableMods(...names: string[]): any[] {
-        var results: any[] = [],
+    disableMods(...names: string[]): unknown[] {
+        var results: unknown[] = [],
             i: number;
 
         for (i = 0; i < names.length; i += 1) {
@@ -479,7 +479,7 @@ export class ModAttachr implements IModAttachr {
      * @param name   The name of the mod to toggle.
      * @returns The result of the mod's onModEnable or onModDisable event.
      */
-    toggleMod(name: string): any {
+    toggleMod(name: string): unknown {
         var mod: IModAttachrMod = this.mods[name];
 
         if (!mod) {
@@ -499,8 +499,8 @@ export class ModAttachr implements IModAttachr {
      * @param names   Names of the mods to toggle.
      * @returns The result of the mods' onModEnable or onModDisable events, in order.
      */
-    toggleMods(...names: string[]): any[] {
-        var result: any[] = [],
+    toggleMods(...names: string[]): unknown[] {
+        var result: unknown[] = [],
             i: number;
 
         for (i = 0; i < names.length; i += 1) {
@@ -520,7 +520,7 @@ export class ModAttachr implements IModAttachr {
      * @param args   Any additional arguments to pass. This will have `mod`
      *               and `event` unshifted in front, in that order.
      */
-    fireEvent(event: string, ...args: any[]): void {
+    fireEvent(event: string, ...args: unknown[]): void {
         var mods: IModAttachrMod[] = this.events[event],
             mod: IModAttachrMod,
             i: number;
@@ -554,7 +554,7 @@ export class ModAttachr implements IModAttachr {
      *               and `event` unshifted in front, in that order.
      * @returns The result of the fired mod event.
      */
-    fireModEvent(event: string, modName: string, ...args: any[]): any {
+    fireModEvent(event: string, modName: string, ...args: unknown[]): unknown {
         var mod: IModAttachrMod = this.mods[modName],
             fires: IModEvent;
 

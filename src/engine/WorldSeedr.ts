@@ -175,9 +175,9 @@ export interface IArgumentPossibility extends IPercentageOption {
  * An Object containing values to add to a choice.
  */
 export interface IArgumentMap {
-    [i: string]: any;
-    width?: any;
-    height?: any;
+    [i: string]: unknown;
+    width?: unknown;
+    height?: unknown;
 }
 
 /**
@@ -1370,7 +1370,7 @@ export class WorldSeedr {
      * @param secondary   A secondary source for the output.
      * @returns A new Object with properties from primary and secondary.
      */
-    private objectMerge(primary: any, secondary: any): any {
+    private objectMerge(primary: unknown, secondary: any): any {
         var output: any = this.objectCopy(primary),
             i: string;
 

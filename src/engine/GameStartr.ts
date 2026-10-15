@@ -222,7 +222,7 @@ export interface IGameStartrStoredSettings {
  * corresponding module, either directly or via a partial copy.
  */
 export interface IGameStartrSettingsObject {
-    [i: string]: any;
+    [i: string]: unknown;
 }
 
 /**
@@ -310,7 +310,7 @@ export interface IItemsHoldrCustoms extends IGameStartrSettingsObject {
     /**
      * An Array of elements as createElement arguments, outside-to-inside.
      */
-    containersArguments: any[][];
+    containersArguments: unknown[][];
 
     /**
      * Default attributes for all ItemValues.
@@ -354,7 +354,7 @@ export interface ILevelEditrCustoms extends IGameStartrSettingsObject {
      */
     prethings: {
         [i: string]: {
-            [i: string]: any;
+            [i: string]: unknown;
         };
     };
 
@@ -366,7 +366,7 @@ export interface ILevelEditrCustoms extends IGameStartrSettingsObject {
     macros: {
         [i: string]: {
             description: string;
-            options: any;
+            options: unknown;
         };
     };
 }
@@ -553,7 +553,7 @@ export interface IPixelRendrCustoms extends IGameStartrSettingsObject {
     /**
      * A nested library of sprites to process.
      */
-    library?: any;
+    library?: unknown;
 
     /**
      * Filters that may be used by sprites in the library.
@@ -998,7 +998,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
-    reset(GameStarter: IGameStartr, settings?: any): void;
+    reset(GameStarter: IGameStartr, settings?: unknown): void;
 
     /**
      * Resets the EightBittr and records the time by calling the parent
@@ -1007,7 +1007,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
-    resetTimed(GameStarter: IGameStartr, settings?: any): void;
+    resetTimed(GameStarter: IGameStartr, settings?: unknown): void;
 
     /**
      * Sets this.UsageHelper.
@@ -1299,7 +1299,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      * @param defaults   The default settings for the Thing's class.
      * @remarks This is generally called as the onMake call in an ObjectMakr.
      */
-    thingProcess(thing: IThing, title: string, settings: any, defaults: any): void;
+    thingProcess(thing: IThing, title: string, settings: unknown, defaults: unknown): void;
 
     /**
      * Processes additional Thing attributes. For each attribute the Thing's
@@ -1692,7 +1692,7 @@ export interface IGameStartr extends EightBittr.IEightBittr {
      *
      * @param current
      */
-    ensureCorrectCaller(current: any): IGameStartr;
+    ensureCorrectCaller(current: unknown): IGameStartr;
 
     /**
      * Removes a Thing from an Array using Array.splice. If the thing has an
@@ -1976,7 +1976,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
-    reset(GameStarter: GameStartr, settings?: any): void {
+    reset(GameStarter: GameStartr, settings?: unknown): void {
         super.reset(GameStarter, GameStarter.resets, settings);
     }
 
@@ -1987,7 +1987,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * @param GameStarter
      * @param customs   Any optional custom settings.
      */
-    resetTimed(GameStarter: GameStartr, settings?: any): void {
+    resetTimed(GameStarter: GameStartr, settings?: unknown): void {
         super.resetTimed(GameStarter, GameStarter.resets, settings);
     }
 
@@ -2605,7 +2605,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      * @param defaults   The default settings for the Thing's class.
      * @remarks This is generally called as the onMake call in an ObjectMakr.
      */
-    thingProcess(thing: IThing, title: string, settings: any, defaults: any): void {
+    thingProcess(thing: IThing, title: string, settings: unknown, defaults: any): void {
         var maxQuads: number = 4,
             num: number,
             cycle: any;
@@ -2728,7 +2728,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
             area: MapsCreatr.IMapsCreatrArea = AreaSpawner.getArea(),
             map: MapsCreatr.IMapsCreatrMap = AreaSpawner.getMap(),
             command: WorldSeedr.ICommand,
-            output: any,
+            output: unknown,
             i: number;
 
         for (i = 0; i < generatedCommands.length; i += 1) {
@@ -3351,7 +3351,7 @@ export class GameStartr extends EightBittr.EightBittr implements IGameStartr {
      *
      * @param current
      */
-    ensureCorrectCaller(current: any): GameStartr {
+    ensureCorrectCaller(current: unknown): GameStartr {
         if (!(current instanceof GameStartr)) {
             throw new Error(
                 "A function requires the scope ('this') to be the " +

@@ -13,7 +13,7 @@ export interface IConstants {
  * @param args   Any other arguments to pass to the equation.
  */
 export interface IEquation {
-    (constants: IConstants, equations: IEquationContainer, ...args: any[]): any;
+    (constants: IConstants, equations: IEquationContainer, ...args: any[]): unknown;
 }
 
 /**
@@ -46,13 +46,13 @@ export interface IMathDecidr {
     /**
      * @returns Useful constants the MathDecidr may use in equations.
      */
-    getConstants(): any;
+    getConstants(): unknown;
 
     /**
      * @param name   The name of a constant to return.
      * @returns The requested constant.
      */
-    getConstant(name: string): any;
+    getConstant(name: string): unknown;
 
     /**
      * @returns Stored equations with the internal members bound as
@@ -83,7 +83,7 @@ export interface IMathDecidr {
      * @param name   The name of the constant to add.
      * @param value   A value for the constant.
      */
-    addConstant(name: string, value: any): void;
+    addConstant(name: string, value: unknown): void;
 
     /**
      * Adds an equation Function under the given name.
@@ -99,7 +99,7 @@ export interface IMathDecidr {
      * @param name   The name of the equation to run.
      * @param args   Any arguments to pass to the equation.
      */
-    compute(name: string, ...args: any[]): any;
+    compute(name: string, ...args: unknown[]): any;
 }
 
 /**
@@ -150,7 +150,7 @@ export class MathDecidr implements IMathDecidr {
     /**
      * @returns Useful constants the MathDecidr may use in equations.
      */
-    getConstants(): any {
+    getConstants(): unknown {
         return this.constants;
     }
 
@@ -158,7 +158,7 @@ export class MathDecidr implements IMathDecidr {
      * @param name   The name of a constant to return.
      * @returns The requested constant.
      */
-    getConstant(name: string): any {
+    getConstant(name: string): unknown {
         return this.constants[name];
     }
 
@@ -202,7 +202,7 @@ export class MathDecidr implements IMathDecidr {
      * @param name   The name of the constant to add.
      * @param value   A value for the constant.
      */
-    addConstant(name: string, value: any): void {
+    addConstant(name: string, value: unknown): void {
         this.constants[name] = value;
     }
 
@@ -227,7 +227,7 @@ export class MathDecidr implements IMathDecidr {
      * @param args   Any arguments to pass to the equation.
      * @returns The result of the equation.
      */
-    compute(name: string, ...args: any[]): any {
-        return (<(...equationArgs: any[]) => any>this.equations[name]).apply(this, args);
+    compute(name: string, ...args: unknown[]): unknown {
+        return (<(...equationArgs: unknown[]) => any>this.equations[name]).apply(this, args);
     }
 }

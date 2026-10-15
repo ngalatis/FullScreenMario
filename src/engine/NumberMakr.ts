@@ -167,13 +167,13 @@ export interface INumberMakr {
      * @param array   Any Array of values.
      * @returns A random index, from 0 to the given Array's length.
      */
-    randomArrayIndex(array: any[]): number;
+    randomArrayIndex(array: unknown[]): number;
 
     /**
      * @param array   Any Array of values.
      * @returns A random element from within the given Array.
      */
-    randomArrayMember(array: any[]): any;
+    randomArrayMember(array: unknown[]): unknown;
 }
 
 /**
@@ -612,7 +612,7 @@ export class NumberMakr implements INumberMakr {
      * @param array   Any Array of values.
      * @returns A random index, from 0 to the given Array's length.
      */
-    randomArrayIndex(array: any[]): number {
+    randomArrayIndex(array: unknown[]): number {
         return this.randomIntWithin(0, array.length);
     }
 
@@ -620,7 +620,7 @@ export class NumberMakr implements INumberMakr {
      * @param array   Any Array of values.
      * @returns A random element from within the given Array.
      */
-    randomArrayMember(array: any[]): any {
+    randomArrayMember(array: unknown[]): unknown {
         return array[this.randomArrayIndex(array)];
     }
 }

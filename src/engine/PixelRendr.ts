@@ -18,7 +18,7 @@ export interface ILibrary {
     /**
      * The original sources for the sprites.
      */
-    raws: any;
+    raws: unknown;
 
     /**
      * Rendered sprites from the raw sources.
@@ -232,7 +232,7 @@ export interface IGeneralSpriteGenerator {
 }
 
 export interface IPixelRendrEncodeCallback {
-    (result: string, image: HTMLImageElement, ...args: any[]): any;
+    (result: string, image: HTMLImageElement, ...args: unknown[]): unknown;
 }
 
 /**
@@ -247,7 +247,7 @@ export interface IPixelRendrSettings {
     /**
      * A nested library of sprites to process.
      */
-    library?: any;
+    library?: unknown;
 
     /**
      * Filters that may be used by sprites in the library.
@@ -299,7 +299,7 @@ export interface IPixelRendr {
     /**
      * @returns The base container for storing sprite information.
      */
-    getBaseLibrary(): any;
+    getBaseLibrary(): unknown;
 
     /**
      * @returns The StringFilr interface on top of the base library.
@@ -342,7 +342,7 @@ export interface IPixelRendr {
      *                     Numbers are required.
      * @returns A sprite for the given key and attributes.
      */
-    decode(key: string, attributes: any): Uint8ClampedArray | SpriteMultiple;
+    decode(key: string, attributes: unknown): Uint8ClampedArray | SpriteMultiple;
 
     /**
      * Encodes an image into a sprite via ProcessorEncode.process.
@@ -351,7 +351,7 @@ export interface IPixelRendr {
      * @param callback   An optional callback to call with image and the result.
      * @param args   Any additional arguments to pass to the callback.
      */
-    encode(image: HTMLImageElement, callback: IPixelRendrEncodeCallback, ...args: any[]): string;
+    encode(image: HTMLImageElement, callback: IPixelRendrEncodeCallback, ...args: unknown[]): string;
 
     /**
      * Fetches an image from a source and encodes it into a sprite via
@@ -699,7 +699,7 @@ export class PixelRendr implements IPixelRendr {
     /**
      * @returns The base container for storing sprite information.
      */
-    getBaseLibrary(): any {
+    getBaseLibrary(): unknown {
         return this.BaseFiler.getLibrary();
     }
 
@@ -757,7 +757,7 @@ export class PixelRendr implements IPixelRendr {
      *                     Numbers are required.
      * @returns A sprite for the given key and attributes.
      */
-    decode(key: string, attributes: any): Uint8ClampedArray | SpriteMultiple {
+    decode(key: string, attributes: unknown): Uint8ClampedArray | SpriteMultiple {
         var render: Render = this.BaseFiler.get(key),
             sprite: Uint8ClampedArray | SpriteMultiple;
 
@@ -789,7 +789,7 @@ export class PixelRendr implements IPixelRendr {
      * @param callback   An optional callback to call with image and the result.
      * @param args   Any additional arguments to pass to the callback.
      */
-    encode(image: HTMLImageElement, callback: IPixelRendrEncodeCallback, ...args: any[]): string {
+    encode(image: HTMLImageElement, callback: IPixelRendrEncodeCallback, ...args: unknown[]): string {
         var result: string = this.ProcessorEncode.process(image);
 
         if (callback) {
@@ -1008,7 +1008,7 @@ export class PixelRendr implements IPixelRendr {
      * @param attributes   Any additional information to pass to the sprite
      *                     generation process.
      */
-    private generateRenderSprite(render: Render, key: string, attributes: any): void {
+    private generateRenderSprite(render: Render, key: string, attributes: unknown): void {
         var sprite: Uint8ClampedArray | SpriteMultiple;
 
         if (render.source.constructor === String) {
@@ -1029,7 +1029,7 @@ export class PixelRendr implements IPixelRendr {
      *                     process.
      * @returns   The output sprite.
      */
-    private generateSpriteSingleFromRender(render: Render, key: string, attributes: any): Uint8ClampedArray {
+    private generateSpriteSingleFromRender(render: Render, key: string, attributes: unknown): Uint8ClampedArray {
         var base: Uint8ClampedArray = this.ProcessorBase.process(render.source, key, render.filter),
             sprite: Uint8ClampedArray = this.ProcessorDims.process(base, key, attributes);
 
@@ -1047,7 +1047,7 @@ export class PixelRendr implements IPixelRendr {
      *                     process.
      * @returns The output sprite.
      */
-    private generateSpriteCommandMultipleFromRender(render: Render, key: string, attributes: any): SpriteMultiple {
+    private generateSpriteCommandMultipleFromRender(render: Render, key: string, attributes: unknown): SpriteMultiple {
         var sources: any = render.source[2],
             sprites: IClampedArraysContainer = {},
             sprite: Uint8ClampedArray,
@@ -1080,7 +1080,7 @@ export class PixelRendr implements IPixelRendr {
     private generateSpriteCommandSameFromRender(
         render: Render,
         key: string,
-        attributes: any
+        attributes: unknown
     ): Uint8ClampedArray | SpriteMultiple {
         var replacement: Render | IRenderLibrary = this.followPath(this.library.sprites, render.source[1], 0);
 
@@ -1655,7 +1655,7 @@ export class PixelRendr implements IPixelRendr {
      * @param palette   A palette of colors.
      * @returns The equivalent digitsize for the palette.
      */
-    private getDigitSizeFromArray(palette: any[]): number {
+    private getDigitSizeFromArray(palette: unknown[]): number {
         var digitsize: number = 0,
             i: number;
 
@@ -1685,7 +1685,7 @@ export class PixelRendr implements IPixelRendr {
      * @returns The actual palette Object for the given palette, with an index
      *          for every palette member.
      */
-    private getPaletteReference(palette: any[]): any {
+    private getPaletteReference(palette: any[]): unknown {
         var output: any = {},
             digitsize: number = this.getDigitSizeFromArray(palette),
             i: number;
@@ -1705,7 +1705,7 @@ export class PixelRendr implements IPixelRendr {
      * @returns The actual palette Object for the given palette, with an index
      *          for every palette member.
      */
-    private getPaletteReferenceStarting(palette: IPalette): any {
+    private getPaletteReferenceStarting(palette: IPalette): unknown {
         var output: any = {},
             digit: string,
             i: number;
@@ -1792,7 +1792,7 @@ export class PixelRendr implements IPixelRendr {
      * @param inserted   The element to insert.
      * @returns The original Array, with the element replaced.
      */
-    private arrayReplace(array: any[], removed: any, inserted: any): any[] {
+    private arrayReplace(array: unknown[], removed: unknown, inserted: unknown): unknown[] {
         for (var i: number = 0; i < array.length; i += 1) {
             if (array[i] === removed) {
                 array[i] = inserted;
@@ -1827,7 +1827,7 @@ export class PixelRendr implements IPixelRendr {
      * @param array   An Array to convert.
      * @returns An Object with an index equal to each element of the Array.
      */
-    private getValueIndices(array: any[]): any {
+    private getValueIndices(array: any[]): unknown {
         var output: any = {},
             i: number;
 

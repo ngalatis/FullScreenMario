@@ -6,7 +6,7 @@
  * @param event   The source Event causing the trigger.
  */
 export interface IInputWritrTriggerCallback {
-    (eventInformation: any, event: Event): void;
+    (eventInformation: unknown, event: Event): void;
 }
 
 /**
@@ -23,7 +23,7 @@ export interface IInputWritrTriggerContainer {
  * Function to determine whether some functionality is available.
  */
 export interface IInputWriterBooleanGetter {
-    (...args: any[]): boolean;
+    (...args: unknown[]): boolean;
 }
 
 /**
@@ -80,7 +80,7 @@ export interface IInputWritrSettings {
     /**
      * The first argument to be passed to event callbacks.
      */
-    eventInformation?: any;
+    eventInformation?: unknown;
 
     /**
      * Function to generate a current timestamp, commonly performance.now.
@@ -91,7 +91,7 @@ export interface IInputWritrSettings {
      * Known, allowed aliases for triggers.
      */
     aliases?: {
-        [i: string]: any[];
+        [i: string]: unknown[];
     };
 
     /**
@@ -130,7 +130,7 @@ export interface IInputWritr {
     /**
      * @returns The stored mapping of aliases to values.
      */
-    getAliases(): any;
+    getAliases(): unknown;
 
     /**
      * @returns The stored mapping of aliases to values, with values
@@ -147,14 +147,14 @@ export interface IInputWritr {
      *          typically the human-readable Strings representing
      *          input names, such as "a" or "left".
      */
-    getAliasAsKeyStrings(alias: any): string[];
+    getAliasAsKeyStrings(alias: unknown): string[];
 
     /**
      * @param alias   The alias of an input, typically a character code.
      * @returns The human-readable String representing the input name,
      *          such as "a" or "left".
      */
-    convertAliasToKeyString(alias: any): string;
+    convertAliasToKeyString(alias: unknown): string;
 
     /**
      * @param key   The number code of an input.
@@ -167,7 +167,7 @@ export interface IInputWritr {
      *
      * @returns The currently recording history of inputs in JSON-friendly form.
      */
-    getHistory(name?: string): any;
+    getHistory(name?: string): unknown;
 
     /**
      * Getter for a single saved history.
@@ -175,7 +175,7 @@ export interface IInputWritr {
      * @param name   The identifier for the old history to return.
      * @returns A history of inputs in JSON-friendly form.
      */
-    getHistories(): any;
+    getHistories(): unknown;
 
     /**
      * @returns All previously stored histories.
@@ -208,7 +208,7 @@ export interface IInputWritr {
      *
      * @param eventInformationNew   A new first argument for event callbacks.
      */
-    setEventInformation(eventInformationNew: any): void;
+    setEventInformation(eventInformationNew: unknown): void;
 
     /**
      * Adds a list of values by which an event may be triggered.
@@ -218,7 +218,7 @@ export interface IInputWritr {
      * @param values   An array of aliases by which the event will also
      *                 be callable.
      */
-    addAliasValues(name: any, values: any[]): void;
+    addAliasValues(name: unknown, values: unknown[]): void;
 
     /**
      * Removes a list of values by which an event may be triggered.
@@ -227,7 +227,7 @@ export interface IInputWritr {
      *               such as "left".
      * @param values   Aliases by which the event will no longer be callable.
      */
-    removeAliasValues(name: string, values: any[]): void;
+    removeAliasValues(name: string, values: unknown[]): void;
 
     /**
      * Shortcut to remove old alias values and add new ones in.
@@ -240,14 +240,14 @@ export interface IInputWritr {
      * @param valuesNew   An array of aliases by which the event will
      *                    now be callable.
      */
-    switchAliasValues(name: string, valuesOld: any[], valuesNew: any[]): void;
+    switchAliasValues(name: string, valuesOld: unknown[], valuesNew: unknown[]): void;
 
     /**
      * Adds a set of alises from an Object containing "name" => [values] pairs.
      *
      * @param aliasesRaw   Aliases to be added via this.addAliasvalues.
      */
-    addAliases(aliasesRaw: any): void;
+    addAliases(aliasesRaw: unknown): void;
 
     /**
      * Adds a triggerable event by marking a new callback under the trigger's
@@ -258,7 +258,7 @@ export interface IInputWritr {
      *                typically either a character code or an alias.
      * @param callback   The callback Function to be triggered.
      */
-    addEvent(trigger: string, label: any, callback: IInputWritrTriggerCallback): void;
+    addEvent(trigger: string, label: unknown, callback: IInputWritrTriggerCallback): void;
 
     /**
      * Removes a triggerable event by deleting any callbacks under the trigger's
@@ -268,7 +268,7 @@ export interface IInputWritr {
      * @param label   The code within the trigger to call within,
      *                typically either a character code or an alias.
      */
-    removeEvent(trigger: string, label: any): void;
+    removeEvent(trigger: string, label: unknown): void;
 
     /**
      * Stores the current history in the histories listing. this.restartHistory
@@ -310,7 +310,7 @@ export interface IInputWritr {
      *                        to be triggered, such as a MouseEvent.
      * @returns The result of calling the triggered event.
      */
-    callEvent(event: Function | string, keyCode?: number | string, sourceEvent?: Event): any;
+    callEvent(event: Function | string, keyCode?: number | string, sourceEvent?: Event): unknown;
 
     /**
      * Creates and returns a Function to run a trigger.
@@ -369,7 +369,7 @@ export class InputWritr implements IInputWritr {
      * An Object to be passed to event calls, commonly with key information
      * such as { "down": 0 }.
      */
-    private eventInformation: any;
+    private eventInformation: unknown;
 
     /**
      * An optional Boolean callback to disable or enable input triggers.
@@ -623,7 +623,7 @@ export class InputWritr implements IInputWritr {
      *
      * @param eventInformationNew   A new first argument for event callbacks.
      */
-    setEventInformation(eventInformationNew: any): void {
+    setEventInformation(eventInformationNew: unknown): void {
         this.eventInformation = eventInformationNew;
     }
 
@@ -710,7 +710,7 @@ export class InputWritr implements IInputWritr {
      * @param valuesNew   An array of aliases by which the event will
      *                    now be callable.
      */
-    switchAliasValues(name: string, valuesOld: any[], valuesNew: any[]): void {
+    switchAliasValues(name: string, valuesOld: unknown[], valuesNew: unknown[]): void {
         this.removeAliasValues(name, valuesOld);
         this.addAliasValues(name, valuesNew);
     }
@@ -841,7 +841,7 @@ export class InputWritr implements IInputWritr {
      *                        to be triggered, such as a MouseEvent.
      * @returns The result of calling the triggered event.
      */
-    callEvent(event: Function | string, keyCode?: number | string, sourceEvent?: Event): any {
+    callEvent(event: Function | string, keyCode?: number | string, sourceEvent?: Event): unknown {
         if (!event) {
             throw new Error("Blank event given to InputWritr.");
         }

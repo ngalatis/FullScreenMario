@@ -330,7 +330,7 @@ export const spawnMethods = {
     spawnCustomText(this: MarioGame, thing: ICustomText): void {
         var top: number = thing.top,
             texts: ICustomTextInfo[] = thing.texts,
-            attributes: any = thing.textAttributes,
+            attributes: unknown = thing.textAttributes,
             spacingHorizontal: number = thing.spacingHorizontal * thing.FSM.unitsize,
             spacingVertical: number = thing.spacingVertical * thing.FSM.unitsize,
             spacingVerticalBlank: number = thing.spacingVerticalBlank * thing.FSM.unitsize,

@@ -37,11 +37,11 @@ export interface IGameStartr {
     UserWrapper: IUserWrappr;
     canvas: HTMLCanvasElement;
     container: HTMLElement;
-    player?: any;
-    addPageStyles(styles: any): void;
+    player?: unknown;
+    addPageStyles(styles: unknown): void;
     gameStart(): void;
-    createElement(tag: string, ...args: any[]): HTMLElement;
-    proliferate(recipient: any, donor: any, noOverride?: boolean): any;
+    createElement(tag: string, ...args: unknown[]): HTMLElement;
+    proliferate(recipient: unknown, donor: unknown, noOverride?: boolean): any;
 }
 
 /**
@@ -53,7 +53,7 @@ export type IGameStartrCustoms = any;
  * Initializes a new instance of the IGameStartr interface.
  */
 export interface IGameStartrConstructor {
-    new (...args: any[]): IGameStartr;
+    new (...args: unknown[]): IGameStartr;
 }
 
 /**
@@ -155,7 +155,7 @@ export interface IUserWrapprSettings {
     /**
      * A utility Function to log messages, commonly console.log.
      */
-    logger?: (...args: any[]) => void;
+    logger?: (...args: unknown[]) => void;
 
     /**
      * Custom arguments to be passed to the IGameStartr's modules.
@@ -241,7 +241,7 @@ export interface IUserWrappr {
     /**
      * @returns A utility Function to log messages, commonly console.log.
      */
-    getLogger(): (...args: any[]) => string;
+    getLogger(): (...args: unknown[]) => string;
 
     /**
      * @returns Generators used to generate HTML controls for the user.
@@ -337,7 +337,7 @@ export namespace UISchemas {
      * @returns An initial value for an option control.
      */
     export interface IOptionSource {
-        (GameStarter: IGameStartr, ...args: any[]): any;
+        (GameStarter: IGameStartr, ...args: unknown[]): any;
     }
 
     /**
@@ -349,14 +349,14 @@ export namespace UISchemas {
          *
          * @param value   A new value for this element.
          */
-        setValue(value: any): void;
+        setValue(value: unknown): void;
     }
 
     /**
      * An HTMLInputElement that has been given a utility setValue Function.
      */
     export interface IInputElement extends HTMLInputElement {
-        setValue(value: any): void;
+        setValue(value: unknown): void;
     }
 
     /**
@@ -374,7 +374,7 @@ export namespace UISchemas {
          *
          * @param value   A new value for this element.
          */
-        setValue(value: any): void;
+        setValue(value: unknown): void;
     }
 
     /**
@@ -451,7 +451,7 @@ export namespace UISchemas {
         /**
          * A general, default callback for when a button is clicked.
          */
-        callback: (GameStarter: IGameStartr, ...args: any[]) => void;
+        callback: (GameStarter: IGameStartr, ...args: unknown[]) => void;
 
         /**
          * A key to add to buttons when they're active.
@@ -471,7 +471,7 @@ export namespace UISchemas {
         /**
          * A callback for when this specific button is pressed.
          */
-        callback?: (GameStarter: IGameStartr, ...args: any[]) => void;
+        callback?: (GameStarter: IGameStartr, ...args: unknown[]) => void;
 
         /**
          * A source for the button's initial value.
@@ -903,7 +903,7 @@ export namespace UISchemas {
         /**
          * Options for the element, such as className or value.
          */
-        options: any;
+        options: unknown;
     }
 
     /**
@@ -1534,7 +1534,7 @@ export namespace UISchemas {
             schema: ISchema
         ): void {
             var keyGeneral: string = schema.title + "::" + details.title,
-                values: any[] = details.source.call(this, this.GameStarter),
+                values: unknown[] = details.source.call(this, this.GameStarter),
                 key: string,
                 value: any,
                 child: IInputElement | ISelectElement,
@@ -1570,7 +1570,7 @@ export namespace UISchemas {
          * @param {HTMLElement} child   An element with a value to store.
          * @param {Mixed} value   What value is to be stored under the key.
          */
-        protected storeLocalStorageValue(child: IInputElement | ISelectElement, value: any): void {
+        protected storeLocalStorageValue(child: IInputElement | ISelectElement, value: unknown): void {
             var key: string | null = child.getAttribute("localStorageKey");
 
             if (key) {
@@ -1650,7 +1650,7 @@ export class UserWrappr {
     /**
      * Custom arguments to be passed to the GameStartr's modules.
      */
-    private customs: any;
+    private customs: unknown;
 
     /**
      * What the global object is called (typically "window" for browser
@@ -1718,7 +1718,7 @@ export class UserWrappr {
     /**
      * A utility Function to log messages, commonly console.log.
      */
-    private logger: (...args: any[]) => any;
+    private logger: (...args: unknown[]) => any;
 
     /**
      * Generators used to generate HTML controls for the user.
@@ -1914,7 +1914,7 @@ export class UserWrappr {
     /**
      * @returns A utility Function to log messages, commonly console.log.
      */
-    getLogger(): (...args: any[]) => string {
+    getLogger(): (...args: unknown[]) => string {
         return this.logger;
     }
 
@@ -2045,7 +2045,7 @@ export class UserWrappr {
      *
      * @param customsRaw   Raw, user-provided customs.
      */
-    private fixCustoms(customsRaw: IGameStartrCustoms): any {
+    private fixCustoms(customsRaw: IGameStartrCustoms): unknown {
         var customs: IGameStartrCustoms = this.GameStartrConstructor.prototype.proliferate({}, customsRaw);
 
         this.GameStartrConstructor.prototype.proliferate(customs, this.currentSize);

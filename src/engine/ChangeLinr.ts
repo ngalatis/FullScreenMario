@@ -17,14 +17,14 @@ export interface IChangeLinrTransforms {
  *          will be passed in by the calling ChangeLinr.
  */
 export interface IChangeLinrTransform {
-    (data: any, key: string, attributes?: any, scope?: IChangeLinr): any;
+    (data: any, key: string, attributes?: any, scope?: IChangeLinr): unknown;
 }
 
 /**
  * Cached storage for outputs of transformations, keyed by their request key.
  */
 export interface IChangeLinrCache {
-    [i: string]: any;
+    [i: string]: unknown;
 }
 
 /**
@@ -33,7 +33,7 @@ export interface IChangeLinrCache {
  */
 export interface IChangeLinrCacheFull {
     [i: string]: {
-        [j: string]: any;
+        [j: string]: unknown;
     };
 }
 
@@ -76,7 +76,7 @@ export interface IChangeLinr {
      * @param key   The key under which the output was processed
      * @returns The cached output filed under the given key.
      */
-    getCached(key: string): any;
+    getCached(key: string): unknown;
 
     /**
      * @returns A complete listing of the cached outputs from all
@@ -106,7 +106,7 @@ export interface IChangeLinr {
      *                       transform Functions.
      * @returns The final output of the pipeline.
      */
-    process(data: any, key?: string, attributes?: any): any;
+    process(data: unknown, key?: string, attributes?: unknown): unknown;
 
     /**
      * A version of this.process that returns the complete output from each
@@ -117,7 +117,7 @@ export interface IChangeLinr {
      * @param [attributes]   Any extra attributes to be given to the transforms.
      * @returns The final output of the transforms.
      */
-    processFull(data: any, key: string, attributes?: any): any;
+    processFull(data: unknown, key: string, attributes?: unknown): unknown;
 }
 
 /**
@@ -215,7 +215,7 @@ export class ChangeLinr implements IChangeLinr {
      * @param key   The key under which the output was processed
      * @returns The cached output filed under the given key.
      */
-    getCached(key: string): any {
+    getCached(key: string): unknown {
         return this.cache[key];
     }
 
@@ -255,7 +255,7 @@ export class ChangeLinr implements IChangeLinr {
      * @param [attributes]   Any extra attributes to be given to transforms.
      * @returns The final output of the pipeline.
      */
-    process(data: any, key?: string, attributes?: any): any {
+    process(data: any, key?: string, attributes?: unknown): any {
         var i: number;
 
         if (typeof key === "undefined" && (this.doMakeCache || this.doUseCache)) {
@@ -292,7 +292,7 @@ export class ChangeLinr implements IChangeLinr {
      * @param [attributes]   Any extra attributes to be given to the transforms.
      * @returns The final output of the transforms.
      */
-    processFull(data: any, key: string, attributes?: any): any {
+    processFull(data: unknown, key: string, attributes?: unknown): unknown {
         var output: any = {},
             i: number;
 

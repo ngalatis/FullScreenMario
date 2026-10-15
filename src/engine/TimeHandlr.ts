@@ -65,7 +65,7 @@ export interface IEventCallback {
  * @returns Some numeric value.
  */
 export interface INumericCalculator {
-    (...args: any[]): number;
+    (...args: unknown[]): number;
 }
 
 /**
@@ -76,7 +76,7 @@ export interface INumericCalculator {
  * @returns Whether an event should keep repeating.
  */
 export interface IRepeatCalculator {
-    (...args: any[]): boolean;
+    (...args: unknown[]): boolean;
 }
 
 /**
@@ -121,7 +121,7 @@ export interface ITimeEvent {
     /**
      * Arguments to be passed to the callback.
      */
-    args?: any[];
+    args?: unknown[];
 
     /**
      * How many times this should repeat. If a Function, called for whether to repeat.
@@ -219,7 +219,7 @@ export interface ITimeHandlr {
      * @param args   Any additional arguments to pass to the callback.
      * @returns An event with the given callback and time information.
      */
-    addEvent(callback: IEventCallback, timeDelay?: number | INumericCalculator, ...args: any[]): ITimeEvent;
+    addEvent(callback: IEventCallback, timeDelay?: number | INumericCalculator, ...args: unknown[]): ITimeEvent;
 
     /**
      * Adds an event in a manner similar to setInterval, though any arguments past
@@ -240,7 +240,7 @@ export interface ITimeHandlr {
         callback: IEventCallback,
         timeDelay?: number | INumericCalculator,
         numRepeats?: number | IEventCallback,
-        ...args: any[]
+        ...args: unknown[]
     ): ITimeEvent;
 
     /**
@@ -352,7 +352,7 @@ export class TimeEvent implements ITimeEvent {
     /**
      * Arguments to be passed to the callback.
      */
-    args: any[];
+    args: unknown[];
 
     /**
      * How many times this should repeat. If a Function, called for a return value.
@@ -385,7 +385,7 @@ export class TimeEvent implements ITimeEvent {
         repeat: number | INumericCalculator,
         time: number,
         timeRepeat: number | INumericCalculator,
-        args?: any[]
+        args?: unknown[]
     ) {
         this.callback = callback;
         this.repeat = repeat;
@@ -401,7 +401,7 @@ export class TimeEvent implements ITimeEvent {
      * @param args   Any additional arguments, if value is a Function.
      * @returns A numeric equivalent of the value.
      */
-    static runCalculator(value: number | INumericCalculator, ...args: any[]): number {
+    static runCalculator(value: number | INumericCalculator, ...args: unknown[]): number {
         if (value.constructor === Number) {
             return <number>value;
         } else {
@@ -534,7 +534,7 @@ export class TimeHandlr implements ITimeHandlr {
      * @param args   Any additional arguments to pass to the callback.
      * @returns An event with the given callback and time information.
      */
-    addEvent(callback: IEventCallback, timeDelay?: number | INumericCalculator, ...args: any[]): TimeEvent {
+    addEvent(callback: IEventCallback, timeDelay?: number | INumericCalculator, ...args: unknown[]): TimeEvent {
         var event: TimeEvent = new TimeEvent(callback, 1, this.time, timeDelay || 1, args);
         this.insertEvent(event);
         return event;
@@ -559,7 +559,7 @@ export class TimeHandlr implements ITimeHandlr {
         callback: IEventCallback,
         timeDelay?: number | INumericCalculator,
         numRepeats?: number | IEventCallback,
-        ...args: any[]
+        ...args: unknown[]
     ): TimeEvent {
         var event: TimeEvent = new TimeEvent(callback, numRepeats || 1, this.time, timeDelay || 1, args);
         this.insertEvent(event);
@@ -585,7 +585,7 @@ export class TimeHandlr implements ITimeHandlr {
         callback: IEventCallback,
         timeDelay?: number | INumericCalculator,
         numRepeats?: number | IEventCallback,
-        ...args: any[]
+        ...args: unknown[]
     ): TimeEvent {
         timeDelay = timeDelay || 1;
         numRepeats = numRepeats || 1;

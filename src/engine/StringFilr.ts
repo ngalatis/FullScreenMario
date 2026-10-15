@@ -9,7 +9,7 @@ export interface ILibrary {
  * A cache of previously completed lookups.
  */
 export interface ICache {
-    [i: string]: any;
+    [i: string]: unknown;
 }
 
 /**
@@ -51,12 +51,12 @@ export interface IStringFilr {
     /**
      * @returns The complete cache of previously completed lookups.
      */
-    getCache(): any;
+    getCache(): unknown;
 
     /**
      * @returns A cached value, if it exists.
      */
-    getCached(key: string): any;
+    getCached(key: string): unknown;
 
     /**
      * Completely clears the lookup cache.  
@@ -76,7 +76,7 @@ export interface IStringFilr {
      * @param keyRaw   The raw key for data to look up, in String form.
      * @returns The deepest matching data in the library.
      */
-    get(keyRaw: string): any;
+    get(keyRaw: string): unknown;
 }
 
 /**
@@ -156,7 +156,7 @@ export class StringFilr implements IStringFilr {
     /**
      * @returns A cached value, if it exists.
      */
-    getCached(key: string): any {
+    getCached(key: string): unknown {
         return this.cache[key];
     }
 
@@ -187,7 +187,7 @@ export class StringFilr implements IStringFilr {
      * @returns The deepest matching data in the library.
      */
     get(keyRaw: string): any {
-        var key: string, result: any;
+        var key: string, result: unknown;
 
         if (this.normal) {
             key = keyRaw.replace(this.normal, "");
@@ -217,7 +217,7 @@ export class StringFilr implements IStringFilr {
      * @param current   The current location being searched within the library.
      * @returns The most deeply matched part of the library.
      */
-    private followClass(keys: string[], current: any): any {
+    private followClass(keys: string[], current: any): unknown {
         var key: string, i: number;
 
         // If keys runs out, we're done

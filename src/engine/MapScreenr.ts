@@ -25,12 +25,12 @@ export interface IMapScreenrSettings {
     /**
      * Arguments to be passed to variable Functions.
      */
-    variableArgs?: any[];
+    variableArgs?: unknown[];
 
     /**
      * Variables of any type may be added to the MapScreenr.
      */
-    [i: string]: any;
+    [i: string]: unknown;
 }
 
 /**
@@ -47,7 +47,7 @@ export interface IMapScreenr {
     /**
      * Arguments to be passed into variable computation Functions.
      */
-    variableArgs: any[];
+    variableArgs: unknown[];
 
     /**
      * Top border measurement of the bounding box.
@@ -117,7 +117,7 @@ export interface IMapScreenr {
      * @param value   A new value for the variable instead of its Function's result.
      * @returns The new value of the variable.
      */
-    setVariable(name: string, value?: any): any;
+    setVariable(name: string, value?: unknown): unknown;
 
     /**
      * Shifts the MapScreenr horizontally and vertically via shiftX and shiftY.
@@ -144,7 +144,7 @@ export interface IMapScreenr {
     /**
      * Any variable may be kept publically on a MapScreenr, keyed by name.
      */
-    [i: string]: any;
+    [i: string]: unknown;
 }
 
 /**
@@ -161,7 +161,7 @@ export class MapScreenr implements IMapScreenr {
     /**
      * Arguments to be passed into variable computation Functions.
      */
-    public variableArgs: any[];
+    public variableArgs: unknown[];
 
     /**
      * Top border measurement of the bounding box.
@@ -285,7 +285,7 @@ export class MapScreenr implements IMapScreenr {
      * @param value   A new value for the variable instead of its Function's result.
      * @returns The new value of the variable.
      */
-    setVariable(name: string, value?: any): any {
+    setVariable(name: string, value?: unknown): any {
         this[name] = arguments.length === 1 ? this.variables[name].apply(this, this.variableArgs) : value;
     }
 
@@ -331,5 +331,5 @@ export class MapScreenr implements IMapScreenr {
     /**
      * Any variable may be kept publically on a MapScreenr, keyed by name.
      */
-    [i: string]: any;
+    [i: string]: unknown;
 }

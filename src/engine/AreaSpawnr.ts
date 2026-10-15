@@ -60,7 +60,7 @@ export interface IAreaSpawnrSettings {
     /**
      * An optional scope to call stretchAdd and afterAdd on, if not this.
      */
-    commandScope?: any;
+    commandScope?: unknown;
 }
 
 /**
@@ -301,7 +301,7 @@ export class AreaSpawnr implements IAreaSpawnr {
     /**
      * An optional scope to call stretchAdd and afterAdd on, if not this.
      */
-    private commandScope: any;
+    private commandScope: unknown;
 
     /**
      * @param {IAreaSpawnrSettings} settings

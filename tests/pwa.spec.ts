@@ -160,6 +160,10 @@ test.describe("offline", () => {
 
         expect(expected.length).toBeGreaterThan(40);
         expect([...precache].sort()).toEqual([...expected].sort());
+        // The chunks fetched on first use are precached too, so they work offline
+        for (const chunk of ["level-editor", "map-generator"]) {
+            expect(precache.filter((file) => file.startsWith("assets/" + chunk + "-"))).toHaveLength(1);
+        }
         // A different build gets a different cache name, so a deploy replaces the old files cleanly.
         expect(source).toMatch(/CACHE_NAME = CACHE_PREFIX \+ "[0-9a-f]{12}"/);
     });
@@ -229,6 +233,33 @@ test.describe("offline", () => {
         await page.keyboard.down("ArrowRight");
         await page.waitForFunction(() => (window as any).FSM.player.xvel > 0);
         await page.keyboard.up("ArrowRight");
+
+        expect(errors).toEqual([]);
+    });
+
+    test("the level editor and the map generator, fetched on first use, work with no network", async ({
+        context,
+        page
+    }) => {
+        const { errors } = collectPageErrors(page);
+
+        await bootGame(page);
+        await installAndReload(page);
+        await context.setOffline(true);
+        await page.reload();
+        await page.waitForFunction(() => !!(window as any).FSM && !!(window as any).FSM.player);
+
+        await page.evaluate(() => (window as any).FSM.setMap("Random"));
+        await page.waitForFunction(
+            () => (window as any).FSM.AreaSpawner.getMapName() === "Random" && !!(window as any).FSM.player
+        );
+
+        const editorEnabled = await page.evaluate(async () => {
+            const editor = await (window as any).FSM.loadLevelEditor();
+            editor.enable();
+            return editor.getEnabled() as boolean;
+        });
+        expect(editorEnabled).toBe(true);
 
         expect(errors).toEqual([]);
     });

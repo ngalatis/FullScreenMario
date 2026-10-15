@@ -76,6 +76,8 @@ FSM.ItemsHolder.increase("coins", 10);
 FSM.ModAttacher.enableMod("Low Gravity");
 ```
 
+The level editor and the random map generator are not part of the main bundle: each is a separate chunk, downloaded the first time it is used (and precached for offline play like everything else). So `FSM.setMap("Random")` starts the map a moment later the first time, and `FSM.LevelEditor` and `FSM.WorldSeeder` stay undefined until then. To use them from the console right away, load them first: `await FSM.loadLevelEditor()` or `await FSM.loadWorldSeeder()`.
+
 ## Install and offline
 
 The game is a small installable web app. In Chrome, Edge or Android, use the browser's "Install app" option (or "Add to Home screen"); on iPhone use Share, then "Add to Home Screen". It opens fullscreen in landscape with its own icon.

@@ -9,8 +9,14 @@
  */
 import * as AreaSpawnr from "../../engine/AreaSpawnr";
 import * as MapsCreatr from "../../engine/MapsCreatr";
+import type { INumberMakrState } from "../../engine/NumberMakr";
 import type { IArea, IMarioGame, ILocation, IMap, IMapScreenr, IPipe, IPlayer, IThing, IVine } from "../types";
 import { MarioGame } from "../MarioGame";
+
+/**
+ * The pending setMap("Random") call of each game, while the map generator is being fetched.
+ */
+const pendingRandomMaps: WeakMap<MarioGame, object> = new WeakMap();
 
 export const mapMethods = {
     /* Map sets
@@ -35,6 +41,14 @@ export const mapMethods = {
             name = FSM.AreaSpawner.getMapName();
         }
 
+        // Setting a map cancels a Random map still waiting for the map generator
+        pendingRandomMaps.delete(FSM);
+
+        if (name === "Random" && !FSM.WorldSeeder) {
+            FSM.setRandomMapWhenLoaded(location);
+            return;
+        }
+
         map = FSM.AreaSpawner.setMap(<string>name);
 
         FSM.ModAttacher.fireEvent("onPreSetMap", map);
@@ -52,6 +66,29 @@ export const mapMethods = {
 
         time = (<IArea>FSM.AreaSpawner.getArea()).time || (<IMap>FSM.AreaSpawner.getMap()).time;
         FSM.ItemsHolder.setItem("time", Number(time));
+    },
+
+    /**
+     * setMap for the Random map while the map generator is not loaded yet: the generator
+     * and the map are a separate chunk, fetched now. The map is set once they are in,
+     * unless another map was set meanwhile, and with the random number generator put
+     * back as it was at this call, so a seed set right before still decides the map.
+     *
+     * @param location   The name of the location within the Random map.
+     */
+    setRandomMapWhenLoaded(this: MarioGame, location?: string | number): void {
+        var FSM: MarioGame = MarioGame.prototype.ensureCorrectCaller(this),
+            request: object = {},
+            state: INumberMakrState = FSM.NumberMaker.getState();
+
+        pendingRandomMaps.set(FSM, request);
+
+        void FSM.loadWorldSeeder().then((): void => {
+            if (pendingRandomMaps.get(FSM) === request) {
+                FSM.NumberMaker.setState(state);
+                FSM.setMap("Random", location);
+            }
+        });
     },
 
     /**

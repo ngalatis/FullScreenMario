@@ -129,6 +129,18 @@ test.describe("easter egg review: findings", () => {
         await page.waitForURL(GAME);
     });
 
+    test("E-01: a Greek α typed into a form field still does not count", async ({ page }) => {
+        await openDemo(page);
+        const cdp = await page.context().newCDPSession(page);
+        await typeCode(page, ARROWS);
+        await pressLayoutKey(cdp, "β", "KeyB", 66);
+        await page.locator("#search").focus();
+        await pressLayoutKey(cdp, "α", "KeyA", 65);
+        await page.waitForTimeout(1000);
+        await expect(overlay(page)).toHaveCount(0);
+        expect(await litDots(page)).toBe(9);
+    });
+
     test("E-02: a navigation that gets cancelled does not leave the site under a permanent overlay", async ({
         page
     }) => {
@@ -173,7 +185,8 @@ test.describe("easter egg review: touch findings", () => {
             await swipe(cdp, x1, y1, x2, y2);
         }
         const paragraph = (await page.getByText("Lorem ipsum dolor sit amet").boundingBox())!;
-        expect(await litDots(page)).toBe(8); // the eight flicks alone already match the code's first eight steps
+        // Swipes are armed only once the riddle has been opened, so none of the flicks counted.
+        expect(await litDots(page)).toBe(0);
         await tap(cdp, paragraph.x + 40, paragraph.y + 10);
         await tap(cdp, paragraph.x + 40, paragraph.y + 10);
         // The overlay is appended synchronously on the tenth input, so count it once, right away, rather

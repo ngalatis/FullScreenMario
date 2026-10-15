@@ -104,7 +104,7 @@ test.describe("WeFixIt easter egg", () => {
     test("clicking him tells the riddle, clicking again gives the hint", async ({ page }) => {
         await openDemo(page);
         const plumber = await meetPlumber(page);
-        const bubble = page.getByRole("dialog");
+        const bubble = page.getByRole("dialog", { name: "Riddle" });
         await expect(bubble).toBeHidden();
 
         await plumber.click();
@@ -148,6 +148,13 @@ test.describe("WeFixIt easter egg", () => {
         await expect(bubble).toBeVisible();
         await page.getByText("We are always online").click();
         await expect(bubble).toBeHidden();
+
+        // Escape leaves focus alone when the keyboard user has moved it out of the bubble.
+        await plumber.click();
+        await page.locator("#search").focus();
+        await page.keyboard.press("Escape");
+        await expect(bubble).toBeHidden();
+        await expect(page.locator("#search")).toBeFocused();
     });
 
     test("the Konami code plays the transition, then opens the game", async ({ page }) => {
@@ -202,7 +209,7 @@ test.describe("WeFixIt easter egg", () => {
         const plumber = page.getByRole("button", { name: "Ο υδραυλικός της WeFixIt. Πάτησε για έναν γρίφο" });
         await page.locator("footer wefixit-easter-egg").scrollIntoViewIfNeeded();
         await plumber.click();
-        await expect(page.getByRole("dialog")).toContainText(
+        await expect(page.getByRole("dialog", { name: "Γρίφος" })).toContainText(
             "Ψιτ! Είσαι από τους παλιούς που θυμούνται τον κωδικό Konami; Πληκτρολόγησέ τον οπουδήποτε σε αυτό το site."
         );
         await plumber.click();
@@ -223,6 +230,28 @@ test.describe("WeFixIt easter egg", () => {
             (window as any).wefixitEasterEgg = { target: "javascript:alert(1)" };
         });
         await openDemo(page);
+        await typeCode(page);
+        await page.waitForURL(GAME);
+    });
+
+    test("a target that is not a string falls back to the game", async ({ page }) => {
+        await page.addInitScript(() => {
+            (window as any).wefixitEasterEgg = { target: { toString: () => "https://elsewhere.example/" } };
+        });
+        await openDemo(page);
+        await typeCode(page);
+        await page.waitForURL(GAME);
+    });
+
+    test("Escape during the transition cancels it and gives the page back", async ({ page }) => {
+        await openDemo(page);
+        await typeCode(page);
+        await expect(overlay(page)).toBeAttached();
+        await page.keyboard.press("Escape");
+        await expect(overlay(page)).toHaveCount(0);
+        await page.waitForTimeout(2000);
+        expect(page.url()).toBe(`${SITE}/demo.html`);
+
         await typeCode(page);
         await page.waitForURL(GAME);
     });
@@ -312,29 +341,50 @@ test.describe("WeFixIt easter egg on a phone", () => {
         await page.waitForURL(GAME);
     });
 
-    test("swipes and two taps anywhere enter the code", async ({ page }) => {
+    test("once the riddle has been opened, swipes and two taps anywhere enter the code", async ({ page }) => {
         await openDemo(page);
+        const plumber = await meetPlumber(page);
+        await plumber.tap();
+        await expect(page.getByRole("dialog")).toBeVisible();
+        // Armed for the rest of the browsing session, so on the next page too.
+        await page.goto(`${SITE}/demo.html`);
         const cdp = await page.context().newCDPSession(page);
-        const swipes: [number, number, number, number][] = [
-            [195, 600, 195, 400],
-            [195, 600, 195, 400], // up, up
-            [195, 300, 195, 500],
-            [195, 300, 195, 500], // down, down
-            [300, 400, 100, 400],
-            [100, 400, 300, 400], // left, right
-            [300, 400, 100, 400],
-            [100, 400, 300, 400] // left, right
-        ];
-        for (const [x1, y1, x2, y2] of swipes) {
-            await swipe(cdp, x1, y1, x2, y2);
-        }
+        await swipeArrows(cdp);
         await tap(cdp, 60, 200);
         expect(page.url()).toBe(`${SITE}/demo.html`);
         await tap(cdp, 60, 200);
         await expect(overlay(page)).toBeAttached();
         await page.waitForURL(GAME);
     });
+
+    test("swipes and taps do nothing while the riddle has not been opened", async ({ page }) => {
+        await openDemo(page);
+        const cdp = await page.context().newCDPSession(page);
+        await swipeArrows(cdp);
+        await tap(cdp, 60, 200);
+        await tap(cdp, 60, 200);
+        await page.waitForTimeout(2000);
+        await expect(overlay(page)).toHaveCount(0);
+        expect(page.url()).toBe(`${SITE}/demo.html`);
+    });
 });
+
+/** Swipes up, up, down, down, left, right, left, right. */
+async function swipeArrows(cdp: CDPSession): Promise<void> {
+    const swipes: [number, number, number, number][] = [
+        [195, 600, 195, 400],
+        [195, 600, 195, 400], // up, up
+        [195, 300, 195, 500],
+        [195, 300, 195, 500], // down, down
+        [300, 400, 100, 400],
+        [100, 400, 300, 400], // left, right
+        [300, 400, 100, 400],
+        [100, 400, 300, 400] // left, right
+    ];
+    for (const [x1, y1, x2, y2] of swipes) {
+        await swipe(cdp, x1, y1, x2, y2);
+    }
+}
 
 async function swipe(cdp: CDPSession, x1: number, y1: number, x2: number, y2: number): Promise<void> {
     await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: x1, y: y1 }] });

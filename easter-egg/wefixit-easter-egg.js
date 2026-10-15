@@ -2,7 +2,8 @@
 /**
  * WeFixIt easter egg for wefixit.gr: a pixel-art plumber fixes a leaky pipe in the footer and,
  * when clicked, asks a riddle about the Konami code. Entering the code anywhere on the site
- * (keys, swipes plus two taps, or his little controller) plays a pixel transition and opens the game.
+ * (keys, his little controller, or once the riddle has been opened, swipes plus two taps) plays a
+ * pixel transition and opens the game.
  *
  * Dependency-free, no network requests, styles isolated in Shadow DOM. Optional configuration,
  * set before this script runs or as data-* attributes on its tag (see README.md):
@@ -32,10 +33,13 @@
     const CYCLE_MS = 9000; // work, "fixed it!", the leak comes back, a shrug
     const DISSOLVE_MS = 600;
     const INTRO_MS = 900;
+    const WATCHDOG_MS = 5000; // after navigating: give the page back if it is still here
+    const SWIPES_KEY = "wefixitEasterEggSwipes"; // sessionStorage flag: the riddle has been opened
 
     const STRINGS = {
         en: {
             label: "The WeFixIt plumber. Press for a riddle",
+            dialog: "Riddle",
             riddle: "Psst! Are you old enough to remember the Konami code? Enter it anywhere on this site.",
             hint: "(you didn't hear it from me)",
             touch: "No keyboard? Use my controller:",
@@ -45,6 +49,7 @@
         },
         el: {
             label: "Ο υδραυλικός της WeFixIt. Πάτησε για έναν γρίφο",
+            dialog: "Γρίφος",
             riddle: "Ψιτ! Είσαι από τους παλιούς που θυμούνται τον κωδικό Konami; Πληκτρολόγησέ τον οπουδήποτε σε αυτό το site.",
             hint: "(δεν το άκουσες από μένα)",
             touch: "Δεν έχεις πληκτρολόγιο; Πάρε το χειριστήριό μου:",
@@ -202,7 +207,7 @@ button { margin: 0; padding: 0; border: 0; font-family: inherit; color: #1B1918;
     width: min(330px, calc(100% - 24px)); padding: 14px 40px 14px 16px; background: #FFFCE8; color: #1B1918;
     font-size: 15px; line-height: 1.45; text-align: left; pointer-events: auto; ${BORDER(4, "#00BCD4")} }
 .bubble p { margin: 0 0 8px; }
-.bubble strong { display: block; font-size: 18px; letter-spacing: 0.08em; color: #00838F; }
+.bubble strong { display: block; font-size: 18px; letter-spacing: 0.08em; color: #006E78; }
 .bubble button:focus-visible { outline: 2px dashed #00838F; outline-offset: 3px; }
 .tail { position: absolute; top: 100%; width: ${6 * SCALE}px; height: ${5 * SCALE}px; }
 .close { position: absolute; top: 2px; right: 2px; width: 36px; height: 36px; background: none; font-size: 24px; }
@@ -323,6 +328,8 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
     let lastInputAt = 0;
     /** @type {{ x: number, y: number, time: number } | null} */
     let touchStart = null;
+    // Swipes and taps count only once the visitor has opened the riddle, so scrolling never does.
+    let swipesArmed = false;
 
     // Bumped by every reset, which turns pending callbacks of an abandoned transition into no-ops.
     let transitionId = 0;
@@ -383,12 +390,12 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
     }
 
     /**
-     * Only http(s), so a mistyped or hostile config can never turn into a javascript: URL.
+     * Only http(s) strings, so a mistyped or hostile config can never turn into a javascript: URL.
      * @param {unknown} value
      */
     function safeTarget(value) {
         try {
-            const url = new URL(String(value || DEFAULT_TARGET), location.href);
+            const url = new URL(typeof value === "string" && value ? value : DEFAULT_TARGET, location.href);
             if (url.protocol === "https:" || url.protocol === "http:") {
                 return url.href;
             }
@@ -445,13 +452,34 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
         return (!!ui.host && path.includes(ui.host)) || (!!overlayHost && path.includes(overlayHost));
     }
 
+    /**
+     * The step of the code a key stands for. The letter (`key`) wins, so remapped keyboards and other
+     * Latin layouts work; for anything else the physical key (`code`) decides, so on a Greek layout
+     * the keys that type "β" and "α" are still B and A.
+     * @param {KeyboardEvent} event
+     */
+    function keyStep(event) {
+        const key = String(event.key || "").toLowerCase();
+        if (key.startsWith("arrow")) {
+            return key.slice(5);
+        }
+        if (/^[a-z]$/.test(key)) {
+            return key === "a" || key === "b" ? key : "other";
+        }
+        const physical = /^(?:Arrow(Up|Down|Left|Right)|Key([AB]))$/.exec(String(event.code || ""));
+        return physical ? (physical[1] || physical[2]).toLowerCase() : "other";
+    }
+
     /** @param {KeyboardEvent} event */
     function onKeyDown(event) {
         const key = String(event.key || "").toLowerCase();
         // Enter or Space on the controller's buttons click them, which already feeds the matcher.
         const pressesOwnButton = (key === "enter" || key === " ") && isOwn(event);
-        if (key === "escape" && bubbleOpen) {
-            closeBubble(true);
+        if (key === "escape" && transitionRunning) {
+            restorePage();
+        } else if (key === "escape" && bubbleOpen) {
+            // Focus goes back to the plumber only if it was in the bubble, never from elsewhere.
+            closeBubble(false);
         } else if (
             !event.ctrlKey &&
             !event.metaKey &&
@@ -463,7 +491,17 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
             key !== "shift" &&
             key !== "capslock"
         ) {
-            feed(key.startsWith("arrow") ? key.slice(5) : key === "a" || key === "b" ? key : "other");
+            feed(keyStep(event));
+        }
+    }
+
+    /** Arms the swipes for the rest of the browsing session, or for this page if storage is blocked. */
+    function armSwipes() {
+        swipesArmed = true;
+        try {
+            sessionStorage.setItem(SWIPES_KEY, "1");
+        } catch (error) {
+            // Armed on this page only.
         }
     }
 
@@ -471,7 +509,7 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
     function onTouchStart(event) {
         const touch = event.touches[0];
         touchStart =
-            event.touches.length === 1 && !isOwn(event)
+            swipesArmed && event.touches.length === 1 && !isOwn(event)
                 ? { x: touch.clientX, y: touch.clientY, time: Date.now() }
                 : null;
     }
@@ -556,7 +594,7 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
         tail.className = "tail";
         const bubble = h(
             "div",
-            { class: "bubble", id: "bubble", role: "dialog", "aria-label": text.label, hidden: "" },
+            { class: "bubble", id: "bubble", role: "dialog", "aria-label": text.dialog, hidden: "" },
             [h("p", {}, [text.riddle]), hint, hintButton, controller, close, tail]
         );
         const live = h("p", { class: "sr", "aria-live": "polite" });
@@ -803,6 +841,7 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
         ui.controller.hidden = !matches("(pointer: coarse)");
         ui.bubble.hidden = false;
         ui.plumber.setAttribute("aria-expanded", "true");
+        armSwipes();
         announce(text.riddle);
         positionBubble();
         render();
@@ -875,9 +914,15 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
 
     /** @param {number} id */
     function go(id) {
-        if (id === transitionId) {
-            location.assign(config.target);
+        if (id !== transitionId) {
+            return;
         }
+        location.assign(config.target);
+        // A navigation that never commits (Stop, Back, "stay" at a leave prompt, a slow or down host)
+        // would leave the page under the overlay: give it back once the visitor can see it again.
+        // Unloading, or a restore from the bfcache, bumps transitionId, which disarms this.
+        const watchdog = () => (document.hidden ? later(id, watchdog, WATCHDOG_MS) : restorePage());
+        later(id, watchdog, WATCHDOG_MS);
     }
 
     /**
@@ -1068,8 +1113,11 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
         });
     }
 
-    /** The back button can restore this page from the bfcache mid-transition: make it usable again. */
-    function resetAfterReturn() {
+    /**
+     * Makes the page usable again after a transition: on Escape, when the navigation did not happen,
+     * or when the back button restores this page from the bfcache mid-transition.
+     */
+    function restorePage() {
         transitionId++;
         transitionRunning = false;
         recent = [];
@@ -1111,9 +1159,16 @@ canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelate
             window.addEventListener("touchcancel", () => (touchStart = null), passive);
             window.addEventListener("pageshow", (event) => {
                 if (event.persisted) {
-                    resetAfterReturn();
+                    restorePage();
                 }
             });
+            // Leaving the page, or going into the bfcache: disarm pending callbacks such as the watchdog.
+            window.addEventListener("pagehide", () => transitionId++);
+            try {
+                swipesArmed = sessionStorage.getItem(SWIPES_KEY) === "1";
+            } catch (error) {
+                // No storage: armed once the riddle is opened on this page.
+            }
             buildStrip();
         } catch (error) {
             // An easter egg must never break the site.

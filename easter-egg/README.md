@@ -11,12 +11,21 @@ A hidden way from wefixit.gr to the game at <https://mario.wefixit.gr/>.
   Clicking again (or "Hint?") gives away the code. On touch screens the bubble also has a little
   controller to enter it with. Escape, the close button or a click outside closes the bubble.
 - **The code works on every page**, with or without the plumber: ↑ ↑ ↓ ↓ ← → ← → B A on a
-  keyboard, or on a touch screen swipe up, up, down, down, left, right, left, right and tap twice.
-  Keys typed into form fields, and keys held with Ctrl, Alt or Cmd, never count.
+  keyboard, always. B and A are also recognised by their position on the keyboard, so the code
+  works with the Greek layout active too. Keys typed into form fields, and keys held with Ctrl, Alt
+  or Cmd, never count.
+- **Swipes only after the riddle.** On a touch screen the controller in the bubble is the way in.
+  Swiping up, up, down, down, left, right, left, right and tapping twice anywhere on the page also
+  works, but only once the visitor has opened the riddle, so ordinary scrolling and double-tap zoom
+  can never take anyone to the game by accident. Opening the riddle arms the swipes for the rest of
+  the browsing session (remembered in `sessionStorage`), on every page of the site; where storage
+  is blocked, on the current page only.
 - **The transition.** The page dissolves into chunky pixel blocks that close in on the plumber,
   a black "WORLD 1-1" card shows him with "x 3" (and a short, quiet chiptune plays), then the
   browser goes to the game. With "reduce motion" turned on, he stands still and the page simply
-  fades. Coming back with the back button leaves the site usable again.
+  fades. Escape during the transition cancels it. If the game does not open (the visitor stops
+  the navigation, the game's host is slow or down), the page comes back by itself after about 5
+  seconds, and coming back with the back button leaves the site usable again too.
 
 Greek pages (`<html lang="el">`, the `/el` paths) get the Greek texts.
 

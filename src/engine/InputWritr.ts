@@ -313,6 +313,14 @@ export interface IInputWritr {
     callEvent(event: Function | string, keyCode?: number | string, sourceEvent?: Event): unknown;
 
     /**
+     * @param trigger   The label of an Array of functions, such as "onkeydown".
+     * @param keyCode   The alias of an event Function under it, such as "left".
+     * @returns Whether there is an event Function under that trigger and alias
+     *          for callEvent to run (it throws if there is not).
+     */
+    hasEvent(trigger: string, keyCode: number | string): boolean;
+
+    /**
      * Creates and returns a Function to run a trigger.
      *
      * @param trigger   The label for the Array of functions that the
@@ -855,6 +863,16 @@ export class InputWritr implements IInputWritr {
         }
 
         return (<Function>event)(this.eventInformation, sourceEvent);
+    }
+
+    /**
+     * @param trigger   The label of an Array of functions, such as "onkeydown".
+     * @param keyCode   The alias of an event Function under it, such as "left".
+     * @returns Whether there is an event Function under that trigger and alias
+     *          for callEvent to run (it throws if there is not).
+     */
+    hasEvent(trigger: string, keyCode: number | string): boolean {
+        return this.triggers.hasOwnProperty(trigger) && this.triggers[trigger].hasOwnProperty(keyCode);
     }
 
     /**

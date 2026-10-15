@@ -3,8 +3,8 @@ import * as MarioGame from "../MarioGame";
 MarioGame.MarioGame.settings.runner = {
     "games": [
         function () {
-            this.DeviceLayer.checkNavigatorGamepads();
-            this.DeviceLayer.activateAllGamepadTriggers();
+            // Controllers are read once per update, before anything else uses the inputs
+            this.DeviceLayer.poll();
         },
         function () {
             this.QuadsKeeper.determineAllQuadrants("Scenery", this.GroupHolder.getSceneryGroup());

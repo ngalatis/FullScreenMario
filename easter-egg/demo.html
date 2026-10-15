@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Easter egg demo</title>
+    <link rel="icon" href="data:,">
+    <style>
+        /* A small stand-in for the wefixit.gr theme: same colors, font stack and footer layout. */
+        *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid; }
+        html { background: #292624; color: #d9d5cf; font: 300 15px/1.25 "Roboto", Helvetica, Arial, sans-serif; }
+        a { color: #00bcd4; text-decoration: none; }
+        a:hover { color: #4dd0e1; }
+        h1, h2, h3 { color: #fffce8; font-weight: 300; line-height: 1.2; }
+        h1 { font-size: 48px; margin-bottom: 24px; }
+        h3 { font-size: 21px; margin: 0 0 16px; }
+        p { font-size: 18px; line-height: 1.5; margin-bottom: 20px; }
+        .container { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: 16px; }
+        .hidden { display: none; }
+        .mt-4 { margin-top: 16px; }
+        .mt-16 { margin-top: 64px; }
+        .p-8 { padding: 32px; }
+        .py-8 { padding-block: 32px; }
+        .text-center { text-align: center; }
+        .text-primary-500 { color: #00bcd4; }
+        .text-body-text-muted { color: rgba(255, 255, 255, 0.3); }
+        header { padding: 20px 0; background: #211e1d; }
+        .logo { color: #fffce8; font-size: 22px; font-weight: 700; }
+        main { padding-top: 64px; }
+        .hero { max-width: 720px; }
+        label { display: block; margin: 32px 0 8px; }
+        input { width: min(100%, 360px); padding: 10px 12px; background: #3a3633; color: #fffce8; font: inherit; }
+        footer h2 { font-size: 40px; margin-bottom: 48px; }
+        .grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+        .footer-menu { list-style: none; }
+        .footer-menu > li { font-size: 17px; }
+        .footer-menu > li + li { border-top: 1px solid rgba(255, 255, 255, 0.12); margin-top: 5px; padding-top: 5px; }
+        .bg-base-800 { background: #1b1918; }
+        .social-icons { display: flex; gap: 10px; justify-content: center; list-style: none; }
+        .icon-button { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #3a3633; color: #d9d5cf; }
+        .footer-final-nav { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; list-style: none; }
+        .footer-final-nav a { color: #d9d5cf; }
+        .footer-final-nav li { border-right: 1px solid rgba(153, 153, 153, 0.5); padding-right: 16px; }
+        .footer-final-nav li:last-child { border: 0; }
+        .scroll-t-top-cont { position: fixed; right: 2%; bottom: 2%; z-index: 2; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container"><span class="logo">wefixit<span class="text-primary-500">.</span></span></div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>We build websites that work</h1>
+            <p>This is a demo page for the footer easter egg. Scroll down to the footer and meet the
+                plumber, or enter the Konami code anywhere on the page.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante
+                venenatis dapibus posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna. Cras justo odio, dapibus ac
+                facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper.</p>
+            <label for="search">Typing the code in here should do nothing:</label>
+            <input id="search" type="search" placeholder="Search">
+            <p class="mt-16">Nullam quis risus eget urna mollis ornare vel eu leo. Curabitur blandit tempus
+                porttitor. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna
+                mollis euismod. Sed posuere consectetur est at lobortis.</p>
+        </section>
+    </main>
+
+    <footer class="mt-16" role="contentinfo">
+        <div id="block-wefixit-footercontact">
+            <section id="footer-contact">
+                <div class="py-8">
+                    <div class="container">
+                        <h2 class="text-primary-500">Still got questions?</h2>
+                        <div class="grid">
+                            <div>
+                                <h3>Services</h3>
+                                <ul class="footer-menu">
+                                    <li><a href="#">Web design</a></li>
+                                    <li><a href="#">Development</a></li>
+                                    <li><a href="#">Marketing</a></li>
+                                    <li><a href="#">Hosting</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3>Dive deeper</h3>
+                                <ul class="footer-menu">
+                                    <li><a href="#">Articles</a></li>
+                                    <li><a href="#">Careers</a></li>
+                                    <li><span class="text-body-text-muted">FAQ</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3>Start a conversation</h3>
+                                <ul class="footer-menu">
+                                    <li>Tel.: <a href="#">+30 000 000 0000</a></li>
+                                    <li><a href="#">Contact page</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div id="block-wefixit-footersocial">
+            <section id="footer-social">
+                <div class="bg-base-800 py-8">
+                    <div class="container text-center">
+                        <h2 class="text-primary-500">We are always online</h2>
+                        <ul class="social-icons">
+                            <li><a href="#" class="icon-button" aria-label="Social link one">f</a></li>
+                            <li><a href="#" class="icon-button" aria-label="Social link two">in</a></li>
+                            <li><a href="#" class="icon-button" aria-label="Social link three">ig</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div id="block-wefixit-footerfinal">
+            <section id="footer-final">
+                <div class="p-8">
+                    <div class="container text-center">
+                        <ul class="footer-final-nav">
+                            <li><a href="#">Client Area</a></li>
+                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            <li class="lang-switcher"><a href="#" hreflang="el">Δες το Ελληνικά</a></li>
+                        </ul>
+                        <div class="mt-4"><span>created by yours truly...</span></div>
+                    </div>
+                </div>
+            </section>
+            <div class="scroll-t-top-cont" id="totop">
+                <a class="icon-button" href="#" aria-label="Back to top">↑</a>
+            </div>
+        </div>
+        <div id="block-langswitching-popup" class="hidden" role="contentinfo">
+            <p>Language suggestion popup (hidden).</p>
+        </div>
+    </footer>
+
+    <script src="wefixit-easter-egg.js"></script>
+</body>
+</html>

@@ -81,9 +81,9 @@ FSM.ModAttacher.enableMod("Low Gravity");
 The game remembers two things on the device, in `localStorage` under the prefix `WeFixItMario`:
 
 - `WeFixItMariotopScore`: the best score ever reached (shown on the 1-1 title card as `TOP- 012345`, and saved the moment the score passes it).
-- `WeFixItMariolastLevel`: the last level from 1-1 to 8-4 that was started (the random map is not saved).
+- `WeFixItMariolastLevel`: the last level from 1-2 to 8-4 that was started (1-1, where every game starts, and the random map are not saved).
 
-When the game starts, or starts again after a game over, and the saved level is not 1-1, the title card also reads `CONTINUE 4-2: PRESS DOWN` (`TAP DOWN` on touch devices). Pressing down starts that level as a fresh game with 3 lives and no score. The offer ends as soon as the player moves or jumps, or leaves 1-1. Everywhere else, down works as before.
+When the game starts, or starts again after a game over, and the saved level is not 1-1, the title card also reads `CONTINUE 4-2: PRESS DOWN` (`TAP DOWN` on touch devices). Pressing down starts that level as a fresh game with 3 lives and no score. The offer ends as soon as the player moves or jumps, or leaves 1-1, but the saved level is kept, so it is offered again next time. Everywhere else, down works as before.
 
 To start over, press `Reset Progress` in the Options menu, or run `FSM.resetProgress();` in the console. Values that are missing, invalid or unreadable are ignored, and the game plays normally when `localStorage` is blocked or full (progress then lasts until the page is closed).
 

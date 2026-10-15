@@ -50,14 +50,16 @@ export const progressMethods = {
 
     /**
      * Saves a level as the last one started. Anything but a standard level
-     * (1-1 to 8-4) is ignored, so the random map and custom maps are not saved.
+     * (2-1 to 8-4, plus 1-2 to 1-4) is ignored: the random map and custom maps
+     * are not saved, and neither is 1-1, where every game starts anyway, so
+     * leaving the title card (even by accident) never loses a saved level.
      *
      * @param name   The name of a map that is being started.
      */
     rememberLevel(this: MarioGame, name: string): void {
         var level: string | undefined = sanitizeLevel(name);
 
-        if (level === undefined || level === this.getLastLevel()) {
+        if (level === undefined || level === firstLevel || level === this.getLastLevel()) {
             return;
         }
 
@@ -142,13 +144,11 @@ export const progressMethods = {
     },
 
     /**
-     * Ends the continue offer because the player started to play the level the
-     * title card leads to, which makes it the last level started.
+     * Ends the continue offer because the player started to play 1-1 instead.
+     * The saved level is kept, so the title card offers it again next time.
      */
     endContinueOffer(this: MarioGame): void {
-        if (this.closeContinueOffer()) {
-            this.rememberLevel(<string>this.AreaSpawner.getMapName());
-        }
+        this.closeContinueOffer();
     },
 
     /**

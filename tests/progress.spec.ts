@@ -252,18 +252,20 @@ test.describe("continue", () => {
         });
     }
 
-    test("moving starts 1-1, so 1-1 is the level remembered from then on", async ({ page }) => {
+    test("moving closes the offer but keeps the saved level for next time", async ({ page }) => {
         await bootWith(page, { [levelKey]: JSON.stringify("4-2") });
 
         await page.keyboard.down("ArrowRight");
         await page.waitForTimeout(100);
         await page.keyboard.up("ArrowRight");
 
-        expect(await stored(page, levelKey)).toBe(JSON.stringify("1-1"));
-
-        await bootGame(page);
         expect((await readState(page)).offer).toBeUndefined();
         expect(hasContinueLine(await titleLines(page))).toBe(false);
+        expect(await stored(page, levelKey)).toBe(JSON.stringify("4-2"));
+
+        await bootGame(page);
+        expect((await readState(page)).offer).toBe("4-2");
+        expect(hasContinueLine(await titleLines(page))).toBe(true);
     });
 
     test("the offer ends when 1-1 is left, and down is then an ordinary key", async ({ page }) => {
@@ -279,12 +281,12 @@ test.describe("continue", () => {
         expect(state.lives).toBe(3);
     });
 
-    test("starting 1-1 again later does not bring the offer back", async ({ page }) => {
+    test("starting 1-1 from the menu closes the offer and keeps the saved level", async ({ page }) => {
         await bootWith(page, { [levelKey]: JSON.stringify("4-2") });
 
         await page.evaluate(() => (window as any).FSM.setMap("1-1"));
 
-        expect(await readState(page)).toMatchObject({ offer: undefined, level: "1-1" });
+        expect(await readState(page)).toMatchObject({ offer: undefined, level: "4-2" });
         expect(hasContinueLine(await titleLines(page))).toBe(false);
     });
 

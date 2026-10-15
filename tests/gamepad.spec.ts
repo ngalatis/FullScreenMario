@@ -621,6 +621,35 @@ test.describe("plugging in and out", () => {
     });
 });
 
+test.describe("rebuilding the game", () => {
+    test("a game rebuilt by a View Mode change finds the pad that is already plugged in", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const pads = await startGame(page);
+        await pads.connect();
+
+        await page.evaluate(() => (window as any).FSM.UserWrapper.setCurrentSize("NES"));
+        await page.waitForFunction(() => {
+            const fsm = (window as any).FSM;
+            return !!fsm.player && !!fsm.player.resting && !fsm.GamesRunner.getPaused();
+        });
+
+        // No new connection event comes for a pad that was there already
+        const before = await readPlayer(page);
+        await pads.press(BUTTON.dpadRight);
+        await page.waitForFunction((x) => (window as any).FSM.player.left > x + 20, before.left);
+
+        // Start still works while paused, through the new game's watcher
+        await pads.release(BUTTON.dpadRight);
+        await pads.press(BUTTON.start);
+        await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === true);
+        await pads.release(BUTTON.start);
+        await pads.press(BUTTON.start);
+        await page.waitForFunction(() => (window as any).FSM.GamesRunner.getPaused() === false);
+
+        expect(errors).toEqual([]);
+    });
+});
+
 test.describe("without a controller", () => {
     test("nothing connected means no errors and next to no checking", async ({ page }) => {
         const { errors } = collectPageErrors(page);

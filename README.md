@@ -78,6 +78,10 @@ FSM.ModAttacher.enableMod("Low Gravity");
 
 The level editor and the random map generator are not part of the main bundle: each is a separate chunk, downloaded the first time it is used (and precached for offline play like everything else). So `FSM.setMap("Random")` starts the map a moment later the first time, and `FSM.LevelEditor` and `FSM.WorldSeeder` stay undefined until then. To use them from the console right away, load them first: `await FSM.loadLevelEditor()` or `await FSM.loadWorldSeeder()`.
 
+## Sound memory
+
+Sounds play through the Web Audio API, which keeps them decoded as raw samples: about 0.34 MB per second of stereo, 86 MB for the whole library. To stay well clear of the limits of phone browsers (iOS closes heavy tabs), only the sounds that must start instantly are decoded at boot and kept: the sound effects, the hurry and death jingles and the Star theme, about 10 MB (`preload` in `src/game/settings/audio.js`). The level themes and the long jingles are decoded when played and then kept only while they fit in a budget of about 14 MB (`cacheSeconds`), least recently played first out. Their downloaded files are kept, so decoding one again needs no network. At most about 24 MB is decoded at any time. A new level's theme can start a fraction of a second late on a slow phone while it is decoded.
+
 ## Install and offline
 
 The game is a small installable web app. In Chrome, Edge or Android, use the browser's "Install app" option (or "Add to Home screen"); on iPhone use Share, then "Add to Home Screen". It opens fullscreen in landscape with its own icon.

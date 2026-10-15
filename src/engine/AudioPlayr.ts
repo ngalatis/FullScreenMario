@@ -167,6 +167,22 @@ export interface IAudioPlayrSettings {
      *
      */
     getVolumeLocal?: number | { (...args: unknown[]): number };
+
+    /**
+     * The sounds to decode in the background right after boot, in this order, and to
+     * keep decoded for good: the ones that must start the moment they are played. By
+     * default, every sound outside the theme folders.
+     */
+    preload?: string[];
+
+    /**
+     * How much decoded audio the other sounds may keep, in seconds of stereo sound at
+     * the context's sample rate (a second of stereo takes 8 bytes per sample frame,
+     * about 0.34 MB at 44.1 kHz). They are decoded when played, and once they are not
+     * in use they are dropped, least recently played first, when they no longer fit
+     * (by default, 45).
+     */
+    cacheSeconds?: number;
 }
 
 /**
@@ -214,6 +230,18 @@ export interface IAudioPlayr {
      * @returns The gain of the master output: 0 when muted, otherwise the volume.
      */
     getOutputGain(): number;
+
+    /**
+     * @returns How many bytes of decoded audio (length x channels x 4) each sound
+     *          holds right now, keyed by name, least recently played first.
+     */
+    getDecodedAudio(): { [name: string]: number };
+
+    /**
+     * @returns How many bytes of decoded audio the sounds that are not preloaded may
+     *          keep (see the cacheSeconds setting).
+     */
+    getCacheBytes(): number;
 
     /**
      * @returns The current volume as a Number in [0,1], retrieved by the ItemsHoldr.
@@ -422,6 +450,11 @@ interface ISoundHost {
      * undefined when the sound cannot be loaded.
      */
     load(name: string): Promise<AudioBuffer | undefined>;
+
+    /**
+     * Tells the player that a sound took (or failed to get) its decoded audio.
+     */
+    settle(name: string, buffer: AudioBuffer | undefined): void;
 }
 
 /**
@@ -468,6 +501,11 @@ class Sound implements ISound {
      * Whether a load is already in flight.
      */
     private loading = false;
+
+    /**
+     * The load in flight (or the last one).
+     */
+    private loaded: Promise<void> = Promise.resolve();
 
     /**
      * Whether this was started while the page was hidden, in which case it is
@@ -601,6 +639,23 @@ class Sound implements ISound {
     }
 
     /**
+     * Fetches and decodes the sound without playing it, unless that is done already.
+     *
+     * @returns A promise for when the sound is decoded (or failed to be).
+     */
+    prepare(): Promise<void> {
+        return this.buffer || this._failed ? Promise.resolve() : this.load();
+    }
+
+    /**
+     * Drops the decoded audio of a sound that is not playing. It is decoded again
+     * the next time it is played.
+     */
+    unload(): void {
+        this.buffer = undefined;
+    }
+
+    /**
      * Reacts to the page being hidden or shown again.
      */
     syncHold(): void {
@@ -646,28 +701,32 @@ class Sound implements ISound {
         }
 
         if (!this.buffer) {
-            this.load();
+            // Starts once decoded, unless it has been paused or stopped (or replaced, for a theme) by then
+            void this.load();
             return;
         }
 
         this.begin();
     }
 
-    private load(): void {
+    private load(): Promise<void> {
         if (this.loading) {
-            return;
+            return this.loaded;
         }
 
         this.loading = true;
-        void this.host.load(this.name).then((buffer: AudioBuffer | undefined): void => {
+        this.loaded = this.host.load(this.name).then((buffer: AudioBuffer | undefined): void => {
             this.loading = false;
             if (buffer) {
                 this.buffer = buffer;
             } else {
                 this._failed = true;
             }
+            this.host.settle(this.name, buffer);
             this.reconcile();
         });
+
+        return this.loaded;
     }
 
     /**
@@ -850,6 +909,13 @@ class Sound implements ISound {
  * one shared AudioContext, a master GainNode for volume and mute, and decoded
  * AudioBuffers cached by name.
  *
+ * Decoded audio is large (raw 32-bit samples), so only the sounds listed in the
+ * preload setting are decoded at boot and kept. The others are decoded when they
+ * are played and stay decoded while they are in use (playing, paused mid-way, or
+ * the theme). Afterwards they are kept only while they fit in the cacheSeconds
+ * budget, least recently played first out; dropped ones are decoded again from
+ * their downloaded file, which is kept, so that needs no network.
+ *
  * The context starts suspended in browsers that block autoplay. It is resumed
  * on the first keydown, pointerdown or touchstart, after which sounds that are
  * already playing (such as the level theme) become audible. The context is
@@ -875,6 +941,11 @@ export class AudioPlayr implements IAudioPlayr {
      * Every sound in the library.
      */
     private allSounds!: Sound[];
+
+    /**
+     * Sounds by name.
+     */
+    private soundsByName!: { [i: string]: Sound };
 
     /**
      * The folder each sound lives in, keyed by sound name.
@@ -972,6 +1043,45 @@ export class AudioPlayr implements IAudioPlayr {
     private controllers = new Set<AbortController>();
 
     /**
+     * The sounds decoded at boot and kept for good (the preload setting).
+     */
+    private resident: { [i: string]: boolean } = {};
+
+    /**
+     * Decoded sizes in bytes of the sounds that hold decoded audio now, least
+     * recently played first.
+     */
+    private decoded = new Map<string, number>();
+
+    /**
+     * Decoded sizes in bytes of every sound decoded so far, kept after the audio
+     * is dropped, to make room for it before it is decoded again.
+     */
+    private decodedSizes: { [i: string]: number } = {};
+
+    /**
+     * The downloaded files of the sounds that are not preloaded, so dropped ones
+     * are decoded again without a download.
+     */
+    private files: { [i: string]: ArrayBuffer } = {};
+
+    /**
+     * How many bytes of decoded audio the sounds that are not preloaded may keep.
+     */
+    private cacheBytes: number;
+
+    /**
+     * The theme a playThemePrefixed call hands over to when its sound ends. It is
+     * decoded while that sound plays, and kept until then.
+     */
+    private nextTheme: string | undefined;
+
+    /**
+     * The theme that playThemePrefixed call replaces: it may be dropped to make room.
+     */
+    private outgoingTheme: string | undefined;
+
+    /**
      * Bound handlers, kept so dispose can remove them.
      */
     private gestureHandler: () => void = this.onGesture.bind(this);
@@ -1000,7 +1110,7 @@ export class AudioPlayr implements IAudioPlayr {
             throw new Error("No ItemsHoldr given to AudioPlayr.");
         }
 
-        var volumeInitial: number;
+        var volumeInitial: number, preload: string[];
 
         this.ItemsHolder = settings.ItemsHolder;
 
@@ -1021,11 +1131,26 @@ export class AudioPlayr implements IAudioPlayr {
             getOutput: (): AudioNode | undefined => this.output,
             isHeld: (): boolean => this.held,
             isContextRunning: (): boolean => !!this.context && this.context.state === "running",
-            load: (name: string): Promise<AudioBuffer | undefined> => this.loadBuffer(name)
+            load: (name: string): Promise<AudioBuffer | undefined> => this.loadBuffer(name),
+            settle: (name: string, buffer: AudioBuffer | undefined): void => this.settle(name, buffer)
         };
 
         this.createContext();
         this.generateLibraryFromSettings(settings.library);
+
+        preload = settings.preload || this.getSoundsOutsideThemes(settings.library);
+        preload.forEach((name: string): void => {
+            if (!this.soundsByName.hasOwnProperty(name)) {
+                throw new Error("Unknown name given to AudioPlayr preload: '" + name + "'.");
+            }
+            this.resident[name] = true;
+        });
+
+        // Seconds of stereo: 2 channels of 4-byte samples
+        this.cacheBytes =
+            (typeof settings.cacheSeconds === "undefined" ? 45 : settings.cacheSeconds) *
+            (this.context ? this.context.sampleRate : 44100) *
+            8;
 
         this.restore("volume");
         this.restore("muted");
@@ -1039,7 +1164,7 @@ export class AudioPlayr implements IAudioPlayr {
 
         this.watchPage();
         this.syncContext();
-        this.preload(settings.library);
+        this.preload(preload);
     }
 
     /* Simple getters
@@ -1100,6 +1225,28 @@ export class AudioPlayr implements IAudioPlayr {
      */
     getOutputGain(): number {
         return this.output ? this.output.gain.value : 0;
+    }
+
+    /**
+     * @returns How many bytes of decoded audio (length x channels x 4) each sound
+     *          holds right now, keyed by name, least recently played first.
+     */
+    getDecodedAudio(): { [name: string]: number } {
+        var output: { [name: string]: number } = {};
+
+        this.decoded.forEach((bytes: number, name: string): void => {
+            output[name] = bytes;
+        });
+
+        return output;
+    }
+
+    /**
+     * @returns How many bytes of decoded audio the sounds that are not preloaded may
+     *          keep (see the cacheSeconds setting).
+     */
+    getCacheBytes(): number {
+        return this.cacheBytes;
     }
 
     /* Playback modifiers
@@ -1267,6 +1414,8 @@ export class AudioPlayr implements IAudioPlayr {
         this.pauseAll();
         this.clearTheme();
         this.sounds = {};
+        this.nextTheme = this.outgoingTheme = undefined;
+        this.trim();
     }
 
     /**
@@ -1298,6 +1447,9 @@ export class AudioPlayr implements IAudioPlayr {
         }
 
         this.buffers = {};
+        this.decoded.clear();
+        this.files = {};
+        this.allSounds.forEach((sound: Sound): void => sound.unload());
         this.context = this.output = undefined;
 
         if (context) {
@@ -1325,6 +1477,7 @@ export class AudioPlayr implements IAudioPlayr {
         delete this.sounds[this.theme.name];
         this.theme = undefined;
         this.themeName = undefined;
+        this.trim();
     }
 
     /**
@@ -1395,7 +1548,10 @@ export class AudioPlayr implements IAudioPlayr {
 
         first = !this.used[name];
         this.themeName = name;
+        this.nextTheme = this.outgoingTheme = undefined;
         this.theme = this.sounds[name] = this.startSound(name, loop);
+        // The theme replaced above may have to make room
+        this.trim();
 
         // If it's used (no repeat), add the event listener to resume theme
         if (first) {
@@ -1441,6 +1597,14 @@ export class AudioPlayr implements IAudioPlayr {
         // Only the newest request counts, so they don't pile up over a session
         this.removeEventListeners(prefix, "ended");
         this.addEventListener(prefix, "ended", this.playTheme.bind(this, prefix + " " + name, loop));
+
+        // Decode the next theme while the sound plays, so it starts on time; the theme it
+        // replaces is not needed any more and may make room for it
+        this.outgoingTheme = this.themeName;
+        this.nextTheme = prefix + " " + name;
+        if (this.soundsByName.hasOwnProperty(this.nextTheme)) {
+            void this.soundsByName[this.nextTheme].prepare();
+        }
 
         return sound;
     }
@@ -1550,6 +1714,7 @@ export class AudioPlayr implements IAudioPlayr {
 
         this.soundStop(sound);
         this.used[name] = true;
+        this.touch(name);
 
         sound.loop = loop;
         sound.volume = 1;
@@ -1567,6 +1732,8 @@ export class AudioPlayr implements IAudioPlayr {
         if (this.sounds.hasOwnProperty(name)) {
             delete this.sounds[name];
         }
+
+        this.trim();
     }
 
     /**
@@ -1774,6 +1941,7 @@ export class AudioPlayr implements IAudioPlayr {
         this.library = {};
         this.directories = {};
         this.allSounds = [];
+        this.soundsByName = {};
         this.soundFolders = {};
 
         // For each given directory (e.g. names, themes):
@@ -1809,55 +1977,119 @@ export class AudioPlayr implements IAudioPlayr {
 
         sound.addEventListener("ended", this.soundFinish.bind(this, name));
         this.allSounds.push(sound);
+        this.soundsByName[name] = sound;
 
         return sound;
     }
 
     /**
-     * Fetches and decodes sounds one after another in the background: themes
-     * first (the "Hurry" ones last, since they're needed less often), then the
-     * rest. A sound that is played earlier is loaded right then instead.
+     * @returns The names of the sounds outside the theme folders: what is preloaded by default.
      */
-    private preload(librarySettings: ILibrarySettings): void {
-        var themes: string[] = [],
-            hurryThemes: string[] = [],
-            others: string[] = [],
-            directoryName: string,
-            names: string[],
-            queue: string[],
-            next: () => void,
-            j: number;
+    private getSoundsOutsideThemes(librarySettings: ILibrarySettings): string[] {
+        var names: string[] = [],
+            directoryName: string;
+
+        for (directoryName in librarySettings) {
+            if (librarySettings.hasOwnProperty(directoryName) && !/theme/i.test(directoryName)) {
+                names = names.concat(librarySettings[directoryName]);
+            }
+        }
+
+        return names;
+    }
+
+    /**
+     * Fetches and decodes the preloaded sounds one after another in the background.
+     * A sound that is played earlier is loaded right then instead.
+     */
+    private preload(names: string[]): void {
+        var queue: string[] = names.slice(),
+            next: () => void;
 
         if (!this.context) {
             return;
         }
 
-        for (directoryName in librarySettings) {
-            if (!librarySettings.hasOwnProperty(directoryName)) {
-                continue;
-            }
-
-            names = librarySettings[directoryName];
-            for (j = 0; j < names.length; j += 1) {
-                if (!/theme/i.test(directoryName)) {
-                    others.push(names[j]);
-                } else if (/^hurry/i.test(names[j])) {
-                    hurryThemes.push(names[j]);
-                } else {
-                    themes.push(names[j]);
-                }
-            }
-        }
-
-        queue = themes.concat(others, hurryThemes);
         next = (): void => {
             if (!this.disposed && queue.length) {
-                void this.loadBuffer(<string>queue.shift()).then(next);
+                void this.soundsByName[<string>queue.shift()].prepare().then(next);
             }
         };
 
         // Don't compete with the rest of the boot.
         setTimeout(next, 0);
+    }
+
+    /**
+     * Marks a sound as the most recently played one.
+     */
+    private touch(name: string): void {
+        var bytes: number | undefined = this.decoded.get(name);
+
+        if (bytes !== undefined) {
+            this.decoded.delete(name);
+            this.decoded.set(name, bytes);
+        }
+    }
+
+    /**
+     * Records the decoded audio a sound took, and keeps the cache in its budget.
+     */
+    private settle(name: string, buffer: AudioBuffer | undefined): void {
+        var bytes: number;
+
+        if (!buffer || this.disposed) {
+            return;
+        }
+
+        bytes = buffer.length * buffer.numberOfChannels * 4;
+        this.decodedSizes[name] = bytes;
+        this.decoded.delete(name);
+        this.decoded.set(name, bytes);
+        this.trim();
+    }
+
+    /**
+     * @returns Whether the decoded audio of a sound must stay: it is playing, paused
+     *          mid-way, the theme (unless a playThemePrefixed call replaces it), or
+     *          the theme such a call hands over to.
+     */
+    private isInUse(name: string): boolean {
+        if (name === this.nextTheme || !this.soundsByName[name].paused) {
+            return true;
+        }
+
+        return this.sounds.hasOwnProperty(name) && name !== this.outgoingTheme;
+    }
+
+    /**
+     * Drops the decoded audio of sounds that are neither preloaded nor in use, least
+     * recently played first, until the ones that are not preloaded fit in the budget
+     * (with room for some more bytes, about to be decoded).
+     *
+     * @param room   Bytes to leave free in the budget.
+     */
+    private trim(room: number = 0): void {
+        var cached: number = 0;
+
+        this.decoded.forEach((bytes: number, name: string): void => {
+            if (!this.resident[name]) {
+                cached += bytes;
+            }
+        });
+
+        for (const [name, bytes] of this.decoded) {
+            if (cached + room <= this.cacheBytes) {
+                return;
+            }
+
+            if (!this.resident[name] && !this.isInUse(name)) {
+                this.decoded.delete(name);
+                delete this.buffers[name];
+                this.soundsByName[name].unload();
+                cached -= bytes;
+            }
+        }
     }
 
     /**
@@ -1885,6 +2117,11 @@ export class AudioPlayr implements IAudioPlayr {
             return undefined;
         }
 
+        // Decoded before and dropped since: decode the kept file again
+        if (this.files.hasOwnProperty(name)) {
+            return this.decodeFile(name, this.files[name]);
+        }
+
         for (i = 0; i < this.fileTypes.length; i += 1) {
             if (this.disposed) {
                 return undefined;
@@ -1901,7 +2138,7 @@ export class AudioPlayr implements IAudioPlayr {
             try {
                 response = await fetch(url, { signal: controller.signal });
                 if (response.ok) {
-                    return await this.decode(await response.arrayBuffer());
+                    return await this.decodeFile(name, await response.arrayBuffer());
                 }
             } catch (error) {
                 // Try the next file type.
@@ -1912,6 +2149,31 @@ export class AudioPlayr implements IAudioPlayr {
         }
 
         return undefined;
+    }
+
+    /**
+     * Decodes a sound's file. For a sound that is not preloaded, room is made in the
+     * budget first (so old and new audio are not held side by side), and the file is
+     * kept, to decode the sound again without a download once its audio is dropped.
+     */
+    private async decodeFile(name: string, data: ArrayBuffer): Promise<AudioBuffer | undefined> {
+        var buffer: AudioBuffer;
+
+        if (this.resident[name]) {
+            return this.decode(data);
+        }
+
+        // Before the first decode the size is estimated: these mp3 files decode to about 30 times their size
+        this.trim(this.decodedSizes[name] || data.byteLength * 32);
+
+        // Decoding takes the bytes away (it detaches the ArrayBuffer), so it gets a copy
+        buffer = await this.decode(data.slice(0));
+        if (this.disposed) {
+            return undefined;
+        }
+
+        this.files[name] = data;
+        return buffer;
     }
 
     private decode(data: ArrayBuffer): Promise<AudioBuffer> {

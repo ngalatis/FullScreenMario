@@ -455,3 +455,243 @@ async function expectThemeAudibleAfterRestart(page: Page): Promise<void> {
         return player.getContextState() === "running" && !!theme && !theme.paused && theme.audible;
     });
 }
+
+/* Decoded audio memory: what is decoded, when, and what is dropped */
+
+const MiB = 1024 * 1024;
+
+/** The decoded audio the player holds right now (bytes by sound name, least recently played first). */
+function decodedAudio(page: Page) {
+    return page.evaluate(() => {
+        const player = (window as any).FSM.AudioPlayer;
+        return {
+            decoded: player.getDecodedAudio() as Record<string, number>,
+            budget: player.getCacheBytes() as number
+        };
+    });
+}
+
+/** Waits until the background preload is done and the level theme is decoded. */
+async function waitForPreload(page: Page): Promise<string[]> {
+    await page.waitForFunction(
+        () => {
+            const fsm = (window as any).FSM;
+            const decoded = fsm.AudioPlayer.getDecodedAudio();
+            return fsm.settings.audio.preload.every((name: string) => name in decoded) && "Overworld" in decoded;
+        },
+        undefined,
+        { timeout: 30_000 }
+    );
+
+    return page.evaluate(() => (window as any).FSM.settings.audio.preload as string[]);
+}
+
+test.describe("decoded audio memory", () => {
+    test("every sound measured, and the most the cache policy holds at once", async ({ page }) => {
+        await bootGame(page);
+        const preload = await waitForPreload(page);
+
+        // Decoded size of every sound in the library: length x channels x 4 bytes, at the context's rate
+        const measured = await page.evaluate(async () => {
+            const settings = (window as any).FSM.settings.audio;
+            const probe = new AudioContext();
+            const sizes: Record<string, number> = {};
+
+            for (const folder of Object.keys(settings.library)) {
+                for (const name of settings.library[folder]) {
+                    const type = settings.fileTypes[0];
+                    const file = `${settings.directory}/${folder}/${type}/${name}.${type}`;
+                    const buffer = await probe.decodeAudioData(await (await fetch(encodeURI(file))).arrayBuffer());
+                    sizes[name] = buffer.length * buffer.numberOfChannels * 4;
+                }
+            }
+
+            const sampleRate = probe.sampleRate;
+            await probe.close();
+            return { sizes, sampleRate };
+        });
+        const { decoded, budget } = await decodedAudio(page);
+        const sum = (names: string[]) => names.reduce((total, name) => total + measured.sizes[name], 0);
+        const all = Object.keys(measured.sizes);
+        const onDemand = all.filter((name) => !preload.includes(name));
+        const largestOnDemand = Math.max(...onDemand.map((name) => measured.sizes[name]));
+        const mb = (bytes: number) => (bytes / MiB).toFixed(2) + " MB";
+        // At 48 kHz (most phones) every size is 48 / 44.1 times its size at 44.1 kHz
+        const at44k = (bytes: number) => (bytes * 44100) / measured.sampleRate;
+
+        const before = sum(all);
+        const resident = sum(preload);
+        // Preloaded sounds, plus the budget or the one theme in use when that is larger
+        const peak = resident + Math.max(budget, largestOnDemand);
+        console.log(
+            "decoded-audio",
+            JSON.stringify({
+                sampleRate: measured.sampleRate,
+                perSound: Object.fromEntries(all.map((name) => [name, mb(measured.sizes[name])])),
+                allDecoded: mb(before),
+                preloaded: mb(resident),
+                cacheBudget: mb(budget),
+                largestOnDemand: mb(largestOnDemand),
+                mostHeldAtOnce: mb(peak)
+            })
+        );
+
+        // What the player holds after boot is exactly the preload and the level theme
+        expect(Object.keys(decoded).sort()).toEqual([...preload, "Overworld"].sort());
+        for (const name of Object.keys(decoded)) {
+            expect(decoded[name], name).toBe(measured.sizes[name]);
+        }
+
+        // Keeping everything decoded, as before, took about 86 MB; now at most about 24 MB is held
+        expect(at44k(before)).toBeGreaterThan(80 * MiB);
+        expect(at44k(resident)).toBeLessThan(11 * MiB);
+        expect(at44k(peak)).toBeLessThan(25 * MiB);
+        // The longest theme fits in the budget, so the level theme survives a star or a death
+        expect(budget).toBeGreaterThanOrEqual(largestOnDemand);
+    });
+
+    test("themes are decoded when played, the least recently played go first, and Star stays warm", async ({
+        page
+    }) => {
+        const { errors } = collectPageErrors(page);
+        const themeDownloads: string[] = [];
+        page.on("request", (request) => {
+            const match = /Themes\/mp3\/([^/]+)\.mp3$/.exec(decodeURIComponent(new URL(request.url()).pathname));
+            if (match) {
+                themeDownloads.push(match[1]);
+            }
+        });
+
+        await bootGame(page);
+        const preload = await waitForPreload(page);
+        const onDemand = (decoded: Record<string, number>) => Object.keys(decoded).filter((n) => !preload.includes(n));
+        const playTheme = async (name: string) => {
+            await page.evaluate((theme) => (window as any).FSM.AudioPlayer.playTheme(theme), name);
+            await page.waitForFunction((theme) => theme in (window as any).FSM.AudioPlayer.getDecodedAudio(), name);
+            const state = await decodedAudio(page);
+            const cached = onDemand(state.decoded).reduce((total, n) => total + state.decoded[n], 0);
+            expect(cached).toBeLessThanOrEqual(state.budget);
+            expect(state.decoded.Star).toBeGreaterThan(0);
+            return onDemand(state.decoded);
+        };
+
+        // Of the themes and long jingles, only the level theme is decoded at boot (and Star, preloaded)
+        expect(onDemand((await decodedAudio(page)).decoded)).toEqual(["Overworld"]);
+        expect(themeDownloads.sort()).toEqual(["Overworld", "Star"]);
+
+        // Overworld (13 MB) and Underworld (4 MB) do not fit together: Overworld, no longer the theme, is let go
+        expect(await playTheme("Underworld")).toEqual(["Underworld"]);
+        expect(await page.evaluate(() => (window as any).FSM.AudioPlayer.getLibrary().Overworld.readyState)).toBe(0);
+
+        // Sky is small: the previous theme is kept
+        expect(await playTheme("Sky")).toEqual(["Underworld", "Sky"]);
+
+        // Underworld played again becomes the most recent, so Sky goes first to make room for Underwater
+        expect(await playTheme("Underworld")).toEqual(["Sky", "Underworld"]);
+        expect(await playTheme("Underwater")).toEqual(["Underworld", "Underwater"]);
+
+        // A theme that was let go is decoded again from its kept file, with no second download
+        expect(await playTheme("Overworld")).toEqual(["Overworld"]);
+        expect(themeDownloads.filter((name) => name === "Overworld")).toHaveLength(1);
+        expect(errors).toEqual([]);
+    });
+
+    test("the hurry theme is decoded while the hurry jingle plays, in place of the level theme", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+
+        await bootGame(page);
+        await waitForPreload(page);
+        await page.mouse.click(100, 100);
+        await page.evaluate(() => (window as any).FSM.AudioPlayer.playThemePrefixed("Hurry"));
+
+        // Ready before the jingle (3 seconds) ends, and the level theme made room for it
+        await page.waitForFunction(() => {
+            const player = (window as any).FSM.AudioPlayer;
+            return "Hurry Overworld" in player.getDecodedAudio() && player.getThemeName() === "Overworld";
+        });
+        expect("Overworld" in (await decodedAudio(page)).decoded).toBe(false);
+
+        await page.waitForFunction(
+            () => (window as any).FSM.AudioPlayer.getThemeName() === "Hurry Overworld",
+            undefined,
+            {
+                timeout: 15000
+            }
+        );
+        await page.waitForFunction(() => {
+            const theme = (window as any).FSM.AudioPlayer.getTheme();
+            return !theme.paused && theme.audible && theme.loop;
+        });
+        expect(errors).toEqual([]);
+    });
+
+    test("a theme still loading starts when ready, unless it was replaced or stopped meanwhile", async ({ page }) => {
+        const { errors } = collectPageErrors(page);
+        const release: Record<string, () => void> = {};
+        await trackSources(page);
+
+        // Hold these downloads until the test lets them through
+        for (const name of ["Underwater", "Underworld", "Castle"]) {
+            const released = new Promise<void>((resolve) => (release[name] = resolve));
+            await page.route(new RegExp(`Themes/mp3/${name}\\.mp3$`), async (route) => {
+                await released;
+                await route.continue();
+            });
+        }
+
+        await bootGame(page);
+        await page.mouse.click(100, 100);
+        await expectThemeAudible(page);
+
+        const sound = (name: string) =>
+            page.evaluate((n) => {
+                const s = (window as any).FSM.AudioPlayer.getLibrary()[n];
+                return { paused: s.paused as boolean, audible: s.audible as boolean, duration: s.duration as number };
+            }, name);
+        const sourcesLasting = (seconds: number) =>
+            page.evaluate(
+                (d) => (window as any).__sources.filter((s: any) => Math.abs(s.duration - d) < 0.01).length as number,
+                seconds
+            );
+        const decodedNow = (name: string) =>
+            page.waitForFunction((n) => (window as any).FSM.AudioPlayer.getLibrary()[n].readyState === 4, name);
+
+        // Replaced: Underwater is asked for, then Underworld, before either has arrived
+        await page.evaluate(() => {
+            const player = (window as any).FSM.AudioPlayer;
+            player.playTheme("Underwater");
+            player.playTheme("Underworld");
+        });
+        release.Underwater();
+        await decodedNow("Underwater");
+        await page.waitForTimeout(300);
+        const underwater = await sound("Underwater");
+        expect(underwater).toMatchObject({ paused: true, audible: false });
+        expect(await sourcesLasting(underwater.duration)).toBe(0);
+        expect(await page.evaluate(() => (window as any).FSM.AudioPlayer.getThemeName())).toBe("Underworld");
+
+        // Still wanted: Underworld starts as soon as it is in
+        release.Underworld();
+        await page.waitForFunction(() => {
+            const theme = (window as any).FSM.AudioPlayer.getTheme();
+            return theme.name === "Underworld" && !theme.paused && theme.audible;
+        });
+        expect(await sound("Underwater")).toMatchObject({ paused: true, audible: false });
+
+        // Stopped: Castle is asked for, and the theme cleared, before it has arrived
+        await page.evaluate(() => {
+            const player = (window as any).FSM.AudioPlayer;
+            player.playTheme("Castle");
+            player.clearTheme();
+        });
+        release.Castle();
+        await decodedNow("Castle");
+        await page.waitForTimeout(300);
+        const castle = await sound("Castle");
+        expect(castle).toMatchObject({ paused: true, audible: false });
+        expect(await sourcesLasting(castle.duration)).toBe(0);
+        expect(await page.evaluate(() => (window as any).FSM.AudioPlayer.getTheme())).toBeUndefined();
+
+        expect(errors).toEqual([]);
+    });
+});
